@@ -2,9 +2,9 @@
 // Components - HomeLink
 // ============================================================================
 
-import React from 'react';
 import { Link } from '@/i18n/routing';
 import { cn } from '@/lib/utils';
+import React from 'react';
 import { BUTTON_STYLES } from '../constants';
 
 interface HomeLinkProps {
@@ -22,7 +22,7 @@ export const HomeLink: React.FC<HomeLinkProps> = ({ href, label, isActive, class
         isActive ? BUTTON_STYLES.homeLinkActive : BUTTON_STYLES.homeLinkInactive
       )}
     >
-      <span className={cn(className || BUTTON_STYLES.navLink, isActive && 'text-gray-800')}>
+      <span className={cn(className || BUTTON_STYLES.navLink, isActive && 'text-gray-800 font-[600]!')}>
         {label}
       </span>
     </div>

@@ -1,15 +1,15 @@
 "use client";
 
-import * as React from "react";
-import { Button, Input, DialogWrapper, InputOtp } from "@/ui";
-import type { AccountRecoveryProps } from "./Recovery.types";
-import { accountRecovery, verifyAccountRecovery, resetPasswordVerification } from "./services/recovery.service";
-import { resetPassword } from "../ForgotPassword/services/forgot-password.service";
-import { toast } from "sonner";
-import { useTranslations } from "next-intl";
-import { ConfirmationChannelTabs } from "../SignUp/components/ConfirmationChannelTabs";
 import CountryPhone from "@/app/(components)/template/phone/CountryPhone";
+import { Button, DialogWrapper, Input, InputOtp } from "@/ui";
+import { useTranslations } from "next-intl";
+import * as React from "react";
+import { toast } from "sonner";
 import { useDialog } from "../../../hooks/useDialog";
+import { resetPassword } from "../ForgotPassword/services/forgot-password.service";
+import { ConfirmationChannelTabs } from "../SignUp/components/ConfirmationChannelTabs";
+import type { AccountRecoveryProps } from "./Recovery.types";
+import { accountRecovery, resetPasswordVerification, verifyAccountRecovery } from "./services/recovery.service";
 
 type Step = "request" | "verify" | "reset";
 
@@ -136,7 +136,7 @@ export function AccountRecoveryDialog({
         // If we don't have clientId yet, try to get it from response
         if (!clientId && typeof response.data === 'object' && response.data !== null) {
           const clientIdValue = response.data.clientId;
-          
+
           if (clientIdValue) {
             setClientId(clientIdValue);
           }
@@ -213,7 +213,7 @@ export function AccountRecoveryDialog({
         if (isSuccess) {
           toast.success(t('messages.passwordResetSuccess'));
           onSuccess?.();
-          
+
           // Close current dialog and open login after a short delay
           setTimeout(() => {
             onClose();
@@ -369,7 +369,7 @@ export function AccountRecoveryDialog({
                     type="button"
                     onClick={handleRequestRecovery}
                     disabled={isLoading}
-                    className="text-[#1A1A1A] text-sm font-semibold underline hover:text-[#DC340A]/80 disabled:opacity-50"
+                    className="text-[#1A1A1A] text-sm font-semibold underline hover:text-[#110000]/80 disabled:opacity-50"
                   >
                     {t('buttons.resend')}
                   </button>

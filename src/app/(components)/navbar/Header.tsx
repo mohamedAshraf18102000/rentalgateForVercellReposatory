@@ -5,7 +5,6 @@
 'use client';
 
 import { ContactUsDialog } from '@/app/(components)/ContactUsDialog';
-import { cn } from '@/lib/utils';
 import { useTranslations } from 'next-intl';
 import * as React from 'react';
 import { LoginButton } from '../LoginButton';
@@ -15,7 +14,6 @@ import { Logo } from './components/Logo';
 import { MobileBottomNav } from './components/MobileBottomNav';
 import { MobileHeader } from './components/MobileHeader';
 import { UserMenu } from './components/UserMenu';
-import { WhatsAppLink } from './components/WhatsAppLink';
 import { BUTTON_STYLES, NAVBAR_STYLES } from './constants';
 import { useHeaderLogic } from './hooks/useHeaderLogic';
 
@@ -60,11 +58,10 @@ export default function Header() {
           <div className={NAVBAR_STYLES.navbar}>
             {/* Left Section */}
             <div className={NAVBAR_STYLES.leftSection}>
-              <WhatsAppLink
-                url={whatsappUrl}
-                label={translations.talkToUs}
-                className={BUTTON_STYLES.navLink}
-              />
+              {/* Center Section - Logo */}
+              <div className={NAVBAR_STYLES.centerSection}>
+                <Logo href="/" src="/logo-rental.png" alt="logo" />
+              </div>
               <HomeLink
                 href="/"
                 label={translations.home}
@@ -81,15 +78,12 @@ export default function Header() {
 
             </div>
 
-            {/* Center Section - Logo */}
-            <div className={NAVBAR_STYLES.centerSection}>
-              <Logo href="/" src="/logo.avif" alt="logo" />
-            </div>
+
 
             {/* Right Section */}
             <div className={NAVBAR_STYLES.rightSection}>
               <div className={NAVBAR_STYLES.actionsWrapper}>
-                <button
+                {/* <button
                   onClick={() => setContactDialogOpen(true)}
                   className={cn(
                     BUTTON_STYLES.homeLink,
@@ -98,7 +92,7 @@ export default function Header() {
                   )}
                 >
                   {tContact('title')}
-                </button>
+                </button> */}
                 <LanguageSwitcher currentLocale={locale} onToggle={handleLanguageChange} />
 
                 {isClient && authenticated ? (

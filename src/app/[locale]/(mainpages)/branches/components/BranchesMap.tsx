@@ -5,8 +5,8 @@
 
 'use client';
 
-import React, { useState, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
+import React, { useEffect, useState } from 'react';
 import type { Branch } from '../types/branch.types';
 
 // Type declarations for Google Maps API
@@ -14,7 +14,7 @@ declare global {
   interface Window {
     google?: any;
   }
-  
+
   var google: any;
 }
 
@@ -224,9 +224,9 @@ export const BranchesMap: React.FC<BranchesMapProps> = ({
           href="https://www.google.com/maps?q=${branch.latitude},${branch.longitude}" 
           target="_blank" 
           rel="noopener noreferrer"
-          style="display: block; margin-top: 8px; padding: 6px 12px; background: #DC340A; color: #e4e4e7; text-align: center; text-decoration: none; border-radius: 6px; font-weight: 500; font-size: 12px; transition: background 0.2s;"
-          onmouseover="this.style.background='#C02E09'"
-          onmouseout="this.style.background='#DC340A'"
+          style="display: block; margin-top: 8px; padding: 6px 12px; background: #110000; color: #e4e4e7; text-align: center; text-decoration: none; border-radius: 6px; font-weight: 500; font-size: 12px; transition: background 0.2s;"
+          onmouseover="this.style.background='#110000'"
+          onmouseout="this.style.background='#110000'"
         >
           ${locale === 'en' ? 'Open in Google Maps' : 'فتح في خرائط Google'}
         </a>

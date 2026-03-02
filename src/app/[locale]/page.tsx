@@ -30,7 +30,6 @@ export default async function HomePage({ params }: Props) {
       <div className=" ">
         <HomeSlider banners={banners} />
 
-
         <MostRequestedCars locale={locale} />
 
         {/* هناخد الديزين الجديد  */}

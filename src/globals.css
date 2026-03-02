@@ -88,8 +88,8 @@ body {
 
 /* Primary Color - From Figma */
 :root {
-  --primary: #DC340A !important;
-  --primary-hover: #C02E09;
+  --primary: #110000 !important;
+  --primary-hover: #110000;
   --primary-dark: #A32607;
   --bg-light: #F8F8F8;
   --bg-white: #FFFFFF;
@@ -133,8 +133,8 @@ body {
 
 /* Tailwind Custom Colors */
 @theme {
-  --color-primary: #DC340A;
-  --color-primary-hover: #C02E09;
+  --color-primary: #110000;
+  --color-primary-hover: #110000;
   --color-primary-dark: #A32607;
 }
 
@@ -636,7 +636,7 @@ input {
 
 }
 
-.bg_cars_card{
+.bg_cars_card {
   /* background-image: url('/Card_Cars2.png');
   background-position: center center;
   background-size: 100% auto;

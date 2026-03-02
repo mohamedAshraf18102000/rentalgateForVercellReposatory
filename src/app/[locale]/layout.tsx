@@ -1,18 +1,25 @@
+import { routing } from '@/i18n/routing';
+import { DialogProvider, Footer, Header, SharedDataLoader, Toaster } from '@/ui';
+import type { Metadata } from 'next';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages, setRequestLocale } from 'next-intl/server';
+import { Almarai, Zain } from 'next/font/google';
 import { notFound } from 'next/navigation';
-import { Zain } from 'next/font/google';
-import { routing } from '@/i18n/routing';
-import { Header, Footer, DialogProvider, Toaster, SharedDataLoader } from '@/ui';
-import { RouteGuard } from './(components)/RouteGuard';
-import type { Metadata } from 'next';
 import '../../globals.css';
+import { RouteGuard } from './(components)/RouteGuard';
 
 const fontZain = Zain({
   subsets: ['arabic', 'latin'],
   weight: ['400', '200', '300', '700'],
   display: 'swap',
   variable: '--font-zain',
+});
+
+const fontAlmarai = Almarai({
+  weight: ['400', '700', '800'],
+  subsets: ['arabic', 'latin'],
+  display: 'swap',
+  variable: '--font-almarai',
 });
 
 export function generateStaticParams() {
@@ -31,13 +38,13 @@ export async function generateMetadata({
 
   const isArabic = locale === 'ar';
   const siteName = isArabic ? 'المقام' : 'AlMaqam';
-  const title = isArabic 
+  const title = isArabic
     ? `${tHome.title || 'مرحباً بك في المقام'} - ${tCommon.companyName || 'المقام'}`
     : `${tHome.title || 'Welcome to AlMaqam'} - ${tCommon.companyName || 'AlMaqam'}`;
   const description = isArabic
     ? tHome.description || 'منصتك الموثوقة لتأجير السيارات في المملكة العربية السعودية'
     : tHome.description || 'Your trusted platform for car rental in Saudi Arabia';
-  
+
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://almqam.com';
   const url = `${baseUrl}/${locale}`;
 
@@ -139,13 +146,13 @@ export default async function LocaleLayout({
   const messages = await getMessages();
 
   return (
-    <html lang={locale} dir={locale === 'ar' ? 'rtl' : 'ltr'} className={fontZain.variable}>
+    <html lang={locale} dir={locale === 'ar' ? 'rtl' : 'ltr'} className={`${fontZain.variable} ${fontAlmarai.variable}`}>
       <head>
         {/* Favicon */}
         <link rel="icon" href="/logoSm.png" type="image/png" />
         <link rel="apple-touch-icon" href="/logoSm.png" />
         <link rel="manifest" href="/manifest.json" />
-        
+
         {/* DNS Prefetch for external resources */}
         <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
         <link rel="dns-prefetch" href="https://fonts.gstatic.com" />

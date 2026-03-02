@@ -1,18 +1,18 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useTranslations } from "next-intl";
-import { toast } from "sonner";
-import { useForm } from "react-hook-form";
-import { Stepper } from "./Stepper";
 import { Button } from "@/app/(components)/ui/button";
-import { Card, CardContent } from "@/app/(components)/ui/card";
+import { CardContent } from "@/app/(components)/ui/card";
 import { useSharedStore } from "@/lib/api/stores/shared.store";
 import { URL } from "@/util/api";
-import { useFormCookies, FormData } from "../hooks/useFormCookies";
-import { validatePhone } from "../utils/validation";
-import { Step1, Step2, Step3 } from "./steps";
 import { getUserData, isAuthenticated } from "@/util/auth";
+import { useTranslations } from "next-intl";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { FormData, useFormCookies } from "../hooks/useFormCookies";
+import { validatePhone } from "../utils/validation";
+import { Stepper } from "./Stepper";
+import { Step1, Step2, Step3 } from "./steps";
 
 interface CompanyQuotationFormProps {
   locale: string;
@@ -82,7 +82,7 @@ export function CompanyQuotationForm({ locale }: CompanyQuotationFormProps) {
 
       // Get user data if authenticated
       const userData = isAuthenticated() ? getUserData() : null;
-      
+
       // Prepare form values - prioritize saved data, then user data, then defaults
       const formValues: Partial<FormData> = { ...savedData };
 
@@ -382,7 +382,7 @@ export function CompanyQuotationForm({ locale }: CompanyQuotationFormProps) {
                     <Button
                       type="button"
                       onClick={handleNext}
-                      className="flex-1 w-full sm:w-auto min-h-[48px] sm:min-h-[44px] bg-[#DC340A] hover:bg-primary-hover active:bg-[#B02A08] text-white text-base sm:text-sm font-medium touch-manipulation active:scale-[0.98] transition-transform shadow-sm hover:shadow-md"
+                      className="flex-1 w-full sm:w-auto min-h-[48px] sm:min-h-[44px] bg-[#110000] hover:bg-primary-hover active:bg-[#B02A08] text-white text-base sm:text-sm font-medium touch-manipulation active:scale-[0.98] transition-transform shadow-sm hover:shadow-md"
                       size="lg"
                     >
                       {t("buttons.next")}
@@ -391,7 +391,7 @@ export function CompanyQuotationForm({ locale }: CompanyQuotationFormProps) {
                     <Button
                       type="button"
                       onClick={onSubmit}
-                      className="flex-1 w-full sm:w-auto min-h-[48px] sm:min-h-[44px] bg-[#DC340A] hover:bg-primary-hover active:bg-[#B02A08] disabled:opacity-50 disabled:cursor-not-allowed text-white text-base sm:text-sm font-medium touch-manipulation active:scale-[0.98] transition-transform shadow-sm hover:shadow-md"
+                      className="flex-1 w-full sm:w-auto min-h-[48px] sm:min-h-[44px] bg-[#110000] hover:bg-primary-hover active:bg-[#B02A08] disabled:opacity-50 disabled:cursor-not-allowed text-white text-base sm:text-sm font-medium touch-manipulation active:scale-[0.98] transition-transform shadow-sm hover:shadow-md"
                       size="lg"
                       disabled={isSubmitting || isLoadingSharedData}
                     >
