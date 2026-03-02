@@ -1,0 +1,53 @@
+{
+  "step1": {
+    "title": "Company Data",
+    "subtitle": "Please enter your company's basic information so we can provide you with the appropriate quote",
+    "fields": {
+      "companyName": "Company Name:",
+      "activity": "Activity:",
+      "city": "City:"
+    },
+    "placeholders": {
+      "companyName": "Enter Name",
+      "activity": "Company's Special Activity",
+      "city": "Select City"
+    }
+  },
+  "step2": {
+    "title": "Responsible Person's Data",
+    "subtitle": "Enter the contact information of the person responsible for contracting with us",
+    "fields": {
+      "name": "Name:",
+      "phone": "Mobile Number:",
+      "email": "Email:"
+    },
+    "placeholders": {
+      "name": "Enter the name of the responsible person",
+      "email": "Enter email"
+    }
+  },
+  "step3": {
+    "title": "Duration and Number of Cars",
+    "subtitle": "Specify the rental duration, number of cars required, and preferred brands",
+    "fields": {
+      "rentalDuration": "Rental duration per month",
+      "cars": "Cars",
+      "brands": "Select required brands:",
+      "numberOfCars": "Determine the number of cars"
+    },
+    "placeholders": {
+      "brands": "Choose from the available brands in our showrooms"
+    }
+  },
+  "info": {
+    "title": "Why Choose Us?",
+    "description1": "We provide customized car rental solutions for businesses across the Kingdom of Saudi Arabia. Get the best offers and competitive prices with full flexibility in choosing duration and number of vehicles.",
+    "description2": "We guarantee you exceptional 24/7 customer service, regular maintenance, and modern vehicles from the world's most renowned brands. Fill out the form and we will contact you within 24 hours to provide a customized quote for your company's needs."
+  },
+  "buttons": {
+    "next": "Next",
+    "back": "Back",
+    "submit": "Request a quote"
+  }
+}
+

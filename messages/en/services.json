@@ -1,0 +1,31 @@
+{
+  "title": "Our Services",
+  "description": "Discover what we offer",
+  "items": {
+    "business": {
+      "title": "Business Solutions",
+      "description": "Comprehensive business solutions tailored to your needs"
+    },
+    "design": {
+      "title": "Design Services",
+      "description": "Creative and modern design services for your brand"
+    },
+    "development": {
+      "title": "Development",
+      "description": "Custom software development and technical solutions"
+    },
+    "mobile": {
+      "title": "Mobile Apps",
+      "description": "Native and cross-platform mobile application development"
+    },
+    "security": {
+      "title": "Security",
+      "description": "Advanced security solutions to protect your data"
+    },
+    "cloud": {
+      "title": "Cloud Services",
+      "description": "Scalable cloud infrastructure and deployment solutions"
+    }
+  }
+}
+

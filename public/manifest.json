@@ -1,0 +1,28 @@
+{
+  "name": "المقام - AlMaqam",
+  "short_name": "المقام",
+  "description": "منصتك الموثوقة لتأجير السيارات في المملكة العربية السعودية - Your trusted platform for car rental in Saudi Arabia",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#1A1A1A",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/logoSm.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/logoSm.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "lang": "ar",
+  "dir": "rtl",
+  "categories": ["automotive", "travel", "business"]
+}
+

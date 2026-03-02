@@ -1,0 +1,646 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+@import "./animations.css";
+
+@custom-variant dark (&:is(.dark *));
+
+html,
+body,
+#__next {
+  height: 100%;
+}
+
+body {
+  background: #ECEEF2 !important;
+}
+
+/* Smooth Dialog Animations */
+@keyframes dialog-overlay-enter {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes dialog-overlay-exit {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes dialog-content-enter {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -48%) scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+@keyframes dialog-content-exit {
+  from {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+
+  to {
+    opacity: 0;
+    transform: translate(-50%, -48%) scale(0.95);
+  }
+}
+
+/* Apply smooth transitions to dialog */
+[data-state="open"] [data-radix-dialog-overlay] {
+  animation: dialog-overlay-enter 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+[data-state="closed"] [data-radix-dialog-overlay] {
+  animation: dialog-overlay-exit 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+[data-state="open"] [data-radix-dialog-content] {
+  animation: dialog-content-enter 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+[data-state="closed"] [data-radix-dialog-content] {
+  animation: dialog-content-exit 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* RTL Support */
+[dir='rtl'] {
+  text-align: right;
+}
+
+[dir='ltr'] {
+  text-align: left;
+}
+
+/* Primary Color - From Figma */
+:root {
+  --primary: #DC340A !important;
+  --primary-hover: #C02E09;
+  --primary-dark: #A32607;
+  --bg-light: #F8F8F8;
+  --bg-white: #FFFFFF;
+  --gray-light: #E8E8E8;
+  --gray-medium: #9E9E9E;
+  --gray-dark: #757575;
+  --text-primary: #333333;
+  --text-secondary: #666666;
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary-foreground: oklch(0.98 0.016 73.684);
+  --secondary: oklch(0.967 0.001 286.375);
+  --secondary-foreground: oklch(0.21 0.006 285.885);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: oklch(0.58 0.22 27);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+  --chart-1: oklch(0.837 0.128 66.29);
+  --chart-2: oklch(0.705 0.213 47.604);
+  --chart-3: oklch(0.646 0.222 41.116);
+  --chart-4: oklch(0.553 0.195 38.402);
+  --chart-5: oklch(0.47 0.157 37.304);
+  --radius: 0.5rem;
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: oklch(0.646 0.222 41.116);
+  --sidebar-primary-foreground: oklch(0.98 0.016 73.684);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: oklch(0.708 0 0);
+}
+
+/* Tailwind Custom Colors */
+@theme {
+  --color-primary: #DC340A;
+  --color-primary-hover: #C02E09;
+  --color-primary-dark: #A32607;
+}
+
+.dark {
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.205 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.705 0.213 47.604);
+  --primary-foreground: oklch(0.98 0.016 73.684);
+  --secondary: oklch(0.274 0.006 286.033);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.371 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.556 0 0);
+  --chart-1: oklch(0.837 0.128 66.29);
+  --chart-2: oklch(0.705 0.213 47.604);
+  --chart-3: oklch(0.646 0.222 41.116);
+  --chart-4: oklch(0.553 0.195 38.402);
+  --chart-5: oklch(0.47 0.157 37.304);
+  --sidebar: oklch(0.205 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.705 0.213 47.604);
+  --sidebar-primary-foreground: oklch(0.98 0.016 73.684);
+  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.556 0 0);
+}
+
+@theme inline {
+  --font-sans: var(--font-sans);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --color-foreground: var(--foreground);
+  --color-background: var(--background);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --radius-4xl: calc(var(--radius) + 16px);
+}
+
+.shadow-md {
+  box-shadow:
+    0px_0.9px_3.6px_0.9px_#0014251F,
+    0px_0px_0.22px_0.67px_#0000000D,
+    0px_0px_0.22px_0.22px_#00000012,
+    0px_3px_6px_0px_#00142526
+}
+
+.btn-soft-selected,
+.btn-soft {
+  box-sizing: border-box;
+  /* Border gradient */
+  border: 1.8px solid transparent;
+  /* Background gradient */
+  background:
+    linear-gradient(180deg, #F4F4F4 0%, #FEFEFE 100%) padding-box,
+    linear-gradient(180deg, #FFFFFF 0%, #ECECEC 100%) border-box;
+
+  /* Shadows */
+  /* box-shadow:
+    0px 4px 8px rgba(0, 20, 37, 0.18),
+    0px 2px 4px rgba(0, 20, 37, 0.12),
+    0px 0px 0.224852px 0.224852px rgba(0, 0, 0, 0.07),
+    0px 0px 0.224852px 0.674556px rgba(0, 0, 0, 0.05),
+    0px 0.899408px 3.59763px 0.899408px rgba(0, 20, 37, 0.08); */
+
+  box-shadow:
+    0 4px 8px #0014252e,
+    /* 0 2px 4px #0014251f, */
+    0 .899408px 3.59763px .899408px #00142514;
+  box-shadow:
+    0 6px 12px rgba(0, 20, 37, 0.12),
+    0 2px 4px rgba(0, 20, 37, 0.08);
+
+
+
+
+  color: #1A1A1A;
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.4s ease-in-out;
+
+}
+
+.btn-soft:hover {
+  box-shadow: none;
+  border: 1px solid #ECEEF2 !important;
+  transition: all 0.4s ease-out;
+}
+
+.btn-soft:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* Navbar with gradient border and shadow */
+.navbar-gradient-border {
+  border: 1px solid transparent;
+  background:
+    linear-gradient(white, white) padding-box,
+    linear-gradient(360deg, #FFFFFF 0%, #ECECEC 100%) border-box;
+  box-shadow: 0px 2px 8px 0px #5858581A !important;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+.container-custom {
+  @apply mx-4 md:mx-[84px];
+}
+
+@media (min-width: 2400px) {
+  .container-custom {
+    margin-inline: 400px;
+  }
+}
+
+.space-custom {
+  @apply my-[60px];
+}
+
+button {
+  cursor: pointer;
+}
+
+input {
+  background: #ECEEF2;
+}
+
+/* OTP Input Animations */
+@keyframes blink {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0;
+  }
+}
+
+@keyframes otp-slot-pop {
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.1);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Dialog Ultra Smooth Animations - Keyframes */
+@keyframes dialog-overlay-enter {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes dialog-overlay-exit {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes dialog-content-enter {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 100%) scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+@keyframes dialog-content-exit {
+  from {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+
+  to {
+    opacity: 0;
+    transform: translate(-50%, 100%) scale(0.95);
+  }
+}
+
+/* Dialog Ultra Smooth Animations - Enhanced with better easing */
+[data-radix-dialog-overlay] {
+  animation-duration: 700ms;
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  transition: opacity 700ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+[data-radix-dialog-content] {
+  will-change: transform, opacity, scale;
+  backface-visibility: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Ultra smooth enter animation - من الأسفل إلى المنتصف */
+[data-state="open"][data-radix-dialog-content] {
+  animation: dialog-content-enter 700ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Ultra smooth exit animation - من المنتصف إلى الأسفل */
+[data-state="closed"][data-radix-dialog-content] {
+  animation: dialog-content-exit 500ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Overlay animations */
+[data-state="open"][data-radix-dialog-overlay] {
+  animation: dialog-overlay-enter 700ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+[data-state="closed"][data-radix-dialog-overlay] {
+  animation: dialog-overlay-exit 500ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Marquee gradient from left only */
+.marquee-left-gradient {
+  position: relative;
+}
+
+:root {
+  --gradient-color: white;
+  --gradient-width: 200px;
+}
+
+.marquee-left-gradient::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 50px;
+  background: linear-gradient(to right, var(--gradient-color), rgba(255, 255, 255, 0));
+  content: "";
+  height: 100%;
+  position: absolute;
+  width: var(--gradient-width);
+  z-index: 2;
+  pointer-events: none;
+  touch-action: none;
+  z-index: 10;
+  pointer-events: none;
+}
+
+@media (max-width: 768px) {
+  .marquee-left-gradient::before {
+    background: none;
+  }
+
+}
+
+.offers-container {
+  background-image: url('/shared/bg.png');
+  background-position: center center;
+  background-size: 100% auto;
+  background-repeat: no-repeat;
+  height: auto;
+  min-height: 300px;
+}
+
+@media (width < 768px) {
+  .offers-container {
+    background-size: 100% auto;
+    background-position: top center;
+    min-height: auto;
+  }
+}
+
+/* Hide Scrollbar but keep scrolling functionality */
+.scrollbar-hide {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+  /* Chrome, Safari, Opera */
+}
+
+/* Custom scrollbar for time slot selector - thin and light */
+.time-slot-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #B8BCC0 #F5F5F5;
+}
+
+.time-slot-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.time-slot-scrollbar::-webkit-scrollbar-track {
+  background: #F5F5F5;
+  border-radius: 10px;
+}
+
+.time-slot-scrollbar::-webkit-scrollbar-thumb {
+  background: #B8BCC0;
+  border-radius: 10px;
+}
+
+.time-slot-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #9CA3AF;
+}
+
+/* Hide scrollbar buttons (arrows) */
+.time-slot-scrollbar::-webkit-scrollbar-button {
+  display: none;
+}
+
+/* Custom scrollbar for booking details */
+.custom-scrollbar {
+  --sb-track-color: #ffffff;
+  --sb-thumb-color: #aab0bc;
+  --sb-size: 5px;
+  direction: ltr;
+  /* Force scrollbar to right side */
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: var(--sb-size);
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: var(--sb-track-color);
+  border-radius: 50px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--sb-thumb-color);
+  border-radius: 50px;
+}
+
+@supports not selector(::-webkit-scrollbar) {
+  .custom-scrollbar {
+    scrollbar-color: var(--sb-thumb-color) var(--sb-track-color);
+    direction: ltr;
+    /* Force scrollbar to right side */
+  }
+}
+
+
+/* Referral Card Styles */
+.referral-card-wrapper {
+  box-shadow: 0px 3px 6px 0px #00142526;
+  background: linear-gradient(180deg, #FFFFFF 0%, #ECECEC 100%);
+}
+
+.referral-card-inner {
+  background: linear-gradient(180deg, #F4F4F4 0%, #FEFEFE 100%);
+  font-family: var(--font-zain, Zain, sans-serif);
+}
+
+.referral-card-wrapper {
+  font-family: var(--font-zain, Zain, sans-serif);
+}
+
+.referral-card-content {
+  position: relative;
+  z-index: 1;
+}
+
+.referral_bg_card {
+  background-image: url('/profile/bgPromo.png');
+  background-position: center center;
+  background-size: 100% auto;
+  background-repeat: no-repeat;
+  height: auto;
+}
+
+@media (width < 768px) {
+  .referral_bg_card {
+    background-size: cover;
+  }
+}
+
+/* Toast Font - Use site font */
+.toaster,
+[data-sonner-toast],
+[data-sonner-toast] * {
+  font-family: var(--font-zain, Zain, sans-serif) !important;
+}
+
+.gm-style-iw-chr {
+  display: none !important;
+}
+
+.avatar-gradient-border {
+  border: 4px solid transparent;
+  border-radius: 9999px;
+
+  background:
+    linear-gradient(0deg, #ECEEF2, #ECEEF2) padding-box,
+    linear-gradient(303.36deg,
+      #FFFFFF -15.63%,
+      #F5A600 123.85%) border-box;
+}
+
+
+
+::-moz-selection {
+  background: rgba(250, 100, 9, 0.3);
+}
+
+::selection {
+  background: rgba(250, 100, 9, 0.3);
+}
+
+::-webkit-scrollbar {
+  width: 7px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: #ECEEF2;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--primary);
+  border-radius: 0px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #162A2B;
+}
+
+::-webkit-scrollbar-corner {
+  background-color: transparent;
+}
+
+.custom-bg {
+  background-image: url('/shared/bg_lg.png');
+  background-position: center 38px;
+  background-size: contain;
+  background-repeat: no-repeat;
+
+}
+
+.bg_cars_card{
+  /* background-image: url('/Card_Cars2.png');
+  background-position: center center;
+  background-size: 100% auto;
+  background-repeat: no-repeat;
+  height: auto;
+  min-height: 178px; */
+}

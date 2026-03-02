@@ -1,0 +1,19 @@
+{
+  "title": "Welcome to AlMaqam",
+  "subtitle": "Your trusted platform",
+  "description": "We provide excellent services to meet your needs",
+  "bookNow": "Book Now",
+  "mostRequestedCars": "Most Requested Cars",
+  "viewAll": "View All",
+  "appDownload": "Download AlMaqam app and book your car with ease",
+  "referral": {
+    "title": "Want to earn discounts?!!",
+    "description": "For every person you refer, you will get 50% discount on the rental period",
+    "shareCode": "Share the code:"
+  },
+  "bookings": {
+    "title": "My Bookings",
+    "description": "View and manage all your bookings (Cars) in one place"
+  }
+}
+

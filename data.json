@@ -1,0 +1,173 @@
+{
+    "data": [
+        {
+            "state": {
+                "duration": "daily",
+                "selectedDay": "today",
+                "days": 2,
+                "fromDate": "2025-12-24T22:00:00.000Z",
+                "toDate": "2025-12-25T22:00:00.000Z"
+            },
+            "version": 0
+        },
+        {
+            "state": {
+                "pickupDate": "2025-12-24T22:00:00.000Z",
+                "dropoffDate": "2025-12-25T22:00:00.000Z",
+                "pickupTime": "11:30",
+                "dropoffTime": "09:00",
+                "pickupLocation": "branch",
+                "fromBranch": 35,
+                "toBranch": 39
+            },
+            "version": 0
+        },
+        {
+            "datingType": 1,
+            "numOfDays": 2,
+            "extraHoursCost": 0,
+            "originalDailyPrice": 80,
+            "originalDailyPriceWithoutVat": 69.56521739130436,
+            "dailyPriceAfterDiscount": 70,
+            "dailyPriceAfterDiscountWithoutVat": 60.86956521739131,
+            "insurance": 0,
+            "anotherBranchPrice": 0,
+            "pickupFee": 0,
+            "deliveryFee": 0,
+            "totalDeliveryFee": 0,
+            "membershipDiscount": 0,
+            "membershipLuxuryCarDiscount": 0,
+            "carOfferDiscount": 20,
+            "finalPriceWithExtraHoursCost": 121.73913043478262,
+            "finalPriceBeforeDiscount": 160,
+            "finalTotalPrice": 140,
+            "totalPoints": 0,
+            "totalPromoValue": 0,
+            "tax": 18.260869565217376,
+            "extraServicesCost": 0,
+            "extraKmCost": 0,
+            "extraNewDayHours": 21,
+            "refCodeValid": false,
+            "unfreeHours": 0
+        },
+        {
+            "message": "SUCCESS",
+            "status": true,
+            "data": {
+                "datingType": 1,
+                "numOfDays": 6,
+                "extraHoursCost": 0.0,
+                "originalDailyPrice": 2795.12,
+                "originalDailyPriceWithoutVat": 2430.5391304347827,
+                "dailyPriceAfterDiscount": 2375.0,
+                "dailyPriceAfterDiscountWithoutVat": 2065.217391304348,
+                "insurance": 0.0,
+                "anotherBranchPrice": 0.0,
+                "pickupFee": 0.0,
+                "deliveryFee": 0.0,
+                "totalDeliveryFee": 0.0,
+                "membershipDiscount": 0.0,
+                "membershipLuxuryCarDiscount": 0.0,
+                "carOfferDiscount": 2520.72,
+                "finalPriceWithExtraHoursCost": 12391.304347826088,
+                "finalPriceBeforeDiscount": 16770.72,
+                "finalTotalPrice": 14250.0,
+                "totalPoints": 0.0,
+                "totalPromoValue": 0.0,
+                "tax": 1858.695652173912,
+                "extraServicesCost": 0.0,
+                "extraKmCost": 0.0,
+                "extraNewDayHours": 8,
+                "refCodeValid": false,
+                "unfreeHours": 0
+            }
+        },
+        {
+            "state": {
+                "car": {
+                    "carId": 197,
+                    "carStatus": "AVAILABLE",
+                    "carName": "Toyota Corolla 2024",
+                    "brandId": 25,
+                    "modelId": 53,
+                    "engineId": 14,
+                    "yearId": 20,
+                    "typeId": 28,
+                    "image": "https://cdn.example.com/cars/corolla/main.jpg",
+                    "images": [
+                        "https://cdn.example.com/cars/corolla/2.jpg",
+                        "https://cdn.example.com/cars/corolla/1.jpg",
+                        "https://cdn.example.com/cars/corolla/3.jpg"
+                    ],
+                    "cover": "https://cdn.example.com/cars/corolla/cover.jpg",
+                    "numberOfDoors": 4,
+                    "numberOfPassengers": 5,
+                    "airCondition": true,
+                    "showHome": true,
+                    "price": 25000,
+                    "offer": true,
+                    "insurancePrice": 50,
+                    "dailyPrice": 80,
+                    "weeklyPrice": 500,
+                    "monthlyPrice": 1800,
+                    "yearlyPrice": 18000,
+                    "offerDailyPrice": 70,
+                    "offerWeeklyPrice": 450,
+                    "offerMonthlyPrice": 1600,
+                    "offerYearlyPrice": 16000,
+                    "kmPrice": 0.25,
+                    "maxKm": 200,
+                    "extraHoursPrice": 10,
+                    "systemId": "CAR-000123",
+                    "detailsEnglish": "New model, excellent condition, includes warranty.",
+                    "detailsArabic": "موديل جديد، حالة ممتازة، شامل ضمان.",
+                    "typeEnglishName": "صغيرة",
+                    "typeArabicName": "صغيرة",
+                    "notes": "No smoking inside the car.",
+                    "defaultImage": "https://cdn.example.com/cars/corolla/main.jpg"
+                },
+                "categoryText": "صغيرة",
+                "locale": "ar"
+            },
+            "version": 0
+        },
+        {
+            "message": "SUCCESS",
+            "data": [
+                {
+                    "reservationId": 1706,
+                    "finalAmount": 489.99999999999994,
+                    "startDate": "2025-12-29",
+                    "endDate": "2025-12-31",
+                    "reservationStatus": 2,
+                    "fromBranchName": "فرع قريش - جدة 2",
+                    "fromBranchArName": "فرع قريش - جدة ",
+                    "toBranchName": "Quraish Branch - Jeddah",
+                    "toBranchArName": "فرع مدينة ",
+                    "deliveryLongitude": null,
+                    "deliveryLatitude": null,
+                    "pickupLongitude": null,
+                    "pickupLatitude": null,
+                    "deliveryAddress": null,
+                    "pickupAddress": null,
+                    "carId": 197,
+                    "carName": "Toyota Corolla 2024",
+                    "numberOfDoors": 4,
+                    "numberOfPassengers": 5,
+                    "airCondition": true,
+                    "defaultImage": "https://viganium.co/uploads/1767002630667.avif",
+                    "images": [
+                        "https://viganium.co/uploads/https://cdn.example.com/cars/corolla/2.jpg"
+                    ],
+                    "typeArabicName": "صغيرة",
+                    "typeEnglishName": "صغيرة",
+                    "year": 2025,
+                    "modelEnglishName": "33EX9490",
+                    "modelArabicName": "EX9490d33",
+                    "brandName": "Corolla",
+                    "brandArabicName": "كرولا"
+                } 
+            ]
+        }
+    ]
+}

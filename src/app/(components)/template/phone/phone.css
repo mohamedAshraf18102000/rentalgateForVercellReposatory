@@ -1,0 +1,218 @@
+/* Main container */
+.react-international-phone-input-container {
+    width: 100%;
+    height: 40px;
+    border-radius: 8px;
+    background-color: #ECEEF2;
+    border: none;
+    display: flex;
+    align-items: center;
+    padding: 0;
+    gap: 0;
+    position: relative;
+}
+
+@media (max-width: 640px) {
+    .react-international-phone-input-container {
+        height: 40px;
+    }
+}
+
+/* Country selector button */
+.react-international-phone-country-selector-button {
+    background-color: transparent !important;
+    border: none !important;
+    border-radius: 0.5rem 0 0 0.5rem !important;
+    padding: 0 12px !important;
+    height: 100% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 6px !important;
+    cursor: pointer;
+    min-width: fit-content;
+    flex-shrink: 0;
+}
+
+.react-international-phone-country-selector-button:hover {
+    background-color: transparent !important;
+}
+
+.react-international-phone-country-selector-button:focus {
+    outline: none !important;
+    background-color: transparent !important;
+}
+
+/* Flag emoji - should appear first */
+.react-international-phone-country-selector-button .react-international-phone-flag-emoji {
+    font-size: 20px;
+    line-height: 1;
+    display: inline-block;
+    order: 1;
+}
+
+/* Country code - should appear after flag */
+.react-international-phone-country-selector-button .react-international-phone-country-selector-button__country-code {
+    color: #999 !important;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 24px;
+    margin: 0;
+    order: 2;
+}
+
+/* Phone input field */
+.react-international-phone-input-container .react-international-phone-input {
+    flex: 1;
+    width: 100%;
+    height: 100%;
+    border: none !important;
+    border-radius: 0 0.5rem 0.5rem 0 !important;
+    background-color: transparent !important;
+    padding: 0 16px !important;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 24px;
+    color: #000 !important;
+    outline: none !important;
+}
+
+.react-international-phone-input-container .react-international-phone-input::placeholder {
+    color: #999 !important;
+}
+
+.react-international-phone-input-container .react-international-phone-input:focus {
+    outline: none !important;
+    background-color: transparent !important;
+}
+
+.react-international-phone-input-container .react-international-phone-input:hover {
+    background-color: transparent !important;
+}
+
+/* Mobile responsive */
+@media (max-width: 640px) {
+    .react-international-phone-country-selector-button {
+        padding: 0 8px !important;
+    }
+
+    .react-international-phone-country-selector-button .react-international-phone-flag-emoji {
+        font-size: 18px;
+    }
+
+    .react-international-phone-country-selector-button .react-international-phone-country-selector-button__country-code {
+        font-size: 14px;
+    }
+
+    .react-international-phone-input-container .react-international-phone-input {
+        font-size: 14px;
+        padding: 0 12px !important;
+    }
+}
+
+/* Country selector dropdown menu */
+.react-international-phone-country-selector-button__dropdown {
+    background-color: #fff !important;
+    border-radius: 0.5rem !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+    border: 1px solid #e5e5e5 !important;
+    max-height: 300px;
+    overflow-y: auto;
+    z-index: 1000;
+}
+
+.react-international-phone-country-selector-button__dropdown-item {
+    padding: 12px 16px !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    cursor: pointer !important;
+    font-size: 16px !important;
+}
+
+.react-international-phone-country-selector-button__dropdown-item:hover {
+    background-color: #ECEEF2 !important;
+}
+
+.react-international-phone-country-selector-button__dropdown-item--selected {
+    background-color: #f0f0f0 !important;
+}
+
+/* Override any default styles from the library */
+.react-international-phone-input-container * {
+    box-sizing: border-box;
+}
+
+.react-international-phone-input-container {
+    flex-direction: row-reverse;
+}
+
+.react-international-phone-input {
+    font-size: 12px !important;
+}
+
+.react-international-phone-country-selector-dropdown {
+    direction: ltr !important;
+    text-align: left !important;
+    min-width: 280px;
+    z-index: 1000 !important;
+    background-color: #fff !important;
+    border-radius: 8px !important;
+    border: 1px solid #ECEEF2 !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+    padding: 10px 16px !important;
+    font-size: 14px !important;
+    font-weight: 400 !important;
+    line-height: 24px !important;
+    color: #000 !important;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+/* Custom Scrollbar Design */
+.react-international-phone-country-selector-dropdown::-webkit-scrollbar {
+    width: 6px;
+}
+
+.react-international-phone-country-selector-dropdown::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+.react-international-phone-country-selector-dropdown::-webkit-scrollbar-thumb {
+    background: #d9d9d9;
+    border-radius: 10px;
+}
+
+.react-international-phone-country-selector-dropdown::-webkit-scrollbar-thumb:hover {
+    background: #b3b3b3;
+}
+
+/* Firefox Scrollbar */
+.react-international-phone-country-selector-dropdown {
+    scrollbar-width: thin;
+    scrollbar-color: #d9d9d9 #f1f1f1;
+}
+
+.react-international-phone-country-selector-dropdown__list-item--selected {
+    background-color: var(--primary) !important;
+    border-radius: 8px !important;
+    color: #fff !important; }
+
+.react-international-phone-country-selector-dropdown__list-item--focused {
+    background-color: var(--primary) !important;
+    border-radius: 8px !important;
+    color: #fff !important; 
+}
+.react-international-phone-country-selector-dropdown__list-item--focused .react-international-phone-country-selector-dropdown__list-item-dial-code{
+    color: #fff !important;
+}
+.react-international-phone-country-selector-dropdown__list-item--focused .react-international-phone-country-selector-dropdown__list-item-name{
+    color: #fff !important;
+}
+.react-international-phone-country-selector-dropdown__list-item--focused .react-international-phone-country-selector-dropdown__list-item-flag{
+    color: #fff !important;
+}
+.react-international-phone-country-selector-dropdown__list-item--focused .react-international-phone-country-selector-dropdown__list-item-flag-emoji{
+    color: #fff !important;
+}

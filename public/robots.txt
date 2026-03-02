@@ -1,0 +1,31 @@
+# robots.txt for AlMaqam Web
+User-agent: *
+Allow: /
+
+# Disallow admin and API routes
+Disallow: /api/
+Disallow: /_next/
+Disallow: /_vercel/
+
+# Disallow protected routes
+Disallow: /profile/
+Disallow: /booking/
+Disallow: /checkout/
+Disallow: /order/
+Disallow: /payment-result/
+Disallow: /extend-booking/
+Disallow: /extend-checkout/
+
+# Allow main pages
+Allow: /
+Allow: /ar/
+Allow: /en/
+Allow: /ar/branches
+Allow: /en/branches
+Allow: /ar/company-quotation
+Allow: /en/company-quotation
+Allow: /ar/cars
+Allow: /en/cars
+
+# Sitemap location
+Sitemap: https://almqam.com/sitemap.xml

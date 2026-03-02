@@ -1,0 +1,147 @@
+/* Global Animations - أنيميشنات الموقع العامة */
+
+/* ============================================
+   Login Tabs Smooth Animations
+   حركات ناعمة وسلسة لتبويبات تسجيل الدخول
+   ============================================ */
+
+.login-tabs-container {
+  position: relative;
+}
+
+.login-tabs-list {
+  position: relative;
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.login-tab-trigger {
+  position: relative;
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  transform-origin: center;
+  will-change: transform, background-color, color, box-shadow;
+  backface-visibility: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+.login-tab-trigger:hover:not([data-state="active"]) {
+  transform: scale(1.03);
+  color: rgb(17 24 39 / 0.9);
+}
+
+.login-tab-trigger:active {
+  transform: scale(0.97);
+}
+
+.login-tab-text {
+  display: inline-block;
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+}
+
+.login-tab-icon {
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  transform-origin: center;
+  display: inline-block;
+  will-change: transform;
+}
+
+/* Icon hover animation */
+.login-tab-trigger:hover:not([data-state="active"]) .login-tab-icon {
+  transform: scale(1.12) rotate(8deg);
+}
+
+/* Icon active state animation */
+.login-tab-trigger[data-state="active"] .login-tab-icon {
+  transform: scale(1.18);
+  animation: iconPulse 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes iconPulse {
+  0% {
+    transform: scale(1) rotate(0deg);
+  }
+
+  40% {
+    transform: scale(1.25) rotate(-8deg);
+  }
+
+  70% {
+    transform: scale(1.15) rotate(4deg);
+  }
+
+  100% {
+    transform: scale(1.18) rotate(0deg);
+  }
+}
+
+/* Smooth active state transition with subtle bounce */
+.login-tab-trigger[data-state="active"] {
+  animation: tabActive 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  transition: box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+    background-color 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+    color 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes tabActive {
+  0% {
+    transform: scale(0.98);
+    opacity: 0.8;
+  }
+
+  60% {
+    transform: scale(1.02);
+  }
+
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* ============================================
+   Logo Shadow - نفس shadow من .fab
+   ============================================ */
+
+.navbar-logo-shadow {
+  /* Border gradient */
+  border: 1.8px solid transparent;
+  border-radius: 100px;
+
+  /* Background gradient */
+  background:
+    linear-gradient(180deg, #F4F4F4 0%, #FEFEFE 100%) padding-box,
+    linear-gradient(180deg, #FFFFFF 0%, #ECECEC 100%) border-box;
+
+  /* Shadows */
+  box-shadow:
+    0px 4px 8px rgba(0, 20, 37, 0.18),
+    0px 2px 4px rgba(0, 20, 37, 0.12),
+    0px 0px 0.224852px 0.224852px rgba(0, 0, 0, 0.07),
+    0px 0px 0.224852px 0.674556px rgba(0, 0, 0, 0.05),
+    0px 0.899408px 3.59763px 0.899408px rgba(0, 20, 37, 0.08);
+}
+
+
+.navbar-logo-shadow-mobile {
+  /* Border gradient */
+  border: 1.8px solid transparent;
+  border-radius: 100px;
+
+  /* Background gradient */
+  background:
+    linear-gradient(180deg, #F4F4F4 0%, #FEFEFE 100%) padding-box,
+    linear-gradient(180deg, #FFFFFF 0%, #ECECEC 100%) border-box;
+
+  /* Shadows */
+  box-shadow:
+    0px 4px 8px rgba(0, 20, 37, 0.18),
+    0px 2px 4px rgba(0, 20, 37, 0.12),
+    0px 0.899408px 3.59763px 0.899408px rgba(0, 20, 37, 0.0);
+}
+
+/* ============================================
+   Add more global animations here
+   يمكن إضافة المزيد من الأنيميشنات هنا
+   ============================================ */

@@ -1,0 +1,13 @@
+{
+  "title": "About Us",
+  "description": "Learn more about our company and mission",
+  "mission": {
+    "title": "Our Mission",
+    "description": "We are committed to providing exceptional services that exceed our customers' expectations. Our team of dedicated professionals works tirelessly to ensure quality and satisfaction in everything we do."
+  },
+  "vision": {
+    "title": "Our Vision",
+    "description": "To be the leading platform in our industry, recognized for innovation, reliability, and customer satisfaction. We aim to transform the way people interact with our services."
+  }
+}
+
