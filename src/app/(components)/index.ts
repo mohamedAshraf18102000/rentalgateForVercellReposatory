@@ -28,7 +28,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "./ui/carousel";
-import { Tabs, TabsList, TabsTrigger } from "./ui/tabs";
+import { Tabs, TabsList, TabsTrigger } from "./ui/tabsOriginal";
 import { Toaster } from "./ui/sonner";
 import SharedDataLoader from "./SharedDataLoader";
 import { SeparatorWithContent } from "./ui/separator-with-content";
