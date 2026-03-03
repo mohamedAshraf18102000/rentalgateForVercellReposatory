@@ -1,7 +1,7 @@
 import PickUpCard from "@/app/(components)/customCards/PickUpCard";
 import WrapperContainer from "@/app/(components)/wrapperContainer/WrapperContainer";
 import { DialogWrapper } from "@/app/(components)/ui/dialog-wrapper";
-import CarPickupDialogTabs from "@/app/(components)/carPickupDialogTabs/CarPickupDialogTabs";
+import CarPickupDialogTabs from "@/app/(components)/carPickupDialogComponent/CarPickupDialogTabs";
 
 const pickupCardDetails = [
   {
@@ -52,17 +52,17 @@ const PickUpArea = () => {
           header={{
             mainTitle: "مكان الأستلام",
           }}
-          extraHeader={<CarPickupDialogTabs />}
-          content={
-            <div className="space-y-4 ">
-              <p>هذا مجرد مثال بسيط لاستخدام مكون الـ DialogWrapper.</p>
-              <p>يمكنك وضع أي محتوى تريده هنا.</p>
-            </div>
-          }
+          content={<CarPickupDialogTabs customDefaultValue="currentLocation" />}
           footer={
-            <button className="w-full py-3 bg-red-500 text-white rounded-lg font-bold">
-              إغلاق
-            </button>
+            <div className="w-full flex items-center justify-end gap-2  mt-2">
+              <button className=" py-3 text-primary font-normal w-fit px-2 underline underline-offset-3">
+                إغلاق
+              </button>
+
+              <button className="rounded-[12px] py-3 bg-primary text-white font-bold w-fit px-5">
+                أظهار النتائج
+              </button>
+            </div>
           }
         />
       </WrapperContainer>
