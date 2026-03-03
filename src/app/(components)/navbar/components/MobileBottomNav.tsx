@@ -51,7 +51,7 @@ export const MobileBottomNav: React.FC = () => {
     {
       href: '/cars',
       icon: Car,
-      label: locale === 'ar' ? 'اسطول المقام' : 'Cars',
+      label: locale === 'ar' ? 'أسطول رينتال جيت' : 'Cars',
       labelKey: 'cars',
     },
     {
@@ -139,7 +139,7 @@ export const MobileBottomNav: React.FC = () => {
     {
       href: '/cars',
       icon: Car,
-      label: locale === 'ar' ? 'اسطول المقام' : 'AlMaqam Fleet',
+      label: locale === 'ar' ? 'أسطول رينتال جيت' : 'Rental Gate Fleet',
       labelKey: 'fleet',
     }, 
     {

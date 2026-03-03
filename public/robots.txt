@@ -1,4 +1,4 @@
-# robots.txt for AlMaqam Web
+# robots.txt for Rental Gate Web
 User-agent: *
 Allow: /
 

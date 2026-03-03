@@ -37,10 +37,10 @@ export async function generateMetadata({
   const tHome = messages.home as Record<string, string>;
 
   const isArabic = locale === 'ar';
-  const siteName = isArabic ? 'المقام' : 'AlMaqam';
+  const siteName = isArabic ? 'رينتال جيت' : 'Rental Gate';
   const title = isArabic
-    ? `${tHome.title || 'مرحباً بك في المقام'} - ${tCommon.companyName || 'المقام'}`
-    : `${tHome.title || 'Welcome to AlMaqam'} - ${tCommon.companyName || 'AlMaqam'}`;
+    ? `${tHome.title || 'مرحباً بك في رينتال جيت'} - ${tCommon.companyName || 'رينتال جيت'}`
+    : `${tHome.title || 'Welcome to Rental Gate'} - ${tCommon.companyName || 'Rental Gate'}`;
   const description = isArabic
     ? tHome.description || 'منصتك الموثوقة لتأجير السيارات في المملكة العربية السعودية'
     : tHome.description || 'Your trusted platform for car rental in Saudi Arabia';
@@ -56,8 +56,8 @@ export async function generateMetadata({
     },
     description,
     keywords: isArabic
-      ? ['تأجير سيارات', 'المقام', 'تأجير', 'سيارات', 'السعودية', 'الرياض']
-      : ['car rental', 'AlMaqam', 'rental', 'cars', 'Saudi Arabia', 'Riyadh'],
+      ? ['تأجير سيارات', 'رينتال جيت', 'تأجير', 'سيارات', 'السعودية', 'الرياض']
+      : ['car rental', 'Rental Gate', 'rental', 'cars', 'Saudi Arabia', 'Riyadh'],
     authors: [{ name: siteName }],
     creator: 'Viganium',
     publisher: 'Viganium',
@@ -149,8 +149,8 @@ export default async function LocaleLayout({
     <html lang={locale} dir={locale === 'ar' ? 'rtl' : 'ltr'} className={`${fontZain.variable} ${fontAlmarai.variable}`}>
       <head>
         {/* Favicon */}
-        <link rel="icon" href="/logoSm.png" type="image/png" />
-        <link rel="apple-touch-icon" href="/logoSm.png" />
+        <link rel="icon" href="/logo-rental.png" type="image/png" />
+        <link rel="apple-touch-icon" href="/logo-rental.png" />
         <link rel="manifest" href="/manifest.json" />
 
         {/* DNS Prefetch for external resources */}

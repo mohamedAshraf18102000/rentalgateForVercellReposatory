@@ -85,8 +85,8 @@ export const BranchesClient: React.FC<BranchesClientProps> = ({ locale }) => {
       {/* Screen reader only heading */}
       <h1 className="sr-only">
         {locale === 'ar'
-          ? 'فروعنا - المقام لتأجير السيارات'
-          : 'Our Branches - Al-Maqam Car Rental'
+          ? 'فروعنا - رينتال جيت لتأجير السيارات'
+          : 'Our Branches - Rental Gate Car Rental'
         }
       </h1>
 

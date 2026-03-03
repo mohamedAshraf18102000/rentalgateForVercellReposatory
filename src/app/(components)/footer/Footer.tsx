@@ -1,9 +1,10 @@
 'use client';
 
-import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/routing';
-import { Instagram, Facebook, Linkedin } from 'lucide-react';
 import { useSharedStore } from '@/lib/api/stores';
+import { Facebook, Instagram, Linkedin } from 'lucide-react';
+import { useTranslations } from 'next-intl';
+import Image from 'next/image';
 
 const footerNav = [
   { href: '/', key: 'home' as const },
@@ -39,9 +40,17 @@ export default function Footer() {
       <div className="container mx-auto px-4 md:px-6 py-6 md:py-8">
         <div className="flex flex-col md:flex-row items-center justify-between gap-6 md:gap-4">
           {/* Brand - Right in RTL */}
-          <Link href="/" className="text-white text-xl font-bold hover:opacity-90 transition-opacity order-1 md:order-1">
-            {t('companyName')}
-          </Link>
+          <div className="flex flex-col items-center gap-3">
+            <Link href="/" className="flex items-center gap-3">
+              <Image
+                src="/Logo-rentalGate.png"
+                alt="Rental Gate"
+                width={150}
+                height={150}
+                className="object-contain brightness-0 invert"
+              />
+            </Link>
+          </div>
 
           {/* Nav Links - Center */}
           <nav className="flex flex-wrap items-center justify-center gap-4 md:gap-6 order-2 md:order-2" aria-label="Footer navigation">
@@ -49,7 +58,7 @@ export default function Footer() {
               <Link
                 key={key}
                 href={href}
-                className="text-white text-sm hover:text-orange-500 transition-colors"
+                className="text-white text-sm hover:text-red-500 transition-colors"
               >
                 {t(key)}
               </Link>
@@ -63,7 +72,7 @@ export default function Footer() {
               target="_blank"
               rel="noopener noreferrer"
               aria-label={t('visitYouTube')}
-              className="text-white hover:text-orange-500 transition-colors"
+              className="text-white hover:text-red-500 transition-colors"
             >
               <YoutubeIcon className="w-6 h-6" />
             </a>
@@ -73,7 +82,7 @@ export default function Footer() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={t('visitFacebook')}
-                className="text-white hover:text-orange-500 transition-colors"
+                className="text-white hover:text-red-500 transition-colors"
               >
                 <Facebook className="w-6 h-6" aria-hidden="true" />
               </a>
@@ -84,7 +93,7 @@ export default function Footer() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={t('visitTwitter')}
-                className="text-white hover:text-orange-500 transition-colors flex items-center justify-center"
+                className="text-white hover:text-red-500 transition-colors flex items-center justify-center"
               >
                 <XTwitterIcon className="w-5 h-5" />
               </a>
@@ -95,7 +104,7 @@ export default function Footer() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={t('visitInstagram')}
-                className="text-white hover:text-orange-500 transition-colors"
+                className="text-white hover:text-red-500 transition-colors"
               >
                 <Instagram className="w-6 h-6" aria-hidden="true" />
               </a>
@@ -106,7 +115,7 @@ export default function Footer() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={t('visitLinkedIn')}
-                className="text-white hover:text-orange-500 transition-colors"
+                className="text-white hover:text-red-500 transition-colors"
               >
                 <Linkedin className="w-6 h-6" aria-hidden="true" />
               </a>

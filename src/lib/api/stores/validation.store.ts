@@ -2,10 +2,10 @@
  * Validation Store - Zustand store for managing booking validation data
  */
 
+import type { ReservationForOtherData } from '@/app/[locale]/(old-reservations)/booking/components/reservation-for-other';
+import { getCookie, setCookie } from '@/util/cookies';
 import { create } from 'zustand';
-import { persist, createJSONStorage } from 'zustand/middleware';
-import { setCookie, getCookie } from '@/util/cookies'; 
-import type { ReservationForOtherData } from '@/app/[locale]/(reservations)/booking/components/reservation-for-other'; 
+import { createJSONStorage, persist } from 'zustand/middleware';
 
 interface ValidationState {
   // Booking validation data

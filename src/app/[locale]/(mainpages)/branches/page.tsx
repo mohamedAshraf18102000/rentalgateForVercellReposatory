@@ -1,7 +1,7 @@
-import { BranchesClient } from './components/BranchesClient';
-import { BookingHeader } from '../../(reservations)/booking/components/booking-header';
-import { getTranslations } from 'next-intl/server';
 import type { Metadata } from 'next';
+import { getTranslations } from 'next-intl/server';
+import { BookingHeader } from '../../(old-reservations)/booking/components/booking-header';
+import { BranchesClient } from './components/BranchesClient';
 
 interface BranchesPageProps {
     params: Promise<{ locale: string }>;
@@ -14,14 +14,14 @@ export async function generateMetadata({ params }: BranchesPageProps): Promise<M
 
     return {
         title: isArabic
-            ? 'فروعنا - المقام لتأجير السيارات | مواقع الفروع في السعودية'
-            : 'Our Branches - Al-Maqam Car Rental | Branch Locations in Saudi Arabia',
+            ? 'فروعنا - رينتال جيت لتأجير السيارات | مواقع الفروع في السعودية'
+            : 'Our Branches - Rental Gate Car Rental | Branch Locations in Saudi Arabia',
         description: isArabic
-            ? 'اكتشف فروع المقام لتأجير السيارات في جميع أنحاء المملكة العربية السعودية. نقدم خدمة تأجير السيارات في مكة وجدة مع أفضل الأسعار والخدمات.'
-            : 'Discover Al-Maqam Car Rental branches throughout Saudi Arabia. We offer car rental services in Makkah and Jeddah with the best prices and services.',
+            ? 'اكتشف فروع رينتال جيت لتأجير السيارات في جميع أنحاء المملكة العربية السعودية. نقدم خدمة تأجير السيارات في مكة وجدة مع أفضل الأسعار والخدمات.'
+            : 'Discover Rental Gate Car Rental branches throughout Saudi Arabia. We offer car rental services in Makkah and Jeddah with the best prices and services.',
         keywords: isArabic
-            ? 'فروع المقام, مكاتب تأجير السيارات, فروع في مكة, فروع في جدة, تأجير سيارات السعودية'
-            : 'Al-Maqam branches, car rental offices, branches in Makkah, branches in Jeddah, Saudi Arabia car rental',
+            ? 'فروع رينتال جيت, مكاتب تأجير السيارات, فروع في مكة, فروع في جدة, تأجير سيارات السعودية'
+            : 'Rental Gate branches, car rental offices, branches in Makkah, branches in Jeddah, Saudi Arabia car rental',
         alternates: {
             canonical: `${baseUrl}/${locale}/branches`,
             languages: {

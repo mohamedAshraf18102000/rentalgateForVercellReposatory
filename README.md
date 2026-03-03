@@ -1,4 +1,4 @@
-# AlMaqam Web
+# Rental Gate Web
 
 A modern Next.js application with full internationalization (i18n) support for Arabic and English, featuring a complete car rental booking system with payment integration.
 
@@ -34,7 +34,7 @@ almqam-web/
 │   │   │   │   ├── (home)/  # Home page components
 │   │   │   │   ├── branches/# Branches page with map
 │   │   │   │   └── company-quotation/ # Company quotation form
-│   │   │   ├── (reservations)/ # Reservation system
+│   │   │   ├── (old-reservations)/ # Reservation system
 │   │   │   │   ├── cars/    # Car listing and filtering
 │   │   │   │   ├── booking/ # Booking flow
 │   │   │   │   ├── checkout/# Checkout page
@@ -80,7 +80,7 @@ almqam-web/
 
 ### Prerequisites
 
-- Node.js 18+ 
+- Node.js 18+
 - npm or yarn
 
 ### Installation
@@ -116,21 +116,22 @@ Translations are organized by feature in separate JSON files:
 2. Use the `useTranslations` hook in your components:
 
 ```tsx
-import { useTranslations } from 'next-intl';
+import { useTranslations } from "next-intl";
 
 export default function MyComponent() {
-  const t = useTranslations('common');
-  const tHome = useTranslations('home');
+  const t = useTranslations("common");
+  const tHome = useTranslations("home");
   return (
     <>
-      <h1>{t('title')}</h1>
-      <p>{tHome('description')}</p>
+      <h1>{t("title")}</h1>
+      <p>{tHome("description")}</p>
     </>
   );
 }
 ```
 
 Available translation namespaces:
+
 - `common` - Common translations
 - `home` - Home page
 - `auth` - Authentication
@@ -145,14 +146,14 @@ Available translation namespaces:
 Use the localized navigation components from `@/i18n/routing`:
 
 ```tsx
-import { Link, useRouter, usePathname } from '@/i18n/routing';
+import { Link, useRouter, usePathname } from "@/i18n/routing";
 
 // Link component
-<Link href="/about">About</Link>
+<Link href="/about">About</Link>;
 
 // Router
 const router = useRouter();
-router.push('/services');
+router.push("/services");
 ```
 
 ## URL Structure
@@ -189,6 +190,7 @@ npm start
 ## Key Features
 
 ### 🚗 Car Rental System
+
 - **Car Listing & Filtering**: Advanced filtering by date, location, price, features
 - **Car Details**: Detailed car information with images, specifications, and pricing
 - **Booking Flow**: Multi-step booking process with date/time selection, branch selection, services, and payment
@@ -196,23 +198,27 @@ npm start
 - **Pricing Calculator**: Real-time pricing calculation with discounts, points, and promo codes
 
 ### 💳 Payment Integration
+
 - **PayTabs Integration**: Secure payment processing via PayTabs gateway
 - **Payment Methods**: Support for card and cash payments
 - **Payment Callbacks**: Server-side payment verification and status updates
 - See `PAYTABS_SETUP.md` for detailed setup instructions
 
 ### 👤 User Management
+
 - **Authentication**: Login, signup, OTP verification, password reset
 - **Profile Management**: Edit personal information, change password
 - **Booking History**: View past and current reservations
 - **Points System**: Reward points for bookings and referrals
 
 ### 🏢 Company Features
+
 - **Company Quotation**: Multi-step form for company rental quotations
 - **Form Persistence**: Auto-save form data in cookies with debouncing
 - **Step Navigation**: Progress tracking and step validation
 
 ### 📦 State Management
+
 The project uses Zustand for state management with cookie persistence:
 
 - **Filter Store**: Date range, duration, and filter preferences
@@ -224,19 +230,24 @@ The project uses Zustand for state management with cookie persistence:
 See `docs/FILTER_STORE_EXPLANATION.md` for detailed documentation.
 
 ### 🎭 Dialog System
+
 Advanced dialog system with routing support:
+
 - **Dialog Registry**: Centralized dialog management
 - **Route-based Dialogs**: Dialogs accessible via URL routes
 - **Dialog Provider**: Context-based dialog rendering
 - **Types**: Full TypeScript support for dialog types
 
 ### 🗺️ Branches
+
 - **Interactive Map**: View branch locations on map
 - **Branch Details**: Branch information, contact details, and hours
 - **City/Region Filtering**: Filter branches by city or region
 
 ### 🎨 UI Components
+
 Built on shadcn/ui with custom modifications:
+
 - Form components (Input, Select, DatePicker, TimeSlotSelector)
 - Layout components (Card, Dialog, Drawer, Tabs)
 - Feedback components (Toast, Alert Dialog)
@@ -246,6 +257,7 @@ Built on shadcn/ui with custom modifications:
 ## API Integration
 
 The project integrates with a REST API for:
+
 - Car listings and details
 - Reservation creation and management
 - User authentication and profile
@@ -255,6 +267,7 @@ The project integrates with a REST API for:
 - Services and extras
 
 API functions are organized in `src/lib/api/`:
+
 - `reservation.ts` - Reservation operations
 - `pricing.ts` - Pricing calculations
 - `reservations-list.ts` - List user reservations
@@ -303,12 +316,13 @@ NEXT_PUBLIC_SITE_URL=https://almqam.com
 ## Documentation
 
 Additional documentation available:
+
 - `PAYTABS_SETUP.md` - PayTabs payment integration guide
 - `docs/FILTER_STORE_EXPLANATION.md` - Filter store documentation
 - `docs/QUICK_START_AR.md` - Quick start guide (Arabic)
-- `src/app/[locale]/(reservations)/booking/components/README.md` - Booking components guide
+- `src/app/[locale]/(old-reservations)/booking/components/README.md` - Booking components guide
 - `src/app/[locale]/(mainpages)/company-quotation/README.md` - Company quotation guide
 
 ## License
 
-Private project for AlMaqam.
+Private project for Rental Gate.

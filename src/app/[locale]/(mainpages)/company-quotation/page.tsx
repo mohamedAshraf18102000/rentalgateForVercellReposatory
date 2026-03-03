@@ -1,6 +1,6 @@
-import { BookingHeader } from '../../(reservations)/booking/components/booking-header';
-import { getTranslations } from 'next-intl/server';
 import type { Metadata } from 'next';
+import { getTranslations } from 'next-intl/server';
+import { BookingHeader } from '../../(old-reservations)/booking/components/booking-header';
 import { CompanyQuotationForm } from './components/CompanyQuotationForm';
 
 interface CompanyQuotationPageProps {
@@ -14,11 +14,11 @@ export async function generateMetadata({ params }: CompanyQuotationPageProps): P
 
     return {
         title: isArabic
-            ? 'عروض الشركات - المقام لتأجير السيارات | طلب عرض سعر للشركات'
-            : 'Company Quotation - Al-Maqam Car Rental | Request Company Quote',
+            ? 'عروض الشركات - رينتال جيت لتأجير السيارات | طلب عرض سعر للشركات'
+            : 'Company Quotation - Rental Gate Car Rental | Request Company Quote',
         description: isArabic
-            ? 'اطلب عرض سعر خاص لشركتك من المقام لتأجير السيارات. نقدم أفضل عروض تأجير السيارات للشركات والمؤسسات في السعودية.'
-            : 'Request a special quote for your company from Al-Maqam Car Rental. We offer the best car rental deals for companies and institutions in Saudi Arabia.',
+            ? 'اطلب عرض سعر خاص لشركتك من رينتال جيت لتأجير السيارات. نقدم أفضل عروض تأجير السيارات للشركات والمؤسسات في السعودية.'
+            : 'Request a special quote for your company from Rental Gate Car Rental. We offer the best car rental deals for companies and institutions in Saudi Arabia.',
         keywords: isArabic
             ? 'عروض الشركات, تأجير سيارات للشركات, عرض سعر, تأجير سيارات السعودية'
             : 'company quotes, corporate car rental, quotation request, Saudi Arabia car rental',
