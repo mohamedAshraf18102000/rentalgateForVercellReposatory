@@ -1,25 +1,32 @@
-import { routing } from '@/i18n/routing';
-import { DialogProvider, Footer, Header, SharedDataLoader, Toaster } from '@/ui';
-import type { Metadata } from 'next';
-import { NextIntlClientProvider } from 'next-intl';
-import { getMessages, setRequestLocale } from 'next-intl/server';
-import { Almarai, Zain } from 'next/font/google';
-import { notFound } from 'next/navigation';
-import '../../globals.css';
-import { RouteGuard } from './(components)/RouteGuard';
+import { routing } from "@/i18n/routing";
+import {
+  DialogProvider,
+  Footer,
+  Header,
+  SharedDataLoader,
+  Toaster,
+} from "@/ui";
+import type { Metadata } from "next";
+import { NextIntlClientProvider } from "next-intl";
+import { getMessages, setRequestLocale } from "next-intl/server";
+import { Almarai, Zain } from "next/font/google";
+import { notFound } from "next/navigation";
+import "../../globals.css";
+import { RouteGuard } from "./(components)/RouteGuard";
+import SideToChat from "../(components)/sideToChat/SideToChat";
 
 const fontZain = Zain({
-  subsets: ['arabic', 'latin'],
-  weight: ['400', '200', '300', '700'],
-  display: 'swap',
-  variable: '--font-zain',
+  subsets: ["arabic", "latin"],
+  weight: ["400", "200", "300", "700"],
+  display: "swap",
+  variable: "--font-zain",
 });
 
 const fontAlmarai = Almarai({
-  weight: ['400', '700', '800'],
-  subsets: ['arabic', 'latin'],
-  display: 'swap',
-  variable: '--font-almarai',
+  weight: ["400", "700", "800"],
+  subsets: ["arabic", "latin"],
+  display: "swap",
+  variable: "--font-almarai",
 });
 
 export function generateStaticParams() {
@@ -36,16 +43,18 @@ export async function generateMetadata({
   const tCommon = messages.common as Record<string, string>;
   const tHome = messages.home as Record<string, string>;
 
-  const isArabic = locale === 'ar';
-  const siteName = isArabic ? 'رينتال جيت' : 'Rental Gate';
+  const isArabic = locale === "ar";
+  const siteName = isArabic ? "رينتال جيت" : "Rental Gate";
   const title = isArabic
-    ? `${tHome.title || 'مرحباً بك في رينتال جيت'} - ${tCommon.companyName || 'رينتال جيت'}`
-    : `${tHome.title || 'Welcome to Rental Gate'} - ${tCommon.companyName || 'Rental Gate'}`;
+    ? `${tHome.title || "مرحباً بك في رينتال جيت"} - ${tCommon.companyName || "رينتال جيت"}`
+    : `${tHome.title || "Welcome to Rental Gate"} - ${tCommon.companyName || "Rental Gate"}`;
   const description = isArabic
-    ? tHome.description || 'منصتك الموثوقة لتأجير السيارات في المملكة العربية السعودية'
-    : tHome.description || 'Your trusted platform for car rental in Saudi Arabia';
+    ? tHome.description ||
+      "منصتك الموثوقة لتأجير السيارات في المملكة العربية السعودية"
+    : tHome.description ||
+      "Your trusted platform for car rental in Saudi Arabia";
 
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://almqam.com';
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://almqam.com";
   const url = `${baseUrl}/${locale}`;
 
   return {
@@ -56,26 +65,33 @@ export async function generateMetadata({
     },
     description,
     keywords: isArabic
-      ? ['تأجير سيارات', 'رينتال جيت', 'تأجير', 'سيارات', 'السعودية', 'الرياض']
-      : ['car rental', 'Rental Gate', 'rental', 'cars', 'Saudi Arabia', 'Riyadh'],
+      ? ["تأجير سيارات", "رينتال جيت", "تأجير", "سيارات", "السعودية", "الرياض"]
+      : [
+          "car rental",
+          "Rental Gate",
+          "rental",
+          "cars",
+          "Saudi Arabia",
+          "Riyadh",
+        ],
     authors: [{ name: siteName }],
-    creator: 'Viganium',
-    publisher: 'Viganium',
+    creator: "Viganium",
+    publisher: "Viganium",
     formatDetection: {
       email: false,
       address: false,
       telephone: false,
     },
     openGraph: {
-      type: 'website',
-      locale: locale === 'ar' ? 'ar_SA' : 'en_US',
+      type: "website",
+      locale: locale === "ar" ? "ar_SA" : "en_US",
       url,
       siteName,
       title,
       description,
       images: [
         {
-          url: '/logo.png',
+          url: "/logo.png",
           width: 1200,
           height: 630,
           alt: siteName,
@@ -83,11 +99,11 @@ export async function generateMetadata({
       ],
     },
     twitter: {
-      card: 'summary_large_image',
+      card: "summary_large_image",
       title,
       description,
-      images: ['/logo.png'],
-      creator: '@almqam',
+      images: ["/logo.png"],
+      creator: "@almqam",
     },
     robots: {
       index: true,
@@ -95,27 +111,23 @@ export async function generateMetadata({
       googleBot: {
         index: true,
         follow: true,
-        'max-video-preview': -1,
-        'max-image-preview': 'large',
-        'max-snippet': -1,
+        "max-video-preview": -1,
+        "max-image-preview": "large",
+        "max-snippet": -1,
       },
     },
     icons: {
-      icon: [
-        { url: '/logoSm.png', type: 'image/png' },
-      ],
-      apple: [
-        { url: '/logoSm.png', type: 'image/png' },
-      ],
-      shortcut: '/logoSm.png',
+      icon: [{ url: "/logoSm.png", type: "image/png" }],
+      apple: [{ url: "/logoSm.png", type: "image/png" }],
+      shortcut: "/logoSm.png",
     },
-    manifest: '/manifest.json',
+    manifest: "/manifest.json",
     alternates: {
       canonical: url,
       languages: {
-        'ar': `${baseUrl}/ar`,
-        'en': `${baseUrl}/en`,
-        'x-default': `${baseUrl}/en`,
+        ar: `${baseUrl}/ar`,
+        en: `${baseUrl}/en`,
+        "x-default": `${baseUrl}/en`,
       },
     },
     verification: {
@@ -146,7 +158,11 @@ export default async function LocaleLayout({
   const messages = await getMessages();
 
   return (
-    <html lang={locale} dir={locale === 'ar' ? 'rtl' : 'ltr'} className={`${fontZain.variable} ${fontAlmarai.variable}`}>
+    <html
+      lang={locale}
+      dir={locale === "ar" ? "rtl" : "ltr"}
+      className={`${fontZain.variable} ${fontAlmarai.variable}`}
+    >
       <head>
         {/* Favicon */}
         <link rel="icon" href="/logo-rental.png" type="image/png" />
@@ -159,17 +175,23 @@ export default async function LocaleLayout({
 
         {/* Preconnect to Google Fonts for faster font loading */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossOrigin="anonymous"
+        />
       </head>
-      <body style={{ fontFamily: fontZain.style.fontFamily }} className="flex flex-col min-h-screen">
+      <body
+        style={{ fontFamily: fontZain.style.fontFamily }}
+        className="flex flex-col min-h-screen"
+      >
         <NextIntlClientProvider messages={messages}>
           <DialogProvider>
             <RouteGuard />
             <SharedDataLoader />
             <Header />
-            <main className="max-sm:pt-[65px] ">
-              {children}
-            </main>
+            <SideToChat />
+            <main className="max-sm:pt-[65px] ">{children}</main>
             <Footer />
             <Toaster />
           </DialogProvider>
@@ -178,4 +200,3 @@ export default async function LocaleLayout({
     </html>
   );
 }
-
