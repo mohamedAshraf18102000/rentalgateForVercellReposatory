@@ -1,81 +1,70 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import { cn } from "@/lib/utils"
+import * as React from "react";
+import * as TabsPrimitive from "@radix-ui/react-tabs";
 
-interface TabsProps {
-  value: string
-  onValueChange: (value: string) => void
-  children: React.ReactNode
-  className?: string
-}
+import { cn } from "@/lib/utils";
 
-interface TabsListProps {
-  children: React.ReactNode
-  className?: string
-}
+const Tabs = TabsPrimitive.Root;
 
-interface TabsTriggerProps {
-  value: string
-  children: React.ReactNode
-  className?: string
-  icon?: React.ReactNode
-}
+const TabsList = React.forwardRef<
+  React.ElementRef<typeof TabsPrimitive.List>,
+  React.ComponentPropsWithoutRef<typeof TabsPrimitive.List>
+>(({ className, ...props }, ref) => (
+  <TabsPrimitive.List
+    ref={ref}
+    className={cn(
+      "inline-flex items-center justify-center text-muted-foreground",
+      className,
+    )}
+    {...props}
+  />
+));
+TabsList.displayName = TabsPrimitive.List.displayName;
 
-const TabsContext = React.createContext<{
-  value: string
-  onValueChange: (value: string) => void
-}>({
-  value: "",
-  onValueChange: () => {},
-})
-
-export function Tabs({ value, onValueChange, children, className }: TabsProps) {
-  return (
-    <TabsContext.Provider value={{ value, onValueChange }}>
-      <div className={cn("w-full", className)}>{children}</div>
-    </TabsContext.Provider>
-  )
-}
-
-export function TabsList({ children, className }: TabsListProps) {
-  return (
-    <div
+const TabsTrigger = React.forwardRef<
+  React.ElementRef<typeof TabsPrimitive.Trigger>,
+  React.ComponentPropsWithoutRef<typeof TabsPrimitive.Trigger>
+>(({ className, children, ...props }, ref) => (
+  <>
+    <TabsPrimitive.Trigger
+      ref={ref}
       className={cn(
-        "flex gap-2 p-1 bg-[#ECEEF2] rounded-lg",
-        className
+        "inline-flex flex-1 items-center justify-center whitespace-nowrap px-3 py-2 text-base font-medium ring-offset-background transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border-b-2 border-transparent data-[state=active]:border-black data-[state=active]:text-foreground data-[state=active]:font-bold data-[state=active]:bg-Grey100 data-[state=active]:rounded-t-[12px]",
+        className,
       )}
+      {...props}
     >
-      {children}
+      <div className="inline-grid items-center justify-center">
+        <span
+          className="[grid-area:1/1] invisible font-bold"
+          aria-hidden="true"
+        >
+          {children}
+        </span>
+        <span className="[grid-area:1/1]">{children}</span>
+      </div>
+    </TabsPrimitive.Trigger>
+    <div className="h-[30px] w-[14px] flex justify-center items-center shrink-0 last:hidden">
+      <div className="h-full w-1 bg-[#df1e1e] rounded-full" />
     </div>
-  )
-}
+  </>
+));
+TabsTrigger.displayName = TabsPrimitive.Trigger.displayName;
 
-export function TabsTrigger({
-  value,
-  children,
-  className,
-  icon,
-}: TabsTriggerProps) {
-  const { value: selectedValue, onValueChange } = React.useContext(TabsContext)
-  const isActive = selectedValue === value
+const TabsContent = React.forwardRef<
+  React.ElementRef<typeof TabsPrimitive.Content>,
+  React.ComponentPropsWithoutRef<typeof TabsPrimitive.Content>
+>(({ className, ...props }, ref) => (
+  <TabsPrimitive.Content
+    ref={ref}
+    className={cn(
+      "mt-2 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+      className,
+    )}
+    {...props}
+  />
+));
+TabsContent.displayName = TabsPrimitive.Content.displayName;
 
-  return (
-    <button
-      type="button"
-      onClick={() => onValueChange(value)}
-      data-state={isActive ? "active" : "inactive"}
-      className={cn(
-        " text-[14px] flex-1 flex items-center justify-center gap-2 py-2  px-4 rounded-md transition-all my-[2px]",
-        isActive
-          ? "bg-white text-gray-900  font-bold shadow-sm"
-          : "text-gray-600 hover:text-gray-900",
-        className
-      )}
-    >
-      {icon && <span className="shrink-0">{icon}</span>}
-      <span>{children}</span>
-    </button>
-  )
-}
-
+export { Tabs, TabsList, TabsTrigger, TabsContent };

@@ -1,6 +1,6 @@
 {
   "$schema": "https://ui.shadcn.com/schema.json",
-  "style": "radix-mira",
+  "style": "default",
   "rsc": true,
   "tsx": true,
   "tailwind": {
@@ -12,14 +12,10 @@
   },
   "iconLibrary": "lucide",
   "aliases": {
-    "components": "@/components",
+    "components": "@/app/(components)",
     "utils": "@/lib/utils",
-    "ui": "@/components/ui",
+    "ui": "@/app/(components)/ui",
     "lib": "@/lib",
     "hooks": "@/hooks"
-  },
-  "menuColor": "default",
-  "menuAccent": "subtle",
-  "defaultSize": "large",
-  "registries": {}
+  }
 }
