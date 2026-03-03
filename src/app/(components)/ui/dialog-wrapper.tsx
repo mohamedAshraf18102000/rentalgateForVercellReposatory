@@ -201,7 +201,7 @@ export function DialogWrapper({
               {renderHeader()}
             </DrawerHeader>
           )}
-          <div className="p-[20px] pt-2">
+          <div className="pt-2">
             {content &&
               (scrollableContent ? (
                 <div className="relative rounded-xl overflow-hidden px-2 pb-2">
