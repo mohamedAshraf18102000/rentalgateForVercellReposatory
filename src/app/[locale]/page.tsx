@@ -1,8 +1,8 @@
-import { fetchHomeAllData } from '@/constants/api';
-import { setRequestLocale } from 'next-intl/server';
-import HomeMockups from './(mainpages)/(home)/HomeMockups';
-import HomeSlider from './(mainpages)/(home)/HomeSlider';
-import { MostRequestedCars } from './(mainpages)/(home)/MostRequestedCars/MostRequestedCars';
+import { fetchHomeAllData } from "@/constants/api";
+import { setRequestLocale } from "next-intl/server";
+import HomeMockups from "./(mainpages)/(home)/HomeMockups";
+import HomeSlider from "./(mainpages)/(home)/HomeSlider";
+import { MostRequestedCars } from "./(mainpages)/(home)/MostRequestedCars/MostRequestedCars";
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -20,7 +20,7 @@ export default async function HomePage({ params }: Props) {
     offers = homeData.data?.offers || [];
     banners = homeData.data?.banners || [];
   } catch (error) {
-    console.error('Error fetching home data:', error);
+    console.error("Error fetching home data:", error);
     offers = [];
     banners = [];
   }
@@ -38,4 +38,3 @@ export default async function HomePage({ params }: Props) {
     </main>
   );
 }
-
