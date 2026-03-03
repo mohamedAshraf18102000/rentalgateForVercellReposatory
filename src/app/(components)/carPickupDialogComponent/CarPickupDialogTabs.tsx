@@ -1,6 +1,9 @@
+import GoogleMapsLocation from "../mapsLocation/GoogleMapsLocation";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import WrapperContainer from "../wrapperContainer/WrapperContainer";
 import SearchPickUpDialog from "./SearchPickUpDialog";
+import { ChevronLeft } from 'lucide-react';
+
 
 const CarPickupDialogTabs = ({
   customDefaultValue,
@@ -21,26 +24,34 @@ const CarPickupDialogTabs = ({
           <TabsTrigger value="branches">الفروع</TabsTrigger>
         </TabsList>
 
-        <div className="relative bg-red-100 h-[500px] my-2 rounded-2xl p-2">
-          <SearchPickUpDialog />
+        <div className="relative h-[450px] my-2 rounded-2xl overflow-hidden border border-Grey100 shadow-sm">
+          <div className="absolute top-4 left-4 right-4 z-10 pointer-events-auto">
+            <SearchPickUpDialog />
+          </div>
 
-          <TabsContent className="w-full flex" value="currentLocation">
-            <p>موقعك الخاص</p>
-            <div className="absolute px-2 bottom-8 left-1/2 -translate-x-1/2 bg-red-950 w-[95%] text-white rounded-lg">
-              Mohamed
+          <TabsContent className="w-full h-full mt-0! flex" value="currentLocation">
+            {/* CONTENT */}
+            <div className="w-full h-full">
+              <GoogleMapsLocation />
             </div>
-          </TabsContent>
 
-          <TabsContent className="w-full bg-amber-100" value="airport">
-            <p>المطار</p>
-          </TabsContent>
+            <div className="absolute px-4 py-3 bottom-2 left-1/2 -translate-x-1/2 bg-white/95 backdrop-blur-md text-primary shadow-2xl border border-Grey100 w-[94%] rounded-2xl z-20">
+              <div className="flex justify-between items-center mb-3">
+                <h5 className="font-bold text-base">العناوين المسجلة</h5>
+                <button className="font-bold text-sm border-2 px-3 py-1.5 rounded-lg flex items-center gap-1 hover:bg-Grey200 transition-colors">
+                  عرض الكل <ChevronLeft className="w-4 h-4" />
+                </button>
+              </div>
 
-          <TabsContent className="w-full bg-amber-100" value="trainStation">
-            <p>محطة القطار</p>
-          </TabsContent>
-
-          <TabsContent className="w-full bg-amber-100" value="branches">
-            <p>الفروع</p>
+              <div className="grid grid-cols-3 gap-3">
+                {Array.from({ length: 3 }).map((_, index) => (
+                  <div key={index} className="bg-white border border-Grey100 p-3 rounded-xl hover:border-primary/30 transition-all cursor-pointer shadow-sm group">
+                    <p className="font-bold text-xs mb-1 group-hover:text-primary">فرع العمل رقم {index + 1}</p>
+                    <p className="line-clamp-1 text-Grey600 text-[10px] leading-tight">{index + 1} شارع فاطمة الزهراء حي...</p>
+                  </div>
+                ))}
+              </div>
+            </div>
           </TabsContent>
         </div>
       </WrapperContainer>
