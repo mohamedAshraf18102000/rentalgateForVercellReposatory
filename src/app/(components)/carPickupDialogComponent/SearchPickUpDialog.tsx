@@ -35,9 +35,8 @@ const SearchPickUpDialog = () => {
 
       <div className="w-1/4">
         <Select dir="ltr">
-          <SelectTrigger className="w-full rounded-xl border-2 border-Grey400">
+          <SelectTrigger className="w-full rounded-xl border border-Grey200 bg-white hover:bg-Grey50 transition-colors">
             <SelectValue defaultValue="saudi" placeholder="السعودية" />
-            <div className="w-[30px] h-[20px] bg-red-500" />
           </SelectTrigger>
           <SelectContent>
             <SelectGroup>
