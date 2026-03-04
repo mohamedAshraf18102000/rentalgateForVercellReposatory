@@ -5,16 +5,19 @@ import CarPickupDialogTabs from "@/app/(components)/carPickupDialogComponent/Car
 
 const pickupCardDetails = [
   {
+    key: "airport",
     title: "من محطة المطار",
     description: "كان لوريم إيبسوم ولايزال المعيار للنص الشكلي",
     image: "/pickupCard/Airport.png",
   },
   {
+    key: "trainStation",
     title: "من محطة القطار",
     description: "كان لوريم إيبسوم ولايزال المعيار للنص الشكلي",
     image: "/pickupCard/Train.png",
   },
   {
+    key: "branches",
     title: "من المعرض",
     description: "كان لوريم إيبسوم ولايزال المعيار للنص الشكلي",
     image: "/pickupCard/Showroom.png",
