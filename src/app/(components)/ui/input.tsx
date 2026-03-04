@@ -1,18 +1,47 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import { Button } from "./button"
-import { Eye, EyeOff } from "lucide-react"
-import { cn } from "@/lib/utils"
+import * as React from "react";
+import { Button } from "./button";
+import { Eye, EyeOff } from "lucide-react";
+import { cn } from "@/lib/utils";
 
-interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'> {
-  size?: "sm" | "md" | "lg"
-  label?: string
-  startIcon?: React.ReactNode
-  endIcon?: React.ReactNode
-  endButton?: React.ReactNode | { title: string; icon?: React.ReactNode; variant?: "default" | "outline" | "destructive" | "ghost" | "link" | "secondary"; onClick?: () => void }
-  startButton?: React.ReactNode | { title: string; icon?: React.ReactNode; variant?: "default" | "outline" | "destructive" | "ghost" | "link" | "secondary"; onClick?: () => void }
-  wrapperClassName?: string
+interface InputProps extends Omit<
+  React.InputHTMLAttributes<HTMLInputElement>,
+  "size"
+> {
+  size?: "sm" | "md" | "lg";
+  label?: string;
+  startIcon?: React.ReactNode;
+  endIcon?: React.ReactNode;
+  endButton?:
+    | React.ReactNode
+    | {
+        title: string;
+        icon?: React.ReactNode;
+        variant?:
+          | "default"
+          | "outline"
+          | "destructive"
+          | "ghost"
+          | "link"
+          | "secondary";
+        onClick?: () => void;
+      };
+  startButton?:
+    | React.ReactNode
+    | {
+        title: string;
+        icon?: React.ReactNode;
+        variant?:
+          | "default"
+          | "outline"
+          | "destructive"
+          | "ghost"
+          | "link"
+          | "secondary";
+        onClick?: () => void;
+      };
+  wrapperClassName?: string;
 }
 
 function Input({
@@ -27,42 +56,70 @@ function Input({
   wrapperClassName,
   ...props
 }: InputProps) {
-  const [showPassword, setShowPassword] = React.useState(false)
+  const [showPassword, setShowPassword] = React.useState(false);
 
-  const isPassword = type === "password"
-  const hasStartIcon = !!startIcon
-  const hasEndIcon = !!endIcon || isPassword
-  const hasEndButton = !!endButton
-  const hasStartButton = !!startButton
+  const isPassword = type === "password";
+  const hasStartIcon = !!startIcon;
+  const hasEndIcon = !!endIcon || isPassword;
+  const hasEndButton = !!endButton;
+  const hasStartButton = !!startButton;
 
   const inputPadding = React.useMemo(() => {
-    let padding = ""
+    let padding = "";
 
     // Start padding (left in LTR, right in RTL)
-    if (hasStartButton && typeof startButton === 'object' && 'title' in startButton) {
-      padding += "pl-20 rtl:pr-20 rtl:pl-2 "
+    if (
+      hasStartButton &&
+      typeof startButton === "object" &&
+      "title" in startButton
+    ) {
+      padding += "pl-20 rtl:pr-20 rtl:pl-2 ";
     } else if (hasStartIcon || hasStartButton) {
-      padding += "pl-8 rtl:pr-8 rtl:pl-2 "
+      padding += "pl-8 rtl:pr-8 rtl:pl-2 ";
     }
 
     // End padding (right in LTR, left in RTL)
-    if (hasEndButton && typeof endButton === 'object' && 'title' in endButton) {
-      padding += "pr-20 rtl:pl-20 rtl:pr-2 "
+    if (hasEndButton && typeof endButton === "object" && "title" in endButton) {
+      padding += "pr-20 rtl:pl-20 rtl:pr-2 ";
     } else if (hasEndIcon || hasEndButton || isPassword) {
-      padding += "pr-8 rtl:pl-8 rtl:pr-2 "
+      padding += "pr-8 rtl:pl-8 rtl:pr-2 ";
     }
 
-    return padding
-  }, [hasStartIcon, hasEndIcon, hasEndButton, hasStartButton, endButton, startButton, isPassword])
+    return padding;
+  }, [
+    hasStartIcon,
+    hasEndIcon,
+    hasEndButton,
+    hasStartButton,
+    endButton,
+    startButton,
+    isPassword,
+  ]);
 
-  const renderButton = (button: React.ReactNode | { title: string; icon?: React.ReactNode; variant?: "default" | "outline" | "destructive" | "ghost" | "link" | "secondary"; onClick?: () => void }, position: 'start' | 'end') => {
-    if (!button) return null
+  const renderButton = (
+    button:
+      | React.ReactNode
+      | {
+          title: string;
+          icon?: React.ReactNode;
+          variant?:
+            | "default"
+            | "outline"
+            | "destructive"
+            | "ghost"
+            | "link"
+            | "secondary";
+          onClick?: () => void;
+        },
+    position: "start" | "end",
+  ) => {
+    if (!button) return null;
 
     if (React.isValidElement(button)) {
-      return button
+      return button;
     }
 
-    if (typeof button === 'object' && 'title' in button) {
+    if (typeof button === "object" && "title" in button) {
       return (
         <Button
           title={button.title}
@@ -72,14 +129,16 @@ function Input({
           size="sm"
           className={cn(
             "absolute top-1/2 -translate-y-1/2 h-6 px-2 z-10",
-            position === 'end' ? "right-1 rtl:left-1 rtl:right-auto" : "left-1 rtl:right-1 rtl:left-auto"
+            position === "end"
+              ? "right-1 rtl:left-1 rtl:right-auto"
+              : "left-1 rtl:right-1 rtl:left-auto",
           )}
         />
-      )
+      );
     }
 
-    return null
-  }
+    return null;
+  };
 
   const inputElement = (
     <input
@@ -91,14 +150,15 @@ function Input({
         size === "md" && "h-10",
         size === "lg" && "h-11",
         inputPadding,
-        className
+        className,
       )}
       {...props}
     />
-  )
+  );
 
   // Simple input without icons/buttons/label
-  const needsWrapper = hasStartIcon || hasEndIcon || hasEndButton || hasStartButton || isPassword
+  const needsWrapper =
+    hasStartIcon || hasEndIcon || hasEndButton || hasStartButton || isPassword;
 
   const inputWithWrapper = needsWrapper ? (
     <div className={cn("relative w-full", wrapperClassName)}>
@@ -110,7 +170,7 @@ function Input({
       )}
 
       {/* Start Button */}
-      {hasStartButton && renderButton(startButton, 'start')}
+      {hasStartButton && renderButton(startButton, "start")}
 
       {inputElement}
 
@@ -121,7 +181,11 @@ function Input({
           onClick={() => setShowPassword(!showPassword)}
           className="absolute right-2 rtl:left-2 rtl:right-auto top-1/2 -translate-y-1/2 p-1 text-muted-foreground hover:text-foreground transition-colors z-10"
         >
-          {showPassword ? <Eye className="size-4" /> : <EyeOff className="size-4" />}
+          {showPassword ? (
+            <Eye className="size-4" />
+          ) : (
+            <EyeOff className="size-4" />
+          )}
         </button>
       )}
 
@@ -133,27 +197,25 @@ function Input({
       )}
 
       {/* End Button */}
-      {hasEndButton && renderButton(endButton, 'end')}
+      {hasEndButton && renderButton(endButton, "end")}
     </div>
-  ) : inputElement
+  ) : (
+    inputElement
+  );
 
   // If no label, return input (with or without wrapper)
   if (!label) {
-    return inputWithWrapper
+    return inputWithWrapper;
   }
 
   // With label
   return (
     <div className="space-y-1.5 w-full">
-      <label className="text-sm font-medium text-foreground">
-        {label}
-      </label>
-      <div className="mt-2">
-        {inputWithWrapper}
-      </div>
+      <label className="text-sm font-medium text-foreground">{label}</label>
+      <div className="mt-2">{inputWithWrapper}</div>
     </div>
-  )
+  );
 }
 
-export { Input }
-export type { InputProps }
+export { Input };
+export type { InputProps };

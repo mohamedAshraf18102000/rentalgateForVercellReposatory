@@ -4,11 +4,17 @@ interface PickUpCardProps {
   title: string;
   description: string;
   image: string;
+  onClick?: () => void;
 }
 
-const PickUpCard = ({ title, description, image }: PickUpCardProps) => {
+const PickUpCard = ({
+  title,
+  description,
+  image,
+  onClick,
+}: PickUpCardProps) => {
   return (
-    <div className="w-full h-[450px]">
+    <div className="w-full h-[450px]" onClick={onClick}>
       <div className="w-full h-full pb-5 rounded-[18px] cursor-pointer group hover:bg-white transition-all duration-300">
         <Image
           src={image}

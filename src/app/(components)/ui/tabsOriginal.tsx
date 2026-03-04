@@ -61,10 +61,10 @@ export function TabsTrigger({
       onClick={() => onValueChange(value)}
       data-state={isActive ? "active" : "inactive"}
       className={cn(
-        " text-[14px] flex-1 flex items-center justify-center gap-2 py-2  px-4 rounded-md transition-all my-[2px]",
+        " text-[14px] flex-1 flex items-center justify-center gap-2 border-2 py-2 px-4 rounded-xl transition-all my-[2px]",
         isActive
-          ? "bg-white text-gray-900  font-bold shadow-sm"
-          : "text-gray-600 hover:text-gray-900",
+          ? "bg-white text-primary  font-bold"
+          : "text-gray-600 hover:text-primary",
         className,
       )}
     >

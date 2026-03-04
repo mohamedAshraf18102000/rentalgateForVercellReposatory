@@ -6,7 +6,9 @@ interface WrapperContainerProps {
 }
 
 const WrapperContainer = ({ children, className }: WrapperContainerProps) => {
-  return <div className={cn("w-[90%] mx-auto", className)}>{children}</div>;
+  return (
+    <section className={cn("w-[90%] mx-auto", className)}>{children}</section>
+  );
 };
 
 export default WrapperContainer;
