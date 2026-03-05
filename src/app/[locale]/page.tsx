@@ -2,7 +2,7 @@ import { fetchHomeAllData } from "@/constants/api";
 import { setRequestLocale } from "next-intl/server";
 import HomeMockups from "./(mainpages)/(home)/HomeMockups";
 import HomeSlider from "./(mainpages)/(home)/HomeSlider";
-import { MostRequestedCars } from "./(mainpages)/(home)/MostRequestedCars/MostRequestedCars";
+import { MostRequestedCars } from "./(mainpages)/(home)/MostRequestedCars/MoreRequestedCars";
 import PickUpArea from "./(mainpages)/(home)/PickUpArea";
 import RentalGateInfo from "./(mainpages)/(home)/RentalGateInfo";
 import RentalBookingSearchSection from "./(mainpages)/(home)/RentalBookingSearchSection";

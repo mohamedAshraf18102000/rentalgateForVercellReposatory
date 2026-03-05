@@ -5,19 +5,19 @@ import {
   CardHeader,
   CardTitle,
 } from "@/app/(components)/ui/card";
-import StarIcon from "../../../../public/shared/starIcon";
 import Image from "next/image";
-import FreeKmIcon from "../../../../public/shared/FreeKmIcon";
 import { SaudiRiyal } from "lucide-react";
-import RoundedRec from "../../../../public/shared/RoundedRec";
-import ExeclusiveOfferIcon from "../../../../public/shared/ExeclusiveOfferIcon";
+import RoundedRec from "../../../../../public/shared/RoundedRec";
+import ExeclusiveOfferIcon from "../../../../../public/shared/ExeclusiveOfferIcon";
+import FreeKmIcon from "../../../../../public/shared/FreeKmIcon";
+import StarIcon from "../../../../../public/shared/starIcon";
 
 const CarsCard = () => {
   return (
-    <article>
-      <Card className="relative mx-auto w-full max-w-sm pt-0 rounded-[18px]">
+    <article className="">
+      <Card className="relative mx-auto w-full max-w-sm pt-0 rounded-[18px] hover:shadow-lg transition-all duration-300 border-0! ring-0 hover:ring-1 cursor-pointer">
         {/* Car Image */}
-        <figure className="relative z-20 bg-Grey100">
+        <figure className="relative z-20 bg-Grey100 rounded-b-[18px]">
           <img
             src="/cars/car1.png"
             alt="سيارة للإيجار"

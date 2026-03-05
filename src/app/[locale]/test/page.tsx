@@ -1,4 +1,4 @@
-import CarsCard from "@/app/(components)/CarsCard/CarsCard";
+import CarsCard from "@/app/(components)/customCards/CarsCard/CarsCard";
 
 const page = () => {
   return (
