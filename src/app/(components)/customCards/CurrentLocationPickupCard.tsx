@@ -5,9 +5,11 @@ import { MapPin } from "lucide-react";
 const CurrentLocationPickupCard = ({
   title,
   description,
+  onClick,
 }: {
   title: string;
   description: string;
+  onClick: () => void;
 }) => {
   return (
     <div className="">
@@ -38,7 +40,10 @@ const CurrentLocationPickupCard = ({
               />
 
               <div className="flex justify-end">
-                <Button className="text-base font-normal mt-6">
+                <Button
+                  onClick={onClick}
+                  className="text-base font-normal mt-6"
+                >
                   إظهار النتائج
                 </Button>
               </div>

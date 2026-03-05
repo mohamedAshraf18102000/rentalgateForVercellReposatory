@@ -1,4 +1,5 @@
 import WrapperContainer from "@/app/(components)/wrapperContainer/WrapperContainer";
+import { PickupDialog } from "../../(dialogs)/PickupDialog/PickUpDialog";
 import PickUpCardsSection from "./PickupCardSection";
 
 const PickUpArea = () => {
@@ -12,6 +13,7 @@ const PickUpArea = () => {
           </p>
         </div>
         <PickUpCardsSection />
+        <PickupDialog />
       </WrapperContainer>
     </>
   );
