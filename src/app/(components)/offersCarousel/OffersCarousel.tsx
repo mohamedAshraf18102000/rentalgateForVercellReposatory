@@ -7,15 +7,15 @@ import {
   CarouselPrevious,
   CarouselDots,
 } from "@/app/(components)/ui/carousel";
+import { useLocale } from "next-intl";
 import Image from "next/image";
 
-const page = async ({ params }: { params: Promise<{ locale: string }> }) => {
-  const { locale } = await params;
+const OffersCarousel = () => {
+  const locale = useLocale();
 
   const isRtl = locale === "ar";
-
   return (
-    <div className="bg-red-400 mt-50 mx-auto w-[80%]">
+    <div className="mt-6">
       <Carousel
         lang={locale}
         opts={{
@@ -28,7 +28,7 @@ const page = async ({ params }: { params: Promise<{ locale: string }> }) => {
           {Array.from({ length: 3 }).map((_, index) => (
             <CarouselItem key={index} className="basis-1/2">
               <div className="p-1">
-                <Card className="p-0 m-0">
+                <Card className="p-0 m-0 rounded-2xl overflow-hidden">
                   <CardContent className="flex h-72 items-center justify-center relative">
                     <Image
                       src="/panners/offers/img1.png"
@@ -52,4 +52,4 @@ const page = async ({ params }: { params: Promise<{ locale: string }> }) => {
   );
 };
 
-export default page;
+export default OffersCarousel;

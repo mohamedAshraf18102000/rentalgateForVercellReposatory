@@ -1,9 +1,10 @@
+import OffersCarousel from "@/app/(components)/offersCarousel/OffersCarousel";
 import WrapperContainer from "@/app/(components)/wrapperContainer/WrapperContainer";
 import Image from "next/image";
 
 const Offers = () => {
   return (
-    <WrapperContainer className="bg-red-400">
+    <WrapperContainer className="my-10">
       <div className="flex flex-col items-center justify-center">
         <h6 className="text-3xl font-bold text-center">عروض اليوم الواحد</h6>
         <div className="bg-Green200 p-2 rounded-[8px] flex items-center gap-3 mt-3">
@@ -30,6 +31,7 @@ const Offers = () => {
           />
         </div>
       </div>
+      <OffersCarousel />
     </WrapperContainer>
   );
 };
