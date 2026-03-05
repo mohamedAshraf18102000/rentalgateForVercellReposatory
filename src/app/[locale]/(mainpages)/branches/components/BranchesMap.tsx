@@ -14,8 +14,6 @@ declare global {
   interface Window {
     google?: any;
   }
-
-  var google: any;
 }
 
 interface BranchesMapProps {
@@ -92,7 +90,7 @@ export const BranchesMap: React.FC<BranchesMapProps> = ({
     const mapCenter = getMapCenter();
     const zoomLevel = selectedBranch ? 16 : (branches.length > 1 ? 10 : 16);
 
-    const newMap = new google.maps.Map(mapDiv, {
+    const newMap = new window.google.maps.Map(mapDiv, {
       center: mapCenter,
       zoom: zoomLevel,
       mapTypeControl: false,
@@ -102,7 +100,7 @@ export const BranchesMap: React.FC<BranchesMapProps> = ({
 
     setMap(newMap);
 
-    const newInfoWindow = new google.maps.InfoWindow();
+    const newInfoWindow = new window.google.maps.InfoWindow();
     setInfoWindow(newInfoWindow);
 
     // Add custom styles to hide gm-style-iw-chr (close button) if not already added
@@ -163,7 +161,7 @@ export const BranchesMap: React.FC<BranchesMapProps> = ({
     branchesToShow.forEach((branch) => {
       if (!branch.latitude || !branch.longitude) return;
 
-      const marker = new google.maps.Marker({
+      const marker = new window.google.maps.Marker({
         position: { lat: branch.latitude, lng: branch.longitude },
         map: map,
         title: locale === 'en' ? branch.branchName : branch.branchArName,

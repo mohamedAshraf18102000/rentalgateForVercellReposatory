@@ -12,8 +12,8 @@
  * - Pricing calculations
  */
 
-import { BookingHeader } from '@/app/[locale]/(reservations)/cars/[id]/car-details/header/BookingHeader';
-import { CarInfoSection } from '@/app/[locale]/(reservations)/cars/[id]/car-details/sections/CarInfoSection';
+import { BookingHeader } from '@/app/[locale]/(old-reservations)/cars/[id]/car-details/header/BookingHeader';
+import { CarInfoSection } from '@/app/[locale]/(old-reservations)/cars/[id]/car-details/sections/CarInfoSection';
 import type { PricingData } from '@/constants/api';
 import { useStickyHeader } from '@/hooks/useStickyHeader';
 import { useRouter } from '@/i18n/routing';
