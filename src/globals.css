@@ -139,8 +139,11 @@ body {
   --color-Grey100: #f2f2f2;
   --color-Grey200: #dadada;
   --color-Grey400: #cdcdcd;
+  --color-Grey500: #949494;
   --color-Grey700: #595959;
   --color-Green200: #b4dd7e;
+  --color-StatusGreen: #dcfdeb;
+  --color-StatusDarkGreen: #064d3b;
 }
 
 .dark {
