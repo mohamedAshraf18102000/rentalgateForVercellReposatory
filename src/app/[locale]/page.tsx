@@ -5,8 +5,9 @@ import HomeSlider from "./(mainpages)/(home)/HomeSlider";
 import { MostRequestedCars } from "./(mainpages)/(home)/MostRequestedCars/MostRequestedCars";
 import PickUpArea from "./(mainpages)/(home)/PickUpArea";
 import RentalGateInfo from "./(mainpages)/(home)/RentalGateInfo";
-import WrapperContainer from "../(components)/wrapperContainer/WrapperContainer";
 import RentalBookingSearchSection from "./(mainpages)/(home)/RentalBookingSearchSection";
+import SuccessPartners from "./(mainpages)/(home)/SuccessPartners";
+import Offers from "./(mainpages)/(home)/offers/Offers";
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -31,14 +32,14 @@ export default async function HomePage({ params }: Props) {
 
   return (
     <main>
-      <div className=" ">
-        <HomeSlider banners={banners} />
-        <PickUpArea />
-        <RentalGateInfo />
-        <RentalBookingSearchSection />
-        <MostRequestedCars locale={locale} />
-        <HomeMockups />
-      </div>
+      <HomeSlider banners={banners} />
+      <PickUpArea />
+      <RentalGateInfo />
+      <RentalBookingSearchSection />
+      <SuccessPartners />
+      <Offers />
+      <MostRequestedCars locale={locale} />
+      <HomeMockups />
     </main>
   );
 }
