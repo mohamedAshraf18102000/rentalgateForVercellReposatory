@@ -1,4 +1,3 @@
-import { Card, CardContent } from "@/app/(components)/ui/card";
 import {
   Carousel,
   CarouselContent,

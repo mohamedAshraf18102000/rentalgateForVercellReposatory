@@ -7,10 +7,10 @@ import {
 } from "@/app/(components)/ui/card";
 import Image from "next/image";
 import { SaudiRiyal } from "lucide-react";
-import RoundedRec from "../../../../../public/shared/RoundedRec";
-import ExeclusiveOfferIcon from "../../../../../public/shared/ExeclusiveOfferIcon";
-import FreeKmIcon from "../../../../../public/shared/FreeKmIcon";
-import StarIcon from "../../../../../public/shared/starIcon";
+import RoundedRec from "../../../../constants/icons/RoundedRec";
+import ExeclusiveOfferIcon from "../../../../constants/icons/ExeclusiveOfferIcon";
+import FreeKmIcon from "../../../../constants/icons/FreeKmIcon";
+import StarIcon from "../../../../constants/icons/StarIcon";
 
 const CarsCard = () => {
   return (

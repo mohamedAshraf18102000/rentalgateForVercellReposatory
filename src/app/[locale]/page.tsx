@@ -8,6 +8,8 @@ import RentalGateInfo from "./(mainpages)/(home)/RentalGateInfo";
 import RentalBookingSearchSection from "./(mainpages)/(home)/RentalBookingSearchSection";
 import SuccessPartners from "./(mainpages)/(home)/SuccessPartners";
 import Offers from "./(mainpages)/(home)/offers/Offers";
+import CompanyOffers from "./(mainpages)/(home)/offers/CompanyOffers";
+import BussinessAccounts from "./(mainpages)/(home)/RentalGateBussinessAccounts/BussinessAccounts";
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -17,7 +19,6 @@ export default async function HomePage({ params }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
 
-  // Fetch data from API
   let offers: any[] = [];
   let banners: any[] = [];
   try {
@@ -39,7 +40,9 @@ export default async function HomePage({ params }: Props) {
       <SuccessPartners />
       <Offers />
       <MostRequestedCars locale={locale} />
+      <CompanyOffers />
       <HomeMockups />
+      <BussinessAccounts />
     </main>
   );
 }

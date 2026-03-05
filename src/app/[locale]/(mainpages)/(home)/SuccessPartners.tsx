@@ -1,6 +1,7 @@
 import WrapperContainer from "@/app/(components)/wrapperContainer/WrapperContainer";
 import Image from "next/image";
-import PartnersIcon from "../../../../../public/successPartners/PartnersIcon";
+import PartnersIcon from "../../../../constants/icons/PartnersIcon";
+import SuccessPartnersMerquee from "@/app/(components)/home/SuccessPartnersMerquee";
 
 const SuccessPartners = () => {
   return (
@@ -13,7 +14,7 @@ const SuccessPartners = () => {
           className="object-fill"
         />
 
-        <div className="absolute top-0 right-0 z-40 text-white  p-4 w-full h-full">
+        <div className="absolute top-0 right-0 z-40 text-white p-4 w-full h-full">
           <div className="flex items-center gap-2">
             <PartnersIcon />
             <h5 className="font-extrabold text-3xl">شركائنا في النجاح</h5>
@@ -24,14 +25,7 @@ const SuccessPartners = () => {
         </div>
       </div>
       <div className="w-2/3 relative rounded-2xl overflow-hidden">
-        <div className="relative w-full h-full mask-[linear-gradient(to_right,transparent,black_10%,black_90%,transparent)] [-webkit-mask-image:linear-gradient(to_right,transparent,black_20%,black_80%,transparent)]">
-          <Image
-            src="/successPartners/frame21.png"
-            alt="frame2"
-            fill
-            className="object-fill"
-          />
-        </div>
+        <SuccessPartnersMerquee />
       </div>
     </WrapperContainer>
   );

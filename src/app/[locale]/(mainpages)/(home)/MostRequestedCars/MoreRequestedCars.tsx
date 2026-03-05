@@ -15,7 +15,7 @@ import {
   CarouselPrevious,
   type CarouselApi,
 } from "@/app/(components)/ui/carousel";
-import MoreRequestedCarsCarousel from "@/app/(components)/offersCarousel/MoreRequestedCarsCarousel";
+import MoreRequestedCarsCarousel from "@/app/(components)/mostRequestedCars/MoreRequestedCarsCarousel";
 
 export const MostRequestedCars = ({ locale }: { locale: string }) => {
   const t = useTranslations("home");
