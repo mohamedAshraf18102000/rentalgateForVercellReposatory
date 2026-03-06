@@ -17,6 +17,8 @@ interface CountryPhoneProps {
     onValidationChange?: (isValid: boolean) => void;
     disabled?: boolean;
     label?: string;
+    inputClassName?: string;
+    labelClassName?: string;
 }
 
 export default function CountryPhone({
@@ -28,7 +30,9 @@ export default function CountryPhone({
     className = "",
     onValidationChange,
     disabled = false,
-    label
+    label,
+    inputClassName = "",
+    labelClassName = ""
 }: CountryPhoneProps) {
     const [phone, setPhone] = useState<string>(value || "");
     const [touched, setTouched] = useState<boolean>(false);
@@ -100,7 +104,7 @@ export default function CountryPhone({
             // +9660566830032 -> +966566830032
             formattedValue = '+966' + formattedValue.substring(5);
         }
-        
+
         setPhone(formattedValue);
         // Mark as touched when user starts typing
         if (!touched && formattedValue.length > 0) {
@@ -125,15 +129,14 @@ export default function CountryPhone({
                 defaultCountry={defaultCountry}
                 value={phone}
                 onChange={handlePhoneChange}
-                placeholder={placeholder}  
+                placeholder={placeholder}
                 disabled={disabled}
-                
-
+                inputClassName={inputClassName}
             />
 
             {shouldShowError && (
                 <p style={{
-                    color: "rgb(255, 77, 79)", 
+                    color: "rgb(255, 77, 79)",
                     fontWeight: 400,
                     fontSize: "12px",
                     lineHeight: "22px",
@@ -155,7 +158,7 @@ export default function CountryPhone({
     // With label (same structure as Input component)
     return (
         <div className="space-y-1.5 w-full">
-            <label className="text-sm font-medium text-foreground">
+            <label className={`text-sm font-medium text-foreground ${labelClassName}`}>
                 {label}
             </label>
             <div className="mt-2">
@@ -164,4 +167,3 @@ export default function CountryPhone({
         </div>
     );
 }
-

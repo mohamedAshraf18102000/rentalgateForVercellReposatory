@@ -8,11 +8,6 @@ import { ProtectedLink } from "../../../(components)/ProtectedLink";
 import { useTranslations } from "next-intl";
 import { fetchHomeData, type CarCardData } from "@/constants/api";
 import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
   type CarouselApi,
 } from "@/app/(components)/ui/carousel";
 import MoreRequestedCarsCarousel from "@/app/(components)/mostRequestedCars/MoreRequestedCarsCarousel";

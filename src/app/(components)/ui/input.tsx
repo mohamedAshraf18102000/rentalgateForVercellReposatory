@@ -14,34 +14,35 @@ interface InputProps extends Omit<
   startIcon?: React.ReactNode;
   endIcon?: React.ReactNode;
   endButton?:
-    | React.ReactNode
-    | {
-        title: string;
-        icon?: React.ReactNode;
-        variant?:
-          | "default"
-          | "outline"
-          | "destructive"
-          | "ghost"
-          | "link"
-          | "secondary";
-        onClick?: () => void;
-      };
+  | React.ReactNode
+  | {
+    title: string;
+    icon?: React.ReactNode;
+    variant?:
+    | "default"
+    | "outline"
+    | "destructive"
+    | "ghost"
+    | "link"
+    | "secondary";
+    onClick?: () => void;
+  };
   startButton?:
-    | React.ReactNode
-    | {
-        title: string;
-        icon?: React.ReactNode;
-        variant?:
-          | "default"
-          | "outline"
-          | "destructive"
-          | "ghost"
-          | "link"
-          | "secondary";
-        onClick?: () => void;
-      };
+  | React.ReactNode
+  | {
+    title: string;
+    icon?: React.ReactNode;
+    variant?:
+    | "default"
+    | "outline"
+    | "destructive"
+    | "ghost"
+    | "link"
+    | "secondary";
+    onClick?: () => void;
+  };
   wrapperClassName?: string;
+  labelClassName?: string;
 }
 
 function Input({
@@ -54,6 +55,7 @@ function Input({
   endButton,
   startButton,
   wrapperClassName,
+  labelClassName,
   ...props
 }: InputProps) {
   const [showPassword, setShowPassword] = React.useState(false);
@@ -100,17 +102,17 @@ function Input({
     button:
       | React.ReactNode
       | {
-          title: string;
-          icon?: React.ReactNode;
-          variant?:
-            | "default"
-            | "outline"
-            | "destructive"
-            | "ghost"
-            | "link"
-            | "secondary";
-          onClick?: () => void;
-        },
+        title: string;
+        icon?: React.ReactNode;
+        variant?:
+        | "default"
+        | "outline"
+        | "destructive"
+        | "ghost"
+        | "link"
+        | "secondary";
+        onClick?: () => void;
+      },
     position: "start" | "end",
   ) => {
     if (!button) return null;
@@ -211,7 +213,7 @@ function Input({
   // With label
   return (
     <div className="space-y-1.5 w-full">
-      <label className="text-sm font-medium text-foreground">{label}</label>
+      <label className={cn("text-sm font-medium text-foreground", labelClassName)}>{label}</label>
       <div className="mt-2">{inputWithWrapper}</div>
     </div>
   );
