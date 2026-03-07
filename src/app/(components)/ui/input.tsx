@@ -14,35 +14,36 @@ interface InputProps extends Omit<
   startIcon?: React.ReactNode;
   endIcon?: React.ReactNode;
   endButton?:
-  | React.ReactNode
-  | {
-    title: string;
-    icon?: React.ReactNode;
-    variant?:
-    | "default"
-    | "outline"
-    | "destructive"
-    | "ghost"
-    | "link"
-    | "secondary";
-    onClick?: () => void;
-  };
+    | React.ReactNode
+    | {
+        title: string;
+        icon?: React.ReactNode;
+        variant?:
+          | "default"
+          | "outline"
+          | "destructive"
+          | "ghost"
+          | "link"
+          | "secondary";
+        onClick?: () => void;
+      };
   startButton?:
-  | React.ReactNode
-  | {
-    title: string;
-    icon?: React.ReactNode;
-    variant?:
-    | "default"
-    | "outline"
-    | "destructive"
-    | "ghost"
-    | "link"
-    | "secondary";
-    onClick?: () => void;
-  };
+    | React.ReactNode
+    | {
+        title: string;
+        icon?: React.ReactNode;
+        variant?:
+          | "default"
+          | "outline"
+          | "destructive"
+          | "ghost"
+          | "link"
+          | "secondary";
+        onClick?: () => void;
+      };
   wrapperClassName?: string;
   labelClassName?: string;
+  labelIcon?: React.ReactNode;
 }
 
 function Input({
@@ -56,6 +57,7 @@ function Input({
   startButton,
   wrapperClassName,
   labelClassName,
+  labelIcon,
   ...props
 }: InputProps) {
   const [showPassword, setShowPassword] = React.useState(false);
@@ -102,17 +104,17 @@ function Input({
     button:
       | React.ReactNode
       | {
-        title: string;
-        icon?: React.ReactNode;
-        variant?:
-        | "default"
-        | "outline"
-        | "destructive"
-        | "ghost"
-        | "link"
-        | "secondary";
-        onClick?: () => void;
-      },
+          title: string;
+          icon?: React.ReactNode;
+          variant?:
+            | "default"
+            | "outline"
+            | "destructive"
+            | "ghost"
+            | "link"
+            | "secondary";
+          onClick?: () => void;
+        },
     position: "start" | "end",
   ) => {
     if (!button) return null;
@@ -213,7 +215,15 @@ function Input({
   // With label
   return (
     <div className="space-y-1.5 w-full">
-      <label className={cn("text-sm font-medium text-foreground", labelClassName)}>{label}</label>
+      <label
+        className={cn(
+          "flex items-center gap-1.5 text-sm font-medium text-foreground",
+          labelClassName,
+        )}
+      >
+        {labelIcon && labelIcon}
+        {label}
+      </label>
       <div className="mt-2">{inputWithWrapper}</div>
     </div>
   );

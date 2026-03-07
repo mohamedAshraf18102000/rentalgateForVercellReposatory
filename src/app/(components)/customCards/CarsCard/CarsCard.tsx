@@ -12,12 +12,16 @@ import ExeclusiveOfferIcon from "../../../../constants/icons/ExeclusiveOfferIcon
 import FreeKmIcon from "../../../../constants/icons/FreeKmIcon";
 import StarIcon from "../../../../constants/icons/StarIcon";
 
-const CarsCard = () => {
+const CarsCard = ({ advancedCard }: { advancedCard?: boolean }) => {
   return (
-    <article className="">
-      <Card className="relative mx-auto w-full max-w-sm pt-0 rounded-[18px] hover:shadow-lg transition-all duration-300 border-0! ring-0 hover:ring-1 cursor-pointer">
+    <article>
+      <Card
+        className={`group relative mx-auto w-full max-w-sm pt-0 rounded-[18px] hover:shadow-lg transition-all duration-300 border-0! ring-0 hover:ring-1 cursor-pointer ${advancedCard ? "bg-transparent hover:bg-white" : "bg-white"}`}
+      >
         {/* Car Image */}
-        <figure className="relative z-20 bg-Grey100 rounded-b-[18px]">
+        <figure
+          className={`relative z-20 rounded-[18px] transition-all duration-300 ${advancedCard ? "bg-transparent group-hover:bg-Grey100 border border-white" : "bg-Grey100"}`}
+        >
           <img
             src="/cars/car1.png"
             alt="سيارة للإيجار"
