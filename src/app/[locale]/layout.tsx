@@ -161,7 +161,7 @@ export default async function LocaleLayout({
     <html
       lang={locale}
       dir={locale === "ar" ? "rtl" : "ltr"}
-      className={`${fontZain.variable} ${fontAlmarai.variable}`}
+      className={` ${fontAlmarai.variable} ${fontZain.variable}`}
     >
       <head>
         {/* Favicon */}
@@ -182,7 +182,7 @@ export default async function LocaleLayout({
         />
       </head>
       <body
-        style={{ fontFamily: fontZain.style.fontFamily }}
+        style={{ fontFamily: fontAlmarai.style.fontFamily }}
         className="flex flex-col min-h-screen"
       >
         <NextIntlClientProvider messages={messages}>
