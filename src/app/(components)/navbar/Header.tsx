@@ -2,24 +2,24 @@
 // Main Component - Header
 // ============================================================================
 
-'use client';
+"use client";
 
-import { ContactUsDialog } from '@/app/(components)/ContactUsDialog';
-import { useTranslations } from 'next-intl';
-import * as React from 'react';
-import { LoginButton } from '../LoginButton';
-import { HomeLink } from './components/HomeLink';
-import { LanguageSwitcher } from './components/LanguageSwitcher';
-import { Logo } from './components/Logo';
-import { MobileBottomNav } from './components/MobileBottomNav';
-import { MobileHeader } from './components/MobileHeader';
-import { UserMenu } from './components/UserMenu';
-import { BUTTON_STYLES, NAVBAR_STYLES } from './constants';
-import { useHeaderLogic } from './hooks/useHeaderLogic';
+import { ContactUsDialog } from "@/app/(components)/ContactUsDialog";
+import { useTranslations } from "next-intl";
+import * as React from "react";
+import { LoginButton } from "../LoginButton";
+import { HomeLink } from "./components/HomeLink";
+import { LanguageSwitcher } from "./components/LanguageSwitcher";
+import { Logo } from "./components/Logo";
+import { MobileBottomNav } from "./components/MobileBottomNav";
+import { MobileHeader } from "./components/MobileHeader";
+import { UserMenu } from "./components/UserMenu";
+import { BUTTON_STYLES, NAVBAR_STYLES } from "./constants";
+import { useHeaderLogic } from "./hooks/useHeaderLogic";
 
 export default function Header() {
-  const t = useTranslations('common');
-  const tContact = useTranslations('contact');
+  const t = useTranslations("common");
+  const tContact = useTranslations("contact");
   const {
     isClient,
     authenticated,
@@ -39,16 +39,15 @@ export default function Header() {
   // Translations
   const translations = React.useMemo(
     () => ({
-      profile: t('profile') || 'Profile',
-      myBookings: t('myBookings') || 'My Bookings',
-      logout: t('logout') || 'تسجيل الخروج',
-      login: t('login'),
-      home: t('home'),
-      talkToUs: t('talkToUs'),
+      profile: t("profile") || "Profile",
+      myBookings: t("myBookings") || "My Bookings",
+      logout: t("logout") || "تسجيل الخروج",
+      login: t("login"),
+      home: t("home"),
+      talkToUs: t("talkToUs"),
     }),
-    [t]
+    [t],
   );
-
 
   return (
     <>
@@ -70,15 +69,19 @@ export default function Header() {
               />
 
               <HomeLink
-                href="/branches"
-                label={locale === 'ar' ? 'الفروع' : 'Branches'}
-                isActive={pathname === '/branches'}
+                href="/bookings"
+                label={locale === "ar" ? "الحجز" : "Bookings"}
+                isActive={pathname === "/bookings"}
                 className={BUTTON_STYLES.navLink}
               />
 
+              <HomeLink
+                href="/branches"
+                label={locale === "ar" ? "الفروع" : "Branches"}
+                isActive={pathname === "/branches"}
+                className={BUTTON_STYLES.navLink}
+              />
             </div>
-
-
 
             {/* Right Section */}
             <div className={NAVBAR_STYLES.rightSection}>
@@ -93,7 +96,10 @@ export default function Header() {
                 >
                   {tContact('title')}
                 </button> */}
-                <LanguageSwitcher currentLocale={locale} onToggle={handleLanguageChange} />
+                <LanguageSwitcher
+                  currentLocale={locale}
+                  onToggle={handleLanguageChange}
+                />
 
                 {isClient && authenticated ? (
                   <UserMenu
@@ -105,7 +111,10 @@ export default function Header() {
                     translations={translations}
                   />
                 ) : (
-                  <LoginButton className={BUTTON_STYLES.primary} variant="default">
+                  <LoginButton
+                    className={BUTTON_STYLES.primary}
+                    variant="default"
+                  >
                     {translations.login}
                   </LoginButton>
                 )}

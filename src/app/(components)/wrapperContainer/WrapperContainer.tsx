@@ -3,11 +3,12 @@ import { cn } from "@/lib/utils";
 interface WrapperContainerProps {
   children: React.ReactNode;
   className?: string;
+  exceedNav?: boolean;
 }
 
-const WrapperContainer = ({ children, className }: WrapperContainerProps) => {
+const WrapperContainer = ({ children, className, exceedNav }: WrapperContainerProps) => {
   return (
-    <section className={cn("w-[90%] mx-auto", className)}>{children}</section>
+    <section className={cn("w-[90%] mx-auto", exceedNav && "mt-25", className)}>{children}</section>
   );
 };
 
