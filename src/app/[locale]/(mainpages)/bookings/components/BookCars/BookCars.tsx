@@ -11,6 +11,7 @@ import { DateTimePicker } from "@/app/(components)/ui/dateTime-picker";
 import { useForm, Controller } from "react-hook-form";
 import FilterDrawer from "./FilterDrawer";
 import CustomBadge from "@/app/(components)/ui/customBadge";
+import Link from "next/link";
 
 interface FormValues {
   location: string;
@@ -135,11 +136,9 @@ const BookCars = () => {
           <div className="">
             <Separator className="my-5" />
             <div className="flex items-center gap-3">
-              <CustomBadge title="نوع التصفية" />
-              <CustomBadge title="نوع التصفية" />
-              <CustomBadge title="نوع التصفية" />
-              <CustomBadge title="نوع التصفية" />
-              <CustomBadge title="نوع التصفية" />
+              {Array.from({ length: 5 }).map((_, index) => (
+                <CustomBadge key={index} title="نوع التصفية" />
+              ))}
             </div>
           </div>
         </div>
@@ -155,11 +154,12 @@ const BookCars = () => {
         </div>
       </form>
 
-      <div className="grid grid-cols-4 mt-10">
-        <CarsCard advancedCard />
-        <CarsCard advancedCard />
-        <CarsCard advancedCard />
-        <CarsCard advancedCard />
+      <div className="grid grid-cols-4 gap-8 mt-10">
+        {Array.from({ length: 5 }).map((_, index) => (
+          <Link key={index} href={`/carDetails/${1}`}>
+            <CarsCard advancedCard />
+          </Link>
+        ))}
       </div>
     </section>
   );

@@ -145,6 +145,8 @@ body {
   --color-Green200: #b4dd7e;
   --color-StatusGreen: #dcfdeb;
   --color-StatusDarkGreen: #064d3b;
+  --color-StatusBrown200: #b34a00;
+  --color-StatusBrownBG: #feebcc;
 }
 
 .dark {
