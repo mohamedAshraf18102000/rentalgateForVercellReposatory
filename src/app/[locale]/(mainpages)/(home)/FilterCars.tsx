@@ -1,13 +1,13 @@
 'use client';
 
-import { useFilterStore } from '@/lib/api/stores/filter.store';
-import { Popover, PopoverContent, PopoverTrigger } from '@/app/(components)/ui/popover';
-import { DayPicker } from 'react-day-picker';
-import { ar } from 'date-fns/locale';
 import { Button } from '@/app/(components)/ui/button';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { Tabs, TabsList, TabsTrigger } from '@/ui';
+import { Popover, PopoverContent, PopoverTrigger } from '@/app/(components)/ui/popover';
+import { useFilterStore } from '@/lib/api/stores/filter.store';
 import { cn } from '@/lib/utils';
+import { Tabs, TabsList, TabsTrigger } from '@/ui';
+import { ar } from 'date-fns/locale';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { DayPicker } from 'react-day-picker';
 
 type DurationType = 'daily' | 'weekly' | 'monthly' | 'yearly';
 
@@ -132,6 +132,7 @@ export default function FilterCars({ locale }: FilterCarsProps) {
               </div>
             </PopoverContent>
           </Popover>
+
         </div>
       </div>
     </div>
