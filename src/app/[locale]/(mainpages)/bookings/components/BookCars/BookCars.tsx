@@ -3,7 +3,9 @@ import { Separator } from "@/app/(components)/ui/separator";
 import { Input } from "@/app/(components)/ui/input";
 import { ArrowLeft, Funnel, MapPin, Search, UserRound } from "lucide-react";
 import PositioningIcon from "@/constants/icons/PositioningIcon";
-import { Button, Checkbox } from "@/app/(components)";
+import { Button, Checkbox, DatePicker } from "@/app/(components)";
+import CarRentIcon from "@/constants/icons/CarRentIcon";
+import { DayPicker } from "react-day-picker";
 
 const BookCars = () => {
   return (
@@ -22,7 +24,7 @@ const BookCars = () => {
           </label>
         </div>
       </div>
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between mt-3">
         <div className="p-5 bg-white w-[70%] shadow-xl rounded-2xl flex items-end gap-4">
           <Input
             labelIcon={<PositioningIcon />}
@@ -35,11 +37,11 @@ const BookCars = () => {
             startIcon={<UserRound className="text-primary" />}
           />
           <Input
-            labelIcon={<PositioningIcon />}
+            labelIcon={<CarRentIcon />}
             id="name"
             type="text"
-            placeholder="ادخل الاسم"
-            label="مكان الأستلام:"
+            placeholder="من ..."
+            label="مدة الإيجار:"
             className="bg-white! border-2! border-Grey400! rounded-xl!"
             labelClassName="text-base text-primary"
             startIcon={<UserRound className="text-primary" />}
@@ -51,7 +53,7 @@ const BookCars = () => {
             labelIcon={<PositioningIcon />}
             id="name"
             type="text"
-            placeholder="ادخل الاسم"
+            placeholder="إلى ..."
             className="bg-white! border-2! border-Grey400! rounded-xl!"
             labelClassName="text-base text-primary"
             startIcon={<UserRound className="text-primary" />}
@@ -67,8 +69,8 @@ const BookCars = () => {
           </Button>
         </div>
 
-        <div className="p-5 bg-white w-[15%] shadow-xl rounded-2xl">
-          <p className="">السيارات الظاهرة:</p>
+        <div className="p-2.5 bg-white w-[15%] shadow-xl rounded-2xl">
+          <p className="font-bold">السيارات الظاهرة:</p>
           <Separator className="my-4" />
           <div className="flex items-center justify-evenly">
             <p className="p-2 rounded-lg font-bold">12</p>
@@ -77,7 +79,6 @@ const BookCars = () => {
           </div>
         </div>
       </div>
-
       <div className="grid grid-cols-4 mt-10">
         <CarsCard advancedCard />
         <CarsCard advancedCard />

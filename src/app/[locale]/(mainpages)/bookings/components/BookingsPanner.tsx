@@ -13,7 +13,7 @@ const BookingsPanner = () => {
         </p>
       </div>
 
-      <div className="text-white w-1/4 bg-red-800">
+      <div className="text-white w-1/4">
         <div className="flex gap-3 justify-center">
           <a
             href="#"
