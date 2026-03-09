@@ -7,6 +7,7 @@ import UserDetailsCard from "./components/UserDetailsCard";
 import UserReferal from "./components/UserReferal";
 import ProfileActionCard from "./components/ProfileActionCard";
 import UserProfileActions from "./components/actions/UsersProfileActions";
+import OtherDetailsAction from "./components/otherDetails/OtherDetailsAction";
 
 const userData = [
   {
@@ -86,15 +87,7 @@ const page = () => {
           <div className="">
             <p className="text-base mb-2">البيانات الأخرى:</p>
             <div className="grid grid-cols-2 items-center gap-4">
-              {Array.from({ length: 4 }).map((_, index) => (
-                <ProfileActionCard
-                  key={index}
-                  title="كلمة المرور"
-                  description="تغيير كلمة المرور الخاصة بك"
-                  icon="/profile/ContactIcon.png"
-                  bg_gray
-                />
-              ))}
+              <OtherDetailsAction />
             </div>
           </div>
         </div>

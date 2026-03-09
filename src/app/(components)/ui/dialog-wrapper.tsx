@@ -195,7 +195,7 @@ export function DialogWrapper({
     return (
       <Drawer open={open} onOpenChange={onOpenChange}>
         {trigger && <DrawerTrigger asChild>{trigger}</DrawerTrigger>}
-        <DrawerContent className={cn("max-h-[96vh]", className)}>
+        <DrawerContent className={cn("max-h-[96vh] ", className)}>
           {(header || extraHeader) && (
             <DrawerHeader className="text-center space-y-4 p-0 mb-3">
               {renderHeader()}
