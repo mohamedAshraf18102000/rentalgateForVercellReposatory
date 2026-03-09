@@ -57,7 +57,7 @@ const CarDetailsCard = () => {
         </figure>
       </div>
 
-      <div className="w-[60%] p-6">
+      <div className="w-[60%] p-6 bg-white">
         <div className="flex items-center justify-between w-full text-base">
           <div className="flex items-center">
             <span>السعر شامل الضريبة:</span>

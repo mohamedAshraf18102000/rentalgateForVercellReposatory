@@ -81,6 +81,13 @@ export default function Header() {
                 isActive={pathname === "/branches"}
                 className={BUTTON_STYLES.navLink}
               />
+
+              <HomeLink
+                href="/userProfile"
+                label={locale === "ar" ? "الملف الشخصي" : "Profile"}
+                isActive={pathname === "/userProfile"}
+                className={BUTTON_STYLES.navLink}
+              />
             </div>
 
             {/* Right Section */}
