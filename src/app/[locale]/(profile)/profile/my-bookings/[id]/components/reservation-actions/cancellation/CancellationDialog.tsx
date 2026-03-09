@@ -3,21 +3,21 @@
  * UI for canceling a reservation (Controlled Component)
  */
 
-'use client';
+"use client";
 
-import React, { useEffect } from 'react';
-import { Button } from '@/app/(components)/ui/button';
-import { DialogWrapper } from '@/app/(components)/ui/dialog-wrapper';
-import { Textarea } from '@/app/(components)/ui/textarea';
+import React, { useEffect } from "react";
+import { Button } from "@/app/(components)/ui/button";
+import { DialogWrapper } from "@/app/(components)/ui/dialog-wrapper";
+import { Textarea } from "@/app/(components)/ui/textareaOriginal";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/app/(components)/ui/select';
-import { useTranslations } from 'next-intl';
-import { useCancellation } from './useCancellation';
+} from "@/app/(components)/ui/select";
+import { useTranslations } from "next-intl";
+import { useCancellation } from "./useCancellation";
 
 interface CancellationDialogProps {
   reservationId: number;
@@ -32,8 +32,8 @@ export function CancellationDialog({
   open,
   onOpenChange,
 }: CancellationDialogProps) {
-  const t = useTranslations('profile');
-  const isArabic = locale === 'ar';
+  const t = useTranslations("profile");
+  const isArabic = locale === "ar";
 
   const {
     reasons,
@@ -62,10 +62,10 @@ export function CancellationDialog({
       onOpenChange={onOpenChange}
       size="md"
       header={{
-        mainTitle: t('cancelReservationTitle'),
+        mainTitle: t("cancelReservationTitle"),
         description: (
           <p className="text-sm text-gray-600 text-center">
-            {t('cancelReservationDescription')}
+            {t("cancelReservationDescription")}
           </p>
         ),
       }}
@@ -80,7 +80,7 @@ export function CancellationDialog({
               {/* Cancellation Reason */}
               <div className="space-y-2.5">
                 <label className="text-sm font-semibold text-gray-900 dark:text-gray-100 block">
-                  {t('cancellationReason')}{' '}
+                  {t("cancellationReason")}{" "}
                   <span className="text-primary font-normal">*</span>
                 </label>
 
@@ -89,7 +89,7 @@ export function CancellationDialog({
                   onValueChange={(value) => setSelectedReason(Number(value))}
                 >
                   <SelectTrigger size="md">
-                    <SelectValue placeholder={t('selectReason')} />
+                    <SelectValue placeholder={t("selectReason")} />
                   </SelectTrigger>
                   <SelectContent>
                     {reasons.map((reason) => (
@@ -107,12 +107,12 @@ export function CancellationDialog({
               {/* Additional Notes */}
               <div className="space-y-2.5">
                 <label className="text-sm font-semibold text-gray-900 dark:text-gray-100 block">
-                  {t('additionalNotes')}
+                  {t("additionalNotes")}
                 </label>
                 <Textarea
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
-                  placeholder={t('notesPlaceholder')}
+                  placeholder={t("notesPlaceholder")}
                   rows={4}
                   className="resize-none text-sm min-h-[100px]"
                 />
@@ -133,7 +133,7 @@ export function CancellationDialog({
             className="flex-1"
             size="lg"
           >
-            {t('cancel')}
+            {t("cancel")}
           </Button>
           <Button
             onClick={submit}
@@ -141,7 +141,7 @@ export function CancellationDialog({
             className="flex-1 bg-primary hover:bg-primary-hover text-white"
             size="lg"
           >
-            {isSubmitting ? t('cancelling') : t('confirmCancel')}
+            {isSubmitting ? t("cancelling") : t("confirmCancel")}
           </Button>
         </div>
       }

@@ -5,7 +5,7 @@ import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { Card } from "./ui/card";
 import { Badge } from "./ui/badge";
-import { Textarea } from "./ui/textarea";
+import { Textarea } from "./ui/textareaOriginal";
 import {
   RadioGroup,
   RadioGroupItem,

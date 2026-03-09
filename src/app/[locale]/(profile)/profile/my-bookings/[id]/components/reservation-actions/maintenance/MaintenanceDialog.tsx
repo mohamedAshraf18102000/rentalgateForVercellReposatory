@@ -3,14 +3,14 @@
  * UI for requesting maintenance (Controlled Component)
  */
 
-'use client';
+"use client";
 
-import React from 'react';
-import { Button } from '@/app/(components)/ui/button';
-import { DialogWrapper } from '@/app/(components)/ui/dialog-wrapper';
-import { Textarea } from '@/app/(components)/ui/textarea';
-import { useTranslations } from 'next-intl';
-import { useMaintenance } from './useMaintenance';
+import React from "react";
+import { Button } from "@/app/(components)/ui/button";
+import { DialogWrapper } from "@/app/(components)/ui/dialog-wrapper";
+import { Textarea } from "@/app/(components)/ui/textareaOriginal";
+import { useTranslations } from "next-intl";
+import { useMaintenance } from "./useMaintenance";
 
 interface MaintenanceDialogProps {
   reservationId: number;
@@ -25,7 +25,7 @@ export function MaintenanceDialog({
   open,
   onOpenChange,
 }: MaintenanceDialogProps) {
-  const t = useTranslations('profile');
+  const t = useTranslations("profile");
 
   const {
     comments,
@@ -43,10 +43,10 @@ export function MaintenanceDialog({
       onOpenChange={onOpenChange}
       size="md"
       header={{
-        mainTitle: t('requestMaintenanceTitle'),
+        mainTitle: t("requestMaintenanceTitle"),
         description: (
           <p className="text-sm text-gray-600 text-center">
-            {t('requestMaintenanceDescription')}
+            {t("requestMaintenanceDescription")}
           </p>
         ),
       }}
@@ -55,13 +55,13 @@ export function MaintenanceDialog({
           {/* Maintenance Comments */}
           <div className="space-y-2.5">
             <label className="text-sm font-semibold text-gray-900 dark:text-gray-100 block">
-              {t('maintenanceComments')}{' '}
+              {t("maintenanceComments")}{" "}
               <span className="text-primary font-normal">*</span>
             </label>
             <Textarea
               value={comments}
               onChange={(e) => setComments(e.target.value)}
-              placeholder={t('maintenanceCommentsPlaceholder')}
+              placeholder={t("maintenanceCommentsPlaceholder")}
               rows={4}
               className="resize-none text-sm min-h-[100px]"
             />
@@ -70,12 +70,12 @@ export function MaintenanceDialog({
           {/* Additional Notes */}
           <div className="space-y-2.5">
             <label className="text-sm font-semibold text-gray-900 dark:text-gray-100 block">
-              {t('maintenanceNotes')}
+              {t("maintenanceNotes")}
             </label>
             <Textarea
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
-              placeholder={t('maintenanceNotesPlaceholder')}
+              placeholder={t("maintenanceNotesPlaceholder")}
               rows={3}
               className="resize-none text-sm min-h-[80px]"
             />
@@ -94,7 +94,7 @@ export function MaintenanceDialog({
             className="flex-1"
             size="lg"
           >
-            {t('cancel')}
+            {t("cancel")}
           </Button>
           <Button
             onClick={submit}
@@ -102,7 +102,7 @@ export function MaintenanceDialog({
             className="flex-1 bg-primary hover:bg-primary/90 text-white"
             size="lg"
           >
-            {isSubmitting ? t('submitting') : t('submitRequest')}
+            {isSubmitting ? t("submitting") : t("submitRequest")}
           </Button>
         </div>
       }

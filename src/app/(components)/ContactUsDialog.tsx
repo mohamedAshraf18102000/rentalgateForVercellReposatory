@@ -4,7 +4,7 @@ import * as React from "react";
 import { useTranslations } from "next-intl";
 import { DialogWrapper } from "./ui/dialog-wrapper";
 import { Input } from "./ui/input";
-import { Textarea } from "./ui/textarea";
+import { Textarea } from "./ui/textareaOriginal";
 import { Button } from "./ui/button";
 import { sendContactMessage } from "@/lib/api/services/contact.service";
 import { toast } from "sonner";
@@ -34,26 +34,52 @@ export function ContactUsDialog({
 
     // Validation
     if (!formData.fullName.trim()) {
-      const locale = typeof window !== 'undefined' ? window.location.pathname.split('/')[1] : 'ar';
-      toast.error(locale === 'ar' ? 'يرجى إدخال الاسم بالكامل' : 'Please enter your full name');
+      const locale =
+        typeof window !== "undefined"
+          ? window.location.pathname.split("/")[1]
+          : "ar";
+      toast.error(
+        locale === "ar"
+          ? "يرجى إدخال الاسم بالكامل"
+          : "Please enter your full name",
+      );
       return;
     }
     if (!formData.email.trim()) {
-      const locale = typeof window !== 'undefined' ? window.location.pathname.split('/')[1] : 'ar';
-      toast.error(locale === 'ar' ? 'يرجى إدخال البريد الإلكتروني' : 'Please enter your email');
+      const locale =
+        typeof window !== "undefined"
+          ? window.location.pathname.split("/")[1]
+          : "ar";
+      toast.error(
+        locale === "ar"
+          ? "يرجى إدخال البريد الإلكتروني"
+          : "Please enter your email",
+      );
       return;
     }
     if (!formData.message.trim()) {
-      const locale = typeof window !== 'undefined' ? window.location.pathname.split('/')[1] : 'ar';
-      toast.error(locale === 'ar' ? 'يرجى إدخال نص الرسالة' : 'Please enter your message');
+      const locale =
+        typeof window !== "undefined"
+          ? window.location.pathname.split("/")[1]
+          : "ar";
+      toast.error(
+        locale === "ar" ? "يرجى إدخال نص الرسالة" : "Please enter your message",
+      );
       return;
     }
 
     // Email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formData.email)) {
-      const locale = typeof window !== 'undefined' ? window.location.pathname.split('/')[1] : 'ar';
-      toast.error(locale === 'ar' ? 'البريد الإلكتروني غير صحيح' : 'Invalid email address');
+      const locale =
+        typeof window !== "undefined"
+          ? window.location.pathname.split("/")[1]
+          : "ar";
+      toast.error(
+        locale === "ar"
+          ? "البريد الإلكتروني غير صحيح"
+          : "Invalid email address",
+      );
       return;
     }
 
@@ -68,7 +94,7 @@ export function ContactUsDialog({
       });
 
       toast.success(t("form.success"));
-      
+
       // Reset form
       setFormData({
         fullName: "",
@@ -80,16 +106,14 @@ export function ContactUsDialog({
       // Close dialog
       onOpenChange?.(false);
     } catch (error) {
-      toast.error(
-        error instanceof Error ? error.message : t("form.error")
-      );
+      toast.error(error instanceof Error ? error.message : t("form.error"));
     } finally {
       setLoading(false);
     }
   };
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -171,4 +195,3 @@ export function ContactUsDialog({
     />
   );
 }
-

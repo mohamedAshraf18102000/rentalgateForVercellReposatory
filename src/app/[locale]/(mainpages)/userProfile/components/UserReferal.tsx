@@ -1,33 +1,33 @@
 "use client";
-import { Copy, Share2 } from "lucide-react";
-import { useRef } from "react";
+
+import { CheckCircle, Copy, Share2 } from "lucide-react";
+import copy from "copy-to-clipboard";
+import { toast } from "sonner";
 
 interface userReferalProps {
   referalCode: string;
 }
 
 const UserReferal = ({ referalCode }: userReferalProps) => {
-  const inputRef = useRef<HTMLInputElement>(null);
-
   const handleCopy = () => {
-    if (inputRef.current) {
-      inputRef.current.select();
-      inputRef.current.setSelectionRange(0, 99999);
-      document.execCommand("copy");
-      console.log("تم النسخ");
+    if (referalCode) {
+      copy(referalCode);
+
+      toast(
+        <div className="flex items-center gap-2 text-sm">
+          <CheckCircle className="text-green-500 w-5 h-5" />
+          <span>تم نسخ الكود بنجاح</span>
+        </div>,
+        {
+          position: "top-center",
+          className: "rounded-xl",
+        },
+      );
     }
   };
 
   return (
-    <div className="rounded-2xl p-2 bg-[url(/profile/panner.png)] h-[270px] bg-cover w-full flex flex-col justify-center text-white">
-      {/* hidden input */}
-      <input
-        ref={inputRef}
-        value={referalCode}
-        readOnly
-        className="absolute opacity-0 pointer-events-none"
-      />
-
+    <div className="rounded-2xl p-2 bg-[url(/profile/panner.png)] h-[270px] bg-cover w-full flex flex-col justify-center text-white border-2 border-white">
       <div className="w-[60%] p-3">
         <h4 className="text-lg font-extrabold">تحب تكسب خصومات؟!!</h4>
         <p className="text-sm w-3/4">
@@ -43,6 +43,7 @@ const UserReferal = ({ referalCode }: userReferalProps) => {
 
           <div className="flex items-center gap-2">
             <Share2 size={24} className="text-Grey700 cursor-pointer" />
+
             <Copy
               size={24}
               className="text-Grey700 cursor-pointer"

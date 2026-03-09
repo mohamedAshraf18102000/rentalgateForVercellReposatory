@@ -4,8 +4,9 @@ import Image from "next/image";
 import { SaudiRiyal } from "lucide-react";
 import { Separator } from "@/app/(components)/ui/separator";
 import UserDetailsCard from "./components/UserDetailsCard";
-import UserExtraDetailsOccordion from "./components/UserExtraDetailsOccordion";
 import UserReferal from "./components/UserReferal";
+import ProfileActionCard from "./components/ProfileActionCard";
+import UserProfileActions from "./components/actions/UsersProfileActions";
 
 const userData = [
   {
@@ -30,11 +31,11 @@ const page = () => {
     <WrapperContainer exceedNav>
       <ProfileBreadCrump />
 
-      <div className="bg-red-400 w-full p-3 mt-6 flex justify-between ">
-        <div className="w-[50%] bg-white rounded-2xl p-3">
+      <div className="w-full p-3 mt-6 flex justify-between ">
+        <div className="w-[50%] bg-white rounded-2xl shadow-lg p-3">
           <div className="grid grid-cols-2 items-center">
             <div className="flex items-center gap-3">
-              <div className="w-[100px] h-[100px] relative rounded-2xl overflow-hidden">
+              <div className="w-[100px] h-[100px] relative rounded-2xl overflow-hidden bg-[#BE2326]">
                 <Image
                   className="object-fill scale-120"
                   src="https://www.shutterstock.com/image-photo/portrait-phot-saudi-guy-profissional-600w-2603387181.jpg"
@@ -86,19 +87,23 @@ const page = () => {
             <p className="text-base mb-2">البيانات الأخرى:</p>
             <div className="grid grid-cols-2 items-center gap-4">
               {Array.from({ length: 4 }).map((_, index) => (
-                <UserExtraDetailsOccordion
+                <ProfileActionCard
                   key={index}
-                  icon="/Profile/ContactIcon.png"
-                  title="بيانات الرخصة"
-                  content={<p>Mohamed</p>}
+                  title="كلمة المرور"
+                  description="تغيير كلمة المرور الخاصة بك"
+                  icon="/profile/ContactIcon.png"
+                  bg_gray
                 />
               ))}
             </div>
           </div>
         </div>
 
-        <div className="w-[40%] bg-green-400 rounded-2xl p-3">
-          <UserReferal referalCode="MO123MO" />
+        <div className="w-[40%] rounded-2xl p-3">
+          <UserReferal referalCode="A123A" />
+          <div className="flex flex-col gap-4 mt-4">
+            <UserProfileActions />
+          </div>
         </div>
       </div>
     </WrapperContainer>
