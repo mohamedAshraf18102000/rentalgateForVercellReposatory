@@ -2,9 +2,11 @@
 import ProfileActionCard from "../ProfileActionCard";
 import UpdateLicenceDialog from "../userDialog/UpdateLicenceDialog";
 import { useState } from "react";
+import UpdateUserSavedLocationDialog from "../userDialog/UpdateUserSavedLocationDialog";
 
 const OtherDetailsAction = () => {
   const [openLicenceDialog, setOpenLicenceDialog] = useState(false);
+  const [openUserSavedLocDialog, setOpenUserSavedLocDialog] = useState(false);
 
   return (
     <>
@@ -17,6 +19,7 @@ const OtherDetailsAction = () => {
       />
 
       <ProfileActionCard
+        onClick={() => setOpenUserSavedLocDialog(true)}
         bg_gray
         title="العناوين المسجلة"
         description="الحالي: السعودية, جدة"
@@ -41,6 +44,11 @@ const OtherDetailsAction = () => {
       <UpdateLicenceDialog
         open={openLicenceDialog}
         setOpen={setOpenLicenceDialog}
+      />
+
+      <UpdateUserSavedLocationDialog
+        open={openUserSavedLocDialog}
+        setOpen={setOpenUserSavedLocDialog}
       />
     </>
   );

@@ -46,6 +46,7 @@ function Button({
   size = "default",
   asChild = false,
   icon,
+  startIcon,
   title,
   children,
   loading = false,
@@ -55,6 +56,7 @@ function Button({
   VariantProps<typeof buttonVariants> & {
     asChild?: boolean;
     icon?: React.ReactNode;
+    startIcon?: React.ReactNode;
     title?: string;
     loading?: boolean;
   }) {
@@ -78,6 +80,7 @@ function Button({
         children
       ) : (
         <>
+          <div>{startIcon && startIcon}</div>
           {content && (
             <span className="inline-flex items-center leading-none">
               {content}
