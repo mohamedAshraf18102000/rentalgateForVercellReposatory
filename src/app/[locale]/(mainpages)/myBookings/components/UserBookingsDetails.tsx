@@ -2,7 +2,7 @@ import { Separator } from "@/app/(components)/ui/separator";
 import Image from "next/image";
 import { BookingsStatus } from "./BookingsStatus";
 import PaginationDateView from "@/app/(components)/PaginationDateView";
-import BookedCarsDetails from "@/app/(components)/customCards/BookedCarsDetails";
+import BookedCarsDetails from "@/app/(components)/customCards/BookedCarDetails/BookedCarsDetails";
 
 const UserBookingsDetails = () => {
   return (

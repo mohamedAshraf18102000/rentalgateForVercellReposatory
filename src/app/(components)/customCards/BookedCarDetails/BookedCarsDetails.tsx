@@ -1,10 +1,11 @@
 import Image from "next/image";
-import { Badge } from "../ui/badge";
-import { Separator } from "../ui/separator";
-import RecieveCarIcon from "../../../../public/profile/myBookings/RecieveCarIcon";
-import BookingDateIcon from "../../../../public/profile/myBookings/BookingDateIcon";
-import { Button } from "../ui/button";
+import { Badge } from "../../ui/badge";
+import { Separator } from "../../ui/separator";
+import RecieveCarIcon from "../../../../../public/profile/myBookings/RecieveCarIcon";
+import BookingDateIcon from "../../../../../public/profile/myBookings/BookingDateIcon";
+import { Button } from "../../ui/button";
 import { ChevronLeft } from "lucide-react";
+import BookedCarDetailsDrawer from "./BookedCarDetailsDrawer";
 
 const BookedCarsDetails = () => {
   return (
@@ -49,13 +50,26 @@ const BookedCarsDetails = () => {
             <span className="text-Grey700">رقم الحجز:</span>
             <span className="font-bold text-lg mx-2">860</span>
           </div>
-          <Button
-            variant="outline"
-            className="text-base!"
-            icon={<ChevronLeft className="w-8 h-8" />}
-          >
-            عرض التفاصيل
-          </Button>
+          <BookedCarDetailsDrawer
+            data={{
+              id: "860",
+              name: "أسم السيارة وسنة الصنع و ممكن يبقى أكتر من كده",
+              image: "/banner_ar.png",
+              category: "SUVs",
+              pickupLocation: "السعودية، مكة، تفاصيل الم",
+              bookingDate: "السعودية، مكة، تفاصيل الم",
+              bookingNumber: "860",
+            }}
+            trigger={
+              <Button
+                variant="outline"
+                className="text-base!"
+                icon={<ChevronLeft className="w-8 h-8" />}
+              >
+                عرض التفاصيل
+              </Button>
+            }
+          />
         </div>
       </div>
     </div>
