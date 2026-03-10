@@ -133,7 +133,10 @@ const BookedCarDetailsDrawer = ({
           <Separator className="my-3" />
           <div className="grid grid-cols-4 gap-3">
             {Array.from({ length: 5 }).map((_, index) => (
-              <div className="bg-StatusGreen p-2 border-2 border-StatusDarkGreen w-fit flex items-center rounded-xl font-bold">
+              <div
+                key={index}
+                className="bg-StatusGreen p-2 border-2 border-StatusDarkGreen w-fit flex items-center rounded-xl font-bold"
+              >
                 <span className="text-StatusDarkGreen mx-1">الخدمة:</span>
                 <span>70.00</span>
                 <SaudiRiyalIcon />
