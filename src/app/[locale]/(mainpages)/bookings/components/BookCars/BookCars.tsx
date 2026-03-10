@@ -12,6 +12,7 @@ import { useForm, Controller } from "react-hook-form";
 import FilterDrawer from "./FilterDrawer";
 import CustomBadge from "@/app/(components)/ui/customBadge";
 import Link from "next/link";
+import PaginationDateView from "@/app/(components)/PaginationDateView";
 
 interface FormValues {
   location: string;
@@ -146,11 +147,7 @@ const BookCars = () => {
         <div className="p-2.5 bg-white w-[15%] shadow-lg rounded-2xl">
           <p className="font-bold">السيارات الظاهرة:</p>
           <Separator className="my-4" />
-          <div className="flex items-center justify-evenly">
-            <p className="p-2 rounded-lg font-bold">12</p>
-            <p className="p-2 rounded-lg ">من أصل</p>
-            <p className="p-2 rounded-lg font-bold">1249 </p>
-          </div>
+          <PaginationDateView shown="12" total="1249" />
         </div>
       </form>
 
