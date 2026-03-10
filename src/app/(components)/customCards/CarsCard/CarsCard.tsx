@@ -12,7 +12,21 @@ import ExeclusiveOfferIcon from "../../../../constants/icons/ExeclusiveOfferIcon
 import FreeKmIcon from "../../../../constants/icons/FreeKmIcon";
 import StarIcon from "../../../../constants/icons/StarIcon";
 
-const CarsCard = ({ advancedCard }: { advancedCard?: boolean }) => {
+interface carsCard {
+  advancedCard?: boolean;
+  extraBadgeTitle?: string;
+  firstBadgeColor?: "green" | "red";
+  extraBadgeColor?: "green" | "red";
+  extraContent?: React.ReactNode;
+}
+
+const CarsCard = ({
+  advancedCard,
+  extraBadgeTitle,
+  firstBadgeColor,
+  extraBadgeColor,
+  extraContent,
+}: carsCard) => {
   return (
     <article>
       <Card
@@ -28,9 +42,19 @@ const CarsCard = ({ advancedCard }: { advancedCard?: boolean }) => {
             className="relative z-20 mt-10 w-full object-cover scale-90"
           />
 
-          <Badge className="text-sm font-bold absolute top-0 -right-2 bg-StatusGreen text-StatusDarkGreen p-4">
-            خصم 20%
+          <Badge
+            className={`text-sm font-bold absolute top-0 -right-2  p-4 ${firstBadgeColor === "red" ? "bg-StatusBrownBG text-StatusBrown200" : "bg-StatusGreen text-StatusDarkGreen"}`}
+          >
+            تصل خلال 20 دقيقة
           </Badge>
+
+          {extraBadgeTitle && (
+            <Badge
+              className={`text-sm font-bold z-50 absolute top-10 -right-2  p-4 ${extraBadgeColor === "red" ? "bg-StatusBrownBG text-StatusBrown200" : "bg-StatusGreen text-StatusDarkGreen"}`}
+            >
+              {extraBadgeTitle}
+            </Badge>
+          )}
 
           <RoundedRec className="absolute bottom-0 left-1/2 -translate-x-1/2 z-50" />
 
@@ -98,6 +122,9 @@ const CarsCard = ({ advancedCard }: { advancedCard?: boolean }) => {
                 <span>/ يوم</span>
               </p>
             </div>
+            {extraContent && (
+              <div className="w-full h-full">{extraContent}</div>
+            )}
           </CardContent>
         </CardHeader>
       </Card>
