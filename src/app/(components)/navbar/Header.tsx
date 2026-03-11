@@ -4,8 +4,6 @@
 
 "use client";
 
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
 import { ContactUsDialog } from "@/app/(components)/ContactUsDialog";
 import { useTranslations } from "next-intl";
 import * as React from "react";
@@ -22,51 +20,6 @@ import { useHeaderLogic } from "./hooks/useHeaderLogic";
 export default function Header() {
   const t = useTranslations("common");
   const tContact = useTranslations("contact");
-=======
-<<<<<<< Updated upstream
-=======
->>>>>>> Stashed changes
-import { ContactUsDialog } from '@/app/(components)/ContactUsDialog';
-import { useTranslations } from 'next-intl';
-import * as React from 'react';
-import { LoginButton } from '../LoginButton';
-import { HomeLink } from './components/HomeLink';
-import { LanguageSwitcher } from './components/LanguageSwitcher';
-import { Logo } from './components/Logo';
-import { MobileBottomNav } from './components/MobileBottomNav';
-import { MobileHeader } from './components/MobileHeader';
-import { UserMenu } from './components/UserMenu';
-import { BUTTON_STYLES, NAVBAR_STYLES } from './constants';
-import { useHeaderLogic } from './hooks/useHeaderLogic';
-
-export default function Header() {
-  const t = useTranslations('common');
-  const tContact = useTranslations('contact');
-=======
-import { ContactUsDialog } from "@/app/(components)/ContactUsDialog";
-import { useTranslations } from "next-intl";
-import * as React from "react";
-import { LoginButton } from "../LoginButton";
-import { HomeLink } from "./components/HomeLink";
-import { LanguageSwitcher } from "./components/LanguageSwitcher";
-import { Logo } from "./components/Logo";
-import { MobileBottomNav } from "./components/MobileBottomNav";
-import { MobileHeader } from "./components/MobileHeader";
-import { UserMenu } from "./components/UserMenu";
-import { BUTTON_STYLES, NAVBAR_STYLES } from "./constants";
-import { useHeaderLogic } from "./hooks/useHeaderLogic";
-import { useLocationStore } from "@/lib/stores/useLocationStore";
-
-export default function Header() {
-  const latitude = useLocationStore((store) => store.latitude);
-  const longitude = useLocationStore((store) => store.longitude);
-  const t = useTranslations("common");
-  const tContact = useTranslations("contact");
->>>>>>> Stashed changes
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
   const {
     isClient,
     authenticated,
@@ -116,63 +69,11 @@ export default function Header() {
               />
 
               <HomeLink
-                href="/bookings"
-                label={locale === "ar" ? "الحجز" : "Bookings"}
-                isActive={pathname === "/bookings"}
-                className={BUTTON_STYLES.navLink}
-              />
-
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-              <HomeLink
                 href="/branches"
                 label={locale === "ar" ? "الفروع" : "Branches"}
                 isActive={pathname === "/branches"}
                 className={BUTTON_STYLES.navLink}
               />
-
-=======
-<<<<<<< Updated upstream
-=======
->>>>>>> Stashed changes
-=======
-=======
->>>>>>> Stashed changes
-              <HomeLink
-                href="/bussinessAccounts"
-                label={locale === "ar" ? "حساب الاعمال" : "Bussiness Account"}
-                isActive={pathname === "/bussinessAccounts"}
-                className={BUTTON_STYLES.navLink}
-              />
-
-              <HomeLink
-                href="/userProfile"
-                label={locale === "ar" ? "الملف الشخصي" : "Profile"}
-                isActive={pathname === "/userProfile"}
-                className={BUTTON_STYLES.navLink}
-              />
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-
-              <div className="bg-red-500 p-2 text-[14px]">
-                <div className="flex">
-                  <p>Long:</p>
-                  <p>{longitude}</p>
-                </div>
-
-                <div className="flex">
-                  <p>Lat:</p>
-                  <p>{latitude}</p>
-                </div>
-              </div>
->>>>>>> Stashed changes
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
             </div>
 
             {/* Right Section */}

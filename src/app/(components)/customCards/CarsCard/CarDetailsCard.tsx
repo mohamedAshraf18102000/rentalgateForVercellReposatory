@@ -1,11 +1,4 @@
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
 "use client";
->>>>>>> Stashed changes
-=======
-"use client";
->>>>>>> Stashed changes
 import RoundedRec from "@/constants/icons/RoundedRec";
 import { Badge } from "../../ui/badge";
 import ExeclusiveOfferIcon from "@/constants/icons/ExeclusiveOfferIcon";
@@ -16,22 +9,11 @@ import { Button } from "../../ui/button";
 import { Separator } from "../../ui/separator";
 import FreeKmIcon from "@/constants/icons/FreeKmIcon";
 import UnlimitedKmIcon from "@/constants/icons/UnlimitedKmIcon";
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-
-const CarDetailsCard = () => {
-=======
-=======
->>>>>>> Stashed changes
-import { useRouter } from "next/navigation";
+import { useRouter } from "next/router";
 
 const CarDetailsCard = () => {
   const router = useRouter();
 
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
   return (
     <section className="mt-5 flex w-full rounded-[18px] overflow-hidden border-2 border-white shadow-xl">
       <div className="w-[40%] overflow-hidden">
@@ -100,14 +82,7 @@ const CarDetailsCard = () => {
             <Button
               className="text-base!"
               icon={<ChevronLeft className="w-8 h-8" />}
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
               onClick={() => router.push(`/reservation`)}
->>>>>>> Stashed changes
-=======
-              onClick={() => router.push(`/reservation`)}
->>>>>>> Stashed changes
             >
               أحجزها الآن
             </Button>
