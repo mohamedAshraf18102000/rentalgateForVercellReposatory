@@ -1,35 +1,38 @@
 import { Separator } from "@/app/(components)/ui/separator";
 import WrapperContainer from "@/app/(components)/wrapperContainer/WrapperContainer";
 import ShieldRight from "@/constants/icons/ShieldRight";
-import { Sparkles } from 'lucide-react';
+import { Sparkles } from "lucide-react";
 import BussinessAccountForm from "./BussinessAccountForm";
-
 
 const featurePoints = [
   {
-    title: "كان لوريم إيبسوم ولايزال المعيار للنص الشكلي منذ القرن الخامس عشر "
+    title: "كان لوريم إيبسوم ولايزال المعيار للنص الشكلي منذ القرن الخامس عشر ",
   },
   {
-    title: "كان لوريم إيبسوم ولايزال المعيار للنص الشكلي منذ القرن الخامس عشر "
+    title: "كان لوريم إيبسوم ولايزال المعيار للنص الشكلي منذ القرن الخامس عشر ",
   },
   {
-    title: "كان لوريم إيبسوم ولايزال المعيار للنص الشكلي منذ القرن الخامس عشر "
+    title: "كان لوريم إيبسوم ولايزال المعيار للنص الشكلي منذ القرن الخامس عشر ",
   },
   {
-    title: "كان لوريم إيبسوم ولايزال المعيار للنص الشكلي منذ القرن الخامس عشر "
-  }
-]
+    title: "كان لوريم إيبسوم ولايزال المعيار للنص الشكلي منذ القرن الخامس عشر ",
+  },
+];
 
 const BussinessAccounts = () => {
   return (
     <WrapperContainer>
-      <h4 className="text-3xl font-bold mb-4 text-center">رينتال جيت لحساب الأعمال </h4>
+      <h4 className="text-3xl font-bold my-6 text-center">
+        رينتال جيت لحساب الأعمال{" "}
+      </h4>
       <div className="grid grid-cols-2 gap-4">
         <div className=" rounded-2xl border-2  border-white">
           <div className=" bg-[url(/bussinesAccounts/img1.png)] bg-cover p-6">
             <div className=" w-1/2">
               <h6 className="font-bold text-2xl">ماهو حساب الأعمال🤔؟!!</h6>
-              <p className="text-lg mt-3">هو حساب مصمم خصيصًا للشركات وأصحاب الأعمال</p>
+              <p className="text-lg mt-3">
+                هو حساب مصمم خصيصًا للشركات وأصحاب الأعمال
+              </p>
               <BussinessAccountForm />
             </div>
           </div>
@@ -50,7 +53,7 @@ const BussinessAccounts = () => {
           ))}
         </div>
       </div>
-    </WrapperContainer >
+    </WrapperContainer>
   );
 };
 
