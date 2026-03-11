@@ -10,6 +10,7 @@ import SuccessPartners from "./(mainpages)/(home)/SuccessPartners";
 import Offers from "./(mainpages)/(home)/offers/Offers";
 import CompanyOffers from "./(mainpages)/(home)/offers/CompanyOffers";
 import BussinessAccounts from "./(mainpages)/bussinessAccounts/components/RentalGateBussinessAccounts/BussinessAccounts";
+import { CurrentLocationDialog } from "./(dialogs)/PickupDialog/CurrentLocationDialog";
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -33,6 +34,7 @@ export default async function HomePage({ params }: Props) {
 
   return (
     <main>
+      <CurrentLocationDialog />
       <HomeSlider banners={banners} />
       <PickUpArea />
       <RentalGateInfo />
