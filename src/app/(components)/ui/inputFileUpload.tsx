@@ -26,7 +26,7 @@ function InputFileUpload({
   labelClassName,
   labelIcon,
   uploadIcon,
-  uploadText = "أضغط أو قُم بالسحب لأضافة صورة الرخصة",
+  uploadText = "أضغط أو قُم بالسحب لأضافة ملف",
   onFileRemove,
   ...props
 }: InputProps) {

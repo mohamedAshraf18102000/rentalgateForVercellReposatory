@@ -9,7 +9,7 @@ import RentalBookingSearchSection from "./(mainpages)/(home)/RentalBookingSearch
 import SuccessPartners from "./(mainpages)/(home)/SuccessPartners";
 import Offers from "./(mainpages)/(home)/offers/Offers";
 import CompanyOffers from "./(mainpages)/(home)/offers/CompanyOffers";
-import BussinessAccounts from "./(mainpages)/(home)/RentalGateBussinessAccounts/BussinessAccounts";
+import BussinessAccounts from "./(mainpages)/bussinessAccounts/components/RentalGateBussinessAccounts/BussinessAccounts";
 
 type Props = {
   params: Promise<{ locale: string }>;

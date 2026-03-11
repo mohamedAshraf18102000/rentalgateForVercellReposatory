@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import WrapperContainer from "@/app/(components)/wrapperContainer/WrapperContainer";
-import Stepper from "./components/form/Stepper";
+import Stepper from "../../../(components)/rentalStepper/Stepper";
 import CarsCard from "@/app/(components)/customCards/CarsCard/CarsCard";
 import StepContent from "./components/form/StepContent";
 import { Button } from "@/app/(components)";
@@ -42,7 +42,7 @@ const page = () => {
         </div>
 
         <div className="flex gap-4 w-full mt-10">
-          <div className="w-3/4 bg-white rounded-2xl p-4">
+          <div className="w-3/4 bg-white h-fit rounded-2xl p-4">
             <div className="flex justify-between">
               <div className="flex items-center">
                 <span className="mx-2 text-base">أجمالي التكلفة:</span>

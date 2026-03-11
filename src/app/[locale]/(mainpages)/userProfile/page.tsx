@@ -33,7 +33,7 @@ const page = () => {
       <ProfileBreadCrump />
 
       <div className="w-full p-3 mt-6 flex justify-between ">
-        <div className="w-[50%] bg-white rounded-2xl shadow-lg p-3">
+        <div className="w-[60%] bg-white rounded-2xl shadow-lg p-3">
           <div className="grid grid-cols-2 items-center">
             <div className="flex items-center gap-3">
               <div className="w-[100px] h-[100px] relative rounded-2xl overflow-hidden bg-[#BE2326]">

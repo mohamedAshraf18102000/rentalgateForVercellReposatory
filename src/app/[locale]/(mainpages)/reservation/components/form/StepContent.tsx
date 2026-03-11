@@ -1,11 +1,7 @@
 "use client";
-import { OffersIcon } from "@/constants/icons";
-import { useStepAnimation } from "../../hooks/useStepAnimation";
+import { useStepAnimation } from "../../../../../(components)/rentalStepper/hooks/useStepAnimation";
 import ExeclusiveOfferIcon from "@/constants/icons/ExeclusiveOfferIcon";
 import { Separator } from "@/app/(components)/ui/separator";
-import Image from "next/image";
-import { SaudiRiyalIcon } from "lucide-react";
-import { Badge } from "@/app/(components)";
 import OffersCard from "@/app/(components)/customCards/OffersCard";
 
 interface StepContentProps {
