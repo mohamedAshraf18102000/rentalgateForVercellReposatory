@@ -35,12 +35,14 @@ const OtherDetailsAction = () => {
         />
       </Link>
 
-      <ProfileActionCard
-        bg_gray
-        title="المحفظة"
-        description="أستبدل النقاط المكتسبة"
-        icon="/profile/actionIcons/wallet.webp"
-      />
+      <Link href="/wallet">
+        <ProfileActionCard
+          bg_gray
+          title="المحفظة"
+          description="أستبدل النقاط المكتسبة"
+          icon="/profile/actionIcons/wallet.webp"
+        />
+      </Link>
 
       {/* Dialogs */}
       <UpdateLicenceDialog
