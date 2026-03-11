@@ -5,6 +5,7 @@
 "use client";
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 import { ContactUsDialog } from "@/app/(components)/ContactUsDialog";
 import { useTranslations } from "next-intl";
 import * as React from "react";
@@ -23,6 +24,8 @@ export default function Header() {
   const tContact = useTranslations("contact");
 =======
 <<<<<<< Updated upstream
+=======
+>>>>>>> Stashed changes
 import { ContactUsDialog } from '@/app/(components)/ContactUsDialog';
 import { useTranslations } from 'next-intl';
 import * as React from 'react';
@@ -60,6 +63,9 @@ export default function Header() {
   const t = useTranslations("common");
   const tContact = useTranslations("contact");
 >>>>>>> Stashed changes
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
   const {
     isClient,
@@ -117,6 +123,7 @@ export default function Header() {
               />
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
               <HomeLink
                 href="/branches"
                 label={locale === "ar" ? "الفروع" : "Branches"}
@@ -126,6 +133,9 @@ export default function Header() {
 
 =======
 <<<<<<< Updated upstream
+=======
+>>>>>>> Stashed changes
+=======
 =======
 >>>>>>> Stashed changes
               <HomeLink
@@ -142,7 +152,10 @@ export default function Header() {
                 className={BUTTON_STYLES.navLink}
               />
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
 
               <div className="bg-red-500 p-2 text-[14px]">
                 <div className="flex">
@@ -156,6 +169,9 @@ export default function Header() {
                 </div>
               </div>
 >>>>>>> Stashed changes
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
             </div>
 

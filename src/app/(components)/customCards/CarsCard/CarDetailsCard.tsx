@@ -1,4 +1,8 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+"use client";
+>>>>>>> Stashed changes
 =======
 "use client";
 >>>>>>> Stashed changes
@@ -13,14 +17,20 @@ import { Separator } from "../../ui/separator";
 import FreeKmIcon from "@/constants/icons/FreeKmIcon";
 import UnlimitedKmIcon from "@/constants/icons/UnlimitedKmIcon";
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 
 const CarDetailsCard = () => {
 =======
+=======
+>>>>>>> Stashed changes
 import { useRouter } from "next/navigation";
 
 const CarDetailsCard = () => {
   const router = useRouter();
 
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
   return (
     <section className="mt-5 flex w-full rounded-[18px] overflow-hidden border-2 border-white shadow-xl">
@@ -91,6 +101,10 @@ const CarDetailsCard = () => {
               className="text-base!"
               icon={<ChevronLeft className="w-8 h-8" />}
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+              onClick={() => router.push(`/reservation`)}
+>>>>>>> Stashed changes
 =======
               onClick={() => router.push(`/reservation`)}
 >>>>>>> Stashed changes

@@ -1,6 +1,7 @@
 "use client";
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 import { DialogWrapper } from "@/app/(components)";
 import CarPickupDialogTabs from "@/app/(components)/carPickupDialogComponent/CarPickupDialogTabs";
 import GoogleMapsLocation from "@/app/(components)/mapsLocation/GoogleMapsLocation";
@@ -14,6 +15,8 @@ export function CurrentLocationDialog() {
       open={true}
       onOpenChange={setOpen}
 =======
+=======
+>>>>>>> Stashed changes
 import { useState, useEffect } from "react";
 import { DialogWrapper } from "@/app/(components)";
 import GoogleMapsLocation from "@/app/(components)/mapsLocation/GoogleMapsLocation";
@@ -66,6 +69,9 @@ export function CurrentLocationDialog() {
     <DialogWrapper
       open={open}
       onOpenChange={handleOpenChange}
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
       size="xl"
       header={{ mainTitle: "مكان الأستلام" }}
