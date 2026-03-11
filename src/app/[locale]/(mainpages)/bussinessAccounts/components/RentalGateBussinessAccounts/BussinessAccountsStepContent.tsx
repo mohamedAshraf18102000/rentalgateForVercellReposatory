@@ -19,10 +19,16 @@ const stepData = [
     step: 2,
     colorClass: "step-color-2",
     label: "الخطوة الثانية",
-    content: <CompanyInfoForm />,
+    content: <CompanyInfoForm step={1} />,
   },
   {
     step: 3,
+    colorClass: "step-color-2",
+    label: "الخطوة الثانية",
+    content: <CompanyInfoForm step={2} />,
+  },
+  {
+    step: 4,
     colorClass: "step-color-3",
     label: "الخطوة الثالثة",
     content: <NotesForm />,
