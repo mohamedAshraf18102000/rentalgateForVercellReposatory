@@ -44,7 +44,9 @@ const GoogleMapsLocation = () => {
           <p>Getting your location...</p>
         </div>
       ) : (
-        <LoadScript googleMapsApiKey="">
+        <LoadScript
+          googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!}
+        >
           <GoogleMap
             mapContainerStyle={mapStyle}
             center={currentLocation}
