@@ -9,7 +9,7 @@ import { Button } from "../../ui/button";
 import { Separator } from "../../ui/separator";
 import FreeKmIcon from "@/constants/icons/FreeKmIcon";
 import UnlimitedKmIcon from "@/constants/icons/UnlimitedKmIcon";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 const CarDetailsCard = () => {
   const router = useRouter();

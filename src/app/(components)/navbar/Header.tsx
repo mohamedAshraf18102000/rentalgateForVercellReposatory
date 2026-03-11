@@ -69,9 +69,30 @@ export default function Header() {
               />
 
               <HomeLink
+                href="/bookings"
+                label={locale === "ar" ? "الحجز" : "Bookings"}
+                isActive={pathname === "/bookings"}
+                className={BUTTON_STYLES.navLink}
+              />
+
+              <HomeLink
                 href="/branches"
                 label={locale === "ar" ? "الفروع" : "Branches"}
                 isActive={pathname === "/branches"}
+                className={BUTTON_STYLES.navLink}
+              />
+
+              <HomeLink
+                href="/bussinessAccounts"
+                label={locale === "ar" ? "حساب الاعمال" : "Bussiness Account"}
+                isActive={pathname === "/bussinessAccounts"}
+                className={BUTTON_STYLES.navLink}
+              />
+
+              <HomeLink
+                href="/userProfile"
+                label={locale === "ar" ? "الملف الشخصي" : "Profile"}
+                isActive={pathname === "/userProfile"}
                 className={BUTTON_STYLES.navLink}
               />
             </div>

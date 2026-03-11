@@ -1,8 +1,8 @@
 import WrapperContainer from "@/app/(components)/wrapperContainer/WrapperContainer";
 import CarsDetailsBreadCrump from "../components/CarsDetailsBreadCrump";
+import CarDetailsCard from "@/app/(components)/customCards/CarsCard/CarDetailsCard";
 import ServiceCard from "@/app/(components)/customCards/ServiceCard";
 import Panner from "../components/panner/Panner";
-import CarDetailsCard from "@/app/(components)/customCards/CarsCard/CarDetailsCard";
 
 const page = () => {
   return (
