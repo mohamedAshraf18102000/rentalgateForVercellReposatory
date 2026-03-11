@@ -1,11 +1,15 @@
 import WrapperContainer from "@/app/(components)/wrapperContainer/WrapperContainer";
 import CarsDetailsBreadCrump from "../components/CarsDetailsBreadCrump";
 import CarDetailsCard from "@/app/(components)/customCards/CarsCard/CarDetailsCard";
+<<<<<<< Updated upstream
 import HomeMockups from "../../(home)/HomeMockups";
 import ServiceCard from "@/app/(components)/customCards/ServiceCard";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 import GooglePlay_AppStore from "@/app/(components)/getOnGooglePlay_AppStore/GooglePlay_AppStore";
+=======
+import ServiceCard from "@/app/(components)/customCards/ServiceCard";
+>>>>>>> Stashed changes
 import Panner from "../components/panner/Panner";
 
 const page = () => {
