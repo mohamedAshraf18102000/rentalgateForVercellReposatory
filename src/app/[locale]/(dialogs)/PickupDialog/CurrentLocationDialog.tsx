@@ -5,9 +5,10 @@ import { DialogWrapper } from "@/app/(components)";
 import GoogleMapsLocation from "@/app/(components)/mapsLocation/GoogleMapsLocation";
 import { useLocationStore } from "@/lib/stores/useLocationStore";
 import { reverseGeocode } from "@/lib/utils/reverseGeocode";
+import { LocateFixed } from "lucide-react";
 
 export function CurrentLocationDialog() {
-  const { isDialogOpen, openDialog, closeDialog, setLocation } =
+  const { address, isDialogOpen, openDialog, closeDialog, setLocation } =
     useLocationStore();
 
   useEffect(() => {
@@ -49,9 +50,13 @@ export function CurrentLocationDialog() {
       open={isDialogOpen}
       onOpenChange={handleOpenChange}
       size="xl"
-      header={{ mainTitle: "مكان الأستلام" }}
+      header={{ mainTitle: "موقعك الحالي" }}
       content={
         <div className="overflow-hidden">
+          <div className="flex p-2 gap-2">
+            <LocateFixed />
+            {address}
+          </div>
           <GoogleMapsLocation />
         </div>
       }
@@ -65,7 +70,7 @@ export function CurrentLocationDialog() {
           </button>
 
           <button className="rounded-xl py-3 bg-primary text-white font-bold w-fit px-5">
-            أظهار النتائج
+            حفظ
           </button>
         </div>
       }

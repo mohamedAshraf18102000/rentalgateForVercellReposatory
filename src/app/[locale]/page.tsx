@@ -11,6 +11,8 @@ import Offers from "./(mainpages)/(home)/offers/Offers";
 import CompanyOffers from "./(mainpages)/(home)/offers/CompanyOffers";
 import BussinessAccounts from "./(mainpages)/bussinessAccounts/components/RentalGateBussinessAccounts/BussinessAccounts";
 import { CurrentLocationDialog } from "./(dialogs)/PickupDialog/CurrentLocationDialog";
+import BussinessAccountsContent from "./(mainpages)/bussinessAccounts/components/BussinessAccountsContent";
+import WrapperContainer from "../(components)/wrapperContainer/WrapperContainer";
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -44,7 +46,9 @@ export default async function HomePage({ params }: Props) {
       <MostRequestedCars locale={locale} />
       <CompanyOffers />
       <HomeMockups />
-      <BussinessAccounts />
+      <WrapperContainer>
+        <BussinessAccountsContent withOutStepper />
+      </WrapperContainer>
     </main>
   );
 }
