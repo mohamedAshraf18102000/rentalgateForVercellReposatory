@@ -4,7 +4,7 @@ const VoucherCard = () => {
   return (
     <div className="border-2 w-full bg-white flex items-end gap-5 rounded-2xl relative overflow-hidden">
       <div className="w-[30%] h-full bg-[url(/offers/offerImage2.png)] bg-cover bg-center bg-no-repeat flex items-end ">
-        <p className="text-center w-full bg-StatusGreen py-1 font-bold text-StatusDarkGreen">
+        <p className="text-center w-full bg-StatusGreen/95 py-1 font-bold text-StatusDarkGreen">
           <span>حتي</span> <span>30-10-2025</span>
         </p>
       </div>
