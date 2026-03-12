@@ -37,6 +37,7 @@ export default function Header() {
   const longitude = useLocationStore((state) => state.longitude);
   const latitude = useLocationStore((state) => state.latitude);
   const address = useLocationStore((state) => state.address);
+  const openLocationDialog = useLocationStore((state) => state.openDialog);
 
   // Translations
   const translations = React.useMemo(
@@ -77,12 +78,12 @@ export default function Header() {
                 className={BUTTON_STYLES.navLink}
               />
 
-              <HomeLink
+              {/* <HomeLink
                 href="/branches"
                 label={locale === "ar" ? "الفروع" : "Branches"}
                 isActive={pathname === "/branches"}
                 className={BUTTON_STYLES.navLink}
-              />
+              /> */}
 
               <HomeLink
                 href="/bussinessAccounts"
@@ -97,10 +98,6 @@ export default function Header() {
                 isActive={pathname === "/userProfile"}
                 className={BUTTON_STYLES.navLink}
               />
-
-              {/* <div>long : {longitude}</div>
-              <div>lat : {latitude}</div> */}
-              <div>address : {address}</div>
             </div>
 
             {/* Right Section */}
@@ -116,6 +113,14 @@ export default function Header() {
                 >
                   {tContact('title')}
                 </button> */}
+                <button
+                  title={address?.toString()}
+                  onClick={openLocationDialog}
+                >
+                  {address && address?.length > 20
+                    ? `${address?.slice(0, 20)}...`
+                    : address}
+                </button>
                 <LanguageSwitcher
                   currentLocale={locale}
                   onToggle={handleLanguageChange}

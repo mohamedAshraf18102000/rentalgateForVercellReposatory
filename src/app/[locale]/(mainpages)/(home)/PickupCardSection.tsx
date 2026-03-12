@@ -49,12 +49,14 @@ export default function PickUpCardsSection() {
               onClick={() => openDialog(card.key)}
             />
           ) : (
-            <PickUpCard
-              title={card.title}
-              description={card.description}
-              image={card.image}
-              onClick={() => openDialog(card.key)}
-            />
+            <div className="min-h-[480px] ">
+              <PickUpCard
+                title={card.title}
+                description={card.description}
+                image={card.image}
+                onClick={() => openDialog(card.key)}
+              />
+            </div>
           )}
         </div>
       ))}

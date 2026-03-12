@@ -4,7 +4,7 @@
  */
 export async function reverseGeocode(
   lat: number,
-  lng: number
+  lng: number,
 ): Promise<string | null> {
   try {
     const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
@@ -14,7 +14,7 @@ export async function reverseGeocode(
     }
 
     const response = await fetch(
-      `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${apiKey}&language=ar`
+      `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${apiKey}&language=ar`,
     );
     const data = await response.json();
 

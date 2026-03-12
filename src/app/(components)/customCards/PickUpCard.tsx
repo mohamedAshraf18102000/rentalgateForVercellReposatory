@@ -14,7 +14,7 @@ const PickUpCard = ({
   onClick,
 }: PickUpCardProps) => {
   return (
-    <div className="w-full h-[400px]" onClick={onClick}>
+    <div className="w-full" onClick={onClick}>
       <div className="w-full h-full pb-5 rounded-[18px] cursor-pointer group hover:bg-white transition-all duration-300">
         <img
           src={image}

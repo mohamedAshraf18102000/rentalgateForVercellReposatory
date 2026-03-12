@@ -1,14 +1,14 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { DialogWrapper } from "@/app/(components)";
 import GoogleMapsLocation from "@/app/(components)/mapsLocation/GoogleMapsLocation";
 import { useLocationStore } from "@/lib/stores/useLocationStore";
 import { reverseGeocode } from "@/lib/utils/reverseGeocode";
 
 export function CurrentLocationDialog() {
-  const [open, setOpen] = useState(false);
-  const setLocation = useLocationStore((state) => state.setLocation);
+  const { isDialogOpen, openDialog, closeDialog, setLocation } =
+    useLocationStore();
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -26,26 +26,27 @@ export function CurrentLocationDialog() {
 
     const hasClosed = sessionStorage.getItem("hasClosedLocationDialog");
     if (!hasClosed) {
-      const timer = setTimeout(() => setOpen(true), 3000);
+      const timer = setTimeout(() => openDialog(), 3000);
       return () => clearTimeout(timer);
     }
-  }, [setLocation, setOpen]);
+  }, [setLocation, openDialog]);
 
   const handleOpenChange = (isOpen: boolean) => {
-    setOpen(isOpen);
-    if (!isOpen) {
-      sessionStorage.setItem("hasClosedLocationDialog", "true");
+    if (isOpen) {
+      openDialog();
+    } else {
+      handleClose();
     }
   };
 
   const handleClose = () => {
-    setOpen(false);
+    closeDialog();
     sessionStorage.setItem("hasClosedLocationDialog", "true");
   };
 
   return (
     <DialogWrapper
-      open={open}
+      open={isDialogOpen}
       onOpenChange={handleOpenChange}
       size="xl"
       header={{ mainTitle: "مكان الأستلام" }}

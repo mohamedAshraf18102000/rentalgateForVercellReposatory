@@ -2,9 +2,9 @@
 import { useState, useEffect, useRef } from "react";
 import {
   GoogleMap,
-  LoadScript,
   Marker,
   Autocomplete,
+  useJsApiLoader,
 } from "@react-google-maps/api";
 import { Input } from "../ui/input";
 import { LocateFixed, Search } from "lucide-react";
@@ -19,20 +19,29 @@ const mapStyle = {
 
 const defaultLocation = { lat: 0, lng: 0 };
 
+const libraries: "places"[] = ["places"];
+
 const GoogleMapsLocation = () => {
   const { latitude, longitude, setLocation } = useLocationStore();
   const [currentLocation, setCurrentLocation] = useState({
     lat: latitude || defaultLocation.lat,
     lng: longitude || defaultLocation.lng,
   });
-  const [loading, setLoading] = useState(!latitude && !longitude);
+  const [locationLoading, setLocationLoading] = useState(
+    !latitude && !longitude,
+  );
   const autocompleteRef = useRef<any>(null);
   const mapRef = useRef<google.maps.Map | null>(null);
+
+  const { isLoaded } = useJsApiLoader({
+    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!,
+    libraries,
+  });
 
   useEffect(() => {
     if (latitude && longitude) {
       setCurrentLocation({ lat: latitude, lng: longitude });
-      setLoading(false);
+      setLocationLoading(false);
     } else if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         async (position) => {
@@ -43,15 +52,15 @@ const GoogleMapsLocation = () => {
           setCurrentLocation(newPos);
           const address = await reverseGeocode(newPos.lat, newPos.lng);
           setLocation(newPos.lat, newPos.lng, address);
-          setLoading(false);
+          setLocationLoading(false);
         },
         (error) => {
           console.error(error);
-          setLoading(false);
+          setLocationLoading(false);
         },
       );
     } else {
-      setLoading(false);
+      setLocationLoading(false);
     }
   }, [latitude, longitude, setLocation]);
 
@@ -91,68 +100,65 @@ const GoogleMapsLocation = () => {
     );
   };
 
-  return (
-    <div className="w-full h-full relative">
-      {loading ? (
+  if (!isLoaded || locationLoading) {
+    return (
+      <div className="w-full h-full relative">
         <div className="flex items-center justify-center h-[450px]">
           <Skeleton className="w-full h-full" />
         </div>
-      ) : (
-        <LoadScript
-          googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!}
-          libraries={["places"]}
+      </div>
+    );
+  }
+
+  return (
+    <div className="w-full h-full relative">
+      <div className="z-50">
+        <Autocomplete
+          onLoad={(autocomplete) => (autocompleteRef.current = autocomplete)}
+          onPlaceChanged={onPlaceChanged}
         >
-          <div className="z-50">
-            <Autocomplete
-              onLoad={(autocomplete) =>
-                (autocompleteRef.current = autocomplete)
-              }
-              onPlaceChanged={onPlaceChanged}
-            >
-              <Input
-                wrapperClassName="mb-3!"
-                className="bg-white! text-sm! rounded-xl w-full!"
-                type="search"
-                placeholder="بحث ..."
-                startIcon={<Search className="w-6! h-6!" />}
-              />
-            </Autocomplete>
-          </div>
-          <div className="relative w-full rounded-2xl overflow-hidden h-[450px]">
-            <button
-              type="button"
-              onClick={handleLocateUser}
-              className="rounded-full z-9999 absolute bottom-19 right-2.5 "
-            >
-              <LocateFixed className="w-10 h-10 text-blue-600" />
-            </button>
-            <GoogleMap
-              mapContainerStyle={mapStyle}
-              center={currentLocation}
-              zoom={15}
-              options={{
-                mapTypeControl: false,
-                fullscreenControl: false,
-                streetViewControl: false,
-              }}
-              onLoad={(map) => {
-                mapRef.current = map;
-              }}
-              onClick={async (e) => {
-                const newPos = {
-                  lat: e.latLng?.lat() || 0,
-                  lng: e.latLng?.lng() || 0,
-                };
-                setCurrentLocation(newPos);
-                const address = await reverseGeocode(newPos.lat, newPos.lng);
-                setLocation(newPos.lat, newPos.lng, address);
-              }}
-            >
-              <Marker position={currentLocation} />
-            </GoogleMap>
-          </div>
-        </LoadScript>
-      )}
+          <Input
+            wrapperClassName="mb-3!"
+            className="bg-white! text-sm! rounded-xl w-full!"
+            type="search"
+            placeholder="بحث ..."
+            startIcon={<Search className="w-6! h-6!" />}
+          />
+        </Autocomplete>
+      </div>
+      <div className="relative w-full rounded-2xl overflow-hidden h-[450px]">
+        <button
+          type="button"
+          onClick={handleLocateUser}
+          className="rounded-full z-9999 absolute bottom-19 right-2.5 "
+        >
+          <LocateFixed className="w-10 h-10 text-blue-600" />
+        </button>
+        <GoogleMap
+          mapContainerStyle={mapStyle}
+          center={currentLocation}
+          zoom={15}
+          options={{
+            mapTypeControl: false,
+            fullscreenControl: false,
+            streetViewControl: false,
+          }}
+          onLoad={(map) => {
+            mapRef.current = map;
+          }}
+          onClick={async (e) => {
+            const newPos = {
+              lat: e.latLng?.lat() || 0,
+              lng: e.latLng?.lng() || 0,
+            };
+            setCurrentLocation(newPos);
+            const address = await reverseGeocode(newPos.lat, newPos.lng);
+            setLocation(newPos.lat, newPos.lng, address);
+          }}
+        >
+          <Marker position={currentLocation} />
+        </GoogleMap>
+      </div>
     </div>
   );
 };
