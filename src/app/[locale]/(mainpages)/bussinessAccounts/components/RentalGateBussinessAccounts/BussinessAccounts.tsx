@@ -6,7 +6,7 @@ const BussinessAccounts = () => {
   return (
     <WrapperContainer>
       <h4 className="text-3xl font-bold my-6 text-center">
-        رينتال جيت لحساب الأعمال{" "}
+        رينتال جيت لحساب الأعمال
       </h4>
       <div className="grid grid-cols-2 gap-4">
         <div className="rounded-2xl border-2 border-white overflow-hidden">
