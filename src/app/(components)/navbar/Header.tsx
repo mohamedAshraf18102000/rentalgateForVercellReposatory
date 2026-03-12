@@ -16,10 +16,10 @@ import { MobileHeader } from "./components/MobileHeader";
 import { UserMenu } from "./components/UserMenu";
 import { BUTTON_STYLES, NAVBAR_STYLES } from "./constants";
 import { useHeaderLogic } from "./hooks/useHeaderLogic";
+import { useLocationStore } from "@/lib/stores/useLocationStore";
 
 export default function Header() {
   const t = useTranslations("common");
-  const tContact = useTranslations("contact");
   const {
     isClient,
     authenticated,
@@ -27,7 +27,6 @@ export default function Header() {
     isLoading,
     locale,
     pathname,
-    whatsappUrl,
     homePageActive,
     handleLogout,
     handleLanguageChange,
@@ -35,6 +34,9 @@ export default function Header() {
     handleBookingsClick,
   } = useHeaderLogic();
   const [contactDialogOpen, setContactDialogOpen] = React.useState(false);
+  const longitude = useLocationStore((state) => state.longitude);
+  const latitude = useLocationStore((state) => state.latitude);
+  const address = useLocationStore((state) => state.address);
 
   // Translations
   const translations = React.useMemo(
@@ -95,6 +97,10 @@ export default function Header() {
                 isActive={pathname === "/userProfile"}
                 className={BUTTON_STYLES.navLink}
               />
+
+              {/* <div>long : {longitude}</div>
+              <div>lat : {latitude}</div> */}
+              <div>address : {address}</div>
             </div>
 
             {/* Right Section */}

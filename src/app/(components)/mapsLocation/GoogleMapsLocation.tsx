@@ -10,6 +10,7 @@ import { Input } from "../ui/input";
 import { LocateFixed, Search } from "lucide-react";
 import { Skeleton } from "../ui/skeleton";
 import { useLocationStore } from "@/lib/stores/useLocationStore";
+import { reverseGeocode } from "@/lib/utils/reverseGeocode";
 
 const mapStyle = {
   width: "100%",
@@ -34,13 +35,14 @@ const GoogleMapsLocation = () => {
       setLoading(false);
     } else if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
-        (position) => {
+        async (position) => {
           const newPos = {
             lat: position.coords.latitude,
             lng: position.coords.longitude,
           };
           setCurrentLocation(newPos);
-          setLocation(newPos.lat, newPos.lng);
+          const address = await reverseGeocode(newPos.lat, newPos.lng);
+          setLocation(newPos.lat, newPos.lng, address);
           setLoading(false);
         },
         (error) => {
@@ -68,6 +70,25 @@ const GoogleMapsLocation = () => {
       setLocation(newPos.lat, newPos.lng, place.formatted_address);
       console.log(newPos);
     }
+  };
+
+  const handleLocateUser = () => {
+    if (!navigator.geolocation) return;
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const newPos = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        };
+        setCurrentLocation(newPos);
+        mapRef.current?.panTo(newPos);
+        const address = await reverseGeocode(newPos.lat, newPos.lng);
+        setLocation(newPos.lat, newPos.lng, address);
+      },
+      (error) => {
+        console.error("Error getting location:", error);
+      },
+    );
   };
 
   return (
@@ -98,7 +119,11 @@ const GoogleMapsLocation = () => {
             </Autocomplete>
           </div>
           <div className="relative w-full rounded-2xl overflow-hidden h-[450px]">
-            <button className="rounded-full z-9999 absolute bottom-19 right-2.5 ">
+            <button
+              type="button"
+              onClick={handleLocateUser}
+              className="rounded-full z-9999 absolute bottom-19 right-2.5 "
+            >
               <LocateFixed className="w-10 h-10 text-blue-600" />
             </button>
             <GoogleMap
@@ -113,14 +138,14 @@ const GoogleMapsLocation = () => {
               onLoad={(map) => {
                 mapRef.current = map;
               }}
-              onClick={(e) => {
+              onClick={async (e) => {
                 const newPos = {
                   lat: e.latLng?.lat() || 0,
                   lng: e.latLng?.lng() || 0,
                 };
                 setCurrentLocation(newPos);
-                setLocation(newPos.lat, newPos.lng);
-                console.log(newPos);
+                const address = await reverseGeocode(newPos.lat, newPos.lng);
+                setLocation(newPos.lat, newPos.lng, address);
               }}
             >
               <Marker position={currentLocation} />

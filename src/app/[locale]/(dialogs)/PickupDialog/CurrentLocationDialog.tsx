@@ -1,24 +1,26 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { DialogWrapper } from "@/app/(components)";
 import GoogleMapsLocation from "@/app/(components)/mapsLocation/GoogleMapsLocation";
 import { useLocationStore } from "@/lib/stores/useLocationStore";
-import { usePickupDialogStore } from "@/lib/stores/usePickupDialogStore";
+import { reverseGeocode } from "@/lib/utils/reverseGeocode";
 
 export function CurrentLocationDialog() {
-  const { open, setOpen, closeDialog } = usePickupDialogStore();
+  const [open, setOpen] = useState(false);
   const setLocation = useLocationStore((state) => state.setLocation);
 
   useEffect(() => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
-        (position) => {
-          setLocation(position.coords.latitude, position.coords.longitude);
+        async (position) => {
+          const { latitude, longitude } = position.coords;
+          const address = await reverseGeocode(latitude, longitude);
+          setLocation(latitude, longitude, address);
         },
         (error) => {
           console.error("Error getting location:", error);
-        }
+        },
       );
     }
 
@@ -37,7 +39,7 @@ export function CurrentLocationDialog() {
   };
 
   const handleClose = () => {
-    closeDialog();
+    setOpen(false);
     sessionStorage.setItem("hasClosedLocationDialog", "true");
   };
 
@@ -61,7 +63,7 @@ export function CurrentLocationDialog() {
             إغلاق
           </button>
 
-          <button className="rounded-[12px] py-3 bg-primary text-white font-bold w-fit px-5">
+          <button className="rounded-xl py-3 bg-primary text-white font-bold w-fit px-5">
             أظهار النتائج
           </button>
         </div>
