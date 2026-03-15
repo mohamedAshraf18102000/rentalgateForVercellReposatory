@@ -7,10 +7,6 @@ import { useHomeStore } from "@/lib/stores/useHomeStore";
 const HomeSlider = () => {
   const banners = useHomeStore((state) => state.data?.banners);
 
-
-  const t = useTranslations("home");
-  const locale = useLocale();
-
   return (
     <section>
       <div className="relative w-full min-h-[100dvh] min-h-[100vh]">
@@ -30,6 +26,6 @@ const HomeSlider = () => {
       </div>
     </section>
   );
-}; 
+};
 
 export default HomeSlider;

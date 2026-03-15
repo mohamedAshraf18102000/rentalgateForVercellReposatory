@@ -16,6 +16,8 @@ import PaginationDateView from "@/app/(components)/PaginationDateView";
 import { getCompanyCars } from "@/services/companyCars/cars.service";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { CarApiResponse } from "@/types/companyCars/cars";
+import { Skeleton } from "@/app/(components)/ui/skeleton";
+import { useUserPreferedFiltersStore } from "@/lib/stores/useUserPreferedFiltersStore";
 
 interface FormValues {
   location: string;
@@ -24,6 +26,7 @@ interface FormValues {
 }
 
 const BookCars = () => {
+  const { rentPeriod, carCategory } = useUserPreferedFiltersStore();
   const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useInfiniteQuery<CarApiResponse>({
       queryKey: ["company-cars"],
@@ -37,8 +40,6 @@ const BookCars = () => {
 
   const allCars = data?.pages.flatMap((page) => page.content) ?? [];
   const totalElements = data?.pages[0]?.totalElements ?? 0;
-
-  console.log(data);
 
   const { control, handleSubmit, watch, setValue } = useForm<FormValues>({
     defaultValues: {
@@ -156,9 +157,8 @@ const BookCars = () => {
           <div className="">
             <Separator className="my-5" />
             <div className="flex items-center gap-3">
-              {Array.from({ length: 5 }).map((_, index) => (
-                <CustomBadge key={index} title="نوع التصفية" />
-              ))}
+              <CustomBadge title={`${rentPeriod}`} />
+              <CustomBadge title={`${carCategory}`} />
             </div>
           </div>
         </div>
@@ -174,19 +174,33 @@ const BookCars = () => {
       </form>
 
       <div className="grid grid-cols-4 gap-8 mt-10">
-        {allCars.map((car, index) => (
-          <Link key={index} href={`/carDetails/${car.ccbId}`}>
-            <CarsCard
-              carImage={`${process.env.NEXT_PUBLIC_IMAGES_PREFIX_URL}${car.carImage}`}
-              carName={car.carName}
-              advancedCard
-              carBrand={car.brandName}
-              companyLogo={car.companyLogo}
-              companyName={car.companyName}
-              deliveryInMinutes={car.deliveryInMinutes!}
-            />
-          </Link>
-        ))}
+        {isLoading
+          ? Array.from({ length: 8 }).map((_, index) => (
+              <div
+                key={index}
+                className="bg-white h-[450px] rounded-2xl flex flex-col gap-3 overflow-hidden p-3"
+              >
+                <div className="h-[250px] w-full">
+                  <Skeleton className="w-full h-full rounded-2xl" />
+                </div>
+                <div className="h-[150px] w-full">
+                  <Skeleton className="w-full h-full rounded-2xl" />
+                </div>
+              </div>
+            ))
+          : allCars.map((car, index) => (
+              <Link key={index} href={`/carDetails/${car.ccbId}`}>
+                <CarsCard
+                  carImage={`${process.env.NEXT_PUBLIC_IMAGES_PREFIX_URL}${car.carImage}`}
+                  carName={car.carName}
+                  advancedCard
+                  carBrand={car.brandName}
+                  companyLogo={car.companyLogo}
+                  companyName={car.companyName}
+                  deliveryInMinutes={car.deliveryInMinutes!}
+                />
+              </Link>
+            ))}
       </div>
       {hasNextPage && (
         <div className="w-full flex justify-center mt-10">

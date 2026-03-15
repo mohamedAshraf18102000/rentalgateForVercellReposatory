@@ -1,18 +1,10 @@
 import Image from "next/image";
 import { PeriodSearchTabs } from "./PeriodSearchTabs";
 import { Button } from "../../ui/button";
-import { useState } from "react";
+import { useUserPreferedFiltersStore, RentPeriod } from "@/lib/stores/useUserPreferedFiltersStore";
 
-interface RentPeriodComponentProps {
-  value: "daily" | "weekly" | "monthly" | "yearly";
-  onValueChange: (value: "daily" | "weekly" | "monthly" | "yearly") => void;
-}
-
-const RentPeriodComponent = ({
-  value,
-  onValueChange,
-}: RentPeriodComponentProps) => {
-  const [searchType, setSearchType] = useState(value);
+const RentPeriodComponent = () => {
+  const { rentPeriod, setRentPeriod } = useUserPreferedFiltersStore();
 
   return (
     <div className="h-full rounded-2xl! overflow-hidden">
@@ -29,7 +21,10 @@ const RentPeriodComponent = ({
         <p className="text-sm text-Grey700 mb-3">
           اختر المدة اللي تناسب احتياجك، وإحنا نسهّل عليك البحث
         </p>
-        <PeriodSearchTabs value={searchType} onValueChange={setSearchType} />
+        <PeriodSearchTabs 
+          value={rentPeriod} 
+          onValueChange={(value) => setRentPeriod(value as RentPeriod)} 
+        />
 
         <Button className="mt-4 text-sm">إظهار النتائج</Button>
       </div>
