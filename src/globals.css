@@ -148,6 +148,7 @@ body {
   --color-StatusDarkGreen: #064d3b;
   --color-StatusBrown200: #b34a00;
   --color-StatusBrownBG: #feebcc;
+  --z-9999: 9999;
 }
 
 .dark {

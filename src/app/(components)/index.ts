@@ -40,6 +40,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
+import { PageLoader } from "./ui/PageLoader";
 export {
   Header,
   Footer,
@@ -82,4 +83,5 @@ export {
   SelectItem,
   SelectTrigger,
   SelectValue,
+  PageLoader,
 };

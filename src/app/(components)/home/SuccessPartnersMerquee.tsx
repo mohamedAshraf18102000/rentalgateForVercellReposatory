@@ -1,23 +1,8 @@
 "use client";
 
+import { Company } from "@/types/home/home";
 import Image from "next/image";
 import Marquee from "react-fast-marquee";
-
-const partnersRow1 = [
-  { id: 1, src: "/cars/car1.png", alt: "Partner 1" },
-  { id: 2, src: "/cars/car1.png", alt: "Partner 2" },
-  { id: 3, src: "/cars/car1.png", alt: "Partner 3" },
-  { id: 4, src: "/cars/car1.png", alt: "Partner 4" },
-  { id: 5, src: "/cars/car1.png", alt: "Partner 5" },
-];
-
-const partnersRow2 = [
-  { id: 6, src: "/cars/car2.png", alt: "Partner 6" },
-  { id: 7, src: "/cars/car2.png", alt: "Partner 7" },
-  { id: 8, src: "/cars/car2.png", alt: "Partner 8" },
-  { id: 9, src: "/cars/car2.png", alt: "Partner 9" },
-  { id: 10, src: "/cars/car2.png", alt: "Partner 10" },
-];
 
 const PartnerLogo = ({ src, alt }: { src: string; alt: string }) => (
   <div className="flex items-center justify-center mx-3 md:mx-5">
@@ -38,7 +23,11 @@ const PartnerLogo = ({ src, alt }: { src: string; alt: string }) => (
   </div>
 );
 
-const SuccessPartnersMerquee = () => {
+const SuccessPartnersMerquee = ({ partners }: { partners: Company[] }) => {
+  const midPoint = Math.ceil(partners.length / 2);
+  const row1 = partners.slice(0, midPoint);
+  const row2 = partners.slice(midPoint);
+
   return (
     <section className="w-full h-full flex items-center justify-center">
       <div
@@ -54,12 +43,15 @@ const SuccessPartnersMerquee = () => {
           gradientWidth={80}
           direction="left"
         >
-          {partnersRow1.map((partner) => (
-            <PartnerLogo key={partner.id} src={partner.src} alt={partner.alt} />
+          {row1.map((partner) => (
+            <PartnerLogo
+              key={partner.id}
+              src={`${process.env.NEXT_PUBLIC_IMAGES_PREFIX_URL}/${partner.logo}`}
+              alt={partner.name}
+            />
           ))}
         </Marquee>
 
-        {/* Row 2 — scrolls right for dynamic feel */}
         <Marquee
           autoFill={true}
           pauseOnHover={true}
@@ -68,8 +60,12 @@ const SuccessPartnersMerquee = () => {
           gradientWidth={80}
           direction="right"
         >
-          {partnersRow2.map((partner) => (
-            <PartnerLogo key={partner.id} src={partner.src} alt={partner.alt} />
+          {row2.map((partner) => (
+            <PartnerLogo
+              key={partner.id}
+              src={`${process.env.NEXT_PUBLIC_IMAGES_PREFIX_URL}/${partner.logo}`}
+              alt={partner.name}
+            />
           ))}
         </Marquee>
       </div>

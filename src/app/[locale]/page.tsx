@@ -1,4 +1,3 @@
-import { fetchHomeAllData } from "@/constants/api";
 import { setRequestLocale } from "next-intl/server";
 import HomeMockups from "./(mainpages)/(home)/HomeMockups";
 import HomeSlider from "./(mainpages)/(home)/HomeSlider";
@@ -12,6 +11,10 @@ import CompanyOffers from "./(mainpages)/(home)/offers/CompanyOffers";
 import { CurrentLocationDialog } from "./(dialogs)/PickupDialog/CurrentLocationDialog";
 import BussinessAccountsContent from "./(mainpages)/bussinessAccounts/components/BussinessAccountsContent";
 import WrapperContainer from "../(components)/wrapperContainer/WrapperContainer";
+import { HomeResponse } from "@/types/home/home";
+
+import { getHomePageDetails } from "@/services/home/home.service";
+import { HomeStoreHydrator } from "@/lib/stores/HomeStoreHydrator";
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -21,22 +24,19 @@ export default async function HomePage({ params }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
 
-  let offers: any[] = [];
-  let banners: any[] = [];
+  let homeData: HomeResponse | null = null;
+
   try {
-    const homeData = await fetchHomeAllData();
-    offers = homeData.data?.offers || [];
-    banners = homeData.data?.banners || [];
+    homeData = await getHomePageDetails();
   } catch (error) {
     console.error("Error fetching home data:", error);
-    offers = [];
-    banners = [];
   }
 
   return (
     <main>
+      {homeData && <HomeStoreHydrator data={homeData} />}
       <CurrentLocationDialog />
-      <HomeSlider banners={banners} />
+      <HomeSlider />
       <PickUpArea />
       <RentalGateInfo />
       <RentalBookingSearchSection />

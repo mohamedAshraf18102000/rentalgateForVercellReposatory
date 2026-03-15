@@ -1,8 +1,14 @@
+"use client";
 import OffersCarousel from "@/app/(components)/offersCarousel/OffersCarousel";
+
 import WrapperContainer from "@/app/(components)/wrapperContainer/WrapperContainer";
 import Image from "next/image";
+import { useHomeStore } from "@/lib/stores/useHomeStore";
 
 const Offers = () => {
+  const todayOffersRaw = useHomeStore((state) => state.data?.todayOffers);
+  const todayOffers = todayOffersRaw || [];
+
   return (
     <WrapperContainer className="my-10">
       <div className="flex flex-col items-center justify-center">
@@ -31,7 +37,7 @@ const Offers = () => {
           />
         </div>
       </div>
-      <OffersCarousel />
+      <OffersCarousel offers={todayOffers} />
     </WrapperContainer>
   );
 };

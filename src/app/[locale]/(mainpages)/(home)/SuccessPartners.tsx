@@ -1,9 +1,15 @@
+"use client";
 import WrapperContainer from "@/app/(components)/wrapperContainer/WrapperContainer";
 import Image from "next/image";
 import PartnersIcon from "../../../../constants/icons/PartnersIcon";
 import SuccessPartnersMerquee from "@/app/(components)/home/SuccessPartnersMerquee";
+import { useHomeStore } from "@/lib/stores/useHomeStore";
 
 const SuccessPartners = () => {
+  const partners = useHomeStore((state) => state.data?.companies);
+  const displayPartners = partners || [];
+
+
   return (
     <WrapperContainer className="flex gap-10 h-64 my-10">
       <div className="w-1/3 relative rounded-2xl overflow-hidden">
@@ -25,8 +31,9 @@ const SuccessPartners = () => {
         </div>
       </div>
       <div className="w-2/3 relative rounded-2xl overflow-hidden">
-        <SuccessPartnersMerquee />
+        <SuccessPartnersMerquee partners={displayPartners} />
       </div>
+
     </WrapperContainer>
   );
 };
