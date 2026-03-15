@@ -9,7 +9,6 @@ import RentalBookingSearchSection from "./(mainpages)/(home)/RentalBookingSearch
 import SuccessPartners from "./(mainpages)/(home)/SuccessPartners";
 import Offers from "./(mainpages)/(home)/offers/Offers";
 import CompanyOffers from "./(mainpages)/(home)/offers/CompanyOffers";
-import BussinessAccounts from "./(mainpages)/bussinessAccounts/components/RentalGateBussinessAccounts/BussinessAccounts";
 import { CurrentLocationDialog } from "./(dialogs)/PickupDialog/CurrentLocationDialog";
 import BussinessAccountsContent from "./(mainpages)/bussinessAccounts/components/BussinessAccountsContent";
 import WrapperContainer from "../(components)/wrapperContainer/WrapperContainer";
