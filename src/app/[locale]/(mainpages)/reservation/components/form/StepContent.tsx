@@ -3,6 +3,9 @@ import { useStepAnimation } from "../../../../../(components)/rentalStepper/hook
 import ExeclusiveOfferIcon from "@/constants/icons/ExeclusiveOfferIcon";
 import { Separator } from "@/app/(components)/ui/separator";
 import OffersCard from "@/app/(components)/customCards/OffersCard";
+import { Input } from "@/app/(components)";
+import CarRentIcon from "@/constants/icons/CarRentIcon";
+import { ArrowLeft } from "lucide-react";
 
 interface StepContentProps {
   activeStep: number;
@@ -15,6 +18,31 @@ const stepData = [
     label: "الخطوة الأولى",
     content: (
       <>
+        <div className="w-full flex items-center gap-3">
+          <Input
+            label="مكان الأستلام:"
+            labelIcon={<CarRentIcon />}
+            labelClassName="text-base!"
+          />
+          <ArrowLeft className="w-15 h-15 mt-7" />
+          <Input
+            label="مكان الأستلام:"
+            labelIcon={<CarRentIcon />}
+            labelClassName="text-base!"
+          />
+        </div>
+        <Separator className="mt-3" />
+
+        <div className="w-full flex items-end gap-3 mb-3">
+          <Input
+            label="مدة و وقت الإيجار:"
+            labelIcon={<CarRentIcon />}
+            labelClassName="text-base!"
+          />
+          <ArrowLeft className="w-15 h-15 mt-8" />
+          <Input labelIcon={<CarRentIcon />} labelClassName="text-base!" />
+        </div>
+
         <div className="bg-StatusGreen p-2 rounded-xl flex items-center justify-center gap-3 text-StatusDarkGreen">
           <div className="scale-130">
             <ExeclusiveOfferIcon />
