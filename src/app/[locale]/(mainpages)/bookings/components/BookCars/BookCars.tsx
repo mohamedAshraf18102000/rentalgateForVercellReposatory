@@ -3,9 +3,9 @@
 import CarsCard from "@/app/(components)/customCards/CarsCard/CarsCard";
 import { Separator } from "@/app/(components)/ui/separator";
 import { Input } from "@/app/(components)/ui/input";
-import { ArrowLeft, Funnel, MapPin, Search, UserRound, X } from "lucide-react";
+import { ArrowLeft, Search, UserRound } from "lucide-react";
 import PositioningIcon from "@/constants/icons/PositioningIcon";
-import { Button, Checkbox, DatePicker } from "@/app/(components)";
+import { Button, Checkbox } from "@/app/(components)";
 import CarRentIcon from "@/constants/icons/CarRentIcon";
 import { DateTimePicker } from "@/app/(components)/ui/dateTime-picker";
 import { useForm, Controller } from "react-hook-form";
@@ -13,6 +13,9 @@ import FilterDrawer from "./FilterDrawer";
 import CustomBadge from "@/app/(components)/ui/customBadge";
 import Link from "next/link";
 import PaginationDateView from "@/app/(components)/PaginationDateView";
+import { getCompanyCars } from "@/services/companyCars/cars.service";
+import { useInfiniteQuery } from "@tanstack/react-query";
+import { CarApiResponse } from "@/types/companyCars/cars";
 
 interface FormValues {
   location: string;
@@ -21,6 +24,22 @@ interface FormValues {
 }
 
 const BookCars = () => {
+  const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } =
+    useInfiniteQuery<CarApiResponse>({
+      queryKey: ["company-cars"],
+      queryFn: ({ pageParam = 0 }) => getCompanyCars(pageParam as number),
+      initialPageParam: 0,
+      getNextPageParam: (lastPage) => {
+        if (lastPage.last) return undefined;
+        return lastPage.number + 1;
+      },
+    });
+
+  const allCars = data?.pages.flatMap((page) => page.content) ?? [];
+  const totalElements = data?.pages[0]?.totalElements ?? 0;
+
+  console.log(data);
+
   const { control, handleSubmit, watch, setValue } = useForm<FormValues>({
     defaultValues: {
       location: "",
@@ -147,17 +166,39 @@ const BookCars = () => {
         <div className="p-2.5 bg-white w-[15%] shadow-lg rounded-2xl">
           <p className="font-bold">السيارات الظاهرة:</p>
           <Separator className="my-4" />
-          <PaginationDateView shown="12" total="1249" />
+          <PaginationDateView
+            shown={allCars.length.toString()}
+            total={totalElements.toString()}
+          />
         </div>
       </form>
 
       <div className="grid grid-cols-4 gap-8 mt-10">
-        {Array.from({ length: 5 }).map((_, index) => (
-          <Link key={index} href={`/carDetails/${1}`}>
-            <CarsCard advancedCard />
+        {allCars.map((car, index) => (
+          <Link key={index} href={`/carDetails/${car.ccbId}`}>
+            <CarsCard
+              carImage={`${process.env.NEXT_PUBLIC_IMAGES_PREFIX_URL}${car.carImage}`}
+              carName={car.carName}
+              advancedCard
+              carBrand={car.brandName}
+              companyLogo={car.companyLogo}
+              companyName={car.companyName}
+              deliveryInMinutes={car.deliveryInMinutes!}
+            />
           </Link>
         ))}
       </div>
+      {hasNextPage && (
+        <div className="w-full flex justify-center mt-10">
+          <Button
+            onClick={() => fetchNextPage()}
+            disabled={isFetchingNextPage}
+            className="w-fit text-base! px-20!"
+          >
+            {isFetchingNextPage ? "جاري التحميل..." : "المزيد"}
+          </Button>
+        </div>
+      )}
     </section>
   );
 };

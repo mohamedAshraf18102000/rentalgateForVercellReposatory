@@ -14,6 +14,7 @@ import { notFound } from "next/navigation";
 import "../../globals.css";
 import { RouteGuard } from "./(components)/RouteGuard";
 import SideToChat from "../(components)/sideToChat/SideToChat";
+import ReactQueryProvider from "@/provider/ReactQueryProvider";
 
 const fontZain = Zain({
   subsets: ["arabic", "latin"],
@@ -191,7 +192,9 @@ export default async function LocaleLayout({
             <SharedDataLoader />
             <Header />
             <SideToChat />
-            <main className="max-sm:pt-[65px] ">{children}</main>
+            <main className="max-sm:pt-[65px] ">
+              <ReactQueryProvider>{children}</ReactQueryProvider>
+            </main>
             <Footer />
             <Toaster />
           </DialogProvider>

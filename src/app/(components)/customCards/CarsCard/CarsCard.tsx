@@ -18,6 +18,13 @@ interface carsCard {
   firstBadgeColor?: "green" | "red";
   extraBadgeColor?: "green" | "red";
   extraContent?: React.ReactNode;
+
+  carImage?: string;
+  carName?: string;
+  carBrand?: string;
+  companyLogo?: string;
+  companyName?: string;
+  deliveryInMinutes?: number;
 }
 
 const CarsCard = ({
@@ -26,6 +33,12 @@ const CarsCard = ({
   firstBadgeColor,
   extraBadgeColor,
   extraContent,
+  carImage,
+  carName,
+  carBrand,
+  companyName,
+  companyLogo,
+  deliveryInMinutes,
 }: carsCard) => {
   return (
     <article>
@@ -37,16 +50,17 @@ const CarsCard = ({
           className={`relative z-20 rounded-[18px] transition-all duration-300 ${advancedCard ? "bg-transparent group-hover:bg-Grey100 border border-white" : "bg-Grey100"}`}
         >
           <img
-            src="/cars/car1.png"
+            src={carImage}
             alt="سيارة للإيجار"
-            className="relative z-20 mt-10 w-full object-cover scale-90"
+            className="relative z-20 mt-10 w-full object-cover scale-90 min-h-[210px] max-h-[210px]"
           />
-
-          <Badge
-            className={`text-sm font-bold absolute top-0 -right-2  p-4 ${firstBadgeColor === "red" ? "bg-StatusBrownBG text-StatusBrown200" : "bg-StatusGreen text-StatusDarkGreen"}`}
-          >
-            تصل خلال 20 دقيقة
-          </Badge>
+            {/* {typeof deliveryInMinutes === "number" && deliveryInMinutes >= 0 && (
+              <Badge
+                className={`text-sm font-bold absolute top-0 -right-2  p-4 ${firstBadgeColor === "red" ? "bg-StatusBrownBG text-StatusBrown200" : "bg-StatusGreen text-StatusDarkGreen"}`}
+              >
+                تصل خلال {deliveryInMinutes} دقيقة
+              </Badge>
+            )} */}
 
           {extraBadgeTitle && (
             <Badge
@@ -68,12 +82,10 @@ const CarsCard = ({
 
         <CardHeader className="mt-5">
           <CardTitle className="font-bold flex justify-between items-start">
-            <h3 className="w-3/4 text-base">
-              أسم و نوع السيارة و ممكن يبقى أكتر من كده
-            </h3>
+            <h3 className="w-3/4 text-base">{carName}</h3>
 
             <Badge className="text-sm font-bold" variant="secondary">
-              SUV
+              {carBrand}
             </Badge>
           </CardTitle>
 
@@ -82,13 +94,13 @@ const CarsCard = ({
             <div className="flex justify-between items-center">
               <div className="flex items-center gap-1">
                 <Image
-                  src="/cars/car1.png"
+                  src={`${process.env.NEXT_PUBLIC_IMAGES_PREFIX_URL}${companyLogo}`}
                   alt="Event cover"
                   width={100}
                   height={100}
-                  className="w-[50px] h-[50px] object-contain rounded-2xl border-2 border-Grey100 p-0.5"
+                  className="w-[50px] h-[50px] object-fill rounded-2xl border-2 border-Grey100 p-0.5"
                 />
-                <span className="text-base">الغزال</span>
+                <span className="text-base">{companyName}</span>
               </div>
 
               <div className="flex items-center gap-1">
