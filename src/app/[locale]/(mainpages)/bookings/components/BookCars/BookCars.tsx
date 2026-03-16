@@ -26,7 +26,7 @@ interface FormValues {
 }
 
 const BookCars = () => {
-  const { rentPeriod, carCategory } = useUserPreferedFiltersStore();
+  const { filters, setFilter } = useUserPreferedFiltersStore();
   const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useInfiniteQuery<CarApiResponse>({
       queryKey: ["company-cars"],
@@ -55,6 +55,38 @@ const BookCars = () => {
   const handleSearch = (data: FormValues) => {
     console.log("Form Data:", data);
   };
+
+  const activeBadges = [
+    { key: "rentPeriod", title: filters.rentPeriod },
+    { key: "carCategory", title: filters.carCategory },
+    {
+      key: "priceMin",
+      title: filters.priceMin ? `من: ${filters.priceMin}` : "",
+      onClose: () => setFilter("priceMin", ""),
+    },
+    {
+      key: "priceTo",
+      title: filters.priceTo ? `إلى: ${filters.priceTo}` : "",
+      onClose: () => setFilter("priceTo", ""),
+    },
+    {
+      key: "categoryName",
+      title: filters.categoryName,
+      onClose: () => {
+        setFilter("categoryId", "");
+        setFilter("categoryName", "");
+      },
+    },
+    {
+      key: "pickupName",
+      title: filters.pickupName,
+      onClose: () => {
+        setFilter("pickupType", "");
+        setFilter("pickupId", "");
+        setFilter("pickupName", "");
+      },
+    },
+  ].filter((badge) => badge.title);
 
   return (
     <section className="mt-[60px]">
@@ -157,8 +189,13 @@ const BookCars = () => {
           <div className="">
             <Separator className="my-5" />
             <div className="flex items-center gap-3">
-              <CustomBadge title={`${rentPeriod}`} />
-              <CustomBadge title={`${carCategory}`} />
+              {activeBadges.map((badge) => (
+                <CustomBadge
+                  key={badge.key}
+                  title={badge.title}
+                  onClose={badge.onClose}
+                />
+              ))}
             </div>
           </div>
         </div>
