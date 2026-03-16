@@ -34,8 +34,6 @@ export default function Header() {
     handleBookingsClick,
   } = useHeaderLogic();
   const [contactDialogOpen, setContactDialogOpen] = React.useState(false);
-  const longitude = useLocationStore((state) => state.longitude);
-  const latitude = useLocationStore((state) => state.latitude);
   const address = useLocationStore((state) => state.address);
   const openLocationDialog = useLocationStore((state) => state.openDialog);
 
@@ -149,6 +147,7 @@ export default function Header() {
         </div>
       </header>
       <MobileBottomNav />
+
       <ContactUsDialog
         open={contactDialogOpen}
         onOpenChange={setContactDialogOpen}

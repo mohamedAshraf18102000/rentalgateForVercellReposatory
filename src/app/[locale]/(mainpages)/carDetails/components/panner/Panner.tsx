@@ -2,7 +2,7 @@ import GooglePlay_AppStore from "@/app/(components)/getOnGooglePlay_AppStore/Goo
 
 const Panner = () => {
   return (
-    <div className="w-full h-[600px] rounded-2xl p-10 border-white border-2 bg-[url(/Panners/CarDetails/panner.png)] bg-cover bg-center bg-no-repeat flex flex-col justify-center ">
+    <div className="w-full h-[600px] mt-10 rounded-2xl p-10 border-white border-2 bg-[url(/Panners/CarDetails/panner.png)] bg-cover bg-center bg-no-repeat flex flex-col justify-center ">
       <div className="w-1/3">
         <h4 className="font-bold text-[28px]">
           أستمتع بتجربة تأجير راقية لا تُضاهى

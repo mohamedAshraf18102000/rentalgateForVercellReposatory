@@ -10,9 +10,27 @@ import { Separator } from "../../ui/separator";
 import FreeKmIcon from "@/constants/icons/FreeKmIcon";
 import UnlimitedKmIcon from "@/constants/icons/UnlimitedKmIcon";
 import { useRouter } from "next/navigation";
+import { Car, Company } from "@/types/companyCars/carDetails";
+import CarCategoryBadge from "../../carCategoryBadge/CarCategoryBadge";
+import DOMPurify from "dompurify";
 
-const CarDetailsCard = () => {
+interface CarDetailsCardProps {
+  car: Car;
+  company: Company;
+  extraKmPrice: number;
+  unlimitedKm: number;
+}
+
+const CarDetailsCard = ({
+  car,
+  company,
+  extraKmPrice,
+  unlimitedKm,
+}: CarDetailsCardProps) => {
   const router = useRouter();
+  const otherSpecsPurified = DOMPurify.sanitize(car.otherSpecs, {
+    ALLOWED_TAGS: [],
+  });
 
   return (
     <section className="mt-5 flex w-full rounded-[18px] overflow-hidden border-2 border-white shadow-xl">
@@ -21,7 +39,7 @@ const CarDetailsCard = () => {
           className={`relative overflow-hidden h-full transition-all duration-300 `}
         >
           <img
-            src="/cars/car1.png"
+            src={`${process.env.NEXT_PUBLIC_IMAGES_PREFIX_URL}/${car.image}`}
             alt="سيارة للإيجار"
             className="relative z-20 w-full object-contain scale-85 mt-20 mb-5"
           />
@@ -33,13 +51,13 @@ const CarDetailsCard = () => {
           <div className="flex justify-between absolute top-12  items-center gap-4 bg-white rounded-l-[18px] w-fit p-1">
             <div className="flex items-center gap-1">
               <Image
-                src="/cars/car1.png"
+                src={`${process.env.NEXT_PUBLIC_IMAGES_PREFIX_URL}/${company?.logo}`}
                 alt="Event cover"
                 width={100}
                 height={100}
-                className="w-[45px] h-[45px] object-contain rounded-2xl border-2 border-Grey100 p-0.5"
+                className="w-[45px] h-[45px] object-fill rounded-2xl border-2 border-Grey100 p-0.5"
               />
-              <span className="text-base mx-1">الغزال</span>
+              <span className="text-base mx-1">{company?.arabicName}</span>
             </div>
 
             <div className="flex items-center gap-1">
@@ -91,22 +109,22 @@ const CarDetailsCard = () => {
 
         <Separator className="my-3" />
         <div className="flex items-center justify-between gap-2 font-bold">
-          <p>أسم السيارة وسنة الصنع و ممكن يبقى أكتر من كده</p>
-          <div className="p-2 bg-Grey100 rounded-[12px] w-fit">SUV</div>
+          <p>{car.carName}</p>
+          <div className="p-1 bg-Grey100 rounded-[12px] w-fit">
+            <CarCategoryBadge
+              icon={car.categoryIcon}
+              name={car.categoryNameArabic}
+            />
+          </div>
         </div>
         <Separator className="my-3" />
         <div>
           <p>مواصفات السيارة:</p>
           <div className=" w-full p-2 grid grid-cols-2 gap-2 mt-2">
-            {Array.from({ length: 5 }).map((_, index) => (
-              <div
-                key={index}
-                className="flex items-center text-Grey700 text-base"
-              >
-                <Dot />
-                <p>مكيفة</p>
-              </div>
-            ))}
+            <div className="flex items-center text-Grey700 text-base">
+              <Dot />
+              <p>{otherSpecsPurified}</p>
+            </div>
           </div>
         </div>
 
@@ -117,32 +135,39 @@ const CarDetailsCard = () => {
             <FreeKmIcon />
             <p className="text-sm">
               الكيلومترات المجانية:
-              <strong>350 كم / اليوم</strong>
+              <strong>350 </strong>
+              <strong>كم / اليوم</strong>
             </p>
           </div>
 
-          <div className="flex items-center gap-1">
-            <FreeKmIcon />
-            <p className="text-sm">
-              تكلفة الكيلو متر الزيادة:
-              <strong>350 كم / اليوم</strong>
-            </p>
-          </div>
+          {extraKmPrice && (
+            <div className="flex items-center gap-1">
+              <FreeKmIcon />
+              <p className="text-sm flex items-center">
+                تكلفة الكيلو متر الزيادة:
+                <strong className="mx-1">{extraKmPrice}</strong>
+                <SaudiRiyal className="text-sm!" />
+                <strong>/اليوم</strong>
+              </p>
+            </div>
+          )}
         </div>
-
-        <div className="mt-5">
-          <div className="flex items-center gap-1">
-            <UnlimitedKmIcon />
-            <p className="text-sm">
-              عدد كيلومترات لا نهائي:
-              <strong>350 كم / اليوم</strong>
-            </p>
-            <p className="text-sm p-2 bg-StatusBrownBG rounded-[8px] text-StatusBrown200 font-bold flex items-center gap-1">
-              <Flame />
-              <span>قيادة بلا نهاية</span>
-            </p>
+        {unlimitedKm && (
+          <div className="mt-5">
+            <div className="flex items-center gap-1">
+              <UnlimitedKmIcon />
+              <p className="text-sm">
+                عدد كيلومترات لا نهائي:
+                <strong>{unlimitedKm.toString()}</strong>
+                <strong> كم / اليوم</strong>
+              </p>
+              <p className="text-sm p-2 bg-StatusBrownBG rounded-[8px] text-StatusBrown200 font-bold flex items-center gap-1">
+                <Flame />
+                <span>قيادة بلا نهاية</span>
+              </p>
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </section>
   );
