@@ -1,10 +1,13 @@
 import Image from "next/image";
 import { PeriodSearchTabs } from "./PeriodSearchTabs";
 import { Button } from "../../ui/button";
-import { useUserPreferedFiltersStore, RentPeriod } from "@/lib/stores/useUserPreferedFiltersStore";
+import {
+  useUserPreferedFiltersStore,
+  RentPeriod,
+} from "@/lib/stores/useUserPreferedFiltersStore";
 
 const RentPeriodComponent = () => {
-  const { rentPeriod, setRentPeriod } = useUserPreferedFiltersStore();
+  const { filters, setFilter } = useUserPreferedFiltersStore();
 
   return (
     <div className="h-full rounded-2xl! overflow-hidden">
@@ -21,9 +24,11 @@ const RentPeriodComponent = () => {
         <p className="text-sm text-Grey700 mb-3">
           اختر المدة اللي تناسب احتياجك، وإحنا نسهّل عليك البحث
         </p>
-        <PeriodSearchTabs 
-          value={rentPeriod} 
-          onValueChange={(value) => setRentPeriod(value as RentPeriod)} 
+        <PeriodSearchTabs
+          value={filters.rentPeriod}
+          onValueChange={(value) =>
+            setFilter("rentPeriod", value as RentPeriod)
+          }
         />
 
         <Button className="mt-4 text-sm">إظهار النتائج</Button>

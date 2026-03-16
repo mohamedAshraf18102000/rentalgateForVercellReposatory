@@ -4,7 +4,7 @@ import { FavCategoryTabs } from "./FavCategoryTabs";
 import { useUserPreferedFiltersStore, CarCategory } from "@/lib/stores/useUserPreferedFiltersStore";
 
 const FavCategoryComponent = () => {
-  const { carCategory, setCarCategory } = useUserPreferedFiltersStore();
+  const { filters, setFilter } = useUserPreferedFiltersStore();
 
   return (
     <div className="h-full rounded-2xl! overflow-hidden">
@@ -22,8 +22,8 @@ const FavCategoryComponent = () => {
           اختر الفئة التي تناسب احتياجك، وإحنا نسهّل عليك البحث
         </p>
         <FavCategoryTabs 
-          value={carCategory} 
-          onValueChange={(value) => setCarCategory(value as CarCategory)} 
+          value={filters.carCategory} 
+          onValueChange={(value) => setFilter("carCategory", value as CarCategory)} 
         />
 
         <Button className="mt-4 text-sm">إظهار النتائج</Button>
