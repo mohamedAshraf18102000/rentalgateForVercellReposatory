@@ -8,6 +8,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getCompanyCarsByID } from "@/services/companyCars/carById.service";
 import { useParams } from "next/navigation";
 import { getCarServices } from "@/services/companyCars/carServices.service";
+import { Skeleton } from "@/app/(components)/ui/skeleton";
 
 const page = () => {
   const { id } = useParams();
@@ -28,7 +29,16 @@ const page = () => {
   if (isLoading || !data)
     return (
       <WrapperContainer exceedNav>
-        <p>جاري التحميل...</p>
+        <Skeleton className="h-[50px] w-full rounded-2xl mt-5" />
+        <Skeleton className="h-[500px] w-full rounded-2xl mt-5" />
+        <div className="grid grid-cols-4 gap-4">
+          {Array.from({ length: 4 }).map((_, index) => (
+            <Skeleton
+              key={index}
+              className="h-[100px] w-full rounded-2xl mt-5"
+            />
+          ))}
+        </div>
       </WrapperContainer>
     );
 

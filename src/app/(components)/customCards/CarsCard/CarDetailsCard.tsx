@@ -33,22 +33,24 @@ const CarDetailsCard = ({
   });
 
   return (
-    <section className="mt-5 flex w-full rounded-[18px] overflow-hidden border-2 border-white shadow-xl">
+    <section className="mt-5 flex w-full rounded-[18px] overflow-hidden border-2 border-white shadow-xl max-h-[450px]">
       <div className="w-[40%] overflow-hidden">
         <figure
           className={`relative overflow-hidden h-full transition-all duration-300 `}
         >
-          <img
-            src={`${process.env.NEXT_PUBLIC_IMAGES_PREFIX_URL}/${car.image}`}
-            alt="سيارة للإيجار"
-            className="relative z-20 w-full object-contain scale-85 mt-20 mb-5"
-          />
+          <div className="w-full h-full flex items-center justify-center">
+            <img
+              src={`${process.env.NEXT_PUBLIC_IMAGES_PREFIX_URL}/${car.image}`}
+              alt="سيارة للإيجار"
+              className="relative z-20 w-full object-contain scale-85 mb-5"
+            />
 
-          <Badge className="text-sm font-bold absolute top-0 -right-2 bg-StatusGreen text-StatusDarkGreen p-4">
-            خصم 20%
-          </Badge>
+            <Badge className="text-sm font-bold absolute top-0 -right-2 bg-StatusGreen text-StatusDarkGreen p-4 z-50">
+              خصم 20%
+            </Badge>
+          </div>
 
-          <div className="flex justify-between absolute top-12  items-center gap-4 bg-white rounded-l-[18px] w-fit p-1">
+          <div className="flex justify-between absolute top-12  items-center gap-4 bg-white rounded-l-[18px] w-fit p-1 z-50">
             <div className="flex items-center gap-1">
               <Image
                 src={`${process.env.NEXT_PUBLIC_IMAGES_PREFIX_URL}/${company?.logo}`}
