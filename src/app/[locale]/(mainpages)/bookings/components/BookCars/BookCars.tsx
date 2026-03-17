@@ -62,8 +62,6 @@ const BookCars = () => {
         total={totalElements}
       />
 
-      <ActiveFiltersBadges filters={filters} setFilter={setFilter} />
-
       <CarsGrid cars={allCars} isLoading={isLoading} />
 
       <LoadMoreButton
