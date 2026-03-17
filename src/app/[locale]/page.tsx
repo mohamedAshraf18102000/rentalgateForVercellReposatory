@@ -45,7 +45,7 @@ export default async function HomePage({ params }: Props) {
       <MostRequestedCars locale={locale} />
       <CompanyOffers />
       <HomeMockups />
-      <WrapperContainer>
+      <WrapperContainer>  
         <BussinessAccountsContent withOutStepper />
       </WrapperContainer>
     </main>

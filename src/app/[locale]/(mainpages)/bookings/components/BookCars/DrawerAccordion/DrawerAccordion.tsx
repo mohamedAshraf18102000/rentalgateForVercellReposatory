@@ -11,6 +11,7 @@ import { useLocationStore } from "@/lib/stores/useLocationStore";
 import { useUserPreferedFiltersStore } from "@/lib/stores/useUserPreferedFiltersStore";
 import { getCarBrands } from "@/services/companyCars/carBrands.service";
 import { getCompanyCarsCategories } from "@/services/companyCars/carCategories.service";
+import { getCarModelByBrands } from "@/services/companyCars/carModelByBrands.service";
 import { getAirports } from "@/services/pickupLocations/airports.service";
 import { getTrainstations } from "@/services/pickupLocations/trainStations.service";
 import { useQuery } from "@tanstack/react-query";
@@ -40,6 +41,12 @@ const DrawerAccordion = () => {
   const { data: brands, isLoading: brandsLoading } = useQuery({
     queryKey: ["brands"],
     queryFn: () => getCarBrands(),
+  });
+
+  const { data: carModels, isLoading: carModelsLoading } = useQuery({
+    queryKey: ["car-models", filters.brandId],
+    queryFn: () => getCarModelByBrands(Number(filters.brandId)),
+    enabled: !!filters.brandId,
   });
 
   const items = [
@@ -110,7 +117,7 @@ const DrawerAccordion = () => {
           defaultValue={filters.pickupType}
         >
           <AccordionItem value="airport" className="border-b-0">
-            <AccordionTrigger className="hover:no-underline py-2 text-sm font-semibold">
+            <AccordionTrigger className="hover:no-underline py-2 text-sm">
               مطار
             </AccordionTrigger>
             <AccordionContent>
@@ -154,7 +161,7 @@ const DrawerAccordion = () => {
           </AccordionItem>
 
           <AccordionItem value="trainStation" className="border-b-0">
-            <AccordionTrigger className="hover:no-underline py-2 text-sm font-semibold">
+            <AccordionTrigger className="hover:no-underline py-2 text-sm">
               محطة قطار
             </AccordionTrigger>
             <AccordionContent>
@@ -198,7 +205,7 @@ const DrawerAccordion = () => {
           </AccordionItem>
 
           <AccordionItem value="currentLocation" className="border-b-0">
-            <AccordionTrigger className="hover:no-underline py-2 text-sm font-semibold">
+            <AccordionTrigger className="hover:no-underline py-2 text-sm">
               الموقع الحالي
             </AccordionTrigger>
             <AccordionContent>
@@ -243,6 +250,8 @@ const DrawerAccordion = () => {
             );
             setFilter("brandId", val);
             setFilter("brandName", brand?.arabicName || "");
+            setFilter("modelId", "");
+            setFilter("modelName", "");
           }}
         >
           {brands?.content.map((brand) => (
@@ -276,7 +285,40 @@ const DrawerAccordion = () => {
     {
       value: "model",
       trigger: "موديل السيارة:",
-      content: "قريباً",
+      content: !filters.brandId ? (
+        <p className="text-sm text-muted-foreground">اختر ماركة أولاً</p>
+      ) : carModelsLoading ? (
+        <p className="text-sm text-muted-foreground">جاري التحميل...</p>
+      ) : (
+        <RadioGroup
+          className="flex flex-col gap-3 px-1"
+          value={filters.modelId}
+          onValueChange={(val) => {
+            const model = carModels?.find((m) => m.typeId.toString() === val);
+            setFilter("modelId", val);
+            setFilter("modelName", model?.arabicName || "");
+          }}
+        >
+          {carModels?.map((model) => (
+            <div
+              dir="rtl"
+              key={model.typeId}
+              className="flex items-center gap-2"
+            >
+              <RadioGroupItem
+                value={model.typeId.toString()}
+                id={`model-${model.typeId}`}
+              />
+              <Label
+                htmlFor={`model-${model.typeId}`}
+                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
+              >
+                {locale === "ar" ? model.arabicName : model.englishName}
+              </Label>
+            </div>
+          ))}
+        </RadioGroup>
+      ),
     },
   ];
 
@@ -284,7 +326,7 @@ const DrawerAccordion = () => {
     <Accordion type="multiple" className="max-w-lg" defaultValue={["price"]}>
       {items.map((item) => (
         <AccordionItem key={item.value} value={item.value}>
-          <AccordionTrigger>{item.trigger}</AccordionTrigger>
+          <AccordionTrigger className="my-5">{item.trigger}</AccordionTrigger>
           <AccordionContent>{item.content}</AccordionContent>
         </AccordionItem>
       ))}
@@ -324,6 +366,16 @@ const DrawerAccordion = () => {
             onClose: () => {
               setFilter("brandId", "");
               setFilter("brandName", "");
+              setFilter("modelId", "");
+              setFilter("modelName", "");
+            },
+          },
+          {
+            condition: !!filters.modelName,
+            title: filters.modelName,
+            onClose: () => {
+              setFilter("modelId", "");
+              setFilter("modelName", "");
             },
           },
         ]

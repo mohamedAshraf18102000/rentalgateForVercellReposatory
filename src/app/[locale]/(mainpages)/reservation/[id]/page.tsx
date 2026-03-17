@@ -1,17 +1,19 @@
 "use client";
 import { useState } from "react";
 import WrapperContainer from "@/app/(components)/wrapperContainer/WrapperContainer";
-import Stepper from "../../../(components)/rentalStepper/Stepper";
+import Stepper from "../../../../(components)/rentalStepper/Stepper";
 import CarsCard from "@/app/(components)/customCards/CarsCard/CarsCard";
-import StepContent from "./components/form/StepContent";
+import StepContent from "../components/form/StepContent";
 import { Button } from "@/app/(components)";
 import { ChevronLeft, SaudiRiyal } from "lucide-react";
 import { Separator } from "@/app/(components)/ui/separator";
-import ReservationBreadCrump from "./components/ReservationBreadCrump";
+import ReservationBreadCrump from "../components/ReservationBreadCrump";
 import GoogleMapsLocation from "@/app/(components)/mapsLocation/GoogleMapsLocation";
+import { useBookedCarDetailsStore } from "@/lib/stores/useBookedCarDetailsStore";
 
 const page = () => {
   const [activeStep, setActiveStep] = useState<number>(1);
+  const carDetails = useBookedCarDetailsStore((s) => s.carDetails);
 
   return (
     <WrapperContainer exceedNav>
@@ -66,6 +68,12 @@ const page = () => {
           <div className="w-1/4">
             <div className="">
               <CarsCard
+                freeKm={carDetails?.allowedKm}
+                carName={carDetails?.car.carName}
+                companyName={carDetails?.company.arabicName}
+                companyLogo={`${process.env.NEXT_PUBLIC_IMAGES_PREFIX_URL}${carDetails?.company.logo}`}
+                carBrand={carDetails?.car.brandNameArabic}
+                carImage={`${process.env.NEXT_PUBLIC_IMAGES_PREFIX_URL}${carDetails?.car.image}`}
                 extraBadgeTitle="خصم 20%"
                 firstBadgeColor="red"
                 extraContent={

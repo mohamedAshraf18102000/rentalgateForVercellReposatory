@@ -9,22 +9,27 @@ import { getCompanyCarsByID } from "@/services/companyCars/carById.service";
 import { useParams } from "next/navigation";
 import { getCarServices } from "@/services/companyCars/carServices.service";
 import { Skeleton } from "@/app/(components)/ui/skeleton";
+import { useEffect } from "react";
+import { useBookedCarDetailsStore } from "@/lib/stores/useBookedCarDetailsStore";
 
 const page = () => {
   const { id } = useParams();
+  const setCarDetails = useBookedCarDetailsStore((s) => s.setCarDetails);
   const { data, isLoading } = useQuery({
     queryKey: ["company-cars-id", id],
     queryFn: () => getCompanyCarsByID(Number(id)),
   });
 
+  useEffect(() => {
+    if (data) {
+      setCarDetails(data);
+    }
+  }, [data, setCarDetails]);
+
   const { data: services, isLoading: servicesLoading } = useQuery({
     queryKey: ["company-cars-services", id],
     queryFn: () => getCarServices(Number(id)),
   });
-
-  console.log("services", services);
-
-  console.log(data);
 
   if (isLoading || !data)
     return (
@@ -39,6 +44,7 @@ const page = () => {
             />
           ))}
         </div>
+        <Skeleton className="h-[600px] w-full rounded-2xl mt-5" />
       </WrapperContainer>
     );
 
@@ -50,6 +56,7 @@ const page = () => {
         company={data?.company}
         extraKmPrice={data?.extraKmPrice}
         unlimitedKm={data?.unlimitedKm}
+        ccbId={data.ccbId}
       />
       {services && services.length > 0 && (
         <div className="my-8 grid grid-cols-4 gap-4">

@@ -21,7 +21,7 @@ const defaultLocation = { lat: 0, lng: 0 };
 
 const libraries: "places"[] = ["places"];
 
-const GoogleMapsLocation = () => {
+const GoogleMapsLocation = ({ zoomPercent = 15 }: { zoomPercent?: number }) => {
   const { latitude, longitude, setLocation } = useLocationStore();
   const [currentLocation, setCurrentLocation] = useState({
     lat: latitude || defaultLocation.lat,
@@ -137,7 +137,7 @@ const GoogleMapsLocation = () => {
         <GoogleMap
           mapContainerStyle={mapStyle}
           center={currentLocation}
-          zoom={15}
+          zoom={zoomPercent}
           options={{
             mapTypeControl: false,
             fullscreenControl: false,
