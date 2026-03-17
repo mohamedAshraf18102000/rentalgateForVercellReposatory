@@ -1,23 +1,12 @@
 "use client";
 
-import CarsCard from "@/app/(components)/customCards/CarsCard/CarsCard";
-import { Separator } from "@/app/(components)/ui/separator";
-import { Input } from "@/app/(components)/ui/input";
-import { ArrowLeft, Search, UserRound } from "lucide-react";
-import PositioningIcon from "@/constants/icons/PositioningIcon";
-import { Button, Checkbox } from "@/app/(components)";
-import CarRentIcon from "@/constants/icons/CarRentIcon";
-import { DateTimePicker } from "@/app/(components)/ui/dateTime-picker";
-import { useForm, Controller } from "react-hook-form";
-import FilterDrawer from "./FilterDrawer";
-import CustomBadge from "@/app/(components)/ui/customBadge";
-import Link from "next/link";
-import PaginationDateView from "@/app/(components)/PaginationDateView";
-import { getCompanyCars } from "@/services/companyCars/cars.service";
-import { useInfiniteQuery } from "@tanstack/react-query";
-import { CarApiResponse } from "@/types/companyCars/cars";
-import { Skeleton } from "@/app/(components)/ui/skeleton";
+import { useForm } from "react-hook-form";
 import { useUserPreferedFiltersStore } from "@/lib/stores/useUserPreferedFiltersStore";
+import { useCompanyCars } from "../../hooks/useCompanyCars";
+import CarSearchForm from "../CarSearchForm";
+import ActiveFiltersBadges from "../ActiveFiltersBadges";
+import CarsGrid from "../CarsGrid";
+import LoadMoreButton from "../LoadMoreButton";
 
 interface FormValues {
   location: string;
@@ -26,17 +15,25 @@ interface FormValues {
 }
 
 const BookCars = () => {
-  const { filters, setFilter } = useUserPreferedFiltersStore();
+  const { filters, appliedFilters, setFilter } = useUserPreferedFiltersStore();
+
+  const apiFilters = {
+    minPrice: appliedFilters.priceMin || undefined,
+    maxPrice: appliedFilters.priceTo || undefined,
+    categoryId: appliedFilters.categoryId || undefined,
+    airportId:
+      appliedFilters.pickupType === "airport"
+        ? appliedFilters.pickupId || undefined
+        : undefined,
+    trainStationId:
+      appliedFilters.pickupType === "trainStation"
+        ? appliedFilters.pickupId || undefined
+        : undefined,
+    brandId: appliedFilters.brandId || undefined,
+  };
+
   const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } =
-    useInfiniteQuery<CarApiResponse>({
-      queryKey: ["company-cars"],
-      queryFn: ({ pageParam = 0 }) => getCompanyCars(pageParam as number),
-      initialPageParam: 0,
-      getNextPageParam: (lastPage) => {
-        if (lastPage.last) return undefined;
-        return lastPage.number + 1;
-      },
-    });
+    useCompanyCars(apiFilters);
 
   const allCars = data?.pages.flatMap((page) => page.content) ?? [];
   const totalElements = data?.pages[0]?.totalElements ?? 0;
@@ -49,207 +46,31 @@ const BookCars = () => {
     },
   });
 
-  const fromDate = watch("fromDate");
-  const toDate = watch("toDate");
-
   const handleSearch = (data: FormValues) => {
-    console.log("Form Data:", data);
+    console.log(data);
   };
-
-  const activeBadges = [
-    { key: "rentPeriod", title: filters.rentPeriod },
-    { key: "carCategory", title: filters.carCategory },
-    {
-      key: "priceMin",
-      title: filters.priceMin ? `من: ${filters.priceMin}` : "",
-      onClose: () => setFilter("priceMin", ""),
-    },
-    {
-      key: "priceTo",
-      title: filters.priceTo ? `إلى: ${filters.priceTo}` : "",
-      onClose: () => setFilter("priceTo", ""),
-    },
-    {
-      key: "categoryName",
-      title: filters.categoryName,
-      onClose: () => {
-        setFilter("categoryId", "");
-        setFilter("categoryName", "");
-      },
-    },
-    {
-      key: "pickupName",
-      title: filters.pickupName,
-      onClose: () => {
-        setFilter("pickupType", "");
-        setFilter("pickupId", "");
-        setFilter("pickupName", "");
-      },
-    },
-  ].filter((badge) => badge.title);
 
   return (
     <section className="mt-[60px]">
-      <div className=" w-full">
-        <div className="flex items-center gap-2">
-          <Checkbox
-            className="rounded-[7px]"
-            width={25}
-            height={25}
-            id="rememberMe"
-            checked={true}
-          />
-          <label htmlFor="rememberMe" className="text-base font-bold">
-            عرض الأسعار بالضريبة
-          </label>
-        </div>
-      </div>
-      <form
-        onSubmit={handleSubmit(handleSearch)}
-        className="flex items-center justify-between mt-3"
-      >
-        <div className="p-5 bg-white w-[70%] shadow-lg rounded-2xl">
-          <div className="flex items-end gap-4 w-full">
-            <Controller
-              name="location"
-              control={control}
-              render={({ field }) => (
-                <Input
-                  {...field}
-                  labelIcon={<PositioningIcon />}
-                  id="name"
-                  type="text"
-                  placeholder="ادخل الاسم"
-                  label="مكان الأستلام:"
-                  className="bg-Grey100! rounded-xl!"
-                  labelClassName="text-base text-primary"
-                  startIcon={<UserRound className="text-primary" />}
-                />
-              )}
-            />
+      <CarSearchForm
+        control={control}
+        watch={watch}
+        setValue={setValue}
+        handleSubmit={handleSubmit}
+        handleSearch={handleSearch}
+        shown={allCars.length}
+        total={totalElements}
+      />
 
-            <Controller
-              name="fromDate"
-              control={control}
-              render={({ field }) => (
-                <DateTimePicker
-                  withTime
-                  pickerDateLabel="من يوم:"
-                  pickerTimeLabel="من الساعة:"
-                  labelClassName="text-base!"
-                  inputClassName="bg-Grey100! rounded-xl!"
-                  className="w-full"
-                  locale="ar"
-                  placeholder="من..."
-                  label="مدة الإيجار:"
-                  labelIcon={<CarRentIcon />}
-                  value={field.value}
-                  onChange={(date) => {
-                    field.onChange(date);
-                    // If toDate is before the new fromDate, clear or update toDate
-                    if (toDate && date && toDate < date) {
-                      setValue("toDate", null);
-                    }
-                  }}
-                />
-              )}
-            />
+      <ActiveFiltersBadges filters={filters} setFilter={setFilter} />
 
-            <div className="">
-              <ArrowLeft className="w-8 h-8" />
-            </div>
+      <CarsGrid cars={allCars} isLoading={isLoading} />
 
-            <Controller
-              name="toDate"
-              control={control}
-              render={({ field }) => (
-                <DateTimePicker
-                  withTime
-                  pickerDateLabel="من يوم:"
-                  pickerTimeLabel="من الساعة:"
-                  labelClassName="text-base!"
-                  placeholder="إلى..."
-                  inputClassName="bg-Grey100! rounded-xl!"
-                  className="w-full"
-                  locale="ar"
-                  value={field.value}
-                  onChange={field.onChange}
-                  minDate={fromDate}
-                />
-              )}
-            />
-
-            <FilterDrawer />
-
-            <Button className="w-10! h-10! p-0!" type="submit">
-              <Search className="w-6! h-6!" />
-            </Button>
-          </div>
-
-          <div className="">
-            <Separator className="my-5" />
-            <div className="flex items-center gap-3">
-              {activeBadges.map((badge) => (
-                <CustomBadge
-                  key={badge.key}
-                  title={badge.title}
-                  onClose={badge.onClose}
-                />
-              ))}
-            </div>
-          </div>
-        </div>
-
-        <div className="p-2.5 bg-white w-[15%] shadow-lg rounded-2xl">
-          <p className="font-bold">السيارات الظاهرة:</p>
-          <Separator className="my-4" />
-          <PaginationDateView
-            shown={allCars.length.toString()}
-            total={totalElements.toString()}
-          />
-        </div>
-      </form>
-
-      <div className="grid grid-cols-4 gap-8 mt-10">
-        {isLoading
-          ? Array.from({ length: 8 }).map((_, index) => (
-              <div
-                key={index}
-                className="bg-white h-[450px] rounded-2xl flex flex-col gap-3 overflow-hidden p-3"
-              >
-                <div className="h-[250px] w-full">
-                  <Skeleton className="w-full h-full rounded-2xl" />
-                </div>
-                <div className="h-[150px] w-full">
-                  <Skeleton className="w-full h-full rounded-2xl" />
-                </div>
-              </div>
-            ))
-          : allCars.map((car, index) => (
-              <Link key={index} href={`/carDetails/${car.ccbId}`}>
-                <CarsCard
-                  carImage={`${process.env.NEXT_PUBLIC_IMAGES_PREFIX_URL}${car.carImage}`}
-                  carName={car.carName}
-                  advancedCard
-                  carBrand={car.brandName}
-                  companyLogo={car.companyLogo}
-                  companyName={car.companyName}
-                  deliveryInMinutes={car.deliveryInMinutes!}
-                />
-              </Link>
-            ))}
-      </div>
-      {hasNextPage && (
-        <div className="w-full flex justify-center mt-10">
-          <Button
-            onClick={() => fetchNextPage()}
-            disabled={isFetchingNextPage}
-            className="w-fit text-base! px-20!"
-          >
-            {isFetchingNextPage ? "جاري التحميل..." : "المزيد"}
-          </Button>
-        </div>
-      )}
+      <LoadMoreButton
+        hasNextPage={hasNextPage}
+        fetchNextPage={fetchNextPage}
+        isFetchingNextPage={isFetchingNextPage}
+      />
     </section>
   );
 };

@@ -25,12 +25,12 @@ interface carsCard {
   companyLogo?: string;
   companyName?: string;
   deliveryInMinutes?: number;
+  freeKm?: number;
 }
 
 const CarsCard = ({
   advancedCard,
   extraBadgeTitle,
-  firstBadgeColor,
   extraBadgeColor,
   extraContent,
   carImage,
@@ -38,7 +38,7 @@ const CarsCard = ({
   carBrand,
   companyName,
   companyLogo,
-  deliveryInMinutes,
+  freeKm,
 }: carsCard) => {
   return (
     <article>
@@ -54,7 +54,7 @@ const CarsCard = ({
             alt="سيارة للإيجار"
             className="relative z-20 mt-10 w-full object-cover scale-90 min-h-[210px] max-h-[210px]"
           />
-            {/* {typeof deliveryInMinutes === "number" && deliveryInMinutes >= 0 && (
+          {/* {typeof deliveryInMinutes === "number" && deliveryInMinutes >= 0 && (
               <Badge
                 className={`text-sm font-bold absolute top-0 -right-2  p-4 ${firstBadgeColor === "red" ? "bg-StatusBrownBG text-StatusBrown200" : "bg-StatusGreen text-StatusDarkGreen"}`}
               >
@@ -117,7 +117,7 @@ const CarsCard = ({
             <div className="flex items-center gap-1">
               <FreeKmIcon />
               <p className="text-sm">
-                الكيلومترات المجانية: <strong>350 كم / اليوم</strong>
+                الكيلومترات المجانية: <strong>{freeKm} كم / اليوم</strong>
               </p>
             </div>
 

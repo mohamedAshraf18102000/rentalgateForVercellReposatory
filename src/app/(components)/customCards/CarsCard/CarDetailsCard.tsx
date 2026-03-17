@@ -19,6 +19,7 @@ interface CarDetailsCardProps {
   company: Company;
   extraKmPrice: number;
   unlimitedKm: number;
+  ccbId: number;
 }
 
 const CarDetailsCard = ({
@@ -26,6 +27,7 @@ const CarDetailsCard = ({
   company,
   extraKmPrice,
   unlimitedKm,
+  ccbId,
 }: CarDetailsCardProps) => {
   const router = useRouter();
   const otherSpecsPurified = DOMPurify.sanitize(car.otherSpecs, {
@@ -46,7 +48,8 @@ const CarDetailsCard = ({
             />
 
             <Badge className="text-sm font-bold absolute top-0 -right-2 bg-StatusGreen text-StatusDarkGreen p-4 z-50">
-              خصم 20%
+              {/* خصم 20% */}
+              {car.carId}
             </Badge>
           </div>
 
@@ -102,7 +105,7 @@ const CarDetailsCard = ({
             <Button
               className="text-base!"
               icon={<ChevronLeft className="w-8 h-8" />}
-              onClick={() => router.push(`/reservation`)}
+              onClick={() => router.push(`/reservation/${ccbId}`)}
             >
               أحجزها الآن
             </Button>

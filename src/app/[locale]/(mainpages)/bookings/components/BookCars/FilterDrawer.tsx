@@ -16,7 +16,7 @@ import DrawerAccordion from "./DrawerAccordion/DrawerAccordion";
 import { useUserPreferedFiltersStore } from "@/lib/stores/useUserPreferedFiltersStore";
 
 const FilterDrawer = () => {
-  const { resetFilters, filters } = useUserPreferedFiltersStore();
+  const { resetFilters, filters, applyFilters } = useUserPreferedFiltersStore();
 
   const activeFiltersCount = [
     !!filters.rentPeriod,
@@ -44,7 +44,6 @@ const FilterDrawer = () => {
             )}
           </div>
         </button>
-        
       </SheetTrigger>
       <SheetContent dir="rtl" className="flex flex-col p-0">
         <SheetHeader className="text-start! mt-10 px-6 ">
@@ -65,7 +64,11 @@ const FilterDrawer = () => {
           </Button>
 
           <SheetClose asChild>
-            <Button className="w-full text-base!" type="submit">
+            <Button
+              className="w-full text-base!"
+              type="submit"
+              onClick={applyFilters}
+            >
               تطبيق
             </Button>
           </SheetClose>
