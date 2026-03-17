@@ -9,12 +9,16 @@ import {
 import CustomBadge from "@/app/(components)/ui/customBadge";
 import { useLocationStore } from "@/lib/stores/useLocationStore";
 import { useUserPreferedFiltersStore } from "@/lib/stores/useUserPreferedFiltersStore";
+import { getCarBrands } from "@/services/companyCars/carBrands.service";
 import { getCompanyCarsCategories } from "@/services/companyCars/carCategories.service";
 import { getAirports } from "@/services/pickupLocations/airports.service";
 import { getTrainstations } from "@/services/pickupLocations/trainStations.service";
 import { useQuery } from "@tanstack/react-query";
+import { useLocale } from "next-intl";
 
 const DrawerAccordion = () => {
+  const locale = useLocale();
+
   const address = useLocationStore((state) => state.address);
   const { filters, setFilter } = useUserPreferedFiltersStore();
 
@@ -31,6 +35,11 @@ const DrawerAccordion = () => {
   const { data: trainStations, isLoading: trainStationsLoading } = useQuery({
     queryKey: ["train-stations"],
     queryFn: () => getTrainstations(),
+  });
+
+  const { data: brands, isLoading: brandsLoading } = useQuery({
+    queryKey: ["brands"],
+    queryFn: () => getCarBrands(),
   });
 
   const items = [
@@ -83,7 +92,7 @@ const DrawerAccordion = () => {
                 htmlFor={`cat-${cat.categoryId}`}
                 className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
               >
-                {cat.arabicName}
+                {locale === "ar" ? cat.arabicName : cat.englishName}
               </Label>
             </div>
           ))}
@@ -222,14 +231,47 @@ const DrawerAccordion = () => {
       ),
     },
     {
-      value: "billing",
-      trigger: "التصنيف:",
-      content: "قريباً",
-    },
-    {
       value: "brand",
       trigger: "ماركة السيارة:",
-      content: "قريباً",
+      content: (
+        <RadioGroup
+          className="flex flex-col gap-3 px-1"
+          value={filters.brandId}
+          onValueChange={(val) => {
+            const brand = brands?.content.find(
+              (b) => b.brandId.toString() === val,
+            );
+            setFilter("brandId", val);
+            setFilter("brandName", brand?.arabicName || "");
+          }}
+        >
+          {brands?.content.map((brand) => (
+            <div
+              dir="rtl"
+              key={brand.brandId}
+              className="flex items-center gap-2"
+            >
+              <RadioGroupItem
+                value={brand.brandId.toString()}
+                id={`brand-${brand.brandId}`}
+              />
+              <Label
+                htmlFor={`brand-${brand.brandId}`}
+                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
+              >
+                <img
+                  src={`${process.env.NEXT_PUBLIC_IMAGES_PREFIX_URL}${brand.icon}`}
+                  alt={brand.englishName}
+                  width={25}
+                  height={25}
+                  className="object-cover rounded-full"
+                />
+                {locale === "ar" ? brand.arabicName : brand.englishName}
+              </Label>
+            </div>
+          ))}
+        </RadioGroup>
+      ),
     },
     {
       value: "model",
@@ -274,6 +316,14 @@ const DrawerAccordion = () => {
               setFilter("pickupType", "");
               setFilter("pickupId", "");
               setFilter("pickupName", "");
+            },
+          },
+          {
+            condition: !!filters.brandName,
+            title: filters.brandName,
+            onClose: () => {
+              setFilter("brandId", "");
+              setFilter("brandName", "");
             },
           },
         ]

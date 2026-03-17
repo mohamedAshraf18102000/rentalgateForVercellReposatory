@@ -14,6 +14,8 @@ export interface BookingFilters {
   pickupType: "airport" | "trainStation" | "currentLocation" | "";
   categoryName: string;
   pickupName: string;
+  brandId: string;
+  brandName: string;
 }
 
 interface UserPreferedFiltersState {
@@ -35,6 +37,8 @@ const initialFilters: BookingFilters = {
   pickupType: "",
   categoryName: "",
   pickupName: "",
+  brandId: "",
+  brandName: "",
 };
 
 export const useUserPreferedFiltersStore = create<UserPreferedFiltersState>()(
