@@ -10,6 +10,12 @@ export const routing = defineRouting({
 
   // The prefix strategy for the locale in the URL
   localePrefix: 'always',
+
+  // Disable browser Accept-Language detection so that
+  // the defaultLocale ('ar') is used when no cookie/prefix is present.
+  // Without this, browsers with English as the primary language
+  // would always be redirected to /en instead of /ar.
+  localeDetection: false,
 });
 
 // Lightweight wrappers around Next.js' navigation APIs
