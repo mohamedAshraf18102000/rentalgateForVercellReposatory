@@ -1,7 +1,6 @@
 "use client";
 import WrapperContainer from "@/app/(components)/wrapperContainer/WrapperContainer";
 import CarsDetailsBreadCrump from "../components/CarsDetailsBreadCrump";
-import CarDetailsCard from "@/app/(components)/customCards/CarsCard/CarDetailsCard";
 import ServiceCard from "@/app/(components)/customCards/ServiceCard";
 import Panner from "../components/panner/Panner";
 import { useQuery } from "@tanstack/react-query";
@@ -9,8 +8,11 @@ import { getCompanyCarsByID } from "@/services/companyCars/carById.service";
 import { useParams } from "next/navigation";
 import { getCarServices } from "@/services/companyCars/carServices.service";
 import { Skeleton } from "@/app/(components)/ui/skeleton";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
+import { calculateDiscount } from "@/lib/utils/calculateDiscount";
 import { useBookedCarDetailsStore } from "@/lib/stores/useBookedCarDetailsStore";
+import CarsCard from "@/app/(components)/customCards/CarsCard/CarsCard";
+import CarDetailsCard from "@/app/(components)/customCards/CarsCard/CarDetailsCard";
 
 const page = () => {
   const { id } = useParams();
@@ -30,6 +32,22 @@ const page = () => {
     queryKey: ["company-cars-services", id],
     queryFn: () => getCarServices(Number(id)),
   });
+
+  const { discountPercentage } = useMemo(
+    () =>
+      calculateDiscount({
+        originalPrice: data?.dailyPrice ?? 0,
+        offerPrice: data?.offerDailyPrice ?? 0,
+      }),
+    [data?.dailyPrice, data?.offerDailyPrice],
+  );
+
+  const effectivePrice =
+    (data?.offerDailyPrice ?? 0) > 0
+      ? data!.offerDailyPrice
+      : (data?.dailyPrice ?? 0);
+  const discountBadge =
+    discountPercentage > 0 ? `خصم ${discountPercentage}%` : "";
 
   if (isLoading || !data)
     return (
@@ -51,13 +69,20 @@ const page = () => {
   return (
     <WrapperContainer exceedNav>
       <CarsDetailsBreadCrump />
-      <CarDetailsCard
-        car={data?.car}
-        company={data?.company}
-        extraKmPrice={data?.extraKmPrice}
-        unlimitedKm={data?.unlimitedKm}
-        ccbId={data.ccbId}
-      />
+      <div className="mt-10">
+        <CarDetailsCard
+          car={data?.car}
+          company={data?.company}
+          extraKmPrice={data?.extraKmPrice}
+          unlimitedKm={data?.unlimitedKm}
+          ccbId={data.ccbId}
+          carPrice={Math.round(effectivePrice)}
+          priceBeforeOffer={Math.round(data.dailyPrice)}
+          firstBadgeTitle={discountBadge}
+          firstBadgeColor="green"
+        />
+      </div>
+
       {services && services.length > 0 && (
         <div className="my-8 grid grid-cols-4 gap-4">
           <h3 className="col-span-4 font-bold text-2xl my-4">

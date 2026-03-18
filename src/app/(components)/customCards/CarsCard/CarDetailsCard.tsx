@@ -20,6 +20,23 @@ interface CarDetailsCardProps {
   extraKmPrice: number;
   unlimitedKm: number;
   ccbId: number;
+
+  // ── Shared props (same as CarsCard BaseCardProps) ──
+  advancedCard?: boolean;
+  extraBadgeTitle?: string;
+  firstBadgeTitle?: string;
+  firstBadgeColor?: "green" | "red";
+  extraBadgeColor?: "green" | "red";
+  extraContent?: React.ReactNode;
+  priceBeforeOffer?: number;
+  carImage?: string;
+  carName?: string;
+  carBrand?: string;
+  companyLogo?: string;
+  companyName?: string;
+  deliveryInMinutes?: number;
+  freeKm?: number;
+  carPrice?: number;
 }
 
 const CarDetailsCard = ({
@@ -28,6 +45,14 @@ const CarDetailsCard = ({
   extraKmPrice,
   unlimitedKm,
   ccbId,
+  extraBadgeTitle,
+  firstBadgeTitle,
+  firstBadgeColor,
+  extraBadgeColor,
+  extraContent,
+  priceBeforeOffer,
+  freeKm,
+  carPrice,
 }: CarDetailsCardProps) => {
   const router = useRouter();
   const otherSpecsPurified = DOMPurify.sanitize(car.otherSpecs, {
@@ -47,10 +72,30 @@ const CarDetailsCard = ({
               className="relative z-20 w-full object-contain scale-85 mb-5"
             />
 
-            <Badge className="text-sm font-bold absolute top-0 -right-2 bg-StatusGreen text-StatusDarkGreen p-4 z-50">
-              {/* خصم 20% */}
-              {car.carId}
-            </Badge>
+            {typeof firstBadgeTitle === "string" &&
+              firstBadgeTitle.length > 0 && (
+                <Badge
+                  className={`text-sm font-bold absolute top-0 -right-2 p-4 z-50 ${
+                    firstBadgeColor === "red"
+                      ? "bg-StatusBrownBG text-StatusBrown200"
+                      : "bg-StatusGreen text-StatusDarkGreen"
+                  }`}
+                >
+                  {firstBadgeTitle}
+                </Badge>
+              )}
+
+            {extraBadgeTitle && (
+              <Badge
+                className={`text-sm font-bold z-50 absolute top-10 -right-2 p-4 ${
+                  extraBadgeColor === "red"
+                    ? "bg-StatusBrownBG text-StatusBrown200"
+                    : "bg-StatusGreen text-StatusDarkGreen"
+                }`}
+              >
+                {extraBadgeTitle}
+              </Badge>
+            )}
           </div>
 
           <div className="flex justify-between absolute top-12  items-center gap-4 bg-white rounded-l-[18px] w-fit p-1 z-50">
@@ -88,8 +133,10 @@ const CarDetailsCard = ({
         <div className="flex items-center justify-between w-full text-base">
           <div className="flex items-center">
             <span>السعر شامل الضريبة:</span>
-            <span className="text-Grey500 line-through mx-1">150</span>
-            <span className="font-bold">200</span>
+            <span className="text-Grey500 line-through mx-1">
+              {priceBeforeOffer}
+            </span>
+            <span className="font-bold">{carPrice ?? 200}</span>
             <SaudiRiyal />
             <span>/ يوم</span>
           </div>
@@ -140,7 +187,7 @@ const CarDetailsCard = ({
             <FreeKmIcon />
             <p className="text-sm">
               الكيلومترات المجانية:
-              <strong>350 </strong>
+              <strong>{freeKm ?? 350} </strong>
               <strong>كم / اليوم</strong>
             </p>
           </div>
@@ -172,6 +219,11 @@ const CarDetailsCard = ({
               </p>
             </div>
           </div>
+        )}
+
+        {/* Extra content slot */}
+        {extraContent && (
+          <div className="w-full h-full mt-3">{extraContent}</div>
         )}
       </div>
     </section>

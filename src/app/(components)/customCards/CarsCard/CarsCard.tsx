@@ -15,9 +15,11 @@ import StarIcon from "../../../../constants/icons/StarIcon";
 interface carsCard {
   advancedCard?: boolean;
   extraBadgeTitle?: string;
+  firstBadgeTitle?: string;
   firstBadgeColor?: "green" | "red";
   extraBadgeColor?: "green" | "red";
   extraContent?: React.ReactNode;
+  priceBeforeOffer?: number;
 
   carImage?: string;
   carName?: string;
@@ -26,6 +28,7 @@ interface carsCard {
   companyName?: string;
   deliveryInMinutes?: number;
   freeKm?: number;
+  carPrice?: number;
 }
 
 const CarsCard = ({
@@ -39,6 +42,10 @@ const CarsCard = ({
   companyName,
   companyLogo,
   freeKm,
+  carPrice,
+  firstBadgeTitle,
+  firstBadgeColor,
+  priceBeforeOffer,
 }: carsCard) => {
   return (
     <article>
@@ -54,13 +61,14 @@ const CarsCard = ({
             alt="سيارة للإيجار"
             className="relative z-20 mt-10 w-full object-cover scale-90 min-h-[210px] max-h-[210px]"
           />
-          {/* {typeof deliveryInMinutes === "number" && deliveryInMinutes >= 0 && (
+          {typeof firstBadgeTitle === "string" &&
+            firstBadgeTitle.length > 0 && (
               <Badge
                 className={`text-sm font-bold absolute top-0 -right-2  p-4 ${firstBadgeColor === "red" ? "bg-StatusBrownBG text-StatusBrown200" : "bg-StatusGreen text-StatusDarkGreen"}`}
               >
-                تصل خلال {deliveryInMinutes} دقيقة
+                {firstBadgeTitle}
               </Badge>
-            )} */}
+            )}
 
           {extraBadgeTitle && (
             <Badge
@@ -123,10 +131,12 @@ const CarsCard = ({
 
             {/* Price */}
             <div className="flex items-center mt-3">
-              <span className="line-through text-sm text-Grey500">15.00</span>
+              <span className="line-through text-sm text-Grey500">
+                {priceBeforeOffer}
+              </span>
 
               <data value="10.56" className="text-base mx-2 font-bold">
-                10.56
+                {carPrice}
               </data>
 
               <p className="flex items-center text-base">
