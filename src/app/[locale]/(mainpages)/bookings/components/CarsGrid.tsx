@@ -106,7 +106,9 @@ const CarsGrid = ({ cars, isLoading, rentalDays }: CarsGridProps) => {
           getCarPricing(car, rentalDays);
 
         const discountBadge =
-          discountPercentage > 0 ? `خصم ${discountPercentage}%` : "";
+          discountPercentage > 0
+            ? `خصم ${discountPercentage}% - ${pricingTypeLabels[pricingType]}`
+            : "";
 
         return (
           <Link key={car.ccbId} href={`/carDetails/${car.ccbId}`}>
