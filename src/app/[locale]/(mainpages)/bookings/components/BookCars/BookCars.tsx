@@ -19,9 +19,17 @@ interface FormValues {
 
 const BookCars = () => {
   const [rentalDays, setRentalDays] = useState<number>(0);
-  const { appliedFilters } = useUserPreferedFiltersStore();
+  const { appliedFilters, filters, setFilter } = useUserPreferedFiltersStore();
   const longitude = useLocationStore((state) => state.longitude);
   const latitude = useLocationStore((state) => state.latitude);
+  const address = useLocationStore((state) => state.address);
+
+  // Auto-set pickup location name when address is resolved
+  useEffect(() => {
+    if (address && filters.pickupType === "currentLocation") {
+      setFilter("pickupName", address);
+    }
+  }, [address]);
 
   const apiFilters = {
     longitude: longitude ?? undefined,
@@ -62,6 +70,8 @@ const BookCars = () => {
       const diffTime = Math.abs(toDate.getTime() - fromDate.getTime());
       const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
       setRentalDays(diffDays);
+    } else {
+      setRentalDays(0);
     }
   }, [fromDate, toDate]);
 
@@ -81,15 +91,27 @@ const BookCars = () => {
 
   return (
     <section className="mt-[60px]">
-      <CarSearchForm
-        control={control}
-        watch={watch}
-        setValue={setValue}
-        handleSubmit={handleSubmit}
-        handleSearch={handleSearch}
-        shown={allCars.length}
-        total={totalElements}
-      />
+      <div className="bg-white p-5 rounded-2xl">
+        <CarSearchForm
+          control={control}
+          watch={watch}
+          setValue={setValue}
+          handleSubmit={handleSubmit}
+          handleSearch={handleSearch}
+          shown={allCars.length}
+          total={totalElements}
+        />
+
+        <ActiveFiltersBadges
+          filters={appliedFilters}
+          setFilter={setFilter}
+          fromDate={fromDate}
+          toDate={toDate}
+          rentalDays={rentalDays}
+          clearFromDate={() => setValue("fromDate", null)}
+          clearToDate={() => setValue("toDate", null)}
+        />
+      </div>
 
       <CarsGrid cars={allCars} isLoading={isLoading} rentalDays={rentalDays} />
 

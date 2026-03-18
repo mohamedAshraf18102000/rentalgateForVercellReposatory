@@ -8,6 +8,7 @@ import CarRentIcon from "@/constants/icons/CarRentIcon";
 import PaginationDateView from "@/app/(components)/PaginationDateView";
 import { Separator } from "@/app/(components)/ui/separator";
 import FilterDrawer from "./BookCars/FilterDrawer";
+import { useUserPreferedFiltersStore } from "@/lib/stores/useUserPreferedFiltersStore";
 
 const CarSearchForm = ({
   control,
@@ -20,6 +21,7 @@ const CarSearchForm = ({
 }: any) => {
   const fromDate = watch("fromDate");
   const toDate = watch("toDate");
+  const { filters } = useUserPreferedFiltersStore();
 
   return (
     <>
@@ -32,26 +34,29 @@ const CarSearchForm = ({
         onSubmit={handleSubmit(handleSearch)}
         className="flex items-center justify-between mt-3"
       >
-        <div className="p-5 bg-white w-[70%] shadow-lg rounded-2xl">
+        <div className="p-5 bg-white w-[70%] border rounded-2xl">
           <div className="flex items-end gap-4">
-            <Controller
-              name="location"
-              control={control}
-              render={({ field }) => (
-                <Input
-                  {...field}
-                  label="مكان الأستلام:"
-                  labelIcon={<PositioningIcon />}
-                  startIcon={<UserRound />}
-                />
-              )}
-            />
+            <div className="w-full">
+              <div className="flex items-center gap-2">
+                <PositioningIcon />
+                <p className="text-sm mb-2">مكان الاستلام:</p>
+              </div>
+              <div
+                title={filters.pickupName}
+                className="h-[40px] rounded-lg p-2 w-full bg-[#eceef2] flex items-center gap-2"
+              >
+                <p className="text-sm line-clamp-1">
+                  {filters.pickupName || "الموقع الحالي"}
+                </p>
+              </div>
+            </div>
 
             <Controller
               name="fromDate"
               control={control}
               render={({ field }) => (
                 <DateTimePicker
+                  allowClear
                   inputClassName="text-sm!"
                   className="w-full"
                   label="مدة الإيجار:"
@@ -75,6 +80,7 @@ const CarSearchForm = ({
               control={control}
               render={({ field }) => (
                 <DateTimePicker
+                  allowClear
                   className="w-full"
                   inputClassName="text-sm!"
                   value={field.value}
@@ -92,7 +98,7 @@ const CarSearchForm = ({
           </div>
         </div>
 
-        <div className="p-2.5 bg-white w-[15%] shadow-lg rounded-2xl">
+        <div className="p-2.5 bg-white w-[15%] border rounded-2xl">
           <p className="font-bold">السيارات الظاهرة:</p>
           <Separator className="my-4" />
           <PaginationDateView

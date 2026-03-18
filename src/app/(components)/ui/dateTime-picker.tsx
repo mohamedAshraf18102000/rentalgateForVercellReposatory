@@ -1,10 +1,16 @@
 "use client";
 
-import { useState, useRef, useEffect, type ReactNode } from "react";
+import {
+  useState,
+  useRef,
+  useEffect,
+  type ReactNode,
+  type MouseEvent,
+} from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "./popover";
 import { Input } from "./input";
 import { cn } from "@/lib/utils";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import { EditIcon } from "@/constants/icons";
 import { DayPicker } from "react-day-picker";
 import { ar, enUS } from "date-fns/locale";
@@ -41,6 +47,8 @@ interface DatePickerProps {
   withTime?: boolean;
   pickerDateLabel?: string;
   pickerTimeLabel?: string;
+  /** Show an X button to clear the selected date */
+  allowClear?: boolean;
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -392,6 +400,7 @@ export function DateTimePicker({
   withTime = false,
   pickerDateLabel,
   pickerTimeLabel,
+  allowClear = false,
 }: DatePickerProps) {
   const [open, setOpen] = useState(false);
   const [isFromSelected, setIsFromSelected] = useState(true);
@@ -480,9 +489,23 @@ export function DateTimePicker({
                       ? formatFn(fromValue, locale)
                       : defaultPlaceholder}
                   </span>
-                  <span className="shrink-0 w-3 h-3 md:w-4 md:h-4 flex items-center justify-center">
-                    <EditIcon />
-                  </span>
+                  {allowClear && fromValue ? (
+                    <span
+                      role="button"
+                      tabIndex={0}
+                      className="shrink-0 w-4 h-4 md:w-5 md:h-5 flex items-center justify-center rounded-full hover:bg-gray-300 transition-colors"
+                      onClick={(e: MouseEvent) => {
+                        e.stopPropagation();
+                        onFromChange?.(null);
+                      }}
+                    >
+                      <X className="w-3 h-3 md:w-3.5 md:h-3.5 text-gray-500" />
+                    </span>
+                  ) : (
+                    <span className="shrink-0 w-3 h-3 md:w-4 md:h-4 flex items-center justify-center">
+                      <EditIcon />
+                    </span>
+                  )}
                 </div>
               </PopoverTrigger>
               <PopoverContent className="w-auto p-0" align="start">
@@ -541,9 +564,23 @@ export function DateTimePicker({
                     <span className="text-xs md:text-sm font-medium text-gray-900 underline truncate">
                       {toValue ? formatFn(toValue, locale) : defaultPlaceholder}
                     </span>
-                    <span className="shrink-0 w-3 h-3 md:w-4 md:h-4 flex items-center justify-center">
-                      <EditIcon />
-                    </span>
+                    {allowClear && toValue ? (
+                      <span
+                        role="button"
+                        tabIndex={0}
+                        className="shrink-0 w-4 h-4 md:w-5 md:h-5 flex items-center justify-center rounded-full hover:bg-gray-300 transition-colors"
+                        onClick={(e: MouseEvent) => {
+                          e.stopPropagation();
+                          onToChange?.(null);
+                        }}
+                      >
+                        <X className="w-3 h-3 md:w-3.5 md:h-3.5 text-gray-500" />
+                      </span>
+                    ) : (
+                      <span className="shrink-0 w-3 h-3 md:w-4 md:h-4 flex items-center justify-center">
+                        <EditIcon />
+                      </span>
+                    )}
                   </div>
                 </PopoverTrigger>
                 <PopoverContent className="w-auto p-0" align="start">
@@ -585,38 +622,62 @@ export function DateTimePicker({
           {label}
         </label>
       )}
-      <Popover open={open} onOpenChange={setOpen}>
-        <PopoverTrigger asChild>
-          <div
+      <div className="relative">
+        <Popover open={open} onOpenChange={setOpen}>
+          <PopoverTrigger asChild>
+            <div
+              role="button"
+              tabIndex={0}
+              className="flex items-center gap-2 cursor-pointer"
+            >
+              <Input
+                readOnly
+                value={formatFn(displayValue, locale)}
+                placeholder={defaultPlaceholder}
+                className={cn(
+                  "cursor-pointer w-full",
+                  allowClear && value ? "pe-8" : "",
+                  inputClassName,
+                )}
+              />
+            </div>
+          </PopoverTrigger>
+          <PopoverContent className="w-auto p-0 rounded-2xl!" align="start">
+            <DateTimeContent
+              selectedDate={value}
+              onDateChange={(d) => {
+                if (!d) return;
+                onChange?.(d);
+                if (!withTime) setOpen(false);
+              }}
+              locale={locale}
+              minAllowedDate={minAllowedDate}
+              maxAllowedDate={maxAllowedDate}
+              withTime={withTime}
+              pickerDateLabel={pickerDateLabel}
+              pickerTimeLabel={pickerTimeLabel}
+            />
+          </PopoverContent>
+        </Popover>
+        {allowClear && value && (
+          <span
             role="button"
             tabIndex={0}
-            className="flex items-center gap-2 cursor-pointer"
-          >
-            <Input
-              readOnly
-              value={formatFn(displayValue, locale)}
-              placeholder={defaultPlaceholder}
-              className={cn("cursor-pointer w-full", inputClassName)}
-            />
-          </div>
-        </PopoverTrigger>
-        <PopoverContent className="w-auto p-0 rounded-2xl!" align="start">
-          <DateTimeContent
-            selectedDate={value}
-            onDateChange={(d) => {
-              if (!d) return;
-              onChange?.(d);
-              if (!withTime) setOpen(false);
+            className="absolute end-2 top-1/2 -translate-y-1/2 z-10 w-5 h-5 flex items-center justify-center rounded-full hover:bg-gray-200 transition-colors cursor-pointer"
+            onPointerDown={(e) => {
+              e.stopPropagation();
+              e.preventDefault();
             }}
-            locale={locale}
-            minAllowedDate={minAllowedDate}
-            maxAllowedDate={maxAllowedDate}
-            withTime={withTime}
-            pickerDateLabel={pickerDateLabel}
-            pickerTimeLabel={pickerTimeLabel}
-          />
-        </PopoverContent>
-      </Popover>
+            onClick={(e: MouseEvent) => {
+              e.stopPropagation();
+              e.preventDefault();
+              onChange?.(null);
+            }}
+          >
+            <X className="w-3.5 h-3.5 text-gray-400" />
+          </span>
+        )}
+      </div>
       {errorMessage && (
         <p className="text-xs text-red-500 mt-1">{errorMessage}</p>
       )}

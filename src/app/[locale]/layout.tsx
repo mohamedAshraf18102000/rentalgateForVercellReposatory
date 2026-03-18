@@ -14,6 +14,7 @@ import { notFound } from "next/navigation";
 import "../../globals.css";
 import { RouteGuard } from "./(components)/RouteGuard";
 import SideToChat from "../(components)/sideToChat/SideToChat";
+import { CurrentLocationDialog } from "./(dialogs)/PickupDialog/CurrentLocationDialog";
 import ReactQueryProvider from "@/provider/ReactQueryProvider";
 import { GuestAuthInitializer } from "@/lib/stores/GuestAuthInitializer";
 
@@ -192,6 +193,7 @@ export default async function LocaleLayout({
             <GuestAuthInitializer />
             <RouteGuard />
             <SharedDataLoader />
+            <CurrentLocationDialog />
             <Header />
             <SideToChat />
             <main className="max-sm:pt-[65px] ">

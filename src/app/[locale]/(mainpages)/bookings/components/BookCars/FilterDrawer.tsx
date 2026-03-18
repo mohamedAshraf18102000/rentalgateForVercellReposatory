@@ -1,11 +1,8 @@
 import { Button } from "@/app/(components)/ui/button";
-import { Input } from "@/app/(components)/ui/input";
-import { Label } from "@/app/(components)/ui/label";
 import {
   Sheet,
   SheetClose,
   SheetContent,
-  SheetDescription,
   SheetFooter,
   SheetHeader,
   SheetTitle,
@@ -24,7 +21,7 @@ const FilterDrawer = () => {
     filters.priceMin !== "",
     filters.priceTo !== "",
     filters.categoryId !== "",
-    filters.pickupId !== "",
+    filters.pickupId !== "" && filters.pickupId !== "current-location",
   ].filter(Boolean).length;
 
   return (

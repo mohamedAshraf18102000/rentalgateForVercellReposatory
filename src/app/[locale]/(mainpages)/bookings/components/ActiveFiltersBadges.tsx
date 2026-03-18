@@ -1,7 +1,22 @@
 import CustomBadge from "@/app/(components)/ui/customBadge";
 import { Separator } from "@/app/(components)/ui/separator";
 
-const ActiveFiltersBadges = ({ filters, setFilter }: any) => {
+const ActiveFiltersBadges = ({
+  filters,
+  setFilter,
+  fromDate,
+  toDate,
+  rentalDays,
+  clearFromDate,
+  clearToDate,
+}: any) => {
+  const formatShortDate = (date: Date) => {
+    const d = date.getDate();
+    const m = date.getMonth() + 1;
+    const y = date.getFullYear();
+    return `${d}/${m}/${y}`;
+  };
+
   const badges = [
     {
       key: "priceMin",
@@ -21,14 +36,28 @@ const ActiveFiltersBadges = ({ filters, setFilter }: any) => {
         setFilter("brandName", "");
       },
     },
+    {
+      key: "rentalDuration",
+      title:
+        fromDate && toDate
+          ? `المدة: ${formatShortDate(fromDate)} - ${formatShortDate(toDate)} (${rentalDays} يوم)`
+          : fromDate
+            ? `من: ${formatShortDate(fromDate)}`
+            : toDate
+              ? `إلى: ${formatShortDate(toDate)}`
+              : "",
+      onClose: () => {
+        clearFromDate?.();
+        clearToDate?.();
+      },
+    },
   ].filter((b) => b.title);
 
   if (!badges.length) return null;
 
   return (
     <>
-      <Separator className="my-5" />
-      <div className="flex gap-3">
+      <div className="flex gap-3 mt-3">
         {badges.map((badge) => (
           <CustomBadge
             key={badge.key}
