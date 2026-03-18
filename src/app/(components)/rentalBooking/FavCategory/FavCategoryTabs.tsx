@@ -1,10 +1,11 @@
 "use client";
 
 import { Tabs, TabsList, TabsTrigger } from "@/ui";
+import { CarCategory } from "@/lib/stores/useUserPreferedFiltersStore";
 
 interface PeriodSearchProps {
-  value: "small" | "economy" | "family" | "luxury";
-  onValueChange: (value: "small" | "economy" | "family" | "luxury") => void;
+  value: CarCategory;
+  onValueChange: (value: CarCategory) => void;
 }
 
 export const FavCategoryTabs: React.FC<PeriodSearchProps> = ({
@@ -15,7 +16,7 @@ export const FavCategoryTabs: React.FC<PeriodSearchProps> = ({
     <Tabs
       value={value}
       onValueChange={(newValue) =>
-        onValueChange(newValue as "small" | "economy" | "family" | "luxury")
+        onValueChange(newValue as CarCategory)
       }
     >
       <TabsList className="bg-Grey100 p-2">

@@ -1,10 +1,11 @@
 "use client";
 
 import { Tabs, TabsList, TabsTrigger } from "@/ui";
+import { RentPeriod } from "@/lib/stores/useUserPreferedFiltersStore";
 
 interface PeriodSearchProps {
-  value: "daily" | "weekly" | "monthly" | "yearly";
-  onValueChange: (value: "daily" | "weekly" | "monthly" | "yearly") => void;
+  value: RentPeriod;
+  onValueChange: (value: RentPeriod) => void;
 }
 
 export const PeriodSearchTabs: React.FC<PeriodSearchProps> = ({
@@ -15,7 +16,7 @@ export const PeriodSearchTabs: React.FC<PeriodSearchProps> = ({
     <Tabs
       value={value}
       onValueChange={(newValue) =>
-        onValueChange(newValue as "daily" | "weekly" | "monthly" | "yearly")
+        onValueChange(newValue as RentPeriod)
       }
       className=""
     >
