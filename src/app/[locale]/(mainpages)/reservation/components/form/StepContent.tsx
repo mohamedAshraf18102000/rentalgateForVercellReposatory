@@ -10,7 +10,7 @@ import { useUserPreferedFiltersStore } from "@/lib/stores/useUserPreferedFilters
 import { DateTimePicker } from "@/app/(components)/ui/dateTime-picker";
 import { format } from "date-fns";
 import { arEG } from "date-fns/locale";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { DialogWrapper } from "@/app/(components)";
 import GoogleMapsLocation from "@/app/(components)/mapsLocation/GoogleMapsLocation";
 import { LocateFixed } from "lucide-react";
@@ -26,7 +26,17 @@ const StepContent = ({ activeStep }: StepContentProps) => {
   const [isMapOpen, setIsMapOpen] = useState(false);
   const { address } = useLocationStore();
 
-  const [tempAddress, setTempAddress] = useState<string>("");
+  const [tempAddress, setTempAddress] = useState<string>(filters.carReturnLocation || "");
+  const [tempLat, setTempLat] = useState<number | undefined>(filters.carReturnLocationLat);
+  const [tempLng, setTempLng] = useState<number | undefined>(filters.carReturnLocationLng);
+
+  useEffect(() => {
+    if (isMapOpen) {
+      setTempAddress(filters.carReturnLocation || "");
+      setTempLat(filters.carReturnLocationLat);
+      setTempLng(filters.carReturnLocationLng);
+    }
+  }, [isMapOpen, filters.carReturnLocation, filters.carReturnLocationLat, filters.carReturnLocationLng]);
 
   const formatDate = (dateStr?: string) => {
     if (!dateStr) return "";
@@ -66,8 +76,12 @@ const StepContent = ({ activeStep }: StepContentProps) => {
                 </div>
                 <GoogleMapsLocation
                   storeless
+                  initialLat={filters.carReturnLocationLat}
+                  initialLng={filters.carReturnLocationLng}
                   onLocationChange={(lat, lng, address) => {
                     setTempAddress(address || "");
+                    setTempLat(lat);
+                    setTempLng(lng);
                   }}
                 />
               </div>
@@ -83,6 +97,8 @@ const StepContent = ({ activeStep }: StepContentProps) => {
                 <button
                   onClick={() => {
                     setFilter("carReturnLocation", tempAddress);
+                    if (tempLat !== undefined) setFilter("carReturnLocationLat", tempLat);
+                    if (tempLng !== undefined) setFilter("carReturnLocationLng", tempLng);
                     setIsMapOpen(false);
                   }}
                   className="rounded-xl py-3 bg-primary text-white font-bold w-fit px-5"

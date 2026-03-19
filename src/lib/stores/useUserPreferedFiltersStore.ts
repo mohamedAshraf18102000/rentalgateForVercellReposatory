@@ -21,6 +21,8 @@ export interface BookingFilters {
   fromDate: string;
   toDate: string;
   carReturnLocation: string;
+  carReturnLocationLat?: number;
+  carReturnLocationLng?: number;
 }
 
 interface UserPreferedFiltersState {

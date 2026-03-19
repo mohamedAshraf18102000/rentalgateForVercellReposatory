@@ -25,18 +25,22 @@ const GoogleMapsLocation = ({
   zoomPercent = 15,
   storeless = false,
   onLocationChange,
+  initialLat,
+  initialLng,
 }: {
   zoomPercent?: number;
   storeless?: boolean;
   onLocationChange?: (lat: number, lng: number, address: string) => void;
+  initialLat?: number;
+  initialLng?: number;
 }) => {
   const { latitude, longitude, setLocation } = useLocationStore();
   const [currentLocation, setCurrentLocation] = useState({
-    lat: latitude || defaultLocation.lat,
-    lng: longitude || defaultLocation.lng,
+    lat: initialLat || latitude || defaultLocation.lat,
+    lng: initialLng || longitude || defaultLocation.lng,
   });
   const [locationLoading, setLocationLoading] = useState(
-    !latitude && !longitude,
+    !(initialLat && initialLng) && !latitude && !longitude,
   );
   const autocompleteRef = useRef<any>(null);
   const mapRef = useRef<google.maps.Map | null>(null);
@@ -61,7 +65,10 @@ const GoogleMapsLocation = ({
   };
 
   useEffect(() => {
-    if (latitude && longitude && !storeless) {
+    if (initialLat && initialLng) {
+      setCurrentLocation({ lat: initialLat, lng: initialLng });
+      setLocationLoading(false);
+    } else if (latitude && longitude) {
       setCurrentLocation({ lat: latitude, lng: longitude });
       setLocationLoading(false);
     } else if (navigator.geolocation) {
@@ -85,7 +92,7 @@ const GoogleMapsLocation = ({
       setLocationLoading(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [latitude, longitude, setLocation, storeless]);
+  }, [latitude, longitude, setLocation, storeless, initialLat, initialLng]);
 
   useEffect(() => {
     if (mapRef.current) {
