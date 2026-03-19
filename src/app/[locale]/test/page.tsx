@@ -2,8 +2,10 @@
 
 import WrapperContainer from "@/app/(components)/wrapperContainer/WrapperContainer";
 import { calculateRentalPrice } from "@/lib/utils/calculateRentalPrice";
+import { useUserPreferedFiltersStore } from "@/lib/stores/useUserPreferedFiltersStore";
 
 const Page = () => {
+  const { filters } = useUserPreferedFiltersStore();
   const result = calculateRentalPrice({
     days: 12,
 
@@ -31,6 +33,10 @@ const Page = () => {
         <p>Price Per Day: {result.pricePerDay}</p>
         <p>Pricing Type: {result.pricingType}</p>
       </div>
+      <p>--------------------------------------------------</p>
+
+      <p>{filters.fromDate}</p>
+      <p>{filters.toDate}</p>
     </WrapperContainer>
   );
 };

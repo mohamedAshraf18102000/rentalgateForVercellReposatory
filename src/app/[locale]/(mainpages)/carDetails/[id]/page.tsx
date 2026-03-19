@@ -11,7 +11,6 @@ import { Skeleton } from "@/app/(components)/ui/skeleton";
 import { useEffect, useMemo } from "react";
 import { calculateDiscount } from "@/lib/utils/calculateDiscount";
 import { useBookedCarDetailsStore } from "@/lib/stores/useBookedCarDetailsStore";
-import CarsCard from "@/app/(components)/customCards/CarsCard/CarsCard";
 import CarDetailsCard from "@/app/(components)/customCards/CarsCard/CarDetailsCard";
 
 const page = () => {

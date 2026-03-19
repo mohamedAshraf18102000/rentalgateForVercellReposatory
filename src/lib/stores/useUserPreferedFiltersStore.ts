@@ -18,6 +18,9 @@ export interface BookingFilters {
   brandName: string;
   modelId: string;
   modelName: string;
+  fromDate: string;
+  toDate: string;
+  carReturnLocation: string;
 }
 
 interface UserPreferedFiltersState {
@@ -45,6 +48,9 @@ const initialFilters: BookingFilters = {
   brandName: "",
   modelId: "",
   modelName: "",
+  fromDate: "",
+  toDate: "",
+  carReturnLocation: "",
 };
 
 export const useUserPreferedFiltersStore = create<UserPreferedFiltersState>()(
