@@ -21,7 +21,15 @@ const defaultLocation = { lat: 0, lng: 0 };
 
 const libraries: "places"[] = ["places"];
 
-const GoogleMapsLocation = ({ zoomPercent = 15 }: { zoomPercent?: number }) => {
+const GoogleMapsLocation = ({
+  zoomPercent = 15,
+  storeless = false,
+  onLocationChange,
+}: {
+  zoomPercent?: number;
+  storeless?: boolean;
+  onLocationChange?: (lat: number, lng: number, address: string) => void;
+}) => {
   const { latitude, longitude, setLocation } = useLocationStore();
   const [currentLocation, setCurrentLocation] = useState({
     lat: latitude || defaultLocation.lat,
@@ -32,14 +40,28 @@ const GoogleMapsLocation = ({ zoomPercent = 15 }: { zoomPercent?: number }) => {
   );
   const autocompleteRef = useRef<any>(null);
   const mapRef = useRef<google.maps.Map | null>(null);
+  const onLocationChangeRef = useRef(onLocationChange);
+
+  useEffect(() => {
+    onLocationChangeRef.current = onLocationChange;
+  }, [onLocationChange]);
 
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!,
     libraries,
   });
 
+  const handleSetLocation = (lat: number, lng: number, address: string | null) => {
+    if (!storeless) {
+      setLocation(lat, lng, address);
+    }
+    if (onLocationChangeRef.current) {
+      onLocationChangeRef.current(lat, lng, address || "");
+    }
+  };
+
   useEffect(() => {
-    if (latitude && longitude) {
+    if (latitude && longitude && !storeless) {
       setCurrentLocation({ lat: latitude, lng: longitude });
       setLocationLoading(false);
     } else if (navigator.geolocation) {
@@ -51,7 +73,7 @@ const GoogleMapsLocation = ({ zoomPercent = 15 }: { zoomPercent?: number }) => {
           };
           setCurrentLocation(newPos);
           const address = await reverseGeocode(newPos.lat, newPos.lng);
-          setLocation(newPos.lat, newPos.lng, address);
+          handleSetLocation(newPos.lat, newPos.lng, address);
           setLocationLoading(false);
         },
         (error) => {
@@ -62,7 +84,8 @@ const GoogleMapsLocation = ({ zoomPercent = 15 }: { zoomPercent?: number }) => {
     } else {
       setLocationLoading(false);
     }
-  }, [latitude, longitude, setLocation]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [latitude, longitude, setLocation, storeless]);
 
   useEffect(() => {
     if (mapRef.current) {
@@ -76,7 +99,7 @@ const GoogleMapsLocation = ({ zoomPercent = 15 }: { zoomPercent?: number }) => {
       const location = place.geometry.location;
       const newPos = { lat: location.lat(), lng: location.lng() };
       setCurrentLocation(newPos);
-      setLocation(newPos.lat, newPos.lng, place.formatted_address);
+      handleSetLocation(newPos.lat, newPos.lng, place.formatted_address || "");
       console.log(newPos);
     }
   };
@@ -92,7 +115,7 @@ const GoogleMapsLocation = ({ zoomPercent = 15 }: { zoomPercent?: number }) => {
         setCurrentLocation(newPos);
         mapRef.current?.panTo(newPos);
         const address = await reverseGeocode(newPos.lat, newPos.lng);
-        setLocation(newPos.lat, newPos.lng, address);
+        handleSetLocation(newPos.lat, newPos.lng, address);
       },
       (error) => {
         console.error("Error getting location:", error);
@@ -130,7 +153,7 @@ const GoogleMapsLocation = ({ zoomPercent = 15 }: { zoomPercent?: number }) => {
         <button
           type="button"
           onClick={handleLocateUser}
-          className="rounded-full z-9999 absolute bottom-19 right-2.5 "
+          className="rounded-full z-9999 absolute bottom-[19px] right-2.5 "
         >
           <LocateFixed className="w-10 h-10 text-blue-600" />
         </button>
@@ -153,7 +176,7 @@ const GoogleMapsLocation = ({ zoomPercent = 15 }: { zoomPercent?: number }) => {
             };
             setCurrentLocation(newPos);
             const address = await reverseGeocode(newPos.lat, newPos.lng);
-            setLocation(newPos.lat, newPos.lng, address);
+            handleSetLocation(newPos.lat, newPos.lng, address);
           }}
         >
           <Marker position={currentLocation} />

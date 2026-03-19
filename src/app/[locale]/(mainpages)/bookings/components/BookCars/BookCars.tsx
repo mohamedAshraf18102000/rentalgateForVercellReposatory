@@ -57,8 +57,8 @@ const BookCars = () => {
   const { control, handleSubmit, watch, setValue } = useForm<FormValues>({
     defaultValues: {
       location: "",
-      fromDate: null,
-      toDate: null,
+      fromDate: filters.fromDate ? new Date(filters.fromDate) : null,
+      toDate: filters.toDate ? new Date(filters.toDate) : null,
     },
   });
 
@@ -66,6 +66,12 @@ const BookCars = () => {
   const toDate = watch("toDate");
 
   useEffect(() => {
+    if (fromDate) setFilter("fromDate", fromDate.toISOString());
+    else setFilter("fromDate", "");
+
+    if (toDate) setFilter("toDate", toDate.toISOString());
+    else setFilter("toDate", "");
+
     if (fromDate && toDate) {
       const diffTime = Math.abs(toDate.getTime() - fromDate.getTime());
       const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));

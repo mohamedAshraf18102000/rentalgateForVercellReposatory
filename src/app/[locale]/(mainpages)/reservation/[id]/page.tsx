@@ -18,7 +18,7 @@ const page = () => {
   return (
     <WrapperContainer exceedNav>
       <div className="w-full">
-        <ReservationBreadCrump />
+        <ReservationBreadCrump carId={carDetails?.ccbId} />
         <div className="w-full grid grid-cols-3 gap-5">
           <Stepper
             stepNum="1"

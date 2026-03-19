@@ -57,6 +57,7 @@ const CarSearchForm = ({
               render={({ field }) => (
                 <DateTimePicker
                   allowClear
+                  withTime
                   inputClassName="text-sm!"
                   className="w-full"
                   label="مدة الإيجار:"
@@ -81,6 +82,7 @@ const CarSearchForm = ({
               render={({ field }) => (
                 <DateTimePicker
                   allowClear
+                  withTime
                   className="w-full"
                   inputClassName="text-sm!"
                   value={field.value}
