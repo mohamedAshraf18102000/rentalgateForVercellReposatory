@@ -41,6 +41,7 @@ import {
   SelectValue,
 } from "./ui/select";
 import { PageLoader } from "./ui/PageLoader";
+import { PhoneInput } from "./ui/phone-input";
 export {
   Header,
   Footer,
@@ -84,4 +85,5 @@ export {
   SelectTrigger,
   SelectValue,
   PageLoader,
+  PhoneInput,
 };

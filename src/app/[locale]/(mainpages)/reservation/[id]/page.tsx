@@ -18,14 +18,31 @@ const page = () => {
   const stepContentRef = useRef<StepContentRef>(null);
   const carDetails = useBookedCarDetailsStore((s) => s.carDetails);
 
-  const handleNext = async () => {
+  const handleStepNavigation = async (step: number) => {
+    if (step < activeStep) {
+      setActiveStep(step);
+      return;
+    }
+    
+    if (step === activeStep) return;
+
     const isValid = await stepContentRef.current?.validateStep();
     if (isValid) {
-      console.log("Form Data:", stepContentRef.current?.getValues());
-      setActiveStep((prev) => (prev < 3 ? prev + 1 : prev));
+      setActiveStep(step);
     }
   };
 
+  const handleNext = async () => {
+    if (activeStep < 3) {
+      handleStepNavigation(activeStep + 1);
+    } else {
+      const isValid = await stepContentRef.current?.validateStep();
+      if (isValid) {
+        console.log("Form Data:", stepContentRef.current?.getValues());
+        // Handle final submission here
+      }
+    }
+  };
 
   return (
     <WrapperContainer exceedNav>
@@ -37,21 +54,21 @@ const page = () => {
             title="تأكيد مكان و ميعاد الأستلام و التسليم"
             description="كان لوريم إيبسوم ولايزال المعيار للنص"
             isActive={activeStep === 1}
-            onClick={() => setActiveStep(1)}
+            onClick={() => handleStepNavigation(1)}
           />
           <Stepper
             stepNum="2"
             title="تفاصيل المستأجر"
             description="كان لوريم إيبسوم ولايزال المعيار للنص"
             isActive={activeStep === 2}
-            onClick={() => setActiveStep(2)}
+            onClick={() => handleStepNavigation(2)}
           />
           <Stepper
             stepNum="3"
             title="تحديد الخدمات"
             description="كان لوريم إيبسوم ولايزال المعيار للنص"
             isActive={activeStep === 3}
-            onClick={() => setActiveStep(3)}
+            onClick={() => handleStepNavigation(3)}
           />
         </div>
 

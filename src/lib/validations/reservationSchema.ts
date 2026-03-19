@@ -24,9 +24,19 @@ export const reservationSchema = z.object({
 
   // Step 2 - Tenant Details
   fullName: z.string().min(3, "يجب إدخال الاسم الكامل"),
-  phoneNumber: z.string().min(9, "يجب إدخال رقم هاتف صحيح"),
-  idNumber: z.string().min(5, "يجب إدخال رقم الهوية او الجواز"),
-  email: z.string().email("يجب إدخال بريد إلكتروني صحيح"),
+  phoneNumber: z.string().refine(
+    (val) => val.replace(/\D/g, "").length >= 9,
+    "يجب إدخال رقم هاتف كامل"
+  ),
+  idNumber: z.string().min(1, "يجب إدخال نوع الإقامة"),
+  nationality: z.string().min(1, "يجب إدخال الجنسية"),
+  email: z.email("يجب إدخال بريد إلكتروني صحيح"),
+  licenceImage: z.any().refine((val) => val !== undefined && val !== null && val !== "", {
+    message: "يجب إرفاق صورة الرخصة",
+  }),
+  licenceExpiryDate: z.any().refine((val) => val instanceof Date && !isNaN(val.getTime()), {
+    message: "يجب تحديد تاريخ انتهاء الرخصة",
+  }),
 
 
   // Step 3 - Additional Services (Can be optional/required)
