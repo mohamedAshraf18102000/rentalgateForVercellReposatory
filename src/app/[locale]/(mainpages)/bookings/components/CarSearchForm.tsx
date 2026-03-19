@@ -9,6 +9,7 @@ import PaginationDateView from "@/app/(components)/PaginationDateView";
 import { Separator } from "@/app/(components)/ui/separator";
 import FilterDrawer from "./BookCars/FilterDrawer";
 import { useUserPreferedFiltersStore } from "@/lib/stores/useUserPreferedFiltersStore";
+import { useLocationStore } from "@/lib/stores/useLocationStore";
 
 const CarSearchForm = ({
   control,
@@ -22,6 +23,7 @@ const CarSearchForm = ({
   const fromDate = watch("fromDate");
   const toDate = watch("toDate");
   const { filters } = useUserPreferedFiltersStore();
+  const { address } = useLocationStore();
 
   return (
     <>
@@ -41,14 +43,22 @@ const CarSearchForm = ({
                 <PositioningIcon />
                 <p className="text-sm mb-2">مكان الاستلام:</p>
               </div>
-              <div
-                title={filters.pickupName}
-                className="h-[40px] rounded-lg p-2 w-full bg-[#eceef2] flex items-center gap-2"
-              >
-                <p className="text-sm line-clamp-1">
-                  {filters.pickupName || "الموقع الحالي"}
-                </p>
-              </div>
+              {(() => {
+                const displayPickupName =
+                  (filters.pickupName === "الموقع الحالي" ||
+                    !filters.pickupName) &&
+                  address
+                    ? address
+                    : filters.pickupName || "الموقع الحالي";
+                return (
+                  <div
+                    title={displayPickupName}
+                    className="h-[40px] rounded-lg p-2 w-full bg-[#eceef2] flex items-center gap-2"
+                  >
+                    <p className="text-sm line-clamp-1">{displayPickupName}</p>
+                  </div>
+                );
+              })()}
             </div>
 
             <Controller

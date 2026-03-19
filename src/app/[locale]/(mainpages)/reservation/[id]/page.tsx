@@ -3,17 +3,29 @@ import { useState } from "react";
 import WrapperContainer from "@/app/(components)/wrapperContainer/WrapperContainer";
 import Stepper from "../../../../(components)/rentalStepper/Stepper";
 import CarsCard from "@/app/(components)/customCards/CarsCard/CarsCard";
-import StepContent from "../components/form/StepContent";
+import StepContent, { StepContentRef } from "../components/form/StepContent";
+
 import { Button } from "@/app/(components)";
 import { ChevronLeft, SaudiRiyal } from "lucide-react";
 import { Separator } from "@/app/(components)/ui/separator";
 import ReservationBreadCrump from "../components/ReservationBreadCrump";
 import GoogleMapsLocation from "@/app/(components)/mapsLocation/GoogleMapsLocation";
 import { useBookedCarDetailsStore } from "@/lib/stores/useBookedCarDetailsStore";
+import { useRef } from "react";
 
 const page = () => {
   const [activeStep, setActiveStep] = useState<number>(1);
+  const stepContentRef = useRef<StepContentRef>(null);
   const carDetails = useBookedCarDetailsStore((s) => s.carDetails);
+
+  const handleNext = async () => {
+    const isValid = await stepContentRef.current?.validateStep();
+    if (isValid) {
+      console.log("Form Data:", stepContentRef.current?.getValues());
+      setActiveStep((prev) => (prev < 3 ? prev + 1 : prev));
+    }
+  };
+
 
   return (
     <WrapperContainer exceedNav>
@@ -53,9 +65,7 @@ const page = () => {
                 <SaudiRiyal />
               </div>
               <Button
-                onClick={() =>
-                  setActiveStep((prev) => (prev < 3 ? prev + 1 : prev))
-                }
+                onClick={handleNext}
                 className="text-base!"
                 icon={<ChevronLeft className="w-5! h-5!" />}
               >
@@ -63,7 +73,8 @@ const page = () => {
               </Button>
             </div>
             <Separator className="my-3" />
-            <StepContent activeStep={activeStep} />
+            <StepContent ref={stepContentRef} activeStep={activeStep} />
+
           </div>
           <div className="w-1/4">
             <div className="">
