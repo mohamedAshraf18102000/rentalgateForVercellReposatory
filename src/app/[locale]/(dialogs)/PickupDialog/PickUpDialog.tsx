@@ -4,8 +4,9 @@ import { DialogWrapper } from "@/app/(components)";
 import CarPickupDialogTabs from "@/app/(components)/carPickupDialogComponent/CarPickupDialogTabs";
 import { usePickupDialogStore } from "@/lib/stores/usePickupDialogStore";
 
-export function PickupDialog() {
-  const { open, activeTab, setOpen, closeDialog, confirmDialog } = usePickupDialogStore();
+export function PickupDialog({ title }: { title?: string }) {
+  const { open, activeTab, setOpen, closeDialog, confirmDialog } =
+    usePickupDialogStore();
 
   return (
     <DialogWrapper
@@ -23,8 +24,11 @@ export function PickupDialog() {
             إغلاق
           </button>
 
-          <button onClick={confirmDialog} className="rounded-[12px] py-3 bg-primary text-white font-bold w-fit px-5">
-            أظهار النتائج
+          <button
+            onClick={confirmDialog}
+            className="rounded-[12px] py-3 bg-primary text-white font-bold w-fit px-5"
+          >
+            {title || "أظهار النتائج"}
           </button>
         </div>
       }

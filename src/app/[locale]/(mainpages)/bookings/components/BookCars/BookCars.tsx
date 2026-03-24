@@ -118,8 +118,23 @@ const BookCars = () => {
           clearToDate={() => setValue("toDate", null)}
         />
       </div>
-
-      <CarsGrid cars={allCars} isLoading={isLoading} rentalDays={rentalDays} />
+      {allCars.length > 0 ? (
+        <CarsGrid
+          cars={allCars}
+          isLoading={isLoading}
+          rentalDays={rentalDays}
+        />
+      ) : (
+        <div className="flex items-center justify-center w-full h-[400px] rounded-2xl bg-white shadow mt-10">
+          <div className="flex flex-col items-center gap-4 text-center px-8">
+            <div className="flex flex-col gap-1.5">
+              <p className="text-base font-medium text-foreground">
+                لا توجد سيارات حالياً
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
 
       <LoadMoreButton
         hasNextPage={hasNextPage}

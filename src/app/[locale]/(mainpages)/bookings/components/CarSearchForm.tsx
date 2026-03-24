@@ -79,7 +79,7 @@ const CarSearchForm = ({
                       setValue("toDate", null);
                     }
                   }}
-                />
+                />  
               )}
             />
             <div className="flex items-center justify-center">

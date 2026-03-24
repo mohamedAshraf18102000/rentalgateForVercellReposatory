@@ -31,9 +31,7 @@ export const reservationSchema = z.object({
   idNumber: z.string().min(1, "يجب إدخال نوع الإقامة"),
   nationality: z.string().min(1, "يجب إدخال الجنسية"),
   email: z.email("يجب إدخال بريد إلكتروني صحيح"),
-  licenceImage: z.any().refine((val) => val !== undefined && val !== null && val !== "", {
-    message: "يجب إرفاق صورة الرخصة",
-  }),
+  licenseImage: z.string().min(1, "يجب إرفاق صورة الرخصة"),
   licenceExpiryDate: z.any().refine((val) => val instanceof Date && !isNaN(val.getTime()), {
     message: "يجب تحديد تاريخ انتهاء الرخصة",
   }),

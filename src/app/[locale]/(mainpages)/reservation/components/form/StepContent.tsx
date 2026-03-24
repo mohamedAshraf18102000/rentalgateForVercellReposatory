@@ -1,7 +1,7 @@
 "use client";
 import { useStepAnimation } from "../../../../../(components)/rentalStepper/hooks/useStepAnimation";
 import { useUserPreferedFiltersStore } from "@/lib/stores/useUserPreferedFiltersStore";
-import { useReservationFormStore } from "@/lib/stores/useReservationFormStore";
+import { useBookedCarDetailsStore } from "@/lib/stores/useBookedCarDetailsStore";
 import { usePickupDialogStore } from "@/lib/stores/usePickupDialogStore";
 import { useEffect, forwardRef, useImperativeHandle } from "react";
 
@@ -31,7 +31,7 @@ const StepContent = forwardRef<StepContentRef, StepContentProps>(
     const { displayStep, animationClass } = useStepAnimation(activeStep);
     const { filters, setFilter } = useUserPreferedFiltersStore();
     const { address } = useLocationStore();
-    const { formData, setFormField } = useReservationFormStore();
+    const { formData, setFormData } = useBookedCarDetailsStore();
     const { target, open } = usePickupDialogStore();
 
     const {
@@ -55,7 +55,7 @@ const StepContent = forwardRef<StepContentRef, StepContentProps>(
         idNumber: formData.idNumber || "",
         nationality: formData.nationality || "",
         email: formData.email || "",
-        licenceImage: formData.licenceImage ?? undefined,
+        licenseImage: formData.licenseImage || "",
         licenceExpiryDate: formData.licenceExpiryDate ?? undefined,
         services: formData.services || [],
       },
@@ -115,7 +115,7 @@ const StepContent = forwardRef<StepContentRef, StepContentProps>(
             "idNumber",
             "nationality",
             "email",
-            "licenceImage",
+            "licenseImage",
             "licenceExpiryDate",
           ];
         }
@@ -157,6 +157,21 @@ const StepContent = forwardRef<StepContentRef, StepContentProps>(
     // Keep filters store in sync with form (locations & dates only)
     useEffect(() => {
       const subscription = watch((value) => {
+        setFormData({
+          pickupName: value.pickupName,
+          carReturnLocation: value.carReturnLocation,
+          fromDate: value.fromDate,
+          toDate: value.toDate,
+          fullName: value.fullName,
+          phoneNumber: value.phoneNumber,
+          idNumber: value.idNumber,
+          nationality: value.nationality,
+          email: value.email,
+          licenseImage: value.licenseImage as string,
+          licenceExpiryDate: value.licenceExpiryDate,
+          services: value.services as string[],
+        });
+
         setFilter(
           "fromDate",
           value.fromDate ? (value.fromDate as Date).toISOString() : "",
@@ -172,11 +187,9 @@ const StepContent = forwardRef<StepContentRef, StepContentProps>(
           value.carReturnLocation !== "الموقع الحالي"
         )
           setFilter("carReturnLocation", value.carReturnLocation);
-        // ✅ All other fields (Step 2 & 3) live in useForm and are returned
-        // via getValues() at final submission — no extra store sync needed.
       });
       return () => subscription.unsubscribe();
-    }, [watch, setFilter]);
+    }, [watch, setFilter, setFormData]);
 
     const stepData = [
       {

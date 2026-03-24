@@ -2,13 +2,15 @@
 
 import { Control, Controller, FieldErrors, UseFormSetValue } from "react-hook-form";
 import { Globe, Mail, Phone } from "lucide-react";
+import { useMutation } from "@tanstack/react-query";
+import { uploadImage } from "@/services/uploadImages/uploadImage.service";
 
 import { Input, PhoneInput } from "@/app/(components)";
 import { DateTimePicker } from "@/app/(components)/ui/dateTime-picker";
 import { Separator } from "@/app/(components)/ui/separator";
 import { InputFileUpload } from "@/app/(components)/ui/inputFileUpload";
 import { ReservationFormValues } from "@/lib/validations/reservationSchema";
-import { useReservationFormStore } from "@/lib/stores/useReservationFormStore";
+import { useBookedCarDetailsStore } from "@/lib/stores/useBookedCarDetailsStore";
 
 interface StepTwoProps {
   control: Control<ReservationFormValues>;
@@ -17,7 +19,12 @@ interface StepTwoProps {
 }
 
 const StepTwo = ({ control, errors, setValue }: StepTwoProps) => {
-  const { formData, setFormField } = useReservationFormStore();
+  const { formData, setFormField } = useBookedCarDetailsStore();
+  
+  const { mutateAsync: doUploadImage, isPending, error: uploadError } = useMutation({
+    mutationFn: uploadImage,
+  });
+
   return (
     <>
       <div className="grid grid-cols-2 gap-5">
@@ -104,26 +111,41 @@ const StepTwo = ({ control, errors, setValue }: StepTwoProps) => {
         <div className="grid grid-cols-2 gap-4">
           <div>
             <Controller
-              name="licenceImage"
+              name="licenseImage"
               control={control}
               render={({ field }) => (
                 <InputFileUpload
                   {...field}
                   label="صورة الرخصة"
                   placeholder="أدخل صورة الرخصة"
-                  initialFile={formData.licenceImage}
-                  onFileChange={(file) => {
-                    // Save in RHF form
-                    setValue("licenceImage", file ?? undefined, { shouldValidate: true });
-                    // Save in store so it survives step navigation
-                    setFormField("licenceImage", file);
+                  initialFile={formData.licenseImageFile}
+                  onFileChange={async (file) => {
+                    // Save File in store so preview survives step navigation
+                    setFormField("licenseImageFile", file);
+                    
+                    if (file) {
+                      try {
+                        const uploadedImageName = await doUploadImage(file);
+                        // Save in RHF form
+                        setValue("licenseImage", uploadedImageName, { shouldValidate: true });
+                        // Save string in store
+                        setFormField("licenseImage", uploadedImageName);
+                      } catch (err) {
+                        console.error("Upload failed", err);
+                      }
+                    } else {
+                      setValue("licenseImage", "", { shouldValidate: true });
+                      setFormField("licenseImage", "");
+                    }
                   }}
                 />
               )}
             />
-            {errors.licenceImage?.message && (
+            {isPending && <p className="mt-2 text-blue-500 text-sm">جاري رفع الصورة...</p>}
+            {uploadError && <p className="mt-2 text-red-500 text-sm">{(uploadError as Error).message || "حدث خطأ أثناء رفع الصورة"}</p>}
+            {errors.licenseImage?.message && (
               <p className="text-red-500 text-sm">
-                {String(errors.licenceImage?.message)}
+                {String(errors.licenseImage?.message)}
               </p>
             )}
           </div>
