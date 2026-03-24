@@ -1,6 +1,6 @@
 "use client";
 
-import { Control, Controller, FieldErrors } from "react-hook-form";
+import { Control, Controller, FieldErrors, UseFormSetValue } from "react-hook-form";
 import { Globe, Mail, Phone } from "lucide-react";
 
 import { Input, PhoneInput } from "@/app/(components)";
@@ -8,13 +8,16 @@ import { DateTimePicker } from "@/app/(components)/ui/dateTime-picker";
 import { Separator } from "@/app/(components)/ui/separator";
 import { InputFileUpload } from "@/app/(components)/ui/inputFileUpload";
 import { ReservationFormValues } from "@/lib/validations/reservationSchema";
+import { useReservationFormStore } from "@/lib/stores/useReservationFormStore";
 
 interface StepTwoProps {
   control: Control<ReservationFormValues>;
   errors: FieldErrors<ReservationFormValues>;
+  setValue: UseFormSetValue<ReservationFormValues>;
 }
 
-const StepTwo = ({ control, errors }: StepTwoProps) => {
+const StepTwo = ({ control, errors, setValue }: StepTwoProps) => {
+  const { formData, setFormField } = useReservationFormStore();
   return (
     <>
       <div className="grid grid-cols-2 gap-5">
@@ -108,6 +111,13 @@ const StepTwo = ({ control, errors }: StepTwoProps) => {
                   {...field}
                   label="صورة الرخصة"
                   placeholder="أدخل صورة الرخصة"
+                  initialFile={formData.licenceImage}
+                  onFileChange={(file) => {
+                    // Save in RHF form
+                    setValue("licenceImage", file ?? undefined, { shouldValidate: true });
+                    // Save in store so it survives step navigation
+                    setFormField("licenceImage", file);
+                  }}
                 />
               )}
             />
@@ -143,4 +153,3 @@ const StepTwo = ({ control, errors }: StepTwoProps) => {
 };
 
 export default StepTwo;
-

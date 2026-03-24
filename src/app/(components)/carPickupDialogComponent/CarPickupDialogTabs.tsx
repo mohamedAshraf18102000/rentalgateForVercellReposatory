@@ -1,3 +1,4 @@
+import { useUserPreferedFiltersStore } from "@/lib/stores/useUserPreferedFiltersStore";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import WrapperContainer from "../wrapperContainer/WrapperContainer";
 import SearchPickUpDialog from "./SearchPickUpDialog";
@@ -5,17 +6,28 @@ import UserCurrentLocation from "./TabsContent/UserCurrentLocation";
 import AirportLocations from "./TabsContent/AirportLocations";
 import TrainLocations from "./TabsContent/TrainLocations";
 import BranchesLocations from "./TabsContent/BranchesLocations";
+import { usePickupDialogStore } from "@/lib/stores/usePickupDialogStore";
 
 const CarPickupDialogTabs = ({
   customDefaultValue,
 }: {
   customDefaultValue: string;
 }) => {
+  const { setFilter } = useUserPreferedFiltersStore();
+  const { target } = usePickupDialogStore();
+
   return (
     <Tabs
       dir="rtl"
       className="w-full bg-transparent"
       defaultValue={customDefaultValue}
+      onValueChange={(value) => {
+        if (target === "return") {
+          setFilter("carReturnLocationType", value as any);
+        } else {
+          setFilter("pickupType", value as any);
+        }
+      }}
     >
       <WrapperContainer className="w-full">
         <TabsList className="text-base! flex items-start justify-center mx-auto">

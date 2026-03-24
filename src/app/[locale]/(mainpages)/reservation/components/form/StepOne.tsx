@@ -1,20 +1,23 @@
-
 "use client";
 
-import { useState, useEffect } from "react";
-import { Control, Controller, UseFormSetValue, UseFormWatch, FieldErrors } from "react-hook-form";
-import { ArrowLeft, MapPinPlus, LocateFixed } from "lucide-react";
-import { format } from "date-fns";
-import { arEG } from "date-fns/locale";
+import {
+  Control,
+  Controller,
+  UseFormSetValue,
+  UseFormWatch,
+  FieldErrors,
+} from "react-hook-form";
+import { ArrowLeft, MapPinPlus } from "lucide-react";
 
-import { Input, DialogWrapper } from "@/app/(components)";
+import { Input } from "@/app/(components)";
 import { DateTimePicker } from "@/app/(components)/ui/dateTime-picker";
 import CarRentIcon from "@/constants/icons/CarRentIcon";
 import ExeclusiveOfferIcon from "@/constants/icons/ExeclusiveOfferIcon";
 import OffersCard from "@/app/(components)/customCards/OffersCard";
 import { Separator } from "@/app/(components)/ui/separator";
-import GoogleMapsLocation from "@/app/(components)/mapsLocation/GoogleMapsLocation";
 import { useUserPreferedFiltersStore } from "@/lib/stores/useUserPreferedFiltersStore";
+import { usePickupDialogStore } from "@/lib/stores/usePickupDialogStore";
+import { useLocationStore } from "@/lib/stores/useLocationStore";
 import { ReservationFormValues } from "@/lib/validations/reservationSchema";
 
 interface StepOneProps {
@@ -25,79 +28,36 @@ interface StepOneProps {
 }
 
 const StepOne = ({ control, errors, watch, setValue }: StepOneProps) => {
-  const { filters, setFilter } = useUserPreferedFiltersStore();
-  const [isMapOpen, setIsMapOpen] = useState(false);
-  const [tempAddress, setTempAddress] = useState<string>(filters.carReturnLocation || "");
-  const [tempLat, setTempLat] = useState<number | undefined>(filters.carReturnLocationLat);
-  const [tempLng, setTempLng] = useState<number | undefined>(filters.carReturnLocationLng);
+  const { openDialog } = usePickupDialogStore();
 
-  useEffect(() => {
-    if (isMapOpen) {
-      setTempAddress(filters.carReturnLocation || "");
-      setTempLat(filters.carReturnLocationLat);
-      setTempLng(filters.carReturnLocationLng);
-    }
-  }, [isMapOpen, filters.carReturnLocation, filters.carReturnLocationLat, filters.carReturnLocationLng]);
+  const handleOpenReturnLocationDialog = () => {
+    openDialog("currentLocation", "return", () => {
+      const { filters: updatedFilters } =
+        useUserPreferedFiltersStore.getState();
+      const { address } = useLocationStore.getState();
+
+      const locationName =
+        (updatedFilters.carReturnLocationType === "currentLocation" ||
+          !updatedFilters.carReturnLocation ||
+          updatedFilters.carReturnLocation === "الموقع الحالي") &&
+        address
+          ? address
+          : updatedFilters.carReturnLocation || "الموقع الحالي";
+
+      setValue("carReturnLocation", locationName, { shouldValidate: true });
+    });
+  };
 
   return (
     <div className="relative">
       <button
         type="button"
-        onClick={() => setIsMapOpen(true)}
+        onClick={handleOpenReturnLocationDialog}
         className="absolute top-2 left-2 flex items-center gap-2"
       >
         <MapPinPlus />
         التسليم في مكان اخر
       </button>
-
-      <DialogWrapper
-        open={isMapOpen}
-        onOpenChange={setIsMapOpen}
-        size="xl"
-        header={{ mainTitle: "اختر موقع التسليم" }}
-        content={
-          <div className="overflow-hidden">
-            <div className="flex p-2 gap-2">
-              <LocateFixed />
-              {tempAddress || "الرجاء تحديد موقع من الخريطة"}
-            </div>
-            <GoogleMapsLocation
-              storeless
-              initialLat={filters.carReturnLocationLat}
-              initialLng={filters.carReturnLocationLng}
-              onLocationChange={(lat, lng, address) => {
-                setTempAddress(address || "");
-                setTempLat(lat);
-                setTempLng(lng);
-              }}
-            />
-          </div>
-        }
-        footer={
-          <div className="w-full flex items-center justify-end gap-2 mt-2">
-            <button
-              onClick={() => setIsMapOpen(false)}
-              className="py-3 text-primary font-normal w-fit px-2 underline underline-offset-3"
-            >
-              إغلاق
-            </button>
-            <button
-              onClick={() => {
-                setFilter("carReturnLocation", tempAddress);
-                setValue("carReturnLocation", tempAddress, {
-                  shouldValidate: true,
-                });
-                if (tempLat !== undefined) setFilter("carReturnLocationLat", tempLat);
-                if (tempLng !== undefined) setFilter("carReturnLocationLng", tempLng);
-                setIsMapOpen(false);
-              }}
-              className="rounded-xl py-3 bg-primary text-white font-bold w-fit px-5"
-            >
-              حفظ
-            </button>
-          </div>
-        }
-      />
 
       <div className="w-full flex items-center gap-3">
         <div className="w-full">
@@ -154,7 +114,11 @@ const StepOne = ({ control, errors, watch, setValue }: StepOneProps) => {
                 value={field.value}
                 onChange={(date: Date | null) => {
                   field.onChange(date);
-                  if (date && watch("toDate") && new Date(watch("toDate")!) < date) {
+                  if (
+                    date &&
+                    watch("toDate") &&
+                    new Date(watch("toDate")!) < date
+                  ) {
                     setValue("toDate", undefined);
                   }
                 }}
@@ -219,4 +183,4 @@ const StepOne = ({ control, errors, watch, setValue }: StepOneProps) => {
   );
 };
 
-export default StepOne;
+export default StepOne;

@@ -16,6 +16,7 @@ import CarDetailsCard from "@/app/(components)/customCards/CarsCard/CarDetailsCa
 const page = () => {
   const { id } = useParams();
   const setCarDetails = useBookedCarDetailsStore((s) => s.setCarDetails);
+  const setServices = useBookedCarDetailsStore((s) => s.setServices);
   const { data, isLoading } = useQuery({
     queryKey: ["company-cars-id", id],
     queryFn: () => getCompanyCarsByID(Number(id)),
@@ -31,6 +32,12 @@ const page = () => {
     queryKey: ["company-cars-services", id],
     queryFn: () => getCarServices(Number(id)),
   });
+
+  useEffect(() => {
+    if (services) {
+      setServices(services);
+    }
+  }, [services, setServices]);
 
   const { discountPercentage } = useMemo(
     () =>

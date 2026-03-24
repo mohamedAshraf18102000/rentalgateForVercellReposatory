@@ -11,19 +11,22 @@ import { Separator } from "@/app/(components)/ui/separator";
 import ReservationBreadCrump from "../components/ReservationBreadCrump";
 import GoogleMapsLocation from "@/app/(components)/mapsLocation/GoogleMapsLocation";
 import { useBookedCarDetailsStore } from "@/lib/stores/useBookedCarDetailsStore";
+import { useReservationFormStore } from "@/lib/stores/useReservationFormStore";
 import { useRef } from "react";
+import { PickupDialog } from "@/app/[locale]/(dialogs)/PickupDialog/PickUpDialog";
 
 const page = () => {
   const [activeStep, setActiveStep] = useState<number>(1);
   const stepContentRef = useRef<StepContentRef>(null);
   const carDetails = useBookedCarDetailsStore((s) => s.carDetails);
+  const resetReservationForm = useReservationFormStore((s) => s.resetForm);
 
   const handleStepNavigation = async (step: number) => {
     if (step < activeStep) {
       setActiveStep(step);
       return;
     }
-    
+
     if (step === activeStep) return;
 
     const isValid = await stepContentRef.current?.validateStep();
@@ -32,20 +35,63 @@ const page = () => {
     }
   };
 
+  const handleSubmit = async () => {
+    const isValid = await stepContentRef.current?.validateStep();
+    if (!isValid) return;
+
+    const data = stepContentRef.current!.getValues();
+
+    // Build FormData — licenceImage is a real File object
+    const formData = new FormData();
+    formData.append("pickupName", data.pickupName);
+    formData.append("carReturnLocation", data.carReturnLocation);
+    formData.append("fromDate", (data.fromDate as Date).toISOString());
+    formData.append("toDate", (data.toDate as Date).toISOString());
+    formData.append("fullName", data.fullName);
+    formData.append("phoneNumber", data.phoneNumber);
+    formData.append("idNumber", data.idNumber);
+    formData.append("nationality", data.nationality);
+    formData.append("email", data.email);
+formData.append(
+      "licenceExpiryDate",
+      (data.licenceExpiryDate as Date).toISOString(),
+    );
+    if (data.licenceImage instanceof File) {
+      formData.append(
+        "licenceImage",
+        data.licenceImage,
+        data.licenceImage.name,
+      );
+    }
+    if (data.services && data.services.length > 0) {
+      data.services.forEach((serviceId) =>
+        formData.append("services[]", serviceId),
+      );
+    }
+
+    console.log(
+      "✅ Reservation FormData ready:",
+      Object.fromEntries(formData.entries()),
+    );
+
+    // TODO: call your API here, e.g.:
+    // await createReservation(formData);
+
+    // Reset the in-memory licence store after successful submission
+    resetReservationForm();
+  };
+
   const handleNext = async () => {
     if (activeStep < 3) {
       handleStepNavigation(activeStep + 1);
     } else {
-      const isValid = await stepContentRef.current?.validateStep();
-      if (isValid) {
-        console.log("Form Data:", stepContentRef.current?.getValues());
-        // Handle final submission here
-      }
+      await handleSubmit();
     }
   };
 
   return (
     <WrapperContainer exceedNav>
+      <PickupDialog />
       <div className="w-full">
         <ReservationBreadCrump carId={carDetails?.ccbId} />
         <div className="w-full grid grid-cols-3 gap-5">
@@ -91,7 +137,6 @@ const page = () => {
             </div>
             <Separator className="my-3" />
             <StepContent ref={stepContentRef} activeStep={activeStep} />
-
           </div>
           <div className="w-1/4">
             <div className="">

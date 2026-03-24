@@ -16,8 +16,31 @@ interface InputProps extends Omit<
   uploadIcon?: React.ReactNode;
   uploadText?: string;
   onFileRemove?: () => void;
+  /** Pre-populate the component with an existing File (e.g. from a store) */
+  initialFile?: File | null;
+  /** Called whenever the selected file changes (or is removed) */
+  onFileChange?: (file: File | null) => void;
 }
 
+// Helper to merge multiple refs into one callback ref
+function useMergedRef<T>(...refs: React.Ref<T>[]) {
+  return React.useCallback(
+    (node: T | null) => {
+      refs.forEach((ref) => {
+        if (!ref) return;
+        if (typeof ref === "function") {
+          ref(node);
+        } else {
+          (ref as React.MutableRefObject<T | null>).current = node;
+        }
+      });
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    refs
+  );
+}
+
+const InputFileUpload = React.forwardRef<HTMLInputElement, InputProps>(
 function InputFileUpload({
   className,
   size = "md",
@@ -28,13 +51,29 @@ function InputFileUpload({
   uploadIcon,
   uploadText = "أضغط أو قُم بالسحب لأضافة ملف",
   onFileRemove,
+  onFileChange,
+  initialFile,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  value: _value, // file inputs can't be controlled via `value` — discard it
   ...props
-}: InputProps) {
+}: InputProps, forwardedRef) {
   const [isDragging, setIsDragging] = React.useState(false);
   const [file, setFile] = React.useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = React.useState<string | null>(null);
   const [showPreview, setShowPreview] = React.useState(false);
   const inputRef = React.useRef<HTMLInputElement>(null);
+  const mergedRef = useMergedRef(inputRef, forwardedRef);
+
+  // Hydrate from initialFile (e.g. when navigating back to this step)
+  React.useEffect(() => {
+    if (initialFile && !file) {
+      const url = URL.createObjectURL(initialFile);
+      setFile(initialFile);
+      setPreviewUrl(url);
+    }
+    // Only run on mount / when initialFile identity changes
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialFile]);
 
   // Cleanup object URL on unmount or file change
   React.useEffect(() => {
@@ -47,6 +86,7 @@ function InputFileUpload({
     if (previewUrl) URL.revokeObjectURL(previewUrl);
     setFile(incoming);
     setPreviewUrl(URL.createObjectURL(incoming));
+    onFileChange?.(incoming);
   };
 
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
@@ -83,6 +123,7 @@ function InputFileUpload({
     setPreviewUrl(null);
     if (inputRef.current) inputRef.current.value = "";
     onFileRemove?.();
+    onFileChange?.(null);
   };
 
   // ── Preview modal ──────────────────────────────────────────────
@@ -173,7 +214,7 @@ function InputFileUpload({
       )}
     >
       <input
-        ref={inputRef}
+        ref={mergedRef}
         type="file"
         className="sr-only"
         {...props}
@@ -222,6 +263,9 @@ function InputFileUpload({
     </div>
   );
 }
+);
+
+InputFileUpload.displayName = "InputFileUpload";
 
 export { InputFileUpload };
 export type { InputProps };

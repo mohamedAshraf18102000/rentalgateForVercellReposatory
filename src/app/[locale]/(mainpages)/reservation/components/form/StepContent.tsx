@@ -1,7 +1,9 @@
 "use client";
 import { useStepAnimation } from "../../../../../(components)/rentalStepper/hooks/useStepAnimation";
 import { useUserPreferedFiltersStore } from "@/lib/stores/useUserPreferedFiltersStore";
-import { useState, useEffect, forwardRef, useImperativeHandle } from "react";
+import { useReservationFormStore } from "@/lib/stores/useReservationFormStore";
+import { usePickupDialogStore } from "@/lib/stores/usePickupDialogStore";
+import { useEffect, forwardRef, useImperativeHandle } from "react";
 
 import { useLocationStore } from "@/lib/stores/useLocationStore";
 import { useForm } from "react-hook-form";
@@ -29,6 +31,8 @@ const StepContent = forwardRef<StepContentRef, StepContentProps>(
     const { displayStep, animationClass } = useStepAnimation(activeStep);
     const { filters, setFilter } = useUserPreferedFiltersStore();
     const { address } = useLocationStore();
+    const { formData, setFormField } = useReservationFormStore();
+    const { target, open } = usePickupDialogStore();
 
     const {
       control,
@@ -45,14 +49,15 @@ const StepContent = forwardRef<StepContentRef, StepContentProps>(
           filters.carReturnLocation || filters.pickupName || "",
         fromDate: filters.fromDate ? new Date(filters.fromDate) : undefined,
         toDate: filters.toDate ? new Date(filters.toDate) : undefined,
-        fullName: "",
-        phoneNumber: "",
-        idNumber: "",
-        nationality: "",
-        email: "",
-        licenceImage: undefined,
-        licenceExpiryDate: undefined,
-        services: [],
+        // Step 2 – hydrate from reservation form store
+        fullName: formData.fullName || "",
+        phoneNumber: formData.phoneNumber || "",
+        idNumber: formData.idNumber || "",
+        nationality: formData.nationality || "",
+        email: formData.email || "",
+        licenceImage: formData.licenceImage ?? undefined,
+        licenceExpiryDate: formData.licenceExpiryDate ?? undefined,
+        services: formData.services || [],
       },
       mode: "onChange",
     });
@@ -122,17 +127,21 @@ const StepContent = forwardRef<StepContentRef, StepContentProps>(
     // Sync address -> store & form if filter is still placeholder
     useEffect(() => {
       if (address && address !== "الموقع الحالي") {
-        if (filters.pickupName === "الموقع الحالي" || !filters.pickupName) {
-          setValue("pickupName", address);
-          setFilter("pickupName", address);
+        if (!open || target !== "return") {
+          if (filters.pickupName === "الموقع الحالي" || !filters.pickupName) {
+            setValue("pickupName", address);
+            setFilter("pickupName", address);
+          }
         }
-        if (
-          filters.carReturnLocation === "الموقع الحالي" ||
-          !filters.carReturnLocation ||
-          filters.carReturnLocation === ""
-        ) {
-          setValue("carReturnLocation", address);
-          setFilter("carReturnLocation", address);
+        if (!open || target !== "pickup") {
+          if (
+            filters.carReturnLocation === "الموقع الحالي" ||
+            !filters.carReturnLocation ||
+            filters.carReturnLocation === ""
+          ) {
+            setValue("carReturnLocation", address);
+            setFilter("carReturnLocation", address);
+          }
         }
       }
     }, [
@@ -141,9 +150,11 @@ const StepContent = forwardRef<StepContentRef, StepContentProps>(
       filters.carReturnLocation,
       setValue,
       setFilter,
+      open,
+      target,
     ]);
 
-    // Keep store in sync with form
+    // Keep filters store in sync with form (locations & dates only)
     useEffect(() => {
       const subscription = watch((value) => {
         setFilter(
@@ -161,6 +172,8 @@ const StepContent = forwardRef<StepContentRef, StepContentProps>(
           value.carReturnLocation !== "الموقع الحالي"
         )
           setFilter("carReturnLocation", value.carReturnLocation);
+        // ✅ All other fields (Step 2 & 3) live in useForm and are returned
+        // via getValues() at final submission — no extra store sync needed.
       });
       return () => subscription.unsubscribe();
     }, [watch, setFilter]);
@@ -179,7 +192,9 @@ const StepContent = forwardRef<StepContentRef, StepContentProps>(
       },
       {
         step: 2,
-        content: <StepTwo control={control} errors={errors} />,
+        content: (
+          <StepTwo control={control} errors={errors} setValue={setValue} />
+        ),
       },
       {
         step: 3,
@@ -201,4 +216,3 @@ const StepContent = forwardRef<StepContentRef, StepContentProps>(
 StepContent.displayName = "StepContent";
 
 export default StepContent;
-
