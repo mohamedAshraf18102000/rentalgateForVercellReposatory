@@ -24,10 +24,10 @@ export const reservationSchema = z.object({
 
   // Step 2 - Tenant Details
   fullName: z.string().min(3, "يجب إدخال الاسم الكامل"),
-  phoneNumber: z.string().refine(
-    (val) => val.replace(/\D/g, "").length >= 9,
-    "يجب إدخال رقم هاتف كامل"
-  ),
+  phoneNumber: z
+    .string()
+    .min(4, "رقم الجوال مطلوب")
+    .min(13, "رقم الجوال غير صحيح، يجب ألا يقل عن 9 أرقام"),
   idNumber: z.string().min(1, "يجب إدخال نوع الإقامة"),
   nationality: z.string().min(1, "يجب إدخال الجنسية"),
   email: z.email("يجب إدخال بريد إلكتروني صحيح"),

@@ -7,6 +7,7 @@ const ResponsiblePersonForm = () => {
   const {
     register,
     control,
+    trigger,
     formState: { errors },
   } = useFormContext();
 
@@ -21,7 +22,13 @@ const ResponsiblePersonForm = () => {
           className={`bg-white! border-2! rounded-xl! text-base! ${errors.responsableName ? "border-red-500!" : "border-Grey400!"}`}
           labelClassName="text-base text-primary"
           startIcon={<UserRound className="text-primary" />}
-          {...register("responsableName")}
+          {...register("responsableName", {
+            onChange: (e) => {
+              if (errors.responsableName) {
+                trigger("responsableName");
+              }
+            },
+          })}
         />
         {errors.responsableName && (
           <span className="text-red-500 text-sm">
@@ -40,11 +47,16 @@ const ResponsiblePersonForm = () => {
               labelClassName="text-base! text-primary!"
               placeholder={"رقم الجوال:"}
               defaultCountry="sa"
-              showValidation={true}
+              showValidation={false}
               label={"رقم الجوال:"}
               className={`border-2! rounded-xl! ${errors.responsableMobile ? "border-red-500!" : "border-Grey400!"}`}
               value={field.value}
-              onChange={field.onChange}
+              onChange={(val) => {
+                field.onChange(val);
+                if (errors.responsableMobile) {
+                  trigger("responsableMobile");
+                }
+              }}
             />
             {errors.responsableMobile && (
               <span className="text-red-500 text-sm mt-1 block">

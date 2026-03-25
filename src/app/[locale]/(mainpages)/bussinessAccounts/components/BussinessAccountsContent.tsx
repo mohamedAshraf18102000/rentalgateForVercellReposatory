@@ -38,7 +38,7 @@ const BussinessAccountsContent = ({
       registrationNumber: "",
       taxNumber: "",
     },
-    mode: "all",
+    mode: "onBlur",
   });
 
   const { trigger, handleSubmit, reset } = methods;

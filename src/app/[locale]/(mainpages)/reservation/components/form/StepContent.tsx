@@ -59,7 +59,6 @@ const StepContent = forwardRef<StepContentRef, StepContentProps>(
         licenceExpiryDate: formData.licenceExpiryDate ?? undefined,
         services: formData.services || [],
       },
-      mode: "onChange",
     });
 
     // Sync store -> form on hydration or store changes
@@ -206,7 +205,12 @@ const StepContent = forwardRef<StepContentRef, StepContentProps>(
       {
         step: 2,
         content: (
-          <StepTwo control={control} errors={errors} setValue={setValue} />
+          <StepTwo
+            control={control}
+            errors={errors}
+            setValue={setValue}
+            trigger={trigger}
+          />
         ),
       },
       {
