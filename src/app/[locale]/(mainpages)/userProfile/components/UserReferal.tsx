@@ -1,6 +1,6 @@
 "use client";
 
-import { CheckCircle, Copy, Share2 } from "lucide-react";
+import { CheckCircle, Copy } from "lucide-react";
 import { toast } from "sonner";
 
 interface userReferalProps {
@@ -14,12 +14,16 @@ const UserReferal = ({ referalCode }: userReferalProps) => {
       await navigator.clipboard.writeText(referalCode);
       toast(
         <div className="flex items-center gap-2 text-sm">
-          <CheckCircle className="text-green-500 w-5 h-5" />
+          <CheckCircle className="text-green-800 w-5 h-5" />
           <span>تم نسخ الكود بنجاح</span>
         </div>,
         {
           position: "top-center",
           className: "rounded-xl",
+          style: {
+            backgroundColor: "#E3FCEC",
+            border: "none",
+          },
         },
       );
     } catch {
