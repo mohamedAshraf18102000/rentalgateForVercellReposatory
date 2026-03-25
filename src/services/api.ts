@@ -8,11 +8,11 @@ export async function fetcher<T>(
 
   const res = await fetch(`https://rentalgate.net/api${url}`, {
     ...options,
-    // headers: {
-    //   "Content-Type": "application/json",
-    //   ...(token ? { Authorization: `Bearer ${token}` } : {}),
-    //   ...(options?.headers || {}),
-    // },
+    headers: {
+      "Content-Type": "application/json",
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      ...(options?.headers || {}),
+    },
     cache: "no-store",
   });
 

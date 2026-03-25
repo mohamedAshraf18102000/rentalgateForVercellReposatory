@@ -1,3 +1,5 @@
+import { useMutation } from "@tanstack/react-query";
+
 export const uploadImage = async (file: File): Promise<string> => {
   const formData = new FormData();
   formData.append("file", file);
@@ -17,4 +19,10 @@ export const uploadImage = async (file: File): Promise<string> => {
   console.log("filename", filename.trim());
 
   return filename.trim();
+};
+
+export const useUploadImageMutation = () => {
+  return useMutation({
+    mutationFn: uploadImage,
+  });
 };
