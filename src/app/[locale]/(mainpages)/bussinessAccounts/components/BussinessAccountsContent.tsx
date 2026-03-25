@@ -8,11 +8,10 @@ import BussinessAccountFeatures from "./RentalGateBussinessAccounts/BussinessAcc
 import SuccessDialoge from "./dialog/SuccessDialoge";
 import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  createBusinessAccountSchema,
-  CreateBusinessAccountPayload,
-} from "@/types/bussinessAccounts/bussinessAccounts";
+
 import { useCreateBusinessAccountMutation } from "@/services/bussinessAccounts/bussinissAccounts.service";
+import { CreateBusinessAccountPayload } from "@/types/bussinessAccounts/bussinessAccounts";
+import { createBusinessAccountSchema } from "@/schemas/bussinessAccountsSchema";
 
 interface BussinessAccountsContentProps {
   withOutStepper?: boolean;
