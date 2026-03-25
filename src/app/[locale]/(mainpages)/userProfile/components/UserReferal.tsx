@@ -43,8 +43,6 @@ const UserReferal = ({ referalCode }: userReferalProps) => {
           <p className="text-base">{referalCode}</p>
 
           <div className="flex items-center gap-2">
-            <Share2 size={24} className="text-Grey700 cursor-pointer" />
-
             <Copy
               size={24}
               className="text-Grey700 cursor-pointer"
