@@ -1,10 +1,10 @@
-import { useGuestAuthStore } from "@/lib/stores/useGuestAuthStore";
+import { getCookie } from "@/util/cookies";
 
 export async function fetcher<T>(
   url: string,
   options?: RequestInit,
 ): Promise<T> {
-  const { token } = useGuestAuthStore.getState();
+  const token = typeof document !== 'undefined' ? getCookie("authToken") : null;
 
   const res = await fetch(`https://rentalgate.net/api${url}`, {
     ...options,

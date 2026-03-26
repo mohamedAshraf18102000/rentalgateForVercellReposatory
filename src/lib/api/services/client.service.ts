@@ -5,7 +5,7 @@
 import { authenticatedFetch, URL } from "@/util/api";
 import type { ClientDataApiResponse } from "@/lib/api/types/client.types";
 
-const CLIENT_DATA_API_URL = "/clients/get-data";
+const CLIENT_DATA_API_URL = "/clients/auth/profile";
 const CLIENT_UPDATE_API_URL = "/clients/update";
 const CHANGE_PASSWORD_API_URL = "/clients/change-password";
 
@@ -49,11 +49,28 @@ export const getClientData = async (): Promise<ClientDataApiResponse> => {
     method: "GET",
   });
 
-  const data: ClientDataApiResponse = await response.json();
+  let data: ClientDataApiResponse = await response.json();
+
+  // Check for flat response (direct user object instead of {data: user})
+  if (response.ok && !data.data && (data as any).clientId) {
+    data = {
+      message: "SUCCESS",
+      status: true,
+      data: { ...(data as any) },
+    };
+  }
 
   // Check if response is successful (either status: true or message: "SUCCESS")
   if (!response.ok || (!data.status && data.message !== "SUCCESS")) {
     throw new Error(data.message || "فشل في جلب بيانات العميل");
+  }
+
+  // Normalize data to ensure clientName is always available
+  if (data.data) {
+    // Ensure clientName is set, preferring existing clientName, then firstName
+    if (!data.data.clientName && (data.data as any).firstName) {
+      data.data.clientName = (data.data as any).firstName;
+    }
   }
 
   return data;
@@ -66,19 +83,19 @@ export const getClientData = async (): Promise<ClientDataApiResponse> => {
  */
 export const uploadImage = async (file: File): Promise<string> => {
   const formData = new FormData();
-  formData.append('file', file);
+  formData.append("file", file);
 
   // Get auth token for upload endpoint
-  const { getAuthHeader } = await import('@/util/auth');
+  const { getAuthHeader } = await import("@/util/auth");
   const authHeader = getAuthHeader();
-  
-  const response = await fetch('https://viganium.co/uploads', {
-    method: 'POST', 
+
+  const response = await fetch("https://viganium.co/uploads", {
+    method: "POST",
     body: formData,
   });
 
   if (!response.ok) {
-    throw new Error('فشل في رفع الصورة');
+    throw new Error("فشل في رفع الصورة");
   }
 
   // The API returns just the filename as text
@@ -92,7 +109,7 @@ export const uploadImage = async (file: File): Promise<string> => {
  * @returns Update response
  */
 export const updateClientData = async (
-  updateData: UpdateClientData
+  updateData: UpdateClientData,
 ): Promise<UpdateClientResponse> => {
   const response = await authenticatedFetch(URL(CLIENT_UPDATE_API_URL), {
     method: "PATCH",
@@ -102,7 +119,10 @@ export const updateClientData = async (
   const data: UpdateClientResponse = await response.json();
 
   // Check if response is successful (either status: true or message: "SUCCESS")
-  if (!response.ok || (data.status !== undefined && !data.status && data.message !== "SUCCESS")) {
+  if (
+    !response.ok ||
+    (data.status !== undefined && !data.status && data.message !== "SUCCESS")
+  ) {
     throw new Error(data.message || "فشل في تحديث بيانات العميل");
   }
 
@@ -115,7 +135,7 @@ export const updateClientData = async (
  * @returns Change password response
  */
 export const changePassword = async (
-  passwordData: ChangePasswordData
+  passwordData: ChangePasswordData,
 ): Promise<ChangePasswordResponse> => {
   const response = await authenticatedFetch(URL(CHANGE_PASSWORD_API_URL), {
     method: "POST",
@@ -134,4 +154,3 @@ export const changePassword = async (
 
   return data;
 };
-

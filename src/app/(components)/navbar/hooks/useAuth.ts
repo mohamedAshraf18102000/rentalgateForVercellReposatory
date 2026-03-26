@@ -77,11 +77,17 @@ export function useAuth() {
     };
   }, [isClient]); // Only depend on isClient to prevent infinite loop
 
+  // Determine authenticated state based on both cookies and store state
+  const isAuthByCookie = authenticated;
+  // If we have client data in store, we are definitely authenticated
+  const isAuthByStore = !!clientData;
+  const effectivelyAuthenticated = isAuthByCookie || isAuthByStore;
+
   return { 
     isClient, 
-    authenticated, 
+    authenticated: effectivelyAuthenticated, 
     userData: clientData, // Return clientData as userData for backward compatibility
-    isLoading: authenticated && (isDataLoading || !clientData) // Loading when authenticated but data not yet loaded
+    isLoading: effectivelyAuthenticated && isDataLoading && !clientData // Only show loading if authenticated, loading, AND no data yet
   };
 }
 

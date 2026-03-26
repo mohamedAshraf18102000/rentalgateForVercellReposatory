@@ -2,19 +2,19 @@
 // Components - UserMenu
 // ============================================================================
 
-import React from 'react';
+import React from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '../../ui/dropdown-menu';
-import { LogOut, User, ChevronDown, Car } from 'lucide-react';
-import { BUTTON_STYLES } from '../constants';
-import type { ClientData } from '@/lib/api/types';
-import { getUserDisplayName } from '../utils';
-import { useLocale } from 'next-intl';
+} from "../../ui/dropdown-menu";
+import { LogOut, User, ChevronDown, Car } from "lucide-react";
+import { BUTTON_STYLES } from "../constants";
+import type { ClientData } from "@/lib/api/types";
+import { getUserDisplayName } from "../utils";
+import { useLocale } from "next-intl";
 
 interface UserMenuProps {
   userData: ClientData | null;
@@ -38,8 +38,8 @@ export const UserMenu: React.FC<UserMenuProps> = ({
   translations,
 }) => {
   const displayName = getUserDisplayName(userData);
-  const firstName = displayName.split(' ')[0]; // Get only the first word
-  const userImage = userData?.image;
+  const firstName = displayName.split(" ")[0]; // Get only the first word
+  const userImage = userData?.profileImage;
   const [imageError, setImageError] = React.useState(false);
   const locale = useLocale();
 
@@ -59,30 +59,44 @@ export const UserMenu: React.FC<UserMenuProps> = ({
         <button className={BUTTON_STYLES.userButton}>
           <span>{firstName}</span>
           {userImage && !imageError ? (
-            <img 
-              src={userImage} 
+            <img
+              src={userImage}
               alt={displayName}
               className="w-6 h-6 rounded-full object-cover"
               onError={() => setImageError(true)}
-              />
-            ) : (
-              <User className="w-4 h-4" />
-            )}
+            />
+          ) : (
+            <User className="w-4 h-4" />
+          )}
           {/* <ChevronDown className="w-4 h-4" /> */}
         </button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="start" className="w-[176px] rounded-[20px] mt-[12px] px-[16px] py-[12px]"  dir={locale === 'ar' ? 'rtl' : 'ltr'}>
-        <DropdownMenuItem onClick={onProfileClick} className="flex items-center gap-2 cursor-pointer hover:bg-gray-100 hover:text-primary">
+      <DropdownMenuContent
+        align="start"
+        className="w-[176px] rounded-[20px] mt-[12px] px-[16px] py-[12px]"
+        dir={locale === "ar" ? "rtl" : "ltr"}
+      >
+        <DropdownMenuItem
+          onClick={onProfileClick}
+          className="flex items-center gap-2 cursor-pointer hover:bg-gray-100 hover:text-primary"
+        >
           <User className="w-4 h-4" />
           <span>{translations.profile}</span>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={onBookingsClick} className="flex items-center gap-2 cursor-pointer hover:bg-gray-100 hover:text-primary">
+        <DropdownMenuItem
+          onClick={onBookingsClick}
+          className="flex items-center gap-2 cursor-pointer hover:bg-gray-100 hover:text-primary"
+        >
           <Car className="w-4 h-4" />
           <span>{translations.myBookings}</span>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={onLogout} variant="destructive" className="flex items-center gap-2 cursor-pointe hover:bg-[#FFC0C2] hover:text-[#4E0204] cursor-pointer">
+        <DropdownMenuItem
+          onClick={onLogout}
+          variant="destructive"
+          className="flex items-center gap-2 cursor-pointe hover:bg-[#FFC0C2] hover:text-[#4E0204] cursor-pointer"
+        >
           <LogOut className="w-4 h-4" />
           <span>{translations.logout}</span>
         </DropdownMenuItem>
@@ -90,4 +104,3 @@ export const UserMenu: React.FC<UserMenuProps> = ({
     </DropdownMenu>
   );
 };
-

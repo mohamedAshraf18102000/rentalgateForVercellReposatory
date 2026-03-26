@@ -16,7 +16,7 @@ import { RouteGuard } from "./(components)/RouteGuard";
 import SideToChat from "../(components)/sideToChat/SideToChat";
 import { CurrentLocationDialog } from "./(dialogs)/PickupDialog/CurrentLocationDialog";
 import ReactQueryProvider from "@/provider/ReactQueryProvider";
-import { GuestAuthInitializer } from "@/lib/stores/GuestAuthInitializer";
+
 
 const fontZain = Zain({
   subsets: ["arabic", "latin"],
@@ -190,7 +190,7 @@ export default async function LocaleLayout({
       >
         <NextIntlClientProvider messages={messages}>
           <DialogProvider>
-            <GuestAuthInitializer />
+
             <RouteGuard />
             <SharedDataLoader />
             <CurrentLocationDialog />

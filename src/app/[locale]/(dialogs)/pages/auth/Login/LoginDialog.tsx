@@ -1,30 +1,20 @@
 "use client";
 
-import * as React from "react";
 import { DialogWrapper } from "@/ui";
 import { useDialog } from "../../..";
 import type { LoginProps } from "./Login.types";
 import FormLogin from "./FormLogin";
 import { useLogin } from "./hooks/useLogin";
-import { LoginTabs } from "./components/LoginTabs";
 import { LoginFooter } from "./components/LoginFooter";
 import { useTranslations } from "next-intl";
 
-export function LoginDialog({
-  redirectTo,
-  onSuccess,
-  onClose,
-}: LoginProps) {
+export function LoginDialog({ redirectTo, onSuccess, onClose }: LoginProps) {
   const { openDialog } = useDialog();
-  const t = useTranslations('auth');
+  const t = useTranslations("auth");
 
   const {
-    loginType,
-    setLoginType,
     email,
     setEmail,
-    mobile,
-    setMobile,
     password,
     setPassword,
     rememberMe,
@@ -32,6 +22,7 @@ export function LoginDialog({
     isLoading,
     handleLogin,
     isFormValid,
+    error,
   } = useLogin({
     onSuccess,
     onClose,
@@ -64,7 +55,7 @@ export function LoginDialog({
     onClose();
     openDialog("ForgotPassword", {
       onReset: (email: string) => {
-        console.log(t('passwordReset.resetFor'), email);
+        console.log(t("passwordReset.resetFor"), email);
       },
     });
   };
@@ -72,8 +63,15 @@ export function LoginDialog({
   const handleSignUp = () => {
     onClose();
     openDialog("SignUp", {
-      onSignUp: (data: { email?: string; mobile?: string; firstName: string; lastName: string; password: string; channel: "EMAIL" | "WHATSAPP"   }) => {  
-        console.log(t('accountCreated.created'), data);
+      onSignUp: (data: {
+        email?: string;
+        mobile?: string;
+        firstName: string;
+        lastName: string;
+        password: string;
+        channel: "EMAIL" | "WHATSAPP";
+      }) => {
+        console.log(t("accountCreated.created"), data);
       },
     });
   };
@@ -85,23 +83,19 @@ export function LoginDialog({
       size="md"
       closeOnOutsideClick={false}
       header={{
-        mainTitle: t('login.title'),
+        mainTitle: t("login.title"),
       }}
       content={
         <div className="grid gap-4 0">
-          <LoginTabs value={loginType} onValueChange={setLoginType} />
-
           <FormLogin
-            loginType={loginType}
             email={email}
-            mobile={mobile}
             password={password}
             rememberMe={rememberMe}
             setEmail={setEmail}
-            setMobile={setMobile}
             setPassword={setPassword}
             setRememberMe={setRememberMe}
             handleForgotPassword={handleForgotPassword}
+            error={error}
           />
         </div>
       }
@@ -116,4 +110,3 @@ export function LoginDialog({
     />
   );
 }
-

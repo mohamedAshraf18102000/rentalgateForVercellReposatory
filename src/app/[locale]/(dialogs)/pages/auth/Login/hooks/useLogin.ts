@@ -12,8 +12,16 @@ interface UseLoginProps {
   onSuccess?: (user: { id: string; email: string }) => void;
   onClose: () => void;
   redirectTo?: string;
-  onClientInactive?: (email?: string, mobile?: string, channel?: "EMAIL" | "WHATSAPP") => void;
-  onClientDeactivated?: (email?: string, mobile?: string, channel?: "EMAIL" | "WHATSAPP") => void;
+  onClientInactive?: (
+    email?: string,
+    mobile?: string,
+    channel?: "EMAIL" | "WHATSAPP",
+  ) => void;
+  onClientDeactivated?: (
+    email?: string,
+    mobile?: string,
+    channel?: "EMAIL" | "WHATSAPP",
+  ) => void;
 }
 
 interface UseLoginReturn {
@@ -30,6 +38,7 @@ interface UseLoginReturn {
   isLoading: boolean;
   handleLogin: () => Promise<void>;
   isFormValid: boolean;
+  error: string | null;
 }
 
 export const useLogin = ({
@@ -39,13 +48,14 @@ export const useLogin = ({
   onClientInactive,
   onClientDeactivated,
 }: UseLoginProps): UseLoginReturn => {
-  const [loginType, setLoginType] = React.useState<"mobile" | "email">("mobile");
+  const [loginType, setLoginType] = React.useState<"mobile" | "email">("email");
   const [email, setEmail] = React.useState("");
   const [mobile, setMobile] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [rememberMe, setRememberMe] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
-  const { fetchClientData } = useClientStore();
+  const [error, setError] = React.useState<string | null>(null);
+  const { fetchClientData, setClientData } = useClientStore();
   const t = useTranslations("validation.AUTH_ERRORS");
 
   const loginValue = loginType === "email" ? email : mobile;
@@ -65,29 +75,13 @@ export const useLogin = ({
     if (userData.clientId) {
       const userDataToSave = {
         clientId: userData.clientId,
-        clientNumber: userData.clientNumber,
-        firstName: userData.firstName,
-        lastName: userData.lastName,
-        clientType: userData.clientType,
-        clientStatus: userData.clientStatus,
-        email: userData.email,
+        clientName: userData.clientName,
+        creationDate: userData.creationDate,
         mobile: userData.mobile,
-        image: userData.image,
-        nationality: userData.nationality,
-        nationalId: userData.nationalId,
-        copyNum: userData.copyNum,
-        gender: userData.gender,
-        cityId: userData.cityId,
-        address: userData.address,
-        points: userData.points,
-        membership: userData.membership,
-        addedDate: userData.addedDate,
-        birthdate: userData.birthdate,
-        licenseExpiration: userData.licenseExpiration,
-        licenseNumber: userData.licenseNumber,
-        cityName: userData.cityName,
-        refCode: userData.refCode,
-        countryId: userData.countryId,
+        email: userData.email,
+        country: userData.country,
+        city: userData.city,
+        status: userData.status,
         bearerToken: userData.bearerToken,
       };
 
@@ -101,15 +95,16 @@ export const useLogin = ({
 
   const handleLogin = async () => {
     if (!isFormValid) {
-      toast.error(t("EMAIL_IS_REQUIRED") || "يرجى ملء جميع الحقول");
+      toast.error(t("FILL_ALL_FIELDS") || "يرجى ملء جميع الحقول");
       return;
     }
 
+    setError(null);
     setIsLoading(true);
 
     try {
       const payload = {
-        username: loginValue,
+        mobile: loginValue,
         password,
       };
 
@@ -119,16 +114,19 @@ export const useLogin = ({
       if (data.data && (data.message === "SUCCESS" || data.status)) {
         // Save user data to cookies
         saveUserData(data.data, rememberMe);
-        
+
+        // Update Zustand store immediately with login data to avoid loading state in Header
+        setClientData(data.data as any);
+
         // Call onSuccess callback
         onSuccess?.({
           id: String(data.data.clientId || "1"),
           email: data.data.email || loginValue,
         });
-        
+
         // Show success message
         toast.success(t("LOGIN_SUCCESS") || "تم تسجيل الدخول بنجاح");
-        
+
         // Fetch and save complete client data to Zustand store after successful login
         try {
           await fetchClientData();
@@ -136,41 +134,49 @@ export const useLogin = ({
           // If fetching client data fails, it's not critical - we already have login data
           console.warn("Failed to fetch complete client data:", error);
         }
-        
+
         // Close dialog
         onClose();
       } else {
-        throw new Error(data.message || "فشل تسجيل الدخول");
+        throw new Error(data.message || "LOGIN_FAILED");
       }
     } catch (err) {
       console.log("Login error:", err);
       const errorMessage = err instanceof Error ? err.message : "";
-      
+
       // Check if error is CLIENT_INACTIVE
       if (errorMessage === "CLIENT_INACTIVE" && onClientInactive) {
         // Show toast explaining the issue
-        const translatedMessage = t("CLIENT_INACTIVE") || "هذه البيانات غير مؤكدة برجاء تأكيد الحساب";
+        const translatedMessage =
+          t("CLIENT_INACTIVE") || "هذه البيانات غير مؤكدة برجاء تأكيد الحساب";
         toast.error(translatedMessage);
-        
+
         // Determine channel based on login type
-        const channel: "EMAIL" | "WHATSAPP" = loginType === "email" ? "EMAIL" : "WHATSAPP";
+        const channel: "EMAIL" | "WHATSAPP" =
+          loginType === "email" ? "EMAIL" : "WHATSAPP";
         // Call callback to handle inactive client
         onClientInactive(
           loginType === "email" ? email : undefined,
           loginType === "mobile" ? mobile : undefined,
-          channel
+          channel,
         );
       } else if (errorMessage === "CLIENT_DEACTIVATED" && onClientDeactivated) {
         // Determine channel based on login type
-        const channel: "EMAIL" | "WHATSAPP" = loginType === "email" ? "EMAIL" : "WHATSAPP";
+        const channel: "EMAIL" | "WHATSAPP" =
+          loginType === "email" ? "EMAIL" : "WHATSAPP";
         // Call callback to handle deactivated client
         onClientDeactivated(
           loginType === "email" ? email : undefined,
           loginType === "mobile" ? mobile : undefined,
-          channel
+          channel,
         );
       } else {
-        const translatedMessage = errorMessage ? t(errorMessage as any) : t("LOGIN_FAILED");
+        const errorKey =
+          errorMessage === "Bad credentials" ? "BAD_CREDENTIALS" : errorMessage;
+        const translatedMessage = errorKey
+          ? t(errorKey as any)
+          : t("LOGIN_FAILED");
+        setError(translatedMessage);
         toast.error(translatedMessage);
       }
     } finally {
@@ -192,6 +198,6 @@ export const useLogin = ({
     isLoading,
     handleLogin,
     isFormValid,
+    error,
   };
 };
-

@@ -25,7 +25,17 @@ export const getUserData = (): any | null => {
   if (!userDataStr) return null;
 
   try {
-    return JSON.parse(userDataStr);
+    const data = JSON.parse(userDataStr);
+    // Normalize data to ensure clientName is always available
+    if (data) {
+      if (!data.clientName && data.firstName) {
+        data.clientName = data.firstName;
+      }
+      if (!data.firstName && data.clientName) {
+        data.firstName = data.clientName;
+      }
+    }
+    return data;
   } catch {
     return null;
   }

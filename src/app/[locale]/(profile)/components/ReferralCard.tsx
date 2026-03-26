@@ -13,7 +13,7 @@ export default function ReferralCard() {
   const { clientData } = useClientStore();
 
   // Use refCode from clientData or fallback to default
-  const referralCode = clientData?.refCode || "";
+  const referralCode = clientData?.referralCode || "";
 
   const handleCopy = async () => {
     try {

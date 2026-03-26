@@ -1,3 +1,4 @@
+"use client";
 import WrapperContainer from "@/app/(components)/wrapperContainer/WrapperContainer";
 import ProfileBreadCrump from "./components/ProfileBreadCrump";
 import Image from "next/image";
@@ -5,29 +6,46 @@ import { SaudiRiyal } from "lucide-react";
 import { Separator } from "@/app/(components)/ui/separator";
 import UserDetailsCard from "./components/UserDetailsCard";
 import UserReferal from "./components/UserReferal";
-import ProfileActionCard from "./components/ProfileActionCard";
 import UserProfileActions from "./components/actions/UsersProfileActions";
 import OtherDetailsAction from "./components/otherDetails/OtherDetailsAction";
-
-const userData = [
-  {
-    icon: "/profile/NameIcon.png",
-    label: "الأسم:",
-    userDetails: "محمد أحمد عبد السلام",
-  },
-  {
-    icon: "/profile/MailIcon.png",
-    label: "البريد الالكتروني:",
-    userDetails: "mohamed@gmail.com",
-  },
-  {
-    icon: "/profile/ContactIcon.png",
-    label: "رقم الهاتف:",
-    userDetails: "0555555555",
-  },
-];
+import { useAuth } from "@/app/(components)/navbar/hooks/useAuth";
 
 const page = () => {
+  const { userData: storeUserData, isClient } = useAuth();
+  const userData = [
+    {
+      icon: "/profile/NameIcon.png",
+      label: "الأسم:",
+      userDetails: storeUserData?.clientName,
+    },
+    {
+      icon: "/profile/MailIcon.png",
+      label: "البريد الالكتروني:",
+      userDetails: storeUserData?.email,
+    },
+    {
+      icon: "/profile/ContactIcon.png",
+      label: "رقم الهاتف:",
+      userDetails: storeUserData?.mobile,
+    },
+  ];
+
+  if (!isClient) {
+    return (
+      <WrapperContainer exceedNav>
+        <ProfileBreadCrump />
+        <div className="w-full p-3 mt-6">
+          <div className="w-[60%] bg-white rounded-2xl shadow-lg p-6 flex justify-center items-center min-h-[300px]">
+            <div className="animate-pulse flex flex-col items-center">
+              <div className="rounded-full bg-slate-200 h-20 w-20"></div>
+              <div className="h-4 bg-slate-200 rounded w-48 mt-4"></div>
+            </div>
+          </div>
+        </div>
+      </WrapperContainer>
+    );
+  }
+
   return (
     <WrapperContainer exceedNav>
       <ProfileBreadCrump />
@@ -44,7 +62,9 @@ const page = () => {
                   fill
                 />
               </div>
-              <h2 className="text-lg font-bold">أهلاً عبد الرحمن</h2>
+              <h2 className="text-lg font-bold">
+                أهلاً {storeUserData?.clientName || "عبد الرحمن"}
+              </h2>
             </div>
             <div className="flex items-center justify-between p-3 rounded-2xl bg-[linear-gradient(180deg,#BE2326_0%,#581012_100%)] text-white">
               <div className="w-[50px] h-[50px] relative rounded-2xl overflow-hidden">
@@ -76,7 +96,7 @@ const page = () => {
                   key={index}
                   icon={item.icon}
                   label={item.label}
-                  userDetails={item.userDetails}
+                  userDetails={item.userDetails || ""}
                 />
               ))}
             </div>

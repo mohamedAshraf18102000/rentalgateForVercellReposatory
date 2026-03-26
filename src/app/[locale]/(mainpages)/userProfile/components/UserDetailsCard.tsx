@@ -19,7 +19,7 @@ const UserDetailsCard = ({
       <div className="w-full">
         <span className="text-base font-normal">{label}</span>
         <div className="bg-Grey100 mt-2 p-2 rounded-xl px-4 text-Grey500">
-          {userDetails}
+          <span dir="ltr">{userDetails || ""}</span>
         </div>
       </div>
     </div>

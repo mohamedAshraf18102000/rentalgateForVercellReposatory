@@ -1,54 +1,25 @@
-// ============================================================================
-// Main Component - Header
-// ============================================================================
-
-"use client";
-
 import { ContactUsDialog } from "@/app/(components)/ContactUsDialog";
-import { useTranslations } from "next-intl";
-import * as React from "react";
-import { LoginButton } from "../LoginButton";
+import { getTranslations, getLocale } from "next-intl/server";
 import { HomeLink } from "./components/HomeLink";
-import { LanguageSwitcher } from "./components/LanguageSwitcher";
 import { Logo } from "./components/Logo";
 import { MobileBottomNav } from "./components/MobileBottomNav";
 import { MobileHeader } from "./components/MobileHeader";
-import { UserMenu } from "./components/UserMenu";
-import { BUTTON_STYLES, NAVBAR_STYLES } from "./constants";
-import { useHeaderLogic } from "./hooks/useHeaderLogic";
-import { useLocationStore } from "@/lib/stores/useLocationStore";
+import { NAVBAR_STYLES, BUTTON_STYLES } from "./constants";
+import { NavbarActions } from "./components/NavbarActions";
 
-export default function Header() {
-  const t = useTranslations("common");
-  const {
-    isClient,
-    authenticated,
-    userData,
-    isLoading,
-    locale,
-    pathname,
-    homePageActive,
-    handleLogout,
-    handleLanguageChange,
-    handleProfileClick,
-    handleBookingsClick,
-  } = useHeaderLogic();
-  const [contactDialogOpen, setContactDialogOpen] = React.useState(false);
-  const address = useLocationStore((state) => state.address);
-  const openLocationDialog = useLocationStore((state) => state.openDialog);
+export default async function Header() {
+  const t = await getTranslations("common");
+  const locale = await getLocale();
 
-  // Translations
-  const translations = React.useMemo(
-    () => ({
-      profile: t("profile") || "Profile",
-      myBookings: t("myBookings") || "My Bookings",
-      logout: t("logout") || "تسجيل الخروج",
-      login: t("login"),
-      home: t("home"),
-      talkToUs: t("talkToUs"),
-    }),
-    [t],
-  );
+  // Translations for the client component
+  const translations = {
+    profile: t("profile") || "Profile",
+    myBookings: t("myBookings") || "My Bookings",
+    logout: t("logout") || "تسجيل الخروج",
+    login: t("login"),
+    home: t("home"),
+    talkToUs: t("talkToUs"),
+  };
 
   return (
     <>
@@ -65,93 +36,40 @@ export default function Header() {
               <HomeLink
                 href="/"
                 label={translations.home}
-                isActive={homePageActive}
+                isActive={false} // Will be handled by client hydration or CSS if needed
                 className={BUTTON_STYLES.navLink}
               />
 
               <HomeLink
                 href="/bookings"
                 label={locale === "ar" ? "الحجز" : "Bookings"}
-                isActive={pathname === "/bookings"}
+                isActive={false}
                 className={BUTTON_STYLES.navLink}
               />
-
-              {/* <HomeLink
-                href="/branches"
-                label={locale === "ar" ? "الفروع" : "Branches"}
-                isActive={pathname === "/branches"}
-                className={BUTTON_STYLES.navLink}
-              /> */}
 
               <HomeLink
                 href="/bussinessAccounts"
                 label={locale === "ar" ? "حساب الاعمال" : "Bussiness Account"}
-                isActive={pathname === "/bussinessAccounts"}
+                isActive={false}
                 className={BUTTON_STYLES.navLink}
               />
 
               <HomeLink
                 href="/userProfile"
                 label={locale === "ar" ? "الملف الشخصي" : "Profile"}
-                isActive={pathname === "/userProfile"}
+                isActive={false}
                 className={BUTTON_STYLES.navLink}
               />
             </div>
 
             {/* Right Section */}
             <div className={NAVBAR_STYLES.rightSection}>
-              <div className={NAVBAR_STYLES.actionsWrapper}>
-                {/* <button
-                  onClick={() => setContactDialogOpen(true)}
-                  className={cn(
-                    BUTTON_STYLES.homeLink,
-                    BUTTON_STYLES.homeLinkInactive,
-                    BUTTON_STYLES.navLink
-                  )}
-                >
-                  {tContact('title')}
-                </button> */}
-                <button
-                  title={address?.toString()}
-                  onClick={openLocationDialog}
-                >
-                  {address && address?.length > 20
-                    ? `${address?.slice(0, 20)}...`
-                    : address}
-                </button>
-                <LanguageSwitcher
-                  currentLocale={locale}
-                  onToggle={handleLanguageChange}
-                />
-
-                {isClient && authenticated ? (
-                  <UserMenu
-                    userData={userData}
-                    isLoading={isLoading}
-                    onLogout={handleLogout}
-                    onProfileClick={handleProfileClick}
-                    onBookingsClick={handleBookingsClick}
-                    translations={translations}
-                  />
-                ) : (
-                  <LoginButton
-                    className={BUTTON_STYLES.primary}
-                    variant="default"
-                  >
-                    {translations.login}
-                  </LoginButton>
-                )}
-              </div>
+              <NavbarActions translations={translations} />
             </div>
           </div>
         </div>
       </header>
       <MobileBottomNav />
-
-      <ContactUsDialog
-        open={contactDialogOpen}
-        onOpenChange={setContactDialogOpen}
-      />
     </>
   );
 }

@@ -146,6 +146,7 @@
     "LOGIN_SUCCESS": "Login successful",
     "PRICING_CALCULATED_SUCCESS": "Car pricing calculated successfully",
     "RESERVATION_ALREADY_HAS_A_REQUEST": "This reservation already has an active maintenance request",
-    "INVALID_PRICING_REQUEST:[RESERVATION_MUST_BE_AT_LEAST_ONE_HOUR]": "Extension duration must be at least one hour"
+    "INVALID_PRICING_REQUEST:[RESERVATION_MUST_BE_AT_LEAST_ONE_HOUR]": "Extension duration must be at least one hour",
+    "BAD_CREDENTIALS": "The email or password you entered is incorrect"
   }
 }

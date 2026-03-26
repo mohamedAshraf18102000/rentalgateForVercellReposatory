@@ -14,14 +14,10 @@ import { toast } from "sonner";
 import { useTranslations } from "next-intl";
 import { useParams } from "next/navigation";
 
-export function SignUpDialog({
-  onSignUp,
-  onClose,
-  onLogin,
-}: SignUpProps) {
+export function SignUpDialog({ onSignUp, onClose, onLogin }: SignUpProps) {
   const { openDialog } = useDialog();
   const params = useParams();
-  const locale = (params.locale as string) || 'ar';
+  const locale = (params.locale as string) || "ar";
   const [firstName, setFirstName] = React.useState("");
   const [lastName, setLastName] = React.useState("");
   const [mobile, setMobile] = React.useState("");
@@ -34,29 +30,38 @@ export function SignUpDialog({
   const [termsAccepted, setTermsAccepted] = React.useState(false);
   const [termsDialogOpen, setTermsDialogOpen] = React.useState(false);
   const [privacyDialogOpen, setPrivacyDialogOpen] = React.useState(false);
-  const [dialogType, setDialogType] = React.useState<"terms" | "privacy">("terms");
+  const [dialogType, setDialogType] = React.useState<"terms" | "privacy">(
+    "terms",
+  );
   const tValidation = useTranslations("validation.AUTH_ERRORS");
   const t = useTranslations("auth.signUp");
 
   const handleSignUp = async () => {
-
     if (!firstName || !lastName) {
-      toast.error(tValidation("FIRST_NAME_IS_REQUIRED") || "يرجى إدخال الاسم بالكامل");
+      toast.error(
+        tValidation("FIRST_NAME_IS_REQUIRED") || "يرجى إدخال الاسم بالكامل",
+      );
       return;
     }
 
     if (!password || password !== confirmPassword) {
-      toast.error(tValidation("PASSWORDS_DO_NOT_MATCH") || "كلمات المرور غير متطابقة");
+      toast.error(
+        tValidation("PASSWORDS_DO_NOT_MATCH") || "كلمات المرور غير متطابقة",
+      );
       return;
     }
 
     if (channel === "EMAIL" && !email) {
-      toast.error(tValidation("EMAIL_IS_REQUIRED") || "يرجى إدخال البريد الإلكتروني");
+      toast.error(
+        tValidation("EMAIL_IS_REQUIRED") || "يرجى إدخال البريد الإلكتروني",
+      );
       return;
     }
 
     if (channel === "WHATSAPP" && (!mobile || !isPhoneValid)) {
-      toast.error(tValidation("MOBILE_IS_REQUIRED") || "يرجى إدخال رقم جوال صحيح");
+      toast.error(
+        tValidation("MOBILE_IS_REQUIRED") || "يرجى إدخال رقم جوال صحيح",
+      );
       return;
     }
 
@@ -89,9 +94,10 @@ export function SignUpDialog({
       // Check if message is "SUCCESS"
       if (response.message === "SUCCESS") {
         // Extract clientId from response.data
-        const clientId = typeof response.data === 'number'
-          ? response.data
-          : response.data?.clientId;
+        const clientId =
+          typeof response.data === "number"
+            ? response.data
+            : response.data?.clientId;
 
         // Set flag to show welcome points popup after login
         setShowWelcomePointsFlag();
@@ -129,7 +135,10 @@ export function SignUpDialog({
       const errorMessage = err instanceof Error ? err.message : "";
 
       // Check if error is CLIENT_DATA_EXISTS_IN_ALGHAZAL or CLIENT_DATA_EXISTS_IN_ALMAQAM
-      if (errorMessage === "CLIENT_DATA_EXISTS_IN_ALGHAZAL" || errorMessage === "CLIENT_DATA_EXISTS_IN_ALMAQAM") {
+      if (
+        errorMessage === "CLIENT_DATA_EXISTS_IN_ALGHAZAL" ||
+        errorMessage === "CLIENT_DATA_EXISTS_IN_ALMAQAM"
+      ) {
         // Close signup dialog and open account recovery dialog
         onClose();
         openDialog("AccountRecovery", {
@@ -143,7 +152,9 @@ export function SignUpDialog({
         });
       } else if (errorMessage === "CLIENT_INACTIVE") {
         // Show toast explaining the issue
-        const translatedMessage = tValidation("CLIENT_INACTIVE") || "هذه البيانات غير مؤكدة برجاء تأكيد الحساب";
+        const translatedMessage =
+          tValidation("CLIENT_INACTIVE") ||
+          "هذه البيانات غير مؤكدة برجاء تأكيد الحساب";
         toast.error(translatedMessage);
 
         // Close signup dialog and open forgot password dialog for account activation
@@ -158,7 +169,9 @@ export function SignUpDialog({
           },
         });
       } else {
-        const translatedMessage = errorMessage ? tValidation(errorMessage as any) : tValidation("DEFAULT");
+        const translatedMessage = errorMessage
+          ? tValidation(errorMessage as any)
+          : tValidation("DEFAULT");
         toast.error(translatedMessage);
       }
       console.log("SignUp error:", err);
@@ -181,7 +194,7 @@ export function SignUpDialog({
     termsAccepted &&
     (channel === "EMAIL"
       ? email // Email is required when channel is EMAIL
-      : (mobile && isPhoneValid)); // Mobile is required and must be valid when channel is WHATSAPP
+      : mobile && isPhoneValid); // Mobile is required and must be valid when channel is WHATSAPP
 
   return (
     <>
@@ -190,7 +203,7 @@ export function SignUpDialog({
         onOpenChange={(open) => !open && onClose()}
         closeOnOutsideClick={false}
         header={{
-          mainTitle: t('title'),
+          mainTitle: t("title"),
         }}
         scrollableContent={true}
         maxScrollHeight="350px"
@@ -203,16 +216,16 @@ export function SignUpDialog({
                 type="text"
                 value={firstName}
                 onChange={(e) => setFirstName(e.target.value)}
-                placeholder={t('form.firstNamePlaceholder')}
-                label={t('form.firstNameLabel')}
+                placeholder={t("form.firstNamePlaceholder")}
+                label={t("form.firstNameLabel")}
               />
               <Input
                 id="signup-lastname"
                 type="text"
                 value={lastName}
                 onChange={(e) => setLastName(e.target.value)}
-                placeholder={t('form.lastNamePlaceholder')}
-                label={t('form.lastNameLabel')}
+                placeholder={t("form.lastNamePlaceholder")}
+                label={t("form.lastNameLabel")}
               />
             </div>
 
@@ -220,11 +233,11 @@ export function SignUpDialog({
             <CountryPhone
               value={mobile}
               onChange={setMobile}
-              placeholder={t('form.mobilePlaceholder')}
+              placeholder={t("form.mobilePlaceholder")}
               defaultCountry="sa"
               showValidation={true}
               onValidationChange={setIsPhoneValid}
-              label={t('form.mobileLabel')}
+              label={t("form.mobileLabel")}
             />
 
             {/* Email */}
@@ -233,10 +246,9 @@ export function SignUpDialog({
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder={t('form.emailPlaceholder')}
-              label={t('form.emailLabel')}
+              placeholder={t("form.emailPlaceholder")}
+              label={t("form.emailLabel")}
             />
-
 
             {/* Password */}
             <Input
@@ -244,8 +256,8 @@ export function SignUpDialog({
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder={t('form.passwordPlaceholder')}
-              label={t('form.passwordLabel')}
+              placeholder={t("form.passwordPlaceholder")}
+              label={t("form.passwordLabel")}
             />
 
             {/* Confirm Password */}
@@ -255,18 +267,15 @@ export function SignUpDialog({
                 type="password"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                placeholder={t('form.confirmPasswordPlaceholder')}
-                label={t('form.confirmPasswordLabel')}
+                placeholder={t("form.confirmPasswordPlaceholder")}
+                label={t("form.confirmPasswordLabel")}
               />
               {confirmPassword && !passwordsMatch && (
                 <p className="text-sm text-destructive mt-1">
-                  {t('form.passwordsDoNotMatch')}
+                  {t("form.passwordsDoNotMatch")}
                 </p>
               )}
             </div>
-
-            {/* Confirmation Channel Selection */}
-            <ConfirmationChannelTabs value={channel} onValueChange={setChannel} />
           </div>
         }
         footer={
@@ -276,37 +285,39 @@ export function SignUpDialog({
               <Checkbox
                 id="terms-acceptance"
                 checked={termsAccepted}
-                onCheckedChange={(checked) => setTermsAccepted(checked === true)}
+                onCheckedChange={(checked) =>
+                  setTermsAccepted(checked === true)
+                }
               />
               <label
                 htmlFor="terms-acceptance"
                 className="text-sm text-[#595959] cursor-pointer select-none"
               >
-                {locale === 'ar' ? 'أوافق على ' : 'I agree to '}
+                {locale === "ar" ? "أوافق على " : "I agree to "}
                 <button
                   type="button"
                   onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
-                    setDialogType('terms');
+                    setDialogType("terms");
                     setTermsDialogOpen(true);
                   }}
                   className="text-[#1A1A1A] underline underline-offset-2 hover:no-underline"
                 >
-                  {locale === 'ar' ? 'جميع الشروط' : 'all terms'}
+                  {locale === "ar" ? "جميع الشروط" : "all terms"}
                 </button>
-                {locale === 'ar' ? ' و ' : ' and '}
+                {locale === "ar" ? " و " : " and "}
                 <button
                   type="button"
                   onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
-                    setDialogType('privacy');
+                    setDialogType("privacy");
                     setPrivacyDialogOpen(true);
                   }}
                   className="text-[#1A1A1A] underline underline-offset-2 hover:no-underline"
                 >
-                  {locale === 'ar' ? 'سياسة الخصوصية' : 'privacy policy'}
+                  {locale === "ar" ? "سياسة الخصوصية" : "privacy policy"}
                 </button>
               </label>
             </div>
@@ -317,10 +328,10 @@ export function SignUpDialog({
               loading={isLoading}
               size="lg"
             >
-              {t('buttons.createAccount')}
+              {t("buttons.createAccount")}
             </Button>
             <div className="text-center text-sm">
-              <span className="text-[#595959]">{t('footer.haveAccount')} </span>
+              <span className="text-[#595959]">{t("footer.haveAccount")} </span>
               <button
                 type="button"
                 onClick={() => {
@@ -333,7 +344,7 @@ export function SignUpDialog({
                 }}
                 className="text-sm text-[#1A1A1A] underline font-medium   underline-offset-2  "
               >
-                {t('footer.login')}
+                {t("footer.login")}
               </button>
             </div>
           </div>
@@ -355,4 +366,3 @@ export function SignUpDialog({
     </>
   );
 }
-

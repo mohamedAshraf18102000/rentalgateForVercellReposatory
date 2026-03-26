@@ -6,8 +6,22 @@ import { Button } from "@/ui";
 interface LoginButtonProps {
   redirectTo?: string;
   className?: string;
-  variant?: "default" | "outline" | "secondary" | "ghost" | "destructive" | "link";
-  size?: "default" | "xs" | "sm" | "lg" | "icon" | "icon-xs" | "icon-sm" | "icon-lg";
+  variant?:
+    | "default"
+    | "outline"
+    | "secondary"
+    | "ghost"
+    | "destructive"
+    | "link";
+  size?:
+    | "default"
+    | "xs"
+    | "sm"
+    | "lg"
+    | "icon"
+    | "icon-xs"
+    | "icon-sm"
+    | "icon-lg";
   children?: React.ReactNode;
 }
 
@@ -42,4 +56,3 @@ export function LoginButton({
     </Button>
   );
 }
-

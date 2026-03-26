@@ -147,6 +147,7 @@
     "LOGIN_SUCCESS": "تم تسجيل الدخول بنجاح",
     "PRICING_CALCULATED_SUCCESS": "تم حساب تسعيرة السيارة",
     "RESERVATION_ALREADY_HAS_A_REQUEST": "هذا الحجز لديه طلب صيانة قائم بالفعل",
-    "INVALID_PRICING_REQUEST:[RESERVATION_MUST_BE_AT_LEAST_ONE_HOUR]": "يجب أن تكون مدة التمديد ساعة واحدة على الأقل"
+    "INVALID_PRICING_REQUEST:[RESERVATION_MUST_BE_AT_LEAST_ONE_HOUR]": "يجب أن تكون مدة التمديد ساعة واحدة على الأقل",
+    "BAD_CREDENTIALS": "البريد الإلكتروني أو كلمة المرور غير صحيحة"
   }
 }
