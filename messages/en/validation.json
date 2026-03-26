@@ -147,6 +147,10 @@
     "PRICING_CALCULATED_SUCCESS": "Car pricing calculated successfully",
     "RESERVATION_ALREADY_HAS_A_REQUEST": "This reservation already has an active maintenance request",
     "INVALID_PRICING_REQUEST:[RESERVATION_MUST_BE_AT_LEAST_ONE_HOUR]": "Extension duration must be at least one hour",
-    "BAD_CREDENTIALS": "The email or password you entered is incorrect"
+    "BAD_CREDENTIALS": "The email or password you entered is incorrect",
+    "didntReceiveCode": "Didn't receive the code?",
+    "resendCode": "Resend",
+    "resendIn": "Resend in",
+    "OTP_RESENT": "Verification code resent"
   }
 }

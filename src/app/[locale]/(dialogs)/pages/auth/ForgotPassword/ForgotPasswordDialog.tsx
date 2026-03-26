@@ -8,7 +8,12 @@ import { toast } from "sonner";
 import { useDialog } from "../../../hooks/useDialog";
 import { ConfirmationChannelTabs } from "../SignUp/components/ConfirmationChannelTabs";
 import type { ForgotPasswordProps } from "./ForgotPassword.types";
-import { forgetPassword, resendOTP, resetPassword, verifyOTP } from "./services/forgot-password.service";
+import {
+  forgetPassword,
+  resendOTP,
+  resetPassword,
+  verifyOTP,
+} from "./services/forgot-password.service";
 
 type Step = "request" | "verify" | "reset";
 
@@ -19,13 +24,15 @@ export function ForgotPasswordDialog({
   mobile: initialMobile,
   channel: initialChannel,
   isAccountActivation = false,
+  initialStep = "request",
 }: ForgotPasswordProps) {
-  const [step, setStep] = React.useState<Step>("request");
-  const [channel, setChannel] = React.useState<"EMAIL" | "WHATSAPP">(initialChannel || "EMAIL");
+  const [step, setStep] = React.useState<Step>(initialStep || "request");
+  const [channel, setChannel] = React.useState<"EMAIL" | "WHATSAPP">(
+    initialChannel || "EMAIL",
+  );
   const [email, setEmail] = React.useState(initialEmail || "");
   const [mobile, setMobile] = React.useState(initialMobile || "");
   const [isPhoneValid, setIsPhoneValid] = React.useState(false);
-  const [clientId, setClientId] = React.useState<number | null>(null);
   const [otpCode, setOtpCode] = React.useState("");
   const [newPassword, setNewPassword] = React.useState("");
   const [confirmPassword, setConfirmPassword] = React.useState("");
@@ -48,12 +55,16 @@ export function ForgotPasswordDialog({
   // Step 1: Request OTP
   const handleRequestOTP = async () => {
     if (channel === "EMAIL" && !email) {
-      toast.error(tValidation("EMAIL_IS_REQUIRED") || "يرجى إدخال البريد الإلكتروني");
+      toast.error(
+        tValidation("EMAIL_IS_REQUIRED") || "يرجى إدخال البريد الإلكتروني",
+      );
       return;
     }
 
     if (channel === "WHATSAPP" && (!mobile || !isPhoneValid)) {
-      toast.error(tValidation("MOBILE_IS_REQUIRED") || "يرجى إدخال رقم جوال صحيح");
+      toast.error(
+        tValidation("MOBILE_IS_REQUIRED") || "يرجى إدخال رقم جوال صحيح",
+      );
       return;
     }
 
@@ -67,29 +78,48 @@ export function ForgotPasswordDialog({
 
       const response = await forgetPassword(payload);
 
-      console.log('Forget Password Response:', response);
+      // Check for success: either status is true OR message is SUCCESS or message includes success words
+      const isSuccess =
+        response.status === true ||
+        response.message === "SUCCESS" ||
+        response.message?.toLowerCase().includes("success");
 
-      // Handle both cases: data as number or data as object with clientId
-      const clientIdValue = typeof response.data === 'number'
-        ? response.data
-        : response.data?.clientId;
-
-      console.log('Client ID Value:', clientIdValue);
-
-      // Check for success: either status is true OR message is SUCCESS
-      const isSuccess = response.status === true || response.message === "SUCCESS";
-
-      if (clientIdValue && isSuccess) {
-        setClientId(clientIdValue);
-        setStep("verify");
-        setResendTimer(60); // 60 seconds timer
-        toast.success(t('messages.otpSentSuccess'));
+      if (isSuccess) {
+        onClose?.();
+        openDialog("VerifyOTP", {
+          email: channel === "EMAIL" ? email : mobile,
+          type: "FORGOT_PASSWORD",
+          channel,
+          onSuccess: () => {
+            openDialog("ForgotPassword", {
+              initialStep: "reset",
+              email,
+              mobile,
+              channel,
+              isAccountActivation,
+            });
+          },
+        });
+        toast.success(response.message || t("messages.otpSentSuccess"));
       } else {
         throw new Error(response.message || "فشل في إرسال رمز التحقق");
       }
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : "";
-      const translatedMessage = errorMessage ? tValidation(errorMessage as any) : tValidation("DEFAULT");
+
+      // Safe translation: if it looks like a key (no spaces), translate it
+      // otherwise show it raw
+      let translatedMessage = errorMessage;
+      if (errorMessage && !errorMessage.includes(" ")) {
+        try {
+          translatedMessage = tValidation(errorMessage as any);
+        } catch {
+          translatedMessage = errorMessage;
+        }
+      } else if (!errorMessage) {
+        translatedMessage = tValidation("DEFAULT");
+      }
+
       toast.error(translatedMessage);
     } finally {
       setIsLoading(false);
@@ -103,23 +133,18 @@ export function ForgotPasswordDialog({
       return;
     }
 
-    if (!clientId) {
-      toast.error(tValidation("CLIENT_ID_IS_REQUIRED") || "خطأ في البيانات");
-      return;
-    }
-
     setIsLoading(true);
 
     try {
+      const currentEmail = channel === "EMAIL" ? email : mobile;
       const response = await verifyOTP({
-        clientId,
+        email: currentEmail,
         code: otpCode,
       });
 
-      console.log('Verify OTP Response:', response);
-
       // Check for success: either status is true OR message is SUCCESS
-      const isSuccess = response.status === true || response.message === "SUCCESS";
+      const isSuccess =
+        response.status === true || response.message === "SUCCESS";
 
       // If message is SUCCESS but data is false, OTP is incorrect
       if (isSuccess && response.data === false) {
@@ -129,14 +154,16 @@ export function ForgotPasswordDialog({
 
       if (isSuccess) {
         setStep("reset");
-        toast.success(t('messages.otpVerifiedSuccess'));
+        toast.success(t("messages.otpVerifiedSuccess"));
       } else {
         setOtpCode(""); // Clear OTP input on error
         throw new Error(response.message || "INVALID_OTP_CODE");
       }
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : "";
-      const translatedMessage = errorMessage ? tValidation(errorMessage as any) : tValidation("DEFAULT");
+      const translatedMessage = errorMessage
+        ? tValidation(errorMessage as any)
+        : tValidation("DEFAULT");
       toast.error(translatedMessage);
     } finally {
       setIsLoading(false);
@@ -145,21 +172,22 @@ export function ForgotPasswordDialog({
 
   // Resend OTP
   const handleResendOTP = async () => {
-    if (!clientId) return;
-
     setIsLoading(true);
 
     try {
+      const currentEmail = channel === "EMAIL" ? email : mobile;
       await resendOTP({
-        clientId,
+        email: currentEmail,
         channel,
       });
 
-      setResendTimer(60);
-      toast.success(t('messages.otpResentSuccess'));
+      setResendTimer(5);
+      toast.success(t("messages.otpResentSuccess"));
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : "";
-      const translatedMessage = errorMessage ? tValidation(errorMessage as any) : tValidation("DEFAULT");
+      const translatedMessage = errorMessage
+        ? tValidation(errorMessage as any)
+        : tValidation("DEFAULT");
       toast.error(translatedMessage);
     } finally {
       setIsLoading(false);
@@ -169,35 +197,34 @@ export function ForgotPasswordDialog({
   // Step 3: Reset Password
   const handleResetPassword = async () => {
     if (!newPassword) {
-      toast.error(tValidation("PASSWORD_IS_REQUIRED") || "يرجى إدخال كلمة المرور");
+      toast.error(
+        tValidation("PASSWORD_IS_REQUIRED") || "يرجى إدخال كلمة المرور",
+      );
       return;
     }
 
     if (newPassword !== confirmPassword) {
-      toast.error(tValidation("PASSWORDS_DO_NOT_MATCH") || "كلمات المرور غير متطابقة");
-      return;
-    }
-
-    if (!clientId) {
-      toast.error(tValidation("CLIENT_ID_IS_REQUIRED") || "خطأ في البيانات");
+      toast.error(
+        tValidation("PASSWORDS_DO_NOT_MATCH") || "كلمات المرور غير متطابقة",
+      );
       return;
     }
 
     setIsLoading(true);
 
     try {
+      const currentEmail = channel === "EMAIL" ? email : mobile;
       const response = await resetPassword({
-        clientId,
+        email: currentEmail,
         password: newPassword,
       });
 
-      console.log('Reset Password Response:', response);
-
       // Check for success: either status is true OR message is SUCCESS
-      const isSuccess = response.status === true || response.message === "SUCCESS";
+      const isSuccess =
+        response.status === true || response.message === "SUCCESS";
 
       if (isSuccess) {
-        toast.success(t('messages.passwordResetSuccess'));
+        toast.success(t("messages.passwordResetSuccess"));
         onReset?.(email || mobile);
 
         // Close current dialog and open login after a short delay
@@ -212,7 +239,9 @@ export function ForgotPasswordDialog({
       }
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : "";
-      const translatedMessage = errorMessage ? tValidation(errorMessage as any) : tValidation("DEFAULT");
+      const translatedMessage = errorMessage
+        ? tValidation(errorMessage as any)
+        : tValidation("DEFAULT");
       toast.error(translatedMessage);
     } finally {
       setIsLoading(false);
@@ -230,17 +259,20 @@ export function ForgotPasswordDialog({
       case "request":
         return (
           <div className="grid gap-4 mt-2">
-            <ConfirmationChannelTabs value={channel} onValueChange={setChannel} />
+            <ConfirmationChannelTabs
+              value={channel}
+              onValueChange={setChannel}
+            />
 
             {channel === "EMAIL" ? (
               <div className="grid gap-2 mt-3">
                 <Input
-                  label={t('form.emailLabel')}
+                  label={t("form.emailLabel")}
                   id="reset-email"
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder={t('form.emailPlaceholder')}
+                  placeholder={t("form.emailPlaceholder")}
                 />
               </div>
             ) : (
@@ -248,11 +280,11 @@ export function ForgotPasswordDialog({
                 <CountryPhone
                   value={mobile}
                   onChange={setMobile}
-                  placeholder={t('form.mobilePlaceholder')}
+                  placeholder={t("form.mobilePlaceholder")}
                   defaultCountry="sa"
                   showValidation={true}
                   onValidationChange={setIsPhoneValid}
-                  label={t('form.mobileLabel')}
+                  label={t("form.mobileLabel")}
                 />
               </div>
             )}
@@ -279,27 +311,27 @@ export function ForgotPasswordDialog({
           <div className="grid gap-4">
             <div className="grid gap-2">
               <Input
-                label={t('form.newPasswordLabel')}
+                label={t("form.newPasswordLabel")}
                 id="new-password"
                 type="password"
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
-                placeholder={t('form.newPasswordPlaceholder')}
+                placeholder={t("form.newPasswordPlaceholder")}
               />
             </div>
 
             <div className="grid gap-2">
               <Input
-                label={t('form.confirmPasswordLabel')}
+                label={t("form.confirmPasswordLabel")}
                 id="confirm-password"
                 type="password"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                placeholder={t('form.confirmPasswordPlaceholder')}
+                placeholder={t("form.confirmPasswordPlaceholder")}
               />
               {confirmPassword && newPassword !== confirmPassword && (
                 <p className="text-sm text-destructive mt-1">
-                  {t('form.passwordsDoNotMatch')}
+                  {t("form.passwordsDoNotMatch")}
                 </p>
               )}
             </div>
@@ -318,12 +350,15 @@ export function ForgotPasswordDialog({
           <div className="w-full mt-3">
             <Button
               onClick={handleRequestOTP}
-              disabled={isLoading || (channel === "EMAIL" ? !email : (!mobile || !isPhoneValid))}
+              disabled={
+                isLoading ||
+                (channel === "EMAIL" ? !email : !mobile || !isPhoneValid)
+              }
               loading={isLoading}
               className="w-full"
               size="lg"
             >
-              {t('buttons.send')}
+              {t("buttons.send")}
             </Button>
           </div>
         );
@@ -338,25 +373,27 @@ export function ForgotPasswordDialog({
               className="w-full"
               size="lg"
             >
-              {t('buttons.confirm')}
+              {t("buttons.confirm")}
             </Button>
             <div className="flex items-center justify-center">
               {resendTimer > 0 ? (
-                <p className="text-sm  text-[#595959]">
-                  {t('messages.resendAfter')} {formatTime(resendTimer)}
+                <p className="text-sm  text-Grey700">
+                  {t("messages.resendAfter")} {formatTime(resendTimer)}
                 </p>
               ) : (
-                <p className="text-sm text-gray-600">
-                  {t('messages.didNotReceive')}{" "}
+                <div className="flex items-center justify-center gap-2">
+                  <p className="text-sm text-gray-600">
+                    {t("messages.didNotReceive")}
+                  </p>
                   <button
                     type="button"
                     onClick={handleResendOTP}
                     disabled={isLoading}
-                    className="text-[#1A1A1A] text-sm font-semibold  underline hover:text-[#110000]/80 disabled:opacity-50"
+                    className="text-[#1A1A1A] text-sm font-semibold underline hover:text-primary-hover/80 disabled:opacity-50"
                   >
-                    {t('buttons.resend')}
+                    {t("buttons.resend")}
                   </button>
-                </p>
+                </div>
               )}
             </div>
           </div>
@@ -367,12 +404,14 @@ export function ForgotPasswordDialog({
           <div className="w-full mt-4">
             <Button
               onClick={handleResetPassword}
-              disabled={isLoading || !newPassword || newPassword !== confirmPassword}
+              disabled={
+                isLoading || !newPassword || newPassword !== confirmPassword
+              }
               loading={isLoading}
               className="w-full"
               size="lg"
             >
-              {t('buttons.resetPassword')}
+              {t("buttons.resetPassword")}
             </Button>
           </div>
         );
@@ -386,24 +425,24 @@ export function ForgotPasswordDialog({
     if (isAccountActivation) {
       switch (step) {
         case "request":
-          return t('title.activationRequest');
+          return t("title.activationRequest");
         case "verify":
-          return t('title.activationVerify');
+          return t("title.activationVerify");
         case "reset":
-          return t('title.activationReset');
+          return t("title.activationReset");
         default:
-          return t('title.activationRequest');
+          return t("title.activationRequest");
       }
     } else {
       switch (step) {
         case "request":
-          return t('title.request');
+          return t("title.request");
         case "verify":
-          return t('title.verify');
+          return t("title.verify");
         case "reset":
-          return t('title.reset');
+          return t("title.reset");
         default:
-          return t('title.request');
+          return t("title.request");
       }
     }
   };
@@ -425,22 +464,22 @@ export function ForgotPasswordDialog({
     if (isAccountActivation) {
       switch (step) {
         case "request":
-          return t('description.activationRequest');
+          return t("description.activationRequest");
         case "verify":
-          return t('description.activationVerify');
+          return t("description.activationVerify");
         case "reset":
-          return t('description.activationReset');
+          return t("description.activationReset");
         default:
           return "";
       }
     } else {
       switch (step) {
         case "request":
-          return t('description.request');
+          return t("description.request");
         case "verify":
-          return t('description.verify');
+          return t("description.verify");
         case "reset":
-          return t('description.reset');
+          return t("description.reset");
         default:
           return "";
       }
@@ -457,11 +496,7 @@ export function ForgotPasswordDialog({
         description: getHeaderDescription(),
       }}
       content={renderStepContent()}
-      footer={
-        <div className="mt-5 w-full">
-          {renderFooter()}
-        </div>
-      }
+      footer={<div className="mt-5 w-full">{renderFooter()}</div>}
       size={getSize()}
     />
   );

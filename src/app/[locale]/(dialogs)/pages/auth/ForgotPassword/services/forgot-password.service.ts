@@ -2,7 +2,6 @@
  * Forgot Password Service - API calls
  */
 
-import { AUTH_URL } from "@/util/api";
 import type {
   ForgetPasswordPayload,
   ForgetPasswordResponse,
@@ -14,25 +13,28 @@ import type {
   ResetPasswordResponse,
 } from "../types/api.types";
 
-const FORGET_PASSWORD_API_URL = "/forget-password";
-const VERIFY_OTP_API_URL = "/reset-password-verification";
-const RESEND_OTP_API_URL = "/resend";
-const RESET_PASSWORD_API_URL = "/reset-password";
+const FORGET_PASSWORD_API_URL = "/clients/auth/forget-password";
+const VERIFY_OTP_API_URL = "/clients/auth/reset-password-verification";
+const RESEND_OTP_API_URL = "/clients/auth/resend";
+const RESET_PASSWORD_API_URL = "/clients/auth/reset-password";
 
 export const forgetPassword = async (
-  payload: ForgetPasswordPayload
+  payload: ForgetPasswordPayload,
 ): Promise<ForgetPasswordResponse> => {
-  const response = await fetch(AUTH_URL(FORGET_PASSWORD_API_URL), {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
+  const response = await fetch(
+    `https://rentalgate.net/api${FORGET_PASSWORD_API_URL}`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
     },
-    body: JSON.stringify(payload),
-  });
+  );
 
   const data: ForgetPasswordResponse = await response.json();
 
-  if (!response.ok || (data.status !== undefined && !data.status)) {
+  if (!data.status && data.status !== undefined) {
     throw new Error(data.message || "فشل في إرسال رمز التحقق");
   }
 
@@ -40,62 +42,70 @@ export const forgetPassword = async (
 };
 
 export const verifyOTP = async (
-  payload: VerifyOTPPayload
+  payload: VerifyOTPPayload,
 ): Promise<VerifyOTPResponse> => {
-  const response = await fetch(AUTH_URL(VERIFY_OTP_API_URL), {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
+  const response = await fetch(
+    `https://rentalgate.net/api${VERIFY_OTP_API_URL}`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email: payload.email, code: payload.code }),
     },
-    body: JSON.stringify(payload),
-  });
+  );
 
   const data: VerifyOTPResponse = await response.json();
 
-  if (!response.ok || (data.status !== undefined && !data.status)) {
-    throw new Error(data.message || "رمز التحقق غير صحيح");
+  if (!data.status || data.data === false) {
+    throw new Error(data.message || "INVALID_OTP_CODE");
   }
 
   return data;
 };
 
 export const resendOTP = async (
-  payload: ResendOTPPayload
+  payload: ResendOTPPayload,
 ): Promise<ResendOTPResponse> => {
-  const response = await fetch(AUTH_URL(RESEND_OTP_API_URL), {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
+  const response = await fetch(
+    `https://rentalgate.net/api${RESEND_OTP_API_URL}`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email: payload.email, channel: payload.channel }),
     },
-    body: JSON.stringify(payload),
-  });
+  );
 
   const data: ResendOTPResponse = await response.json();
 
-  if (!response.ok || !data.status) {
-    throw new Error(data.message || "فشل في إعادة إرسال رمز التحقق");
+  if (!data.status) {
+    throw new Error(data.message || "FAILED_TO_RESEND_OTP");
   }
 
   return data;
 };
 
 export const resetPassword = async (
-  payload: ResetPasswordPayload
+  payload: ResetPasswordPayload,
 ): Promise<ResetPasswordResponse> => {
-  const response = await fetch(AUTH_URL(RESET_PASSWORD_API_URL), {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
+  const response = await fetch(
+    `https://rentalgate.net/api${RESET_PASSWORD_API_URL}`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email: payload.email, password: payload.password }),
     },
-    body: JSON.stringify(payload),
-  });
+  );
 
   const data: ResetPasswordResponse = await response.json();
 
-  if (!response.ok || (data.status !== undefined && !data.status)) {
+  if (!data.status && data.status !== undefined) {
     throw new Error(data.message || "فشل في إعادة تعيين كلمة المرور");
   }
 
   return data;
 };
-

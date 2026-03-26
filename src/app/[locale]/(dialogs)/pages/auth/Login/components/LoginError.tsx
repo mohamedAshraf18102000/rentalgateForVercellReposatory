@@ -8,9 +8,8 @@ export const LoginError: React.FC<LoginErrorProps> = ({ error }) => {
   if (!error) return null;
 
   return (
-    <div className="text-sm text-red-500 bg-red-50 p-3 rounded-md">
+    <div className="text-sm text-StatusRed bg-red-100 p-3 rounded-md text-center font-bold mt-2">
       {error}
     </div>
   );
 };
-

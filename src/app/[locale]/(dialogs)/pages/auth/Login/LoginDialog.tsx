@@ -100,7 +100,7 @@ export function LoginDialog({ onSuccess, onClose, redirectTo }: LoginProps) {
         </div>
       }
       footer={
-        <div className="w-full space-y-4 mt-8">
+        <div className="w-full space-y-4">
           <LoginFooter
             isLoading={isLoading}
             isFormValid={isFormValid}

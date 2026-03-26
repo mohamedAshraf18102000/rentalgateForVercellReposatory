@@ -17,7 +17,7 @@ export interface ForgetPasswordResponse {
 }
 
 export interface VerifyOTPPayload {
-  clientId: number;
+  email: string;
   code: string;
 }
 
@@ -28,7 +28,7 @@ export interface VerifyOTPResponse {
 }
 
 export interface ResendOTPPayload {
-  clientId: number;
+  email: string;
   channel: "EMAIL" | "WHATSAPP";
 }
 
@@ -38,7 +38,7 @@ export interface ResendOTPResponse {
 }
 
 export interface ResetPasswordPayload {
-  clientId: number;
+  email: string;
   password: string;
 }
 

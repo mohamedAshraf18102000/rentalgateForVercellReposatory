@@ -3,12 +3,11 @@
  */
 
 export interface SignUpPayload {
-  firstName: string;
-  lastName: string;
+  clientName: string;
+  countryId: number;
+  mobile: string;
   password: string;
-  channel: "EMAIL" | "WHATSAPP";
-  mobile?: string;
-  email?: string;
+  email: string;
 }
 
 export interface SignUpApiResponse {
@@ -16,4 +15,3 @@ export interface SignUpApiResponse {
   status?: boolean;
   data?: any;
 }
-
