@@ -19,6 +19,7 @@ interface CountryPhoneProps {
     label?: string;
     inputClassName?: string;
     labelClassName?: string;
+    withoutValidations?: boolean;
 }
 
 export default function CountryPhone({
@@ -32,7 +33,8 @@ export default function CountryPhone({
     disabled = false,
     label,
     inputClassName = "",
-    labelClassName = ""
+    labelClassName = "",
+    withoutValidations = false
 }: CountryPhoneProps) {
     const [phone, setPhone] = useState<string>(value || "");
     const [touched, setTouched] = useState<boolean>(false);
@@ -47,6 +49,9 @@ export default function CountryPhone({
 
     // التحقق من صحة الرقم مع دعم جميع الدول ودقة عالية للهواتف المصرية
     const isValid = useMemo(() => {
+        // If validations are disabled, always return true
+        if (withoutValidations) return true;
+
         // التأكد من أن phone هو string
         const phoneStr = String(phone || "");
         if (!phoneStr || phoneStr.length === 0) return false;
@@ -120,8 +125,8 @@ export default function CountryPhone({
         setTouched(true);
     };
 
-    // Check if we should show error (only if touched and has content beyond country code)
-    const shouldShowError = showValidation && touched && !isValid && phone && phone.length > 4;
+    // Check if we should show error (only if touched and has content beyond country code and validation is not disabled)
+    const shouldShowError = !withoutValidations && showValidation && touched && !isValid && phone && phone.length > 4;
 
     const phoneInput = (
         <div className={className} onBlur={handleBlur}>

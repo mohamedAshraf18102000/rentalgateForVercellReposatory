@@ -1,39 +1,63 @@
+import React from "react";
 import { Input } from "@/app/(components)/ui/input";
 import { Checkbox } from "@/app/(components)/ui/checkbox";
+import CountryPhone from "@/app/(components)/template/phone/CountryPhone";
 import { useTranslations } from "next-intl";
 
 const FormLogin = ({
+  loginType,
   email,
+  mobile,
   password,
   rememberMe,
   setEmail,
+  setMobile,
   setPassword,
   setRememberMe,
   handleForgotPassword,
-  error,
 }: {
+  loginType: string;
   email: string;
+  mobile: string;
   password: string;
   rememberMe: boolean;
   setEmail: (e: string) => void;
+  setMobile: (e: string) => void;
   setPassword: (e: string) => void;
   setRememberMe: (e: boolean) => void;
   handleForgotPassword: () => void;
-  error?: string | null;
 }) => {
   const t = useTranslations("auth.login.form");
+  const [isPhoneValid, setIsPhoneValid] = React.useState(false);
   return (
     <div>
       {/* Input Fields */}
-      <div className="grid gap-2">
-        <Input
-          id="email"
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder={t("emailPlaceholder")}
-          label={t("emailLabel")}
-        />
+      <div className="grid gap-2 mt-4">
+        {loginType === "email" ? (
+          <>
+            <Input
+              id="email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder={t("emailPlaceholder")}
+              label={t("emailLabel")}
+            />
+          </>
+        ) : (
+          <>
+            <CountryPhone
+              value={mobile}
+              onChange={setMobile}
+              placeholder={t("mobilePlaceholder")}
+              defaultCountry="sa"
+              showValidation={true}
+              onValidationChange={setIsPhoneValid}
+              label={t("mobileLabel")}
+              withoutValidations={true}
+            />
+          </>
+        )}
       </div>
       <div className="grid gap-2 mt-4">
         <Input
@@ -71,11 +95,6 @@ const FormLogin = ({
           {t("forgotPassword")}
         </button>
       </div>
-      {error && (
-        <div className="w-full text-center mt-4">
-          <p className="text-sm text-StatusRed">{error}</p>
-        </div>
-      )}
     </div>
   );
 };

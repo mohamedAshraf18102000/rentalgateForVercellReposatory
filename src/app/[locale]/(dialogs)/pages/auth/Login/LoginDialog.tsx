@@ -1,20 +1,37 @@
 "use client";
 
-import { DialogWrapper } from "@/ui";
-import { useDialog } from "../../..";
-import type { LoginProps } from "./Login.types";
-import FormLogin from "./FormLogin";
-import { useLogin } from "./hooks/useLogin";
-import { LoginFooter } from "./components/LoginFooter";
+import { DialogWrapper, Button } from "@/ui";
 import { useTranslations } from "next-intl";
+import { useDialog } from "../../..";
+import { useLogin } from "./hooks/useLogin";
+import FormLogin from "./FormLogin";
+import { LoginTabs } from "./components/LoginTabs";
+import { LoginFooter } from "./components/LoginFooter";
+import { LoginError } from "./components/LoginError";
+import type { LoginProps } from "./Login.types";
 
-export function LoginDialog({ redirectTo, onSuccess, onClose }: LoginProps) {
+/**
+ * Login Dialog
+ *
+ * Handles the login flow including:
+ * - Email/Mobile tab switching
+ * - Authentication via useLogin hook
+ * - Success/Error messaging
+ * - Navigation to ForgotPassword and SignUp
+ * - Handling account states (inactive, deactivated)
+ */
+
+export function LoginDialog({ onSuccess, onClose, redirectTo }: LoginProps) {
   const { openDialog } = useDialog();
-  const t = useTranslations("auth");
+  const t = useTranslations("auth.login");
 
   const {
+    loginType,
+    setLoginType,
     email,
     setEmail,
+    mobile,
+    setMobile,
     password,
     setPassword,
     rememberMe,
@@ -28,84 +45,72 @@ export function LoginDialog({ redirectTo, onSuccess, onClose }: LoginProps) {
     onClose,
     redirectTo,
     onClientInactive: (email, mobile, channel) => {
-      // Close login dialog and open forgot password dialog for account activation
       onClose();
       openDialog("ForgotPassword", {
-        email: email || undefined,
-        mobile: mobile || undefined,
-        channel: channel || "EMAIL",
+        email,
+        mobile,
+        channel,
         isAccountActivation: true,
-        onReset: (emailOrMobile) => {
-          console.log("Account activation successful for:", emailOrMobile);
-        },
       });
     },
     onClientDeactivated: (email, mobile, channel) => {
-      // Close login dialog and open account deactivated dialog
       onClose();
       openDialog("AccountDeactivated", {
-        email: email || undefined,
-        mobile: mobile || undefined,
-        channel: channel || "EMAIL",
+        email,
+        mobile,
+        channel,
       });
     },
   });
-
-  const handleForgotPassword = () => {
-    onClose();
-    openDialog("ForgotPassword", {
-      onReset: (email: string) => {
-        console.log(t("passwordReset.resetFor"), email);
-      },
-    });
-  };
-
-  const handleSignUp = () => {
-    onClose();
-    openDialog("SignUp", {
-      onSignUp: (data: {
-        email?: string;
-        mobile?: string;
-        firstName: string;
-        lastName: string;
-        password: string;
-        channel: "EMAIL" | "WHATSAPP";
-      }) => {
-        console.log(t("accountCreated.created"), data);
-      },
-    });
-  };
 
   return (
     <DialogWrapper
       open={true}
       onOpenChange={(open) => !open && onClose()}
       size="md"
-      closeOnOutsideClick={false}
+      closeOnOutsideClick={!isLoading}
       header={{
-        mainTitle: t("login.title"),
+        mainTitle: t("title"),
       }}
       content={
-        <div className="grid gap-4 0">
+        <div className="grid gap-4">
+          <LoginTabs value={loginType} onValueChange={setLoginType} />
+
           <FormLogin
+            loginType={loginType}
             email={email}
+            mobile={mobile}
             password={password}
             rememberMe={rememberMe}
             setEmail={setEmail}
+            setMobile={setMobile}
             setPassword={setPassword}
             setRememberMe={setRememberMe}
-            handleForgotPassword={handleForgotPassword}
-            error={error}
+            handleForgotPassword={() => {
+              onClose();
+              openDialog("ForgotPassword", {
+                email,
+                mobile,
+                channel: loginType === "email" ? "EMAIL" : "WHATSAPP",
+              });
+            }}
           />
+
+          {error && <LoginError error={error} />}
         </div>
       }
       footer={
-        <LoginFooter
-          isLoading={isLoading}
-          isFormValid={isFormValid}
-          onLogin={handleLogin}
-          onSignUp={handleSignUp}
-        />
+        <div className="w-full space-y-4 mt-8">
+          <LoginFooter
+            isLoading={isLoading}
+            isFormValid={isFormValid}
+            onLogin={handleLogin}
+            onSignUp={() => {
+              onClose();
+              openDialog("SignUp", {});
+            }}
+          />
+        </div>
       }
     />
   );

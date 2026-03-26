@@ -1,61 +1,79 @@
 "use client";
 
+import { Button, DialogWrapper, Input } from "@/app/(components)";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
 import * as React from "react";
-import { Button, Input, DialogWrapper } from "@/ui";
-import type { ChangePasswordProps } from "./ChangePassword.types";
-import { useTranslations } from "next-intl";
-import { changePassword } from "@/lib/api/services/client.service";
 import { toast } from "sonner";
+import { updateClientPassword } from "@/services/auth/updatePassword/updatePassword.service";
+import { useTranslations } from "next-intl";
+import type { ChangePasswordProps } from "./ChangePassword.types";
 
-export function ChangePasswordDialog({
-  onClose,
-}: ChangePasswordProps) {
-  const t = useTranslations("common");
-  const tProfile = useTranslations("profile");
+/**
+ * Change Password Dialog
+ * 
+ * Secure password change using react-hook-form and Zod validation.
+ * Uses the /clients/auth/change-password endpoint.
+ */
+
+const passwordSchema = z
+  .object({
+    oldPassword: z.string().min(1, "كلمة المرور الحالية مطلوبة"),
+    newPassword: z
+      .string()
+      .min(8, "كلمة المرور الجديدة يجب أن تكون 8 أحرف على الأقل"),
+    rePassword: z.string().min(1, "تأكيد كلمة المرور مطلوبة"),
+  })
+  .refine((data) => data.newPassword === data.rePassword, {
+    message: "كلمات المرور غير متطابقة",
+    path: ["rePassword"],
+  });
+
+type PasswordFormValues = z.infer<typeof passwordSchema>;
+
+export function ChangePasswordDialog({ onClose }: ChangePasswordProps) {
+  const [apiError, setApiError] = React.useState<string | null>(null);
   const [isLoading, setIsLoading] = React.useState(false);
-  const [oldPassword, setOldPassword] = React.useState("");
-  const [newPassword, setNewPassword] = React.useState("");
-  const [confirmPassword, setConfirmPassword] = React.useState("");
+  const t = useTranslations("profile");
+  const tCommon = useTranslations("common");
 
-  const handleSave = async () => {
-    // Validation
-    if (!oldPassword || !newPassword || !confirmPassword) {
-      toast.error("يرجى ملء جميع الحقول");
-      return;
-    }
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm<PasswordFormValues>({
+    resolver: zodResolver(passwordSchema),
+    defaultValues: {
+      oldPassword: "",
+      newPassword: "",
+      rePassword: "",
+    },
+  });
 
-    if (newPassword !== confirmPassword) {
-      toast.error("كلمة المرور الجديدة وتأكيد كلمة المرور غير متطابقين");
-      return;
-    }
-
-    if (newPassword.length < 6) {
-      toast.error("كلمة المرور يجب أن تكون على الأقل 6 أحرف");
-      return;
-    }
-
+  const onSubmit = async (values: PasswordFormValues) => {
+    setApiError(null);
     setIsLoading(true);
     try {
-      await changePassword({
-        oldPassword,
-        newPassword,
-        confirmPassword,
+      await updateClientPassword({
+        oldPassword: values.oldPassword,
+        newPassword: values.newPassword,
       });
+
       toast.success("تم تغيير كلمة المرور بنجاح");
       onClose();
-      // Reset form
-      setOldPassword("");
-      setNewPassword("");
-      setConfirmPassword("");
-    } catch (error) {
-      console.error("Error changing password:", error);
-      toast.error(error instanceof Error ? error.message : "فشل في تغيير كلمة المرور");
+      reset();
+    } catch (error: any) {
+      let errorMessage = error.message || "حدث خطأ أثناء تغيير كلمة المرور";
+      if (errorMessage === "Invalid old password") {
+        errorMessage = "كلمه السر الحالية غير صحيحه";
+      }
+      setApiError(errorMessage);
     } finally {
       setIsLoading(false);
     }
   };
-
-  const isFormValid = oldPassword && newPassword && confirmPassword && newPassword === confirmPassword;
 
   return (
     <DialogWrapper
@@ -67,65 +85,78 @@ export function ChangePasswordDialog({
         mainTitle: t("changePassword"),
       }}
       content={
-        <div className="space-y-4">
-          {/* Current Password */}
+        <form
+          id="change-password-form"
+          onSubmit={handleSubmit(onSubmit)}
+          className="flex flex-col gap-3 mb-5 mt-2"
+        >
           <Input
+            {...register("oldPassword")}
+            className="text-base"
+            placeholder="أدخل كلمة المرور الحالية"
             label="كلمة المرور الحالية:"
             type="password"
-            value={oldPassword}
-            onChange={(e) => setOldPassword(e.target.value)}
-            placeholder="أدخل كلمة المرور الحالية"
+            labelClassName="text-base"
+            errorMessage={errors.oldPassword?.message}
             disabled={isLoading}
           />
 
-          {/* New Password */}
           <Input
+            {...register("newPassword")}
+            className="text-base"
+            placeholder="أدخل كلمة المرور الجديدة"
             label="كلمة المرور الجديدة:"
             type="password"
-            value={newPassword}
-            onChange={(e) => setNewPassword(e.target.value)}
-            placeholder="أدخل كلمة المرور الجديدة"
+            labelClassName="text-base"
+            errorMessage={errors.newPassword?.message}
             disabled={isLoading}
           />
 
-          {/* Confirm New Password */}
           <Input
+            {...register("rePassword")}
+            className="text-base"
+            placeholder="أدخل كلمة المرور الجديدة"
             label="تأكيد كلمة المرور الجديدة:"
             type="password"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            placeholder="أكد كلمة المرور الجديدة"
+            labelClassName="text-base"
+            errorMessage={errors.rePassword?.message}
             disabled={isLoading}
           />
 
-          {/* Password mismatch warning */}
-          {confirmPassword && newPassword !== confirmPassword && (
-            <p className="text-sm text-destructive">
-              كلمة المرور الجديدة وتأكيد كلمة المرور غير متطابقين
-            </p>
+          {apiError && (
+            <div className="text-center text-StatusRed text-sm bg-red-50 p-3 font-semibold rounded-lg border border-red-100">
+              {apiError}
+            </div>
           )}
-        </div>
+        </form>
       }
       footer={
-        <div className="grid grid-cols-12 gap-4 w-full mt-8">
-          <div className="col-span-4">
-            <Button variant="outline" className="w-full" size="lg" onClick={onClose} disabled={isLoading}>
-              {t("cancel")}
-            </Button>
-          </div>
-          <div className="col-span-8">
-            <Button
-              className="w-full bg-primary hover:bg-primary-hover text-white"
-              size="lg"
-              onClick={handleSave}
-              disabled={isLoading || !isFormValid}
-            >
-              {isLoading ? t("saving") : t("saveChanges")}
-            </Button>
-          </div>
+        <div className="grid grid-cols-12 gap-4 w-full mt-5">
+            <div className="col-span-4">
+                <Button
+                    variant="outline"
+                    className="w-full"
+                    size="lg"
+                    onClick={onClose}
+                    disabled={isLoading}
+                >
+                    {tCommon("cancel")}
+                </Button>
+            </div>
+            <div className="col-span-8">
+                <Button
+                    className="w-full"
+                    size="lg"
+                    type="submit"
+                    form="change-password-form"
+                    disabled={isLoading}
+                    loading={isLoading}
+                >
+                    {isLoading ? tCommon("saving") : tCommon("saveChanges")}
+                </Button>
+            </div>
         </div>
       }
     />
   );
 }
-
