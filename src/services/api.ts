@@ -17,7 +17,14 @@ export async function fetcher<T>(
   });
 
   if (!res.ok) {
-    throw new Error("API Error");
+    let errorMessage = "API Error";
+    try {
+      const errorData = await res.json();
+      errorMessage = errorData.message || errorData.error || "API Error";
+    } catch (e) {
+      // Not a JSON error or empty body
+    }
+    throw new Error(errorMessage);
   }
 
   return res.json();

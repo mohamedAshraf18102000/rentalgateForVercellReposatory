@@ -18,10 +18,14 @@ const UserProfileActions = () => {
     router.push(pathname, { locale: newLocale });
   };
 
+  const handleChangePassword = () => {
+    setOpenPasswordDialog(true);
+  };
+
   return (
     <>
       <ProfileActionCard
-        onClick={() => setOpenPasswordDialog(true)}
+        onClick={handleChangePassword}
         title="كلمة المرور"
         description="تغيير كلمة المرور الخاصة بك"
         icon="/profile/actionIcons/password.webp"

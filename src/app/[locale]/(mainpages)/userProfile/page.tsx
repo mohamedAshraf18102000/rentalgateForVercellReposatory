@@ -113,7 +113,7 @@ const page = () => {
         </div>
 
         <div className="w-[40%] rounded-2xl p-3">
-          <UserReferal referalCode="A123A" />
+          <UserReferal referalCode={storeUserData?.referralCode} />
           <div className="flex flex-col gap-4 mt-4">
             <UserProfileActions />
           </div>
