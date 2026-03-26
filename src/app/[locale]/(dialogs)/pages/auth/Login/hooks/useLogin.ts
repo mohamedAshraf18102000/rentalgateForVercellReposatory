@@ -48,7 +48,9 @@ export const useLogin = ({
   onClientInactive,
   onClientDeactivated,
 }: UseLoginProps): UseLoginReturn => {
-  const [loginType, setLoginType] = React.useState<"mobile" | "email">("mobile");
+  const [loginType, setLoginType] = React.useState<"mobile" | "email">(
+    "mobile",
+  );
   const [email, setEmail] = React.useState("");
   const [mobile, setMobile] = React.useState("");
   const [password, setPassword] = React.useState("");
