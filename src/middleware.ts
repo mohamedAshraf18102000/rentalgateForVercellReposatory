@@ -4,8 +4,11 @@ import { NextRequest, NextResponse } from 'next/server';
 
 // Define protected routes that require authentication
 const PROTECTED_ROUTES = [
-  '/profile', 
+  '/profile',
+  '/userProfile',
   '/booking',
+  '/myBookings',
+  '/wallet',
   // Add more protected routes here as needed
 ];
 
@@ -14,7 +17,7 @@ function isProtectedRoute(pathname: string): boolean {
   // Remove locale prefix (e.g., /ar/profile -> /profile, /en/profile -> /profile)
   // Handle both /locale/route and /route patterns
   const pathWithoutLocale = pathname.replace(/^\/(ar|en)(\/|$)/, '/') || '/';
-  
+
   return PROTECTED_ROUTES.some(route => {
     // Exact match or starts with the protected route
     const normalizedPath = pathWithoutLocale === '/' ? '/' : pathWithoutLocale;
@@ -39,7 +42,7 @@ const intlMiddleware = createMiddleware(routing);
 
 export default function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  
+
   // Skip middleware for API routes, static files, and Next.js internals
   if (
     pathname.startsWith('/api') ||
@@ -58,10 +61,12 @@ export default function middleware(request: NextRequest) {
       // Check if requireAuth query parameter already exists (to avoid infinite redirect)
       const url = request.nextUrl.clone();
       const hasRequireAuth = url.searchParams.has('requireAuth');
-      
+
       if (!hasRequireAuth) {
-        // Add requireAuth query parameter and redirect to the same page
-        // Also store the intended destination for redirect after login
+        // Redirect to home page with requireAuth query parameter
+        // This prevents the protected page from loading at all
+        const locale = getLocaleFromPath(pathname);
+        const url = new URL(`/${locale}`, request.url);
         url.searchParams.set('requireAuth', 'true');
         url.searchParams.set('redirect', pathname);
         return NextResponse.redirect(url);
@@ -73,7 +78,7 @@ export default function middleware(request: NextRequest) {
         url.searchParams.delete('requireAuth');
         const redirectPath = url.searchParams.get('redirect');
         url.searchParams.delete('redirect');
-        
+
         // If there's a redirect parameter, use it; otherwise use current pathname
         const finalPath = redirectPath || pathname;
         const finalUrl = url.searchParams.toString()

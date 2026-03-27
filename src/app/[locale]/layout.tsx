@@ -17,7 +17,6 @@ import SideToChat from "../(components)/sideToChat/SideToChat";
 import { CurrentLocationDialog } from "./(dialogs)/PickupDialog/CurrentLocationDialog";
 import ReactQueryProvider from "@/provider/ReactQueryProvider";
 
-
 const fontZain = Zain({
   subsets: ["arabic", "latin"],
   weight: ["400", "200", "300", "700"],
@@ -190,13 +189,12 @@ export default async function LocaleLayout({
       >
         <NextIntlClientProvider messages={messages}>
           <DialogProvider>
-
             <RouteGuard />
             <SharedDataLoader />
             <CurrentLocationDialog />
             <Header />
             <SideToChat />
-            <main className="max-sm:pt-[65px] ">
+            <main className="max-sm:pt-[65px] flex-1">
               <ReactQueryProvider>{children}</ReactQueryProvider>
             </main>
             <Footer />

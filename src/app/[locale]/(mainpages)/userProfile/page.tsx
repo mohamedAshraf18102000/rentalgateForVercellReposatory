@@ -9,9 +9,21 @@ import UserReferal from "./components/UserReferal";
 import UserProfileActions from "./components/actions/UsersProfileActions";
 import OtherDetailsAction from "./components/otherDetails/OtherDetailsAction";
 import { useAuth } from "@/app/(components)/navbar/hooks/useAuth";
+import { useRouter } from "@/i18n/routing";
+import { useEffect } from "react";
 
 const page = () => {
-  const { userData: storeUserData, isClient } = useAuth();
+  const { userData: storeUserData, authenticated, isClient, isLoading } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (isClient && !authenticated) {
+      router.replace("/");
+    }
+  }, [isClient, authenticated, router]);
+
+  if (isClient && !authenticated) return null;
+
   const userData = [
     {
       icon: "/profile/NameIcon.png",
@@ -30,7 +42,7 @@ const page = () => {
     },
   ];
 
-  if (!isClient) {
+  if (!isClient || isLoading) {
     return (
       <WrapperContainer exceedNav>
         <ProfileBreadCrump />
