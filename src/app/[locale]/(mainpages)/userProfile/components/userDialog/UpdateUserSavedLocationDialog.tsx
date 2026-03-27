@@ -9,6 +9,8 @@ import {
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import GoogleMapsLocation from "@/app/(components)/mapsLocation/GoogleMapsLocation";
+import { useQuery } from "@tanstack/react-query";
+import { getUserAddress } from "@/services/userProfile/getUserAddress.service";
 
 interface UpdatePasswordDialogProps {
   open: boolean;
@@ -20,6 +22,13 @@ const UpdateUserSavedLocationDialog = ({
   setOpen,
 }: UpdatePasswordDialogProps) => {
   const [showAddForm, setShowAddForm] = useState(false);
+  const { data: userAddresses } = useQuery({
+    queryKey: ["userAddresses"],
+    queryFn: () => getUserAddress(),
+    enabled: open,
+  });
+
+  console.log("userAddresses", userAddresses);
 
   useEffect(() => {
     if (!open) {
@@ -70,16 +79,14 @@ const UpdateUserSavedLocationDialog = ({
                 </Button>
               </div>
               <div className="flex flex-col gap-3 mb-5">
-                <ProfileActionCard
-                  bg_gray
-                  title="المنزل"
-                  description="123 شارع فاطمة الزهراء حي الملز الرياض"
-                />
-                <ProfileActionCard
-                  bg_gray
-                  title="فرع العمل رقم 1"
-                  description="123 شارع فاطمة الزهراء حي الملز الرياض"
-                />
+                {userAddresses?.map((address) => (
+                  <ProfileActionCard
+                    bg_gray
+                    key={address.addressId}
+                    title={address.addressName}
+                    description={address.address}
+                  />
+                ))}
               </div>
             </>
           ) : (

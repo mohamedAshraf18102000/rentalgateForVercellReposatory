@@ -6,6 +6,7 @@ import { create } from "zustand";
 import { getClientData } from "@/lib/api/services/client.service";
 import type { ClientData } from "@/lib/api/types/client.types";
 import { getUserData } from "@/util/auth";
+import { setCookie } from "@/util/cookies";
 
 interface ClientState {
   // Data
@@ -35,12 +36,18 @@ export const useClientStore = create<ClientState>((set) => ({
 
     try {
       const response = await getClientData();
+      // Update store
       set({
         clientData: response.data,
         isLoading: false,
         isError: false,
         error: null,
       });
+
+      // Update cookie to persist full data for next refresh
+      if (response.data) {
+        setCookie("userData", JSON.stringify(response.data), 30);
+      }
     } catch (error) {
       const errorMessage =
         error instanceof Error ? error.message : "حدث خطأ غير متوقع";
@@ -55,6 +62,9 @@ export const useClientStore = create<ClientState>((set) => ({
   // Set client data directly
   setClientData: (data: ClientData | null) => {
     set({ clientData: data });
+    if (data) {
+      setCookie("userData", JSON.stringify(data), 30);
+    }
   },
 
   // Clear client data

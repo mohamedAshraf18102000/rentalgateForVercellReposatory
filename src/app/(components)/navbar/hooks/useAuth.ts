@@ -24,8 +24,8 @@ export function useAuth() {
     setAuthenticated(auth);
     lastAuthStateRef.current = auth;
     
-    // Fetch client data if authenticated and not already fetched
-    if (auth && !clientData && !isDataLoading && !hasFetchedRef.current) {
+    // Fetch client data if authenticated and not already fetched in this session
+    if (auth && !isDataLoading && !hasFetchedRef.current) {
       hasFetchedRef.current = true;
       fetchClientData();
     } else if (!auth) {
@@ -52,8 +52,8 @@ export function useAuth() {
         setAuthenticated(auth);
         
         if (auth) {
-          // Fetch client data if not already loaded and not currently loading
-          if (!currentClientData && !currentIsLoading && !hasFetchedRef.current) {
+          // Always fetch full client data from server even if we have cookie data
+          if (!currentIsLoading && !hasFetchedRef.current) {
             hasFetchedRef.current = true;
             useClientStore.getState().fetchClientData();
           }
@@ -61,8 +61,8 @@ export function useAuth() {
           hasFetchedRef.current = false;
           useClientStore.getState().clearClientData();
         }
-      } else if (auth && !currentClientData && !currentIsLoading && !hasFetchedRef.current) {
-        // If auth is true but data is missing, fetch it
+      } else if (auth && !currentIsLoading && !hasFetchedRef.current) {
+        // If auth is true but hasn't been synced with server in this session, fetch it
         hasFetchedRef.current = true;
         useClientStore.getState().fetchClientData();
       }

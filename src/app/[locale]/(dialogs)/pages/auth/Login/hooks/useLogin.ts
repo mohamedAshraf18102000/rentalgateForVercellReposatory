@@ -84,6 +84,7 @@ export const useLogin = ({
         country: userData.country,
         city: userData.city,
         status: userData.status,
+        referralCode: userData.referralCode,
         bearerToken: userData.bearerToken,
       };
 

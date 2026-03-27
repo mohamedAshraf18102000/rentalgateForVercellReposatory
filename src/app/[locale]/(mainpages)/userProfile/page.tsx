@@ -11,9 +11,15 @@ import OtherDetailsAction from "./components/otherDetails/OtherDetailsAction";
 import { useAuth } from "@/app/(components)/navbar/hooks/useAuth";
 import { useRouter } from "@/i18n/routing";
 import { useEffect } from "react";
+import Points from "./components/Points";
 
 const page = () => {
-  const { userData: storeUserData, authenticated, isClient, isLoading } = useAuth();
+  const {
+    userData: storeUserData,
+    authenticated,
+    isClient,
+    isLoading,
+  } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
@@ -46,8 +52,8 @@ const page = () => {
     return (
       <WrapperContainer exceedNav>
         <ProfileBreadCrump />
-        <div className="w-full p-3 mt-6">
-          <div className="w-[60%] bg-white rounded-2xl shadow-lg p-6 flex justify-center items-center min-h-[300px]">
+        <div className="w-full p-3 mt-6 h-[500px]">
+          <div className=" bg-white rounded-2xl shadow-lg p-6 flex justify-center items-center min-h-[300px]">
             <div className="animate-pulse flex flex-col items-center">
               <div className="rounded-full bg-slate-200 h-20 w-20"></div>
               <div className="h-4 bg-slate-200 rounded w-48 mt-4"></div>
@@ -75,29 +81,10 @@ const page = () => {
                 />
               </div>
               <h2 className="text-lg font-bold">
-                أهلاً {storeUserData?.clientName || "عبد الرحمن"}
+                أهلاً {storeUserData?.clientName || ""}
               </h2>
             </div>
-            <div className="flex items-center justify-between p-3 rounded-2xl bg-[linear-gradient(180deg,#BE2326_0%,#581012_100%)] text-white">
-              <div className="w-[50px] h-[50px] relative rounded-2xl overflow-hidden">
-                <Image
-                  className="object-fill scale-120"
-                  src="/profile/coin.png"
-                  alt="userImage"
-                  fill
-                />
-              </div>
-
-              <div className="">
-                <p className="text-base">255 نقطة</p>
-                <p className="text-sm">20 نقطة سارية حتى 30-03-2025</p>
-              </div>
-
-              <div className="flex items-center text-lg">
-                <p>1,200.00</p>
-                <SaudiRiyal />
-              </div>
-            </div>
+            <Points />
           </div>
           <Separator className="my-2" />
           <div>

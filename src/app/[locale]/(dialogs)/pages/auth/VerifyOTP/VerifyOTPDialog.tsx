@@ -146,7 +146,7 @@ export function VerifyOTPDialog({
           </div>
 
           {error && (
-            <p className="text-red-500 text-center font-zain text-lg">
+            <p className="text-red-500 text-center font-zain text-sm">
               {error}
             </p>
           )}
