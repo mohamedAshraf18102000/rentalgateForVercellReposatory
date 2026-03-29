@@ -3,7 +3,7 @@
 // ============================================================================
 
 import { usePathname, useRouter } from "@/i18n/routing";
-import { useClientStore, useSharedStore } from "@/lib/api/stores";
+import { useClientStore } from "@/lib/api/stores";
 import { logout } from "@/util/auth";
 import { useLocale } from "next-intl";
 import * as React from "react";
@@ -20,10 +20,6 @@ export function useHeaderLogic() {
   const locale = useLocale();
   const { isClient, authenticated, userData, isLoading } = useAuth();
   const { clearClientData } = useClientStore();
-  const { sharedData } = useSharedStore();
-
-  // Get first contact from contacts array
-  const contact = sharedData?.contacts?.[0];
 
   // Handlers
   const handleLogout = React.useCallback(() => {
@@ -48,11 +44,11 @@ export function useHeaderLogic() {
   // Computed values - Get WhatsApp from contacts
   const whatsappUrl = React.useMemo(() => {
     // Use whatsapp, mobile, or phone from contact, fallback to default
-    const whatsappPhone = contact?.whatsapp || "";
+    const whatsappPhone = "";
     // Remove non-numeric characters (in case whatsapp contains URL)
     const cleanPhone = whatsappPhone;
     return getWhatsAppUrl(cleanPhone, WHATSAPP_MESSAGE);
-  }, [contact]);
+  }, []);
 
   const homePageActive = React.useMemo(
     () => isHomePage(pathname, locale),

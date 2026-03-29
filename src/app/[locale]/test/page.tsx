@@ -1,29 +1,41 @@
 "use client";
-import { useAuth } from "@/app/(components)/navbar/hooks/useAuth";
+
+import WrapperContainer from "@/app/(components)/wrapperContainer/WrapperContainer";
+import { getAuthToken } from "@/util/auth";
+import { useEffect, useState } from "react";
 
 const Page = () => {
-  const { userData, authenticated, isLoading } = useAuth();
+  const [userToken, setUserToken] = useState<string | null>(null);
 
-  if (isLoading) {
-    return <div className="p-8">Loading...</div>;
-  }
-
-  if (!authenticated || !userData) {
-    return (
-      <div className="p-8 text-red-500">
-        Not authenticated. Please log in to see the email.
-      </div>
-    );
-  }
+  useEffect(() => {
+    const token = getAuthToken();
+    setUserToken(token);
+  }, []);
 
   return (
-    <div className="p-8 space-y-4">
-      <h1 className="text-2xl font-bold">User Test Page</h1>
-      <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-        <p className="text-gray-600">Customer Email:</p>
-        <p className="text-xl font-semibold text-primary">{userData.email}</p>
-      </div>
-    </div>
+    <WrapperContainer
+      exceedNav
+      className="p-10 flex flex-col gap-8 max-w-4xl mx-auto"
+    >
+      <h1 className="text-3xl font-bold text-gray-800">Token Debug Page</h1>
+
+      <section className="flex flex-col gap-4">
+        <h2 className="text-xl font-semibold text-blue-600">
+          User Authentication Token
+        </h2>
+        <div className="p-6 bg-blue-50 rounded-xl break-all border border-blue-200 shadow-sm">
+          {userToken ? (
+            <code className="text-sm font-mono text-blue-900 selection:bg-blue-200">
+              {userToken}
+            </code>
+          ) : (
+            <span className="text-amber-600 italic">
+              No user token found in cookies (Not logged in)
+            </span>
+          )}
+        </div>
+      </section>
+    </WrapperContainer>
   );
 };
 

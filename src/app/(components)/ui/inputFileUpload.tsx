@@ -18,6 +18,8 @@ interface InputProps extends Omit<
   onFileRemove?: () => void;
   /** Pre-populate the component with an existing File (e.g. from a store) */
   initialFile?: File | null;
+  /** Pre-populate the component with an existing image URL (e.g. from a profile) */
+  initialPreviewUrl?: string | null;
   /** Called whenever the selected file changes (or is removed) */
   onFileChange?: (file: File | null) => void;
 }
@@ -53,6 +55,7 @@ function InputFileUpload({
   onFileRemove,
   onFileChange,
   initialFile,
+  initialPreviewUrl,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   value: _value, // file inputs can't be controlled via `value` — discard it
   ...props
@@ -64,16 +67,23 @@ function InputFileUpload({
   const inputRef = React.useRef<HTMLInputElement>(null);
   const mergedRef = useMergedRef(inputRef, forwardedRef);
 
-  // Hydrate from initialFile (e.g. when navigating back to this step)
+  // Hydrate from initialFile or initialPreviewUrl (e.g. from a store or API)
   React.useEffect(() => {
     if (initialFile && !file) {
       const url = URL.createObjectURL(initialFile);
       setFile(initialFile);
       setPreviewUrl(url);
+    } else if (initialPreviewUrl && !file) {
+      setPreviewUrl(initialPreviewUrl);
+      // Construct a mock File to represent the existing server image
+      setFile({
+        name: initialPreviewUrl.split("/").pop() || "الرخصة الحالية",
+        size: 0,
+      } as File);
     }
-    // Only run on mount / when initialFile identity changes
+    // Only run on mount / when initialFile or initialPreviewUrl identity changes
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [initialFile]);
+  }, [initialFile, initialPreviewUrl]);
 
   // Cleanup object URL on unmount or file change
   React.useEffect(() => {

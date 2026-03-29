@@ -6,12 +6,21 @@ import {
   FieldErrors,
   UseFormSetValue,
   UseFormTrigger,
+  useWatch,
 } from "react-hook-form";
-import { Globe, Mail, Phone } from "lucide-react";
+import { Globe, IdCard, Mail, Phone } from "lucide-react";
 import { useMutation } from "@tanstack/react-query";
 import { uploadImage } from "@/services/uploadImages/uploadImage.service";
 
-import { Input, PhoneInput } from "@/app/(components)";
+import {
+  Input,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+  Label,
+} from "@/app/(components)";
 import { DateTimePicker } from "@/app/(components)/ui/dateTime-picker";
 import { Separator } from "@/app/(components)/ui/separator";
 import { InputFileUpload } from "@/app/(components)/ui/inputFileUpload";
@@ -25,8 +34,10 @@ interface StepTwoProps {
   trigger: UseFormTrigger<ReservationFormValues>;
 }
 
-const StepTwo = ({ control, errors, setValue, trigger }: StepTwoProps) => {
+const StepTwo = ({ control, errors, setValue }: StepTwoProps) => {
   const { formData, setFormField } = useBookedCarDetailsStore();
+
+  const residenceTypeStr = useWatch({ control, name: "idNumber" });
 
   const {
     mutateAsync: doUploadImage,
@@ -41,52 +52,35 @@ const StepTwo = ({ control, errors, setValue, trigger }: StepTwoProps) => {
       <div className="grid grid-cols-2 gap-5">
         <div className="col-span-1">
           <Controller
-            name="fullName"
-            control={control}
-            render={({ field }) => (
-              <Input
-                {...field}
-                label="الاسم الكامل"
-                placeholder="أدخل الاسم الرباعي"
-                errorMessage={errors.fullName?.message}
-              />
-            )}
-          />
-        </div>
-        <div className="col-span-1">
-          <Controller
-            name="phoneNumber"
-            control={control}
-            render={({ field }) => (
-              <PhoneInput
-                value={field.value}
-                onChange={(val) => {
-                  field.onChange(val);
-                  if (errors.phoneNumber) {
-                    trigger("phoneNumber");
-                  }
-                }}
-                defaultCountry="sa"
-                inputClassName="w-full"
-                label="رقم الجوال"
-                labelIcon={<Phone className="size-4" />}
-                placeholder="05xxxxxxxx"
-                errorMessage={errors.phoneNumber?.message}
-              />
-            )}
-          />
-        </div>
-        <div className="col-span-1">
-          <Controller
             name="idNumber"
             control={control}
             render={({ field }) => (
-              <Input
-                {...field}
-                label="نوع الإقامة:"
-                placeholder="أدخل نوع الإقامة"
-                errorMessage={errors.idNumber?.message}
-              />
+              <div className="space-y-1.5 w-full">
+                <Label className="flex items-center gap-1.5 text-sm font-medium text-foreground">
+                  نوع الإقامة:
+                </Label>
+                <div className="mt-2">
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <SelectTrigger className="w-full h-10 px-3 py-2 bg-[#eceef2] border-input rounded-[8px] text-sm text-gray-500">
+                      <SelectValue placeholder="أدخل نوع الإقامة" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="0">مواطن</SelectItem>
+                      <SelectItem value="1">مقيم</SelectItem>
+                      <SelectItem value="2">زائر</SelectItem>
+                      <SelectItem value="3">مواطن خليجي</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                {errors.idNumber?.message && (
+                  <p className="text-xs text-red-500 mt-1">
+                    {String(errors.idNumber.message)}
+                  </p>
+                )}
+              </div>
             )}
           />
         </div>
@@ -105,22 +99,64 @@ const StepTwo = ({ control, errors, setValue, trigger }: StepTwoProps) => {
             )}
           />
         </div>
-        <div className="col-span-1">
-          <Controller
-            name="email"
-            control={control}
-            render={({ field }) => (
-              <Input
-                {...field}
-                startIcon={<Mail className="size-4" />}
-                label="البريد الإلكتروني"
-                placeholder="أدخل البريد الإلكتروني"
-                errorMessage={errors.email?.message}
-              />
-            )}
-          />
-        </div>
+        {residenceTypeStr !== "2" && (
+          <div className="col-span-1">
+            <Controller
+              name="personalId"
+              control={control}
+              render={({ field }) => (
+                <Input
+                  type="number"
+                  {...field}
+                  label="بطاقة تحقيق الشخصيه"
+                  startIcon={<IdCard className="size-4" />}
+                  placeholder="أدخل بطاقة تحقيق الشخصيه"
+                  errorMessage={errors.personalId?.message}
+                />
+              )}
+            />
+          </div>
+        )}
+
+        {(residenceTypeStr === "2" || residenceTypeStr === "3") && (
+          <div className="col-span-1">
+            <Controller
+              name="passportNumber"
+              control={control}
+              render={({ field }) => (
+                <Input
+                  type="number"
+                  {...field}
+                  label="رقم الباسبور"
+                  startIcon={<IdCard className="size-4" />}
+                  placeholder="أدخل رقم الباسبور"
+                  errorMessage={errors.passportNumber?.message}
+                />
+              )}
+            />
+          </div>
+        )}
+
+        {residenceTypeStr === "3" && (
+          <div className="col-span-1">
+            <Controller
+              name="borderNumber"
+              control={control}
+              render={({ field }) => (
+                <Input
+                  type="number"
+                  {...field}
+                  label="رقم الحدود"
+                  startIcon={<IdCard className="size-4" />}
+                  placeholder="أدخل رقم الحدود"
+                  errorMessage={errors.borderNumber?.message}
+                />
+              )}
+            />
+          </div>
+        )}
       </div>
+
       <Separator className="my-4" />
 
       <div>

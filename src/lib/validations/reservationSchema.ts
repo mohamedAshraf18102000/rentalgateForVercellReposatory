@@ -14,32 +14,68 @@ export const reservationSchema = z.object({
     .refine((val) => val !== "الموقع الحالي", {
       message: "الرجاء تحديد موقع التسليم ",
     }),
-  fromDate: z.any().refine((val) => val instanceof Date && !isNaN(val.getTime()), {
-    message: "يجب تحديد تاريخ الاستلام",
-  }),
-  toDate: z.any().refine((val) => val instanceof Date && !isNaN(val.getTime()), {
-    message: "يجب تحديد تاريخ التسليم",
-  }),
-
+  fromDate: z
+    .any()
+    .refine((val) => val instanceof Date && !isNaN(val.getTime()), {
+      message: "يجب تحديد تاريخ الاستلام",
+    }),
+  toDate: z
+    .any()
+    .refine((val) => val instanceof Date && !isNaN(val.getTime()), {
+      message: "يجب تحديد تاريخ التسليم",
+    }),
 
   // Step 2 - Tenant Details
-  fullName: z.string().min(3, "يجب إدخال الاسم الكامل"),
-  phoneNumber: z
-    .string()
-    .min(4, "رقم الجوال مطلوب")
-    .min(13, "رقم الجوال غير صحيح، يجب ألا يقل عن 9 أرقام"),
   idNumber: z.string().min(1, "يجب إدخال نوع الإقامة"),
   nationality: z.string().min(1, "يجب إدخال الجنسية"),
-  email: z.email("يجب إدخال بريد إلكتروني صحيح"),
+  personalId: z.string().optional(),
+  passportNumber: z.string().optional(),
+  borderNumber: z.string().optional(),
   licenseImage: z.string().min(1, "يجب إرفاق صورة الرخصة"),
-  licenceExpiryDate: z.any().refine((val) => val instanceof Date && !isNaN(val.getTime()), {
-    message: "يجب تحديد تاريخ انتهاء الرخصة",
-  }),
-
+  licenceExpiryDate: z
+    .any()
+    .refine((val) => val instanceof Date && !isNaN(val.getTime()), {
+      message: "يجب تحديد تاريخ انتهاء الرخصة",
+    }),
 
   // Step 3 - Additional Services (Can be optional/required)
   // For now, let's keep it simple
   services: z.array(z.string()).optional(),
+}).superRefine((data, ctx) => {
+  // 0: Citizen, 1: Resident, 2: Visitor, 3: Gulf Citizen
+
+  // Personal ID is required for 0, 1, and 3
+  if (data.idNumber !== "2") {
+    if (!data.personalId || data.personalId.trim() === "") {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "يجب إدخال بطاقة تحقيق الشخصية",
+        path: ["personalId"],
+      });
+    }
+  }
+
+  // Passport number is required for 2 and 3
+  if (data.idNumber === "2" || data.idNumber === "3") {
+    if (!data.passportNumber || data.passportNumber.trim() === "") {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "يجب إدخال رقم الباسبور",
+        path: ["passportNumber"],
+      });
+    }
+  }
+
+  // Border number is required only for 3
+  if (data.idNumber === "3") {
+    if (!data.borderNumber || data.borderNumber.trim() === "") {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "يجب إدخال رقم الحدود",
+        path: ["borderNumber"],
+      });
+    }
+  }
 });
 
 export type ReservationFormValues = z.infer<typeof reservationSchema>;

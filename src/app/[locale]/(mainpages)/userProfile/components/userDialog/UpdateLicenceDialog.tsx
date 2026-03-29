@@ -1,6 +1,7 @@
 import { Button, DialogWrapper } from "@/app/(components)";
 import { DatePicker } from "@/app/(components)/ui/datePicker";
 import { InputFileUpload } from "@/app/(components)/ui/inputFileUpload";
+import { useAuth } from "@/app/(components)/navbar/hooks/useAuth";
 
 interface UpdatePasswordDialogProps {
   open: boolean;
@@ -8,6 +9,8 @@ interface UpdatePasswordDialogProps {
 }
 
 const UpdateLicenceDialog = ({ open, setOpen }: UpdatePasswordDialogProps) => {
+  const { userData } = useAuth();
+
   return (
     <DialogWrapper
       className="overflow-hidden!"
@@ -32,8 +35,20 @@ const UpdateLicenceDialog = ({ open, setOpen }: UpdatePasswordDialogProps) => {
             className="text-base!"
             label="صورة الرخصة:"
             labelClassName="text-base!"
+            initialPreviewUrl={
+              userData?.licenseImage
+                ? `https://viganium.co/uploads/${userData.licenseImage}`
+                : null
+            }
           />
-          <DatePicker label="تاريخ إنتهاء الرخصة:" />
+          <DatePicker
+            label="تاريخ إنتهاء الرخصة:"
+            value={
+              userData?.licenseExpirationDate
+                ? new Date(userData.licenseExpirationDate)
+                : undefined
+            }
+          />
         </div>
       }
       footer={

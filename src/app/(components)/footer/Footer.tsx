@@ -1,7 +1,6 @@
 "use client";
 
 import { Link } from "@/i18n/routing";
-import { useSharedStore } from "@/lib/api/stores";
 import { Facebook, Instagram, Linkedin } from "lucide-react";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
@@ -42,8 +41,6 @@ function XTwitterIcon({ className }: { className?: string }) {
 
 export default function Footer() {
   const t = useTranslations("common");
-  const { sharedData } = useSharedStore();
-  const contact = sharedData?.contacts?.[0];
 
   return (
     <footer className="bg-[#1A1A1A] text-white mt-8 md:mt-[60px] pb-20 md:pb-0">
@@ -82,7 +79,6 @@ export default function Footer() {
           {/* Social Icons - Left in RTL: YouTube, Facebook, Twitter, Instagram, LinkedIn */}
           <div className="flex items-center gap-4 order-3 md:order-3">
             <a
-              href={(contact as { youtube?: string })?.youtube ?? "#"}
               target="_blank"
               rel="noopener noreferrer"
               aria-label={t("visitYouTube")}
@@ -90,50 +86,38 @@ export default function Footer() {
             >
               <YoutubeIcon className="w-6 h-6" />
             </a>
-            {contact?.facebook && (
-              <a
-                href={contact.facebook}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={t("visitFacebook")}
-                className="text-white hover:text-red-500 transition-colors"
-              >
-                <Facebook className="w-6 h-6" aria-hidden="true" />
-              </a>
-            )}
-            {contact?.twitter && (
-              <a
-                href={contact.twitter}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={t("visitTwitter")}
-                className="text-white hover:text-red-500 transition-colors flex items-center justify-center"
-              >
-                <XTwitterIcon className="w-5 h-5" />
-              </a>
-            )}
-            {contact?.instagram && (
-              <a
-                href={contact.instagram}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={t("visitInstagram")}
-                className="text-white hover:text-red-500 transition-colors"
-              >
-                <Instagram className="w-6 h-6" aria-hidden="true" />
-              </a>
-            )}
-            {contact?.linkedin && (
-              <a
-                href={contact.linkedin}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={t("visitLinkedIn")}
-                className="text-white hover:text-red-500 transition-colors"
-              >
-                <Linkedin className="w-6 h-6" aria-hidden="true" />
-              </a>
-            )}
+            <a
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={t("visitFacebook")}
+              className="text-white hover:text-red-500 transition-colors"
+            >
+              <Facebook className="w-6 h-6" aria-hidden="true" />
+            </a>
+            <a
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={t("visitTwitter")}
+              className="text-white hover:text-red-500 transition-colors flex items-center justify-center"
+            >
+              <XTwitterIcon className="w-5 h-5" />
+            </a>
+            <a
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={t("visitInstagram")}
+              className="text-white hover:text-red-500 transition-colors"
+            >
+              <Instagram className="w-6 h-6" aria-hidden="true" />
+            </a>
+            <a
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={t("visitLinkedIn")}
+              className="text-white hover:text-red-500 transition-colors"
+            >
+              <Linkedin className="w-6 h-6" aria-hidden="true" />
+            </a>
           </div>
         </div>
       </div>

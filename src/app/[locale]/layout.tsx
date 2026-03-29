@@ -1,11 +1,5 @@
 import { routing } from "@/i18n/routing";
-import {
-  DialogProvider,
-  Footer,
-  Header,
-  SharedDataLoader,
-  Toaster,
-} from "@/ui";
+import { DialogProvider, Footer, Header, Toaster } from "@/ui";
 import type { Metadata } from "next";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages, setRequestLocale } from "next-intl/server";
@@ -190,7 +184,6 @@ export default async function LocaleLayout({
         <NextIntlClientProvider messages={messages}>
           <DialogProvider>
             <RouteGuard />
-            <SharedDataLoader />
             <CurrentLocationDialog />
             <Header />
             <SideToChat />

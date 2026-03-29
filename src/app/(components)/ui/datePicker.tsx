@@ -11,9 +11,20 @@ import {
 } from "@/app/(components)/ui/popover";
 import { format } from "date-fns";
 
-export function DatePicker({ label }: { label: string }) {
+export function DatePicker({
+  label,
+  value,
+}: {
+  label: string;
+  value?: Date;
+}) {
   const [open, setOpen] = React.useState(false);
-  const [date, setDate] = React.useState<Date | undefined>(undefined);
+  const [date, setDate] = React.useState<Date | undefined>(value);
+
+  // Sync state if prop changes
+  React.useEffect(() => {
+    if (value) setDate(value);
+  }, [value]);
 
   return (
     <FieldGroup className="flex-row">

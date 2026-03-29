@@ -4,6 +4,7 @@ import { useUserPreferedFiltersStore } from "@/lib/stores/useUserPreferedFilters
 import { useBookedCarDetailsStore } from "@/lib/stores/useBookedCarDetailsStore";
 import { usePickupDialogStore } from "@/lib/stores/usePickupDialogStore";
 import { useEffect, forwardRef, useImperativeHandle } from "react";
+import { updateUserProfile } from "@/services/userProfile/updateUserProfile.service";
 
 import { useLocationStore } from "@/lib/stores/useLocationStore";
 import { useForm } from "react-hook-form";
@@ -16,6 +17,7 @@ import {
 import StepOne from "./StepOne";
 import StepTwo from "./StepTwo";
 import StepThree from "./StepThree";
+import { useClientStore } from "@/lib/api/stores";
 
 interface StepContentProps {
   activeStep: number;
@@ -34,6 +36,8 @@ const StepContent = forwardRef<StepContentRef, StepContentProps>(
     const { formData, setFormData } = useBookedCarDetailsStore();
     const { target, open } = usePickupDialogStore();
 
+    const { setClientData } = useClientStore();
+
     const {
       control,
       watch,
@@ -50,13 +54,13 @@ const StepContent = forwardRef<StepContentRef, StepContentProps>(
         fromDate: filters.fromDate ? new Date(filters.fromDate) : undefined,
         toDate: filters.toDate ? new Date(filters.toDate) : undefined,
         // Step 2 – hydrate from reservation form store
-        fullName: formData.fullName || "",
-        phoneNumber: formData.phoneNumber || "",
-        idNumber: formData.idNumber || "",
+        idNumber: formData.idNumber || "0",
         nationality: formData.nationality || "",
-        email: formData.email || "",
         licenseImage: formData.licenseImage || "",
         licenceExpiryDate: formData.licenceExpiryDate ?? undefined,
+        personalId: formData.personalId || "",
+        passportNumber: formData.passportNumber || "",
+        borderNumber: formData.borderNumber || "",
         services: formData.services || [],
       },
     });
@@ -107,16 +111,43 @@ const StepContent = forwardRef<StepContentRef, StepContentProps>(
             "fromDate",
             "toDate",
           ];
+          return await trigger(fieldsToValidate);
         } else if (displayStep === 2) {
           fieldsToValidate = [
-            "fullName",
-            "phoneNumber",
             "idNumber",
             "nationality",
-            "email",
             "licenseImage",
             "licenceExpiryDate",
+            "personalId",
+            "passportNumber",
+            "borderNumber",
           ];
+          const isValid = await trigger(fieldsToValidate);
+          if (!isValid) return false;
+
+          const values = getValues();
+          const residenceType = values.idNumber;
+
+          try {
+            const updatedData = await updateUserProfile({
+              licenseExpirationDate: values.licenceExpiryDate
+                ? (values.licenceExpiryDate as Date).toISOString().split("T")[0]
+                : "",
+              licenseImage: values.licenseImage,
+              nationality: values.nationality,
+              residenceType: Number(residenceType),
+              // Visitor (2) must have null personalId and borderNumber
+              personalId: residenceType === "2" ? null : (values.personalId || null),
+              passportNumber: (residenceType === "2" || residenceType === "3") ? (values.passportNumber || null) : null,
+              borderNumber: residenceType === "3" ? (values.borderNumber || null) : null,
+            });
+            // Update the global client store with returned profile data
+            setClientData(updatedData);
+            return true;
+          } catch (err) {
+            console.error("Update profile failed", err);
+            return false;
+          }
         }
         return await trigger(fieldsToValidate);
       },
@@ -161,13 +192,13 @@ const StepContent = forwardRef<StepContentRef, StepContentProps>(
           carReturnLocation: value.carReturnLocation,
           fromDate: value.fromDate,
           toDate: value.toDate,
-          fullName: value.fullName,
-          phoneNumber: value.phoneNumber,
           idNumber: value.idNumber,
           nationality: value.nationality,
-          email: value.email,
           licenseImage: value.licenseImage as string,
           licenceExpiryDate: value.licenceExpiryDate,
+          personalId: value.personalId,
+          passportNumber: value.passportNumber,
+          borderNumber: value.borderNumber,
           services: value.services as string[],
         });
 

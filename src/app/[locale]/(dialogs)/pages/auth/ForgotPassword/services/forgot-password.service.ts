@@ -97,7 +97,10 @@ export const resetPassword = async (
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ email: payload.email, password: payload.password }),
+      body: JSON.stringify({
+        email: payload.email,
+        password: payload.password,
+      }),
     },
   );
 

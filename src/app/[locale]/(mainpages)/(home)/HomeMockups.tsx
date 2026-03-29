@@ -2,17 +2,17 @@
 import Image from "next/image";
 import { useTranslations, useLocale } from "next-intl";
 import { cn } from "@/lib/utils";
-import { useSharedStore } from "@/lib/api/stores";
+// import { useSharedStore } from "@/lib/api/stores";
 
 function HomeMockups() {
   const t = useTranslations("home");
   const locale = useLocale();
   const isRTL = locale === "ar";
 
-  const { sharedData } = useSharedStore();
+  // const { sharedData } = useSharedStore();
 
-  const contact = sharedData?.contacts?.[0];
-  console.log(contact);
+  // const contact = sharedData?.contacts?.[0];
+  // console.log(contact);
 
   return (
     <div className="container-custom pt-[30px]">
@@ -55,7 +55,7 @@ function HomeMockups() {
 
               <div className="flex gap-3 justify-center">
                 <a
-                  href={contact?.androidLink || ""}
+                  href={""}
                   target="_blank"
                   className="block w-[140px] sm:w-[160px] h-[44px] sm:h-[52px] hover:scale-105 transition-transform"
                 >
@@ -68,7 +68,7 @@ function HomeMockups() {
                   />
                 </a>
                 <a
-                  href={contact?.iosLink || ""}
+                  href={""}
                   target="_blank"
                   className="block w-[140px] sm:w-[160px] h-[44px] sm:h-[52px] hover:scale-105 transition-transform"
                 >

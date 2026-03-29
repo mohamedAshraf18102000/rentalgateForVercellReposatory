@@ -19,6 +19,9 @@ export interface ReservationFormData {
   licenseImage: string;
   licenseImageFile: File | null;
   licenceExpiryDate: Date | null;
+  personalId: string;
+  passportNumber: string;
+  borderNumber: string;
 
   // Step 3
   services: string[];
@@ -37,6 +40,9 @@ const initialFormData: ReservationFormData = {
   licenseImage: "",
   licenseImageFile: null,
   licenceExpiryDate: null,
+  personalId: "",
+  passportNumber: "",
+  borderNumber: "",
   services: [],
 };
 
@@ -52,7 +58,7 @@ export interface BookedCarDetailsState {
 
   setFormField: <K extends keyof ReservationFormData>(
     key: K,
-    value: ReservationFormData[K]
+    value: ReservationFormData[K],
   ) => void;
   setFormData: (data: Partial<ReservationFormData>) => void;
   resetForm: () => void;
@@ -87,6 +93,6 @@ export const useBookedCarDetailsStore = create<BookedCarDetailsState>()(
         carDetails: state.carDetails,
         services: state.services,
       }), // Don't persist formData to avoid serializing File objects
-    }
-  )
+    },
+  ),
 );
