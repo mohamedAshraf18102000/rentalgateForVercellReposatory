@@ -13,6 +13,7 @@ import { useRouter } from "next/navigation";
 import { Car, Company } from "@/types/companyCars/carDetails";
 import CarCategoryBadge from "../../carCategoryBadge/CarCategoryBadge";
 import DOMPurify from "dompurify";
+import { PricingType } from "@/lib/utils/calculateRentalPrice";
 
 interface CarDetailsCardProps {
   car: Car;
@@ -37,7 +38,18 @@ interface CarDetailsCardProps {
   deliveryInMinutes?: number;
   freeKm?: number;
   carPrice?: number;
+  pricingType?: PricingType;
+  totalPrice?: number;
+  rentalDays?: number;
 }
+
+const pricingTypeLabels: Record<PricingType, string> = {
+  daily: "يومي",
+  weekly: "أسبوعي",
+  halfMonthly: "نصف شهري",
+  monthly: "شهري",
+  yearly: "سنوي",
+};
 
 const CarDetailsCard = ({
   car,
@@ -53,6 +65,9 @@ const CarDetailsCard = ({
   priceBeforeOffer,
   freeKm,
   carPrice,
+  pricingType = "daily",
+  totalPrice,
+  rentalDays,
 }: CarDetailsCardProps) => {
   const router = useRouter();
   const otherSpecsPurified = DOMPurify.sanitize(car.otherSpecs, {
@@ -131,14 +146,24 @@ const CarDetailsCard = ({
 
       <div className="w-[60%] p-6 bg-white">
         <div className="flex items-center justify-between w-full text-base">
-          <div className="flex items-center">
-            <span>السعر شامل الضريبة:</span>
-            <span className="text-Grey500 line-through mx-1">
-              {priceBeforeOffer}
-            </span>
-            <span className="font-bold">{carPrice ?? 200}</span>
-            <SaudiRiyal />
-            <span>/ يوم</span>
+          <div className="flex flex-col gap-1">
+            <div className="flex items-center">
+              <span>السعر شامل الضريبة:</span>
+              <span className="text-Grey500 line-through mx-1">
+                {priceBeforeOffer}
+              </span>
+              <span className="font-bold">{carPrice ?? 200}</span>
+              <SaudiRiyal />
+              <span className="mx-1">/ {pricingTypeLabels[pricingType]}</span>
+            </div>
+            {/* {rentalDays && rentalDays > 0 && totalPrice && (
+              <div className="text-sm font-medium text-Grey600">
+                <span>إجمالي السعر لـ {rentalDays} أيام: </span>
+                <span className="font-bold text-foreground">
+                  {totalPrice} <SaudiRiyal className="inline w-3 h-3" />
+                </span>
+              </div>
+            )} */}
           </div>
 
           <div className="flex items-center gap-2.5">

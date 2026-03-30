@@ -5,20 +5,16 @@ export const buildReservationRawData = (
 ) => {
   return {
     companyCarBranchId: bookedCarDetails?.carDetails?.ccbId,
-
-    pickupName: bookedCarDetails.formData.pickupName,
-    carReturnLocation: bookedCarDetails.formData.carReturnLocation,
-    startDate: (bookedCarDetails.formData.fromDate as Date).toISOString(),
-    endDate: (bookedCarDetails.formData.toDate as Date).toISOString(),
-    fullName: bookedCarDetails.formData.fullName,
-    phoneNumber: bookedCarDetails.formData.phoneNumber,
-    idNumber: bookedCarDetails.formData.idNumber,
-    nationality: bookedCarDetails.formData.nationality,
-    email: bookedCarDetails.formData.email,
-    licenceExpiryDate: (
-      bookedCarDetails.formData.licenceExpiryDate as Date
-    ).toISOString(),
-    licenseImage: bookedCarDetails.formData.licenseImage,
+    pickupLatitude: bookedCarDetails.formData.pickupLat,
+    pickupLongitude: bookedCarDetails.formData.pickupLong,
+    returnLatitude: bookedCarDetails.formData.returnLat,
+    returnLongitude: bookedCarDetails.formData.returnLong,
+    startDate: bookedCarDetails.formData.fromDate
+      ? (bookedCarDetails.formData.fromDate as Date).toISOString()
+      : "",
+    endDate: bookedCarDetails.formData.toDate
+      ? (bookedCarDetails.formData.toDate as Date).toISOString()
+      : "",
     services: bookedCarDetails.formData.services?.length
       ? bookedCarDetails.formData.services
       : [],

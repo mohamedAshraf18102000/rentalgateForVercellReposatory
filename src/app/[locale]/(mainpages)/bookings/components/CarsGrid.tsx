@@ -102,8 +102,13 @@ const CarsGrid = ({ cars, isLoading, rentalDays }: CarsGridProps) => {
   return (
     <div className="grid grid-cols-4 gap-8 mt-10">
       {cars.map((car) => {
-        const { pricePerDay, discountPercentage, pricingType, originalPrice } =
-          getCarPricing(car, rentalDays);
+        const {
+          pricePerDay,
+          discountPercentage,
+          pricingType,
+          originalPrice,
+          totalPrice,
+        } = getCarPricing(car, rentalDays);
 
         const discountBadge =
           discountPercentage > 0
@@ -125,6 +130,9 @@ const CarsGrid = ({ cars, isLoading, rentalDays }: CarsGridProps) => {
               carPrice={Math.round(pricePerDay)}
               priceBeforeOffer={Math.round(originalPrice)}
               freeKm={car.allowedKm ?? 0}
+              pricingType={pricingType}
+              totalPrice={Math.round(totalPrice)}
+              rentalDays={rentalDays}
             />
           </Link>
         );

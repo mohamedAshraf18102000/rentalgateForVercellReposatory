@@ -27,10 +27,14 @@ const TrainLocations = () => {
         setFilter("carReturnLocationId", station.stationId.toString());
         setFilter("carReturnLocation", station.arabicName);
         setFilter("carReturnLocationType", "trainStation");
+        setFilter("carReturnLocationLat", station.latitude);
+        setFilter("carReturnLocationLng", station.longitude);
       } else {
         setFilter("pickupId", station.stationId.toString());
         setFilter("pickupName", station.arabicName);
         setFilter("pickupType", "trainStation");
+        setFilter("pickupLat", station.latitude);
+        setFilter("pickupLng", station.longitude);
       }
     }
   };

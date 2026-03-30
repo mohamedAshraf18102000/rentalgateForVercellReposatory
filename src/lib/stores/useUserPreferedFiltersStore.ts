@@ -20,6 +20,8 @@ export interface BookingFilters {
   modelName: string;
   fromDate: string;
   toDate: string;
+  pickupLat?: number;
+  pickupLng?: number;
   carReturnLocation: string;
   carReturnLocationLat?: number;
   carReturnLocationLng?: number;

@@ -12,11 +12,26 @@ import { useEffect, useMemo } from "react";
 import { calculateDiscount } from "@/lib/utils/calculateDiscount";
 import { useBookedCarDetailsStore } from "@/lib/stores/useBookedCarDetailsStore";
 import CarDetailsCard from "@/app/(components)/customCards/CarsCard/CarDetailsCard";
+import { useUserPreferedFiltersStore } from "@/lib/stores/useUserPreferedFiltersStore";
+import {
+  calculateRentalPrice,
+  PricingType,
+} from "@/lib/utils/calculateRentalPrice";
+
+const pricingTypeLabels: Record<PricingType, string> = {
+  daily: "يومي",
+  weekly: "أسبوعي",
+  halfMonthly: "نصف شهري",
+  monthly: "شهري",
+  yearly: "سنوي",
+};
 
 const page = () => {
   const { id } = useParams();
   const setCarDetails = useBookedCarDetailsStore((s) => s.setCarDetails);
   const setServices = useBookedCarDetailsStore((s) => s.setServices);
+  const { filters } = useUserPreferedFiltersStore();
+
   const { data, isLoading } = useQuery({
     queryKey: ["company-cars-id", id],
     queryFn: () => getCompanyCarsByID(Number(id)),
@@ -39,21 +54,82 @@ const page = () => {
     }
   }, [services, setServices]);
 
+  const rentalDays = useMemo(() => {
+    if (filters.fromDate && filters.toDate) {
+      const from = new Date(filters.fromDate);
+      const to = new Date(filters.toDate);
+      const diffTime = Math.abs(to.getTime() - from.getTime());
+      return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    }
+    return 0;
+  }, [filters.fromDate, filters.toDate]);
+
+  const pricing = useMemo(() => {
+    const effectiveDays = rentalDays > 0 ? rentalDays : 1;
+    return calculateRentalPrice({
+      days: effectiveDays,
+      dailyPrice: data?.dailyPrice ?? 0,
+      weeklyPrice: data?.weeklyPrice ?? 0,
+      halfMonthlyPrice: data?.halfMonthPrice ?? 0,
+      monthlyPrice: data?.monthlyPrice ?? 0,
+      yearlyPrice: data?.yearlyPrice ?? 0,
+      offerDailyPrice: data?.offerDailyPrice ?? 0,
+      offerWeeklyPrice: data?.offerWeeklyPrice ?? 0,
+      offerHalfMonthlyPrice: data?.offerHalfMonthPrice ?? 0,
+      offerMonthlyPrice: data?.offerMonthlyPrice ?? 0,
+      offerYearlyPrice: data?.offerYearlyPrice ?? 0,
+    });
+  }, [data, rentalDays]);
+
+  const pricingType = pricing.pricingType;
+
+  const originalPriceForType = useMemo(() => {
+    switch (pricingType) {
+      case "daily":
+        return data?.dailyPrice ?? 0;
+      case "weekly":
+        return data?.weeklyPrice ?? 0;
+      case "halfMonthly":
+        return data?.halfMonthPrice ?? 0;
+      case "monthly":
+        return data?.monthlyPrice ?? 0;
+      case "yearly":
+        return data?.yearlyPrice ?? 0;
+      default:
+        return data?.dailyPrice ?? 0;
+    }
+  }, [pricingType, data]);
+
+  const offerPriceForType = useMemo(() => {
+    switch (pricingType) {
+      case "daily":
+        return data?.offerDailyPrice ?? 0;
+      case "weekly":
+        return data?.offerWeeklyPrice ?? 0;
+      case "halfMonthly":
+        return data?.offerHalfMonthPrice ?? 0;
+      case "monthly":
+        return data?.offerMonthlyPrice ?? 0;
+      case "yearly":
+        return data?.offerYearlyPrice ?? 0;
+      default:
+        return data?.offerDailyPrice ?? 0;
+    }
+  }, [pricingType, data]);
+
   const { discountPercentage } = useMemo(
     () =>
       calculateDiscount({
-        originalPrice: data?.dailyPrice ?? 0,
-        offerPrice: data?.offerDailyPrice ?? 0,
+        originalPrice: originalPriceForType,
+        offerPrice: offerPriceForType,
       }),
-    [data?.dailyPrice, data?.offerDailyPrice],
+    [originalPriceForType, offerPriceForType],
   );
 
-  const effectivePrice =
-    (data?.offerDailyPrice ?? 0) > 0
-      ? data!.offerDailyPrice
-      : (data?.dailyPrice ?? 0);
   const discountBadge =
-    discountPercentage > 0 ? `خصم ${discountPercentage}%` : "";
+    discountPercentage > 0
+      ? `خصم ${discountPercentage}% - ${pricingTypeLabels[pricingType]}`
+      : "";
 
   if (isLoading || !data)
     return (
@@ -82,10 +158,13 @@ const page = () => {
           extraKmPrice={data?.extraKmPrice}
           unlimitedKm={data?.unlimitedKm}
           ccbId={data.ccbId}
-          carPrice={Math.round(effectivePrice)}
-          priceBeforeOffer={Math.round(data.dailyPrice)}
+          carPrice={Math.round(pricing.pricePerDay)}
+          priceBeforeOffer={Math.round(originalPriceForType)}
           firstBadgeTitle={discountBadge}
           firstBadgeColor="green"
+          pricingType={pricingType}
+          totalPrice={Math.round(pricing.totalPrice)}
+          rentalDays={rentalDays}
         />
       </div>
 

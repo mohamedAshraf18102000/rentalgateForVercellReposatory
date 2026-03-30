@@ -6,7 +6,11 @@ import { CompanyService } from "@/types/companyCars/carServices";
 export interface ReservationFormData {
   // Step 1
   pickupName: string;
+  pickupLat: number | null;
+  pickupLong: number | null;
   carReturnLocation: string;
+  returnLat: number | null;
+  returnLong: number | null;
   fromDate: Date | null;
   toDate: Date | null;
 
@@ -29,7 +33,11 @@ export interface ReservationFormData {
 
 const initialFormData: ReservationFormData = {
   pickupName: "",
+  pickupLat: null,
+  pickupLong: null,
   carReturnLocation: "",
+  returnLat: null,
+  returnLong: null,
   fromDate: null,
   toDate: null,
   fullName: "",

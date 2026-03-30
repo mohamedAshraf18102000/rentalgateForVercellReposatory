@@ -32,8 +32,8 @@ const StepContent = forwardRef<StepContentRef, StepContentProps>(
   ({ activeStep }, ref) => {
     const { displayStep, animationClass } = useStepAnimation(activeStep);
     const { filters, setFilter } = useUserPreferedFiltersStore();
-    const { address } = useLocationStore();
-    const { formData, setFormData } = useBookedCarDetailsStore();
+    const { latitude, longitude, address } = useLocationStore();
+    const { carDetails, formData, setFormData } = useBookedCarDetailsStore();
     const { target, open } = usePickupDialogStore();
 
     const { setClientData } = useClientStore();
@@ -47,6 +47,8 @@ const StepContent = forwardRef<StepContentRef, StepContentProps>(
       trigger,
     } = useForm<ReservationFormValues>({
       resolver: zodResolver(reservationSchema),
+      mode: "onChange",
+      reValidateMode: "onChange",
       defaultValues: {
         pickupName: filters.pickupName || "",
         carReturnLocation:
@@ -62,6 +64,22 @@ const StepContent = forwardRef<StepContentRef, StepContentProps>(
         passportNumber: formData.passportNumber || "",
         borderNumber: formData.borderNumber || "",
         services: formData.services || [],
+        pickupLat:
+          filters.pickupType === "currentLocation"
+            ? latitude
+            : filters.pickupLat || (carDetails?.latitude ?? undefined),
+        pickupLong:
+          filters.pickupType === "currentLocation"
+            ? longitude
+            : filters.pickupLng || (carDetails?.longitude ?? undefined),
+        returnLat:
+          filters.carReturnLocationType === "currentLocation"
+            ? latitude
+            : filters.carReturnLocationLat ?? undefined,
+        returnLong:
+          filters.carReturnLocationType === "currentLocation"
+            ? longitude
+            : filters.carReturnLocationLng ?? undefined,
       },
     });
 
@@ -137,9 +155,14 @@ const StepContent = forwardRef<StepContentRef, StepContentProps>(
               nationality: values.nationality,
               residenceType: Number(residenceType),
               // Visitor (2) must have null personalId and borderNumber
-              personalId: residenceType === "2" ? null : (values.personalId || null),
-              passportNumber: (residenceType === "2" || residenceType === "3") ? (values.passportNumber || null) : null,
-              borderNumber: residenceType === "3" ? (values.borderNumber || null) : null,
+              personalId:
+                residenceType === "2" ? null : values.personalId || null,
+              passportNumber:
+                residenceType === "2" || residenceType === "3"
+                  ? values.passportNumber || null
+                  : null,
+              borderNumber:
+                residenceType === "3" ? values.borderNumber || null : null,
             });
             // Update the global client store with returned profile data
             setClientData(updatedData);
@@ -160,6 +183,8 @@ const StepContent = forwardRef<StepContentRef, StepContentProps>(
         if (!open || target !== "return") {
           if (filters.pickupName === "الموقع الحالي" || !filters.pickupName) {
             setValue("pickupName", address);
+            setValue("pickupLat", latitude);
+            setValue("pickupLong", longitude);
             setFilter("pickupName", address);
           }
         }
@@ -170,12 +195,16 @@ const StepContent = forwardRef<StepContentRef, StepContentProps>(
             filters.carReturnLocation === ""
           ) {
             setValue("carReturnLocation", address);
+            setValue("returnLat", latitude);
+            setValue("returnLong", longitude);
             setFilter("carReturnLocation", address);
           }
         }
       }
     }, [
       address,
+      latitude,
+      longitude,
       filters.pickupName,
       filters.carReturnLocation,
       setValue,
@@ -186,6 +215,27 @@ const StepContent = forwardRef<StepContentRef, StepContentProps>(
 
     // Keep filters store in sync with form (locations & dates only)
     useEffect(() => {
+      // Initial sync of form values to the data store
+      const initialValues = getValues();
+      setFormData({
+        pickupName: initialValues.pickupName,
+        carReturnLocation: initialValues.carReturnLocation,
+        fromDate: initialValues.fromDate,
+        toDate: initialValues.toDate,
+        idNumber: initialValues.idNumber,
+        nationality: initialValues.nationality,
+        licenseImage: initialValues.licenseImage as string,
+        licenceExpiryDate: initialValues.licenceExpiryDate,
+        personalId: initialValues.personalId,
+        passportNumber: initialValues.passportNumber,
+        borderNumber: initialValues.borderNumber,
+        services: initialValues.services as string[],
+        pickupLat: initialValues.pickupLat as number | null,
+        pickupLong: initialValues.pickupLong as number | null,
+        returnLat: initialValues.returnLat as number | null,
+        returnLong: initialValues.returnLong as number | null,
+      });
+
       const subscription = watch((value) => {
         setFormData({
           pickupName: value.pickupName,
@@ -200,6 +250,10 @@ const StepContent = forwardRef<StepContentRef, StepContentProps>(
           passportNumber: value.passportNumber,
           borderNumber: value.borderNumber,
           services: value.services as string[],
+          pickupLat: value.pickupLat as number | null,
+          pickupLong: value.pickupLong as number | null,
+          returnLat: value.returnLat as number | null,
+          returnLong: value.returnLong as number | null,
         });
 
         setFilter(
@@ -219,7 +273,7 @@ const StepContent = forwardRef<StepContentRef, StepContentProps>(
           setFilter("carReturnLocation", value.carReturnLocation);
       });
       return () => subscription.unsubscribe();
-    }, [watch, setFilter, setFormData]);
+    }, [watch, setFilter, setFormData, latitude, longitude]);
 
     const stepData = [
       {

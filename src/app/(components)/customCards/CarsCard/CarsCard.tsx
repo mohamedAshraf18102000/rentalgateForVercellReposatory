@@ -12,6 +12,8 @@ import ExeclusiveOfferIcon from "../../../../constants/icons/ExeclusiveOfferIcon
 import FreeKmIcon from "../../../../constants/icons/FreeKmIcon";
 import StarIcon from "../../../../constants/icons/StarIcon";
 
+import { PricingType } from "@/lib/utils/calculateRentalPrice";
+
 interface carsCard {
   advancedCard?: boolean;
   extraBadgeTitle?: string;
@@ -29,7 +31,18 @@ interface carsCard {
   deliveryInMinutes?: number;
   freeKm?: number;
   carPrice?: number;
+  pricingType?: PricingType;
+  totalPrice?: number;
+  rentalDays?: number;
 }
+
+const pricingTypeLabels: Record<PricingType, string> = {
+  daily: "يومي",
+  weekly: "أسبوعي",
+  halfMonthly: "نصف شهري",
+  monthly: "شهري",
+  yearly: "سنوي",
+};
 
 const CarsCard = ({
   advancedCard,
@@ -46,6 +59,9 @@ const CarsCard = ({
   firstBadgeTitle,
   firstBadgeColor,
   priceBeforeOffer,
+  pricingType = "daily",
+  totalPrice,
+  rentalDays,
 }: carsCard) => {
   return (
     <article>
@@ -130,19 +146,31 @@ const CarsCard = ({
             </div>
 
             {/* Price */}
-            <div className="flex items-center mt-3">
-              <span className="line-through text-sm text-Grey500">
-                {priceBeforeOffer}
-              </span>
+            <div className="flex flex-col mt-3">
+              <div className="flex items-center">
+                <span className="line-through text-sm text-Grey500">
+                  {priceBeforeOffer}
+                </span>
 
-              <data value="10.56" className="text-base mx-2 font-bold">
-                {carPrice}
-              </data>
+                <data value="10.56" className="text-base mx-2 font-bold">
+                  {carPrice}
+                </data>
 
-              <p className="flex items-center text-base">
-                <SaudiRiyal className="w-5 h-5" />
-                <span>/ يوم</span>
-              </p>
+                <p className="flex items-center text-base">
+                  <SaudiRiyal className="w-5 h-5" />
+                  <span className="mx-1">
+                    / {pricingTypeLabels[pricingType]}
+                  </span>
+                </p>
+              </div>
+              {/* {rentalDays && rentalDays > 0 && totalPrice && (
+                <div className="text-xs font-medium text-Grey600 mt-1">
+                  <span>إجمالي السعر لـ {rentalDays} أيام: </span>
+                  <span className="font-bold text-foreground">
+                    {totalPrice} <SaudiRiyal className="inline w-3 h-3" />
+                  </span>
+                </div>
+              )} */}
             </div>
             {extraContent && (
               <div className="w-full h-full">{extraContent}</div>

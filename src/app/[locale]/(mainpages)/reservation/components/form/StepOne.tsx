@@ -34,8 +34,8 @@ const StepOne = ({ control, errors, watch, setValue }: StepOneProps) => {
     openDialog("currentLocation", "return", () => {
       const { filters: updatedFilters } =
         useUserPreferedFiltersStore.getState();
-      const { address } = useLocationStore.getState();
-
+      const { latitude, longitude, address } = useLocationStore.getState();
+      
       const locationName =
         (updatedFilters.carReturnLocationType === "currentLocation" ||
           !updatedFilters.carReturnLocation ||
@@ -45,6 +45,18 @@ const StepOne = ({ control, errors, watch, setValue }: StepOneProps) => {
           : updatedFilters.carReturnLocation || "الموقع الحالي";
 
       setValue("carReturnLocation", locationName, { shouldValidate: true });
+      setValue(
+        "returnLat",
+        updatedFilters.carReturnLocationType === "currentLocation"
+          ? latitude
+          : updatedFilters.carReturnLocationLat || null,
+      );
+      setValue(
+        "returnLong",
+        updatedFilters.carReturnLocationType === "currentLocation"
+          ? longitude
+          : updatedFilters.carReturnLocationLng || null,
+      );
     });
   };
 

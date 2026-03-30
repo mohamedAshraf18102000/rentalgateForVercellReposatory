@@ -14,6 +14,10 @@ export const reservationSchema = z.object({
     .refine((val) => val !== "الموقع الحالي", {
       message: "الرجاء تحديد موقع التسليم ",
     }),
+  pickupLat: z.number().optional().nullable(),
+  pickupLong: z.number().optional().nullable(),
+  returnLat: z.number().optional().nullable(),
+  returnLong: z.number().optional().nullable(),
   fromDate: z
     .any()
     .refine((val) => val instanceof Date && !isNaN(val.getTime()), {
