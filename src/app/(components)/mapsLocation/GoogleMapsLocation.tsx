@@ -30,11 +30,21 @@ const GoogleMapsLocation = ({
 }: {
   zoomPercent?: number;
   storeless?: boolean;
-  onLocationChange?: (lat: number, lng: number, address: string) => void;
+  onLocationChange?: (
+    lat: number,
+    lng: number,
+    address: string,
+    isManual?: boolean,
+  ) => void;
   initialLat?: number;
   initialLng?: number;
 }) => {
-  const { latitude, longitude, setLocation } = useLocationStore();
+  const {
+    latitude,
+    longitude,
+    address: storeAddress,
+    setLocation,
+  } = useLocationStore();
   const [currentLocation, setCurrentLocation] = useState({
     lat: initialLat || latitude || defaultLocation.lat,
     lng: initialLng || longitude || defaultLocation.lng,
@@ -45,6 +55,7 @@ const GoogleMapsLocation = ({
   const autocompleteRef = useRef<any>(null);
   const mapRef = useRef<google.maps.Map | null>(null);
   const onLocationChangeRef = useRef(onLocationChange);
+  const hasCalledInitialChange = useRef(false);
 
   useEffect(() => {
     onLocationChangeRef.current = onLocationChange;
@@ -55,44 +66,66 @@ const GoogleMapsLocation = ({
     libraries,
   });
 
-  const handleSetLocation = (lat: number, lng: number, address: string | null) => {
+  const handleSetLocation = (
+    lat: number,
+    lng: number,
+    address: string | null,
+    isManual: boolean = false,
+  ) => {
     if (!storeless) {
       setLocation(lat, lng, address);
     }
     if (onLocationChangeRef.current) {
-      onLocationChangeRef.current(lat, lng, address || "");
+      onLocationChangeRef.current(lat, lng, address || "", isManual);
     }
   };
 
   useEffect(() => {
-    if (initialLat && initialLng) {
-      setCurrentLocation({ lat: initialLat, lng: initialLng });
-      setLocationLoading(false);
-    } else if (latitude && longitude) {
-      setCurrentLocation({ lat: latitude, lng: longitude });
-      setLocationLoading(false);
-    } else if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        async (position) => {
-          const newPos = {
-            lat: position.coords.latitude,
-            lng: position.coords.longitude,
-          };
-          setCurrentLocation(newPos);
-          const address = await reverseGeocode(newPos.lat, newPos.lng);
-          handleSetLocation(newPos.lat, newPos.lng, address);
-          setLocationLoading(false);
-        },
-        (error) => {
-          console.error(error);
-          setLocationLoading(false);
-        },
-      );
-    } else {
-      setLocationLoading(false);
-    }
+    const initializeLocation = async () => {
+      if (initialLat && initialLng) {
+        const pos = { lat: initialLat, lng: initialLng };
+        setCurrentLocation(pos);
+        setLocationLoading(false);
+        if (!hasCalledInitialChange.current) {
+          hasCalledInitialChange.current = true;
+          const address = await reverseGeocode(pos.lat, pos.lng);
+          handleSetLocation(pos.lat, pos.lng, address, false);
+        }
+      } else if (latitude && longitude) {
+        const pos = { lat: latitude, lng: longitude };
+        setCurrentLocation(pos);
+        setLocationLoading(false);
+        if (!hasCalledInitialChange.current) {
+          hasCalledInitialChange.current = true;
+          const address =
+            storeAddress || (await reverseGeocode(pos.lat, pos.lng));
+          handleSetLocation(pos.lat, pos.lng, address, false);
+        }
+      } else if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          async (position) => {
+            const newPos = {
+              lat: position.coords.latitude,
+              lng: position.coords.longitude,
+            };
+            setCurrentLocation(newPos);
+            const address = await reverseGeocode(newPos.lat, newPos.lng);
+            handleSetLocation(newPos.lat, newPos.lng, address, false);
+            setLocationLoading(false);
+          },
+          (error) => {
+            console.error(error);
+            setLocationLoading(false);
+          },
+        );
+      } else {
+        setLocationLoading(false);
+      }
+    };
+
+    initializeLocation();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [latitude, longitude, setLocation, storeless, initialLat, initialLng]);
+  }, [latitude, longitude, initialLat, initialLng, storeAddress]);
 
   useEffect(() => {
     if (mapRef.current) {
@@ -106,7 +139,12 @@ const GoogleMapsLocation = ({
       const location = place.geometry.location;
       const newPos = { lat: location.lat(), lng: location.lng() };
       setCurrentLocation(newPos);
-      handleSetLocation(newPos.lat, newPos.lng, place.formatted_address || "");
+      handleSetLocation(
+        newPos.lat,
+        newPos.lng,
+        place.formatted_address || "",
+        true,
+      );
       console.log(newPos);
     }
   };
@@ -122,7 +160,7 @@ const GoogleMapsLocation = ({
         setCurrentLocation(newPos);
         mapRef.current?.panTo(newPos);
         const address = await reverseGeocode(newPos.lat, newPos.lng);
-        handleSetLocation(newPos.lat, newPos.lng, address);
+        handleSetLocation(newPos.lat, newPos.lng, address, true);
       },
       (error) => {
         console.error("Error getting location:", error);
@@ -133,7 +171,7 @@ const GoogleMapsLocation = ({
   if (!isLoaded || locationLoading) {
     return (
       <div className="w-full h-full relative">
-        <div className="flex items-center justify-center h-[450px]">
+        <div className="flex items-center justify-center h-full min-h-[300px]">
           <Skeleton className="w-full h-full" />
         </div>
       </div>
@@ -141,7 +179,7 @@ const GoogleMapsLocation = ({
   }
 
   return (
-    <div className="w-full h-full relative">
+    <div className="w-full h-full flex flex-col relative">
       <div className="z-50">
         <Autocomplete
           onLoad={(autocomplete) => (autocompleteRef.current = autocomplete)}
@@ -156,13 +194,14 @@ const GoogleMapsLocation = ({
           />
         </Autocomplete>
       </div>
-      <div className="relative w-full rounded-2xl overflow-hidden h-[450px]">
+      <div className="relative w-full rounded-2xl overflow-hidden flex-1 min-h-[250px]">
         <button
           type="button"
           onClick={handleLocateUser}
-          className="rounded-full z-9999 absolute bottom-[19px] right-2.5 "
+          className="rounded-full z-9999 absolute top-4 right-4 bg-white/80 p-2 shadow-md hover:bg-white transition-all active:scale-95"
+          title="الموقع الحالي"
         >
-          <LocateFixed className="w-10 h-10 text-blue-600" />
+          <LocateFixed className="w-6 h-6 text-blue-600" />
         </button>
         <GoogleMap
           mapContainerStyle={mapStyle}
@@ -183,7 +222,7 @@ const GoogleMapsLocation = ({
             };
             setCurrentLocation(newPos);
             const address = await reverseGeocode(newPos.lat, newPos.lng);
-            handleSetLocation(newPos.lat, newPos.lng, address);
+            handleSetLocation(newPos.lat, newPos.lng, address, true);
           }}
         >
           <Marker position={currentLocation} />

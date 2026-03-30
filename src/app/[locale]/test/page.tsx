@@ -3,6 +3,7 @@
 import WrapperContainer from "@/app/(components)/wrapperContainer/WrapperContainer";
 import { getAuthToken } from "@/util/auth";
 import { useEffect, useState } from "react";
+import ReservationDrawer from "../(mainpages)/reservation/components/reservationDrawer/ReservationDrawer";
 
 const Page = () => {
   const [userToken, setUserToken] = useState<string | null>(null);
@@ -17,6 +18,7 @@ const Page = () => {
       exceedNav
       className="p-10 flex flex-col gap-8 max-w-4xl mx-auto"
     >
+      <ReservationDrawer open={true} onOpenChange={() => {}} />
       <h1 className="text-3xl font-bold text-gray-800">Token Debug Page</h1>
 
       <section className="flex flex-col gap-4">

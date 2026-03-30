@@ -22,6 +22,7 @@ import {
   PricingType,
 } from "@/lib/utils/calculateRentalPrice";
 import { calculateDiscount } from "@/lib/utils/calculateDiscount";
+import ReservationDrawer from "../components/reservationDrawer/ReservationDrawer";
 
 const pricingTypeLabels: Record<PricingType, string> = {
   daily: "يومي",
