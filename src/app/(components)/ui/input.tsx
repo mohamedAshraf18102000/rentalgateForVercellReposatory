@@ -47,21 +47,25 @@ interface InputProps extends Omit<
   errorMessage?: string;
 }
 
-function Input({
-  className,
-  type,
-  size = "md",
-  label,
-  startIcon,
-  endIcon,
-  endButton,
-  startButton,
-  wrapperClassName,
-  labelClassName,
-  labelIcon,
-  errorMessage,
-  ...props
-}: InputProps) {
+const Input = React.forwardRef<HTMLInputElement, InputProps>(
+  (
+    {
+      className,
+      type,
+      size = "md",
+      label,
+      startIcon,
+      endIcon,
+      endButton,
+      startButton,
+      wrapperClassName,
+      labelClassName,
+      labelIcon,
+      errorMessage,
+      ...props
+    },
+    ref,
+  ) => {
   const [showPassword, setShowPassword] = React.useState(false);
 
   const isPassword = type === "password";
@@ -148,6 +152,7 @@ function Input({
 
   const inputElement = (
     <input
+      ref={ref}
       type={isPassword ? (showPassword ? "text" : "password") : type}
       data-slot="input"
       className={cn(
@@ -234,7 +239,9 @@ function Input({
       )}
     </div>
   );
-}
+});
+
+Input.displayName = "Input";
 
 export { Input };
 export type { InputProps };

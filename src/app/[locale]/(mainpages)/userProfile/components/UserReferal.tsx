@@ -1,17 +1,15 @@
 "use client";
 
+import { useAuth } from "@/app/(components)/navbar/hooks/useAuth";
 import { CheckCircle, Copy } from "lucide-react";
 import { toast } from "sonner";
 
-interface userReferalProps {
-  referalCode: string;
-}
-
-const UserReferal = ({ referalCode }: userReferalProps) => {
+const UserReferal = () => {
+  const { userData: storeUserData, isClient } = useAuth();
   const handleCopy = async () => {
-    if (!referalCode) return;
+    if (!storeUserData?.referralCode) return;
     try {
-      await navigator.clipboard.writeText(referalCode);
+      await navigator.clipboard.writeText(storeUserData.referralCode);
       toast(
         <div className="flex items-center gap-2 text-sm">
           <CheckCircle className="text-green-800 w-5 h-5" />
@@ -44,7 +42,7 @@ const UserReferal = ({ referalCode }: userReferalProps) => {
         <h4 className="text-lg font-extrabold">شارك الكود:</h4>
 
         <div className="flex items-center justify-between p-2 px-4 bg-white text-black rounded-xl mt-2">
-          <p className="text-base">{referalCode}</p>
+          <p className="text-base">{isClient ? storeUserData?.referralCode : ""}</p>
 
           <div className="flex items-center gap-2">
             <Copy

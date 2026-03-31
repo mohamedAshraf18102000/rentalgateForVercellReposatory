@@ -1,6 +1,6 @@
 import Image from "next/image";
-import { SaudiRiyalIcon } from "lucide-react";
 import { RadioGroupItem } from "../ui/radio-group";
+import { SaudiRiyal } from "lucide-react";
 
 interface RadioOfferCardProps {
   value: string;
@@ -8,46 +8,56 @@ interface RadioOfferCardProps {
   discount?: string;
   image?: string;
   id?: string;
+  isBlurred?: boolean;
 }
 
 const RadioOfferCard = ({
   value,
-  title = "أستبدل نقطاتك كلها",
-  discount = "10.00",
+  title = "LOREM",
+  discount = "LOREM",
   image = "/offers/offerImage.png",
   id,
+  isBlurred = false,
 }: RadioOfferCardProps) => {
   return (
     <label
       htmlFor={id || value}
-      className="border-2 border-primary w-full flex justify-between items-center gap-5 rounded-2xl relative overflow-hidden h-[90px] cursor-pointer hover:bg-Grey50 transition-all duration-300 group"
+      className={`border-2 border-primary w-full flex justify-between items-center rounded-2xl relative overflow-hidden h-[90px] cursor-pointer transition-all duration-300 group ${
+        isBlurred
+          ? "opacity-30 blur-[1px] pointer-events-none"
+          : "hover:bg-Grey50"
+      }`}
     >
-      <div>
+      <div className="w-full h-full flex items-center gap-3">
+        <div className="relative w-[100px] h-full overflow-hidden bg-gray-200">
+          <Image
+            src={image}
+            alt="offer"
+            fill
+            className="object-contain group-hover:scale-105 transition-transform duration-300"
+          />
+        </div>
+        <div className="flex items-center h-full">
+          <div className="">
+            <p className="text-base font-bold text-Grey900 truncate mb-1">
+              {title}
+            </p>
+            <div className="flex items-center gap-1 w-full">
+              <span className="text-gray-600 text-base!">وفر</span>
+              <span className="text-gray-600 text-base!"> :</span>
+              <div className="flex items-center">
+                <span className="font-bold">{discount}</span>
+                <SaudiRiyal className="w-4 h-4" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="mx-3">
         <RadioGroupItem
           value={value}
           id={id || value}
           className="w-6 h-6 border-2 border-Grey300 data-[state=checked]:border-primary data-[state=checked]:text-primary shrink-0"
-        />
-      </div>
-      {/* <div className="">
-        <p className="text-base font-bold text-Grey900 truncate mb-1">
-          {title}
-        </p>
-        <p className="flex items-center text-sm">
-          <span className="text-Grey600">وفر:</span>
-          <span className="mx-2 text-primary font-bold text-lg">
-            {discount}
-          </span>
-          <SaudiRiyalIcon className="w-5 h-5 text-primary" />
-        </p>
-      </div> */}
-
-      <div className="relative w-[100px] h-full overflow-hidden bg-gray-200">
-        <Image
-          src={image}
-          alt="offer"
-          fill
-          className="object-contain group-hover:scale-105 transition-transform duration-300"
         />
       </div>
     </label>

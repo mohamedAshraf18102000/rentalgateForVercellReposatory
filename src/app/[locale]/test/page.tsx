@@ -4,8 +4,6 @@ import WrapperContainer from "@/app/(components)/wrapperContainer/WrapperContain
 import { getAuthToken } from "@/util/auth";
 import { useEffect, useState } from "react";
 import ReservationDrawer from "../(mainpages)/reservation/components/reservationDrawer/ReservationDrawer";
-import { RadioGroup } from "@/app/(components)/ui/radio-group";
-import RadioOfferCard from "@/app/(components)/customCards/RadioOfferCard";
 
 const Page = () => {
   const [userToken, setUserToken] = useState<string | null>(null);
@@ -20,11 +18,8 @@ const Page = () => {
       exceedNav
       className="p-10 flex flex-col gap-8 max-w-4xl mx-auto"
     >
-      <ReservationDrawer open={false} onOpenChange={() => {}} />
-      <RadioGroup className="grid grid-cols-2">
-        <RadioOfferCard value="offer-1" />
-        <RadioOfferCard value="offer-2" />
-      </RadioGroup>
+      <ReservationDrawer open={true} onOpenChange={() => {}} />
+
       <h1 className="text-3xl font-bold text-gray-800">Token Debug Page</h1>
 
       <section className="flex flex-col gap-4">

@@ -1,14 +1,10 @@
 "use client";
-import { useQuery } from "@tanstack/react-query";
 import { SaudiRiyal } from "lucide-react";
 import Image from "next/image";
-import { getUserPoints } from "@/services/userProfile/getUserPoints.service";
+import { useUserPoints } from "@/hooks/api/useUserPoints";
 
 const Points = () => {
-  const { data: pointsData, isLoading } = useQuery({
-    queryKey: ["userPoints"],
-    queryFn: getUserPoints,
-  });
+  const { data: pointsData, isLoading } = useUserPoints();
 
   if (isLoading) {
     return (

@@ -35,7 +35,7 @@ const ReservationDrawer = ({ open, onOpenChange }: ReservationDrawerProps) => {
           </div>
         </button>
       </SheetTrigger>
-      <SheetContent dir="rtl" className="flex flex-col p-0">
+      <SheetContent dir="rtl" className="flex flex-col p-0 ">
         <SheetHeader className="text-start! mt-10 px-6 ">
           <SheetTitle>إتمام الدفع</SheetTitle>
           <Separator className="my-2" />

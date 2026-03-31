@@ -2,7 +2,6 @@
 import WrapperContainer from "@/app/(components)/wrapperContainer/WrapperContainer";
 import ProfileBreadCrump from "./components/ProfileBreadCrump";
 import Image from "next/image";
-import { SaudiRiyal } from "lucide-react";
 import { Separator } from "@/app/(components)/ui/separator";
 import UserDetailsCard from "./components/UserDetailsCard";
 import UserReferal from "./components/UserReferal";
@@ -112,7 +111,7 @@ const page = () => {
         </div>
 
         <div className="w-[40%] rounded-2xl p-3">
-          <UserReferal referalCode={storeUserData?.referralCode} />
+          <UserReferal />
           <div className="flex flex-col gap-4 mt-4">
             <UserProfileActions />
           </div>

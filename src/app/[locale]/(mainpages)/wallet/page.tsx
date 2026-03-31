@@ -2,7 +2,7 @@ import WrapperContainer from "@/app/(components)/wrapperContainer/WrapperContain
 import UserReferal from "../userProfile/components/UserReferal";
 import { OwnedOffersStatus } from "./components/OwnedOffersStatus";
 import WalletInfo from "./components/WalletInfo";
-import VoucherCard from "./components/VoucherCard";
+import WalletTransactions from "./components/WalletTransactions";
 
 const page = () => {
   return (
@@ -12,18 +12,10 @@ const page = () => {
           <WalletInfo />
           <OwnedOffersStatus value="all" />
         </div>
-        <UserReferal referalCode="A123A" />
+        <UserReferal />
       </section>
 
-      <section className="w-full mt-8">
-        <p className="my-2 font-bold">24 أكتوبر 2025:</p>
-        <div className="grid grid-cols-2 gap-5">
-          <VoucherCard />
-          <VoucherCard />
-          <VoucherCard />
-          <VoucherCard />
-        </div>
-      </section>
+      <WalletTransactions />
     </WrapperContainer>
   );
 };
