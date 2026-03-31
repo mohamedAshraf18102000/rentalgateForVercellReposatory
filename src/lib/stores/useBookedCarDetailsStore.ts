@@ -59,6 +59,10 @@ export interface BookedCarDetailsState {
   services: CompanyService[];
   formData: ReservationFormData;
 
+  // hydration
+  _hasHydrated: boolean;
+  setHasHydrated: (state: boolean) => void;
+
   setCarDetails: (carDetails: CarDetailsResponse) => void;
   clearCarDetails: () => void;
   setServices: (services: CompanyService[]) => void;
@@ -68,19 +72,24 @@ export interface BookedCarDetailsState {
     key: K,
     value: ReservationFormData[K],
   ) => void;
+
   setFormData: (data: Partial<ReservationFormData>) => void;
   resetForm: () => void;
 }
 
 export const useBookedCarDetailsStore = create<BookedCarDetailsState>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       carDetails: null,
       services: [],
       formData: initialFormData,
 
+      _hasHydrated: false,
+      setHasHydrated: (state) => set({ _hasHydrated: state }),
+
       setCarDetails: (carDetails) => set({ carDetails }),
       clearCarDetails: () => set({ carDetails: null }),
+
       setServices: (services) => set({ services }),
       clearServices: () => set({ services: [] }),
 
@@ -88,23 +97,48 @@ export const useBookedCarDetailsStore = create<BookedCarDetailsState>()(
         set((state) => ({
           formData: { ...state.formData, [key]: value },
         })),
+
       setFormData: (data) =>
         set((state) => ({
-          formData: { ...state.formData, ...data },
+          formData: {
+            ...state.formData,
+            ...Object.fromEntries(
+              Object.entries(data).filter(([_, v]) => v !== undefined),
+            ),
+          },
         })),
+
       resetForm: () => set({ formData: initialFormData }),
     }),
     {
       name: "booked-car-details-storage",
       storage: createJSONStorage(() => localStorage),
+
+      // 🔥 مهم: رجّع الـ Dates
+      onRehydrateStorage: () => (state) => {
+        if (state?.formData) {
+          state.formData.fromDate = state.formData.fromDate
+            ? new Date(state.formData.fromDate)
+            : null;
+
+          state.formData.toDate = state.formData.toDate
+            ? new Date(state.formData.toDate)
+            : null;
+
+          state.formData.licenceExpiryDate = state.formData.licenceExpiryDate
+            ? new Date(state.formData.licenceExpiryDate)
+            : null;
+        }
+
+        state?.setHasHydrated(true);
+      },
+
+      // ✅ خزّن كل حاجة (مفيش File أصلاً)
       partialize: (state) => ({
         carDetails: state.carDetails,
         services: state.services,
-        formData: {
-          ...state.formData,
-          licenseImageFile: null,
-        },
-      }), // Don't persist formData to avoid serializing File objects
+        formData: state.formData,
+      }),
     },
   ),
 );

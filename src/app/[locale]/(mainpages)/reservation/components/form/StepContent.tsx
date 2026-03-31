@@ -33,7 +33,8 @@ const StepContent = forwardRef<StepContentRef, StepContentProps>(
     const { displayStep, animationClass } = useStepAnimation(activeStep);
     const { filters, setFilter } = useUserPreferedFiltersStore();
     const { latitude, longitude, address } = useLocationStore();
-    const { carDetails, formData, setFormData } = useBookedCarDetailsStore();
+    const { carDetails, formData, setFormData, _hasHydrated } =
+      useBookedCarDetailsStore();
     const { target, open } = usePickupDialogStore();
 
     const { setClientData } = useClientStore();
@@ -75,11 +76,11 @@ const StepContent = forwardRef<StepContentRef, StepContentProps>(
         returnLat:
           filters.carReturnLocationType === "currentLocation"
             ? latitude
-            : filters.carReturnLocationLat ?? undefined,
+            : (filters.carReturnLocationLat ?? undefined),
         returnLong:
           filters.carReturnLocationType === "currentLocation"
             ? longitude
-            : filters.carReturnLocationLng ?? undefined,
+            : (filters.carReturnLocationLng ?? undefined),
       },
     });
 
@@ -215,6 +216,7 @@ const StepContent = forwardRef<StepContentRef, StepContentProps>(
 
     // Keep filters store in sync with form (locations & dates only)
     useEffect(() => {
+      if (!_hasHydrated) return;
       // Initial sync of form values to the data store
       const initialValues = getValues();
       setFormData({
@@ -273,7 +275,7 @@ const StepContent = forwardRef<StepContentRef, StepContentProps>(
           setFilter("carReturnLocation", value.carReturnLocation);
       });
       return () => subscription.unsubscribe();
-    }, [watch, setFilter, setFormData, latitude, longitude]);
+    }, [watch, setFilter, setFormData, latitude, longitude, _hasHydrated]);
 
     const stepData = [
       {
