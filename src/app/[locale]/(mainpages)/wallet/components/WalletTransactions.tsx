@@ -4,7 +4,6 @@ import { Transaction } from "@/types/wallet/wallet";
 import VoucherCard from "./VoucherCard";
 import { useWalletTransactions } from "@/hooks/api/useWalletTransactions";
 import { Skeleton } from "@/app/(components)/ui/skeleton";
-import { SelectLabel } from "@radix-ui/react-select";
 
 const WalletTransactions = () => {
   const { data: response, isLoading, isError } = useWalletTransactions();

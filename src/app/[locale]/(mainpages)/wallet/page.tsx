@@ -8,7 +8,7 @@ const page = () => {
   return (
     <WrapperContainer exceedNav>
       <section className="w-full grid grid-cols-2 gap-4">
-        <div className="bg-white p-4 rounded-2xl flex flex-col justify-between">
+        <div className="bg-white p-4 rounded-2xl flex flex-col">
           <WalletInfo />
           <OwnedOffersStatus value="all" />
         </div>

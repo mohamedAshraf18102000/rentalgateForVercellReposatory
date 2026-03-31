@@ -36,7 +36,11 @@ const page = () => {
   const [activeStep, setActiveStep] = useState<number>(1);
   const [isStepTwoSkipped, setIsStepTwoSkipped] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
   const stepContentRef = useRef<StepContentRef>(null);
+  const bookingStore = useBookedCarDetailsStore();
+  console.log("bookingStore", bookingStore);
+
   const carDetails = useBookedCarDetailsStore((s) => s.carDetails);
   const { filters } = useUserPreferedFiltersStore();
   const resetReservationForm = useBookedCarDetailsStore((s) => s.resetForm);
@@ -146,6 +150,7 @@ const page = () => {
     const rawData = buildReservationRawData(bookedCarDetails);
 
     console.log(rawData);
+    setIsDrawerOpen(true);
   };
 
   const handleNext = async () => {
@@ -157,103 +162,106 @@ const page = () => {
   };
 
   return (
-    <WrapperContainer exceedNav>
-      <PickupDialog title="تأكيد" />
-      <div className="w-full">
-        <ReservationBreadCrump carId={carDetails?.ccbId} />
-        <div
-          className={`w-full grid ${isStepTwoSkipped ? "grid-cols-2" : "grid-cols-3"} gap-5`}
-        >
-          <Stepper
-            stepNum="1"
-            title="تأكيد مكان و ميعاد الأستلام و التسليم"
-            description="كان لوريم إيبسوم ولايزال المعيار للنص"
-            isActive={activeStep === 1}
-            onClick={() => handleStepNavigation(1)}
-          />
-          {!isStepTwoSkipped && (
+    <>
+      <ReservationDrawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen} />
+      <WrapperContainer exceedNav>
+        <PickupDialog title="تأكيد" />
+        <div className="w-full">
+          <ReservationBreadCrump carId={carDetails?.ccbId} />
+          <div
+            className={`w-full grid ${isStepTwoSkipped ? "grid-cols-2" : "grid-cols-3"} gap-5`}
+          >
             <Stepper
-              stepNum="2"
-              title="تفاصيل المستأجر"
+              stepNum="1"
+              title="تأكيد مكان و ميعاد الأستلام و التسليم"
               description="كان لوريم إيبسوم ولايزال المعيار للنص"
-              isActive={activeStep === 2}
-              onClick={() => handleStepNavigation(2)}
+              isActive={activeStep === 1}
+              onClick={() => handleStepNavigation(1)}
             />
-          )}
-          <Stepper
-            stepNum={isStepTwoSkipped ? "2" : "3"}
-            title="تحديد الخدمات"
-            description="كان لوريم إيبسوم ولايزال المعيار للنص"
-            isActive={activeStep === 3}
-            onClick={() => handleStepNavigation(3)}
-          />
-        </div>
-
-        <div className="flex gap-4 w-full mt-10">
-          <div className="w-3/4 bg-white h-fit rounded-2xl p-4">
-            <div className="flex justify-between">
-              <div className="flex items-center">
-                <span className="mx-2 text-base">أجمالي التكلفة:</span>
-                {pricingDetails.totalPrice <
-                  pricingDetails.originalTotalPrice && (
-                  <span className="text-Grey500 mx-2 line-through text-sm">
-                    {pricingDetails.originalTotalPrice}
-                  </span>
-                )}
-                <span className="text-lg font-bold">
-                  {pricingDetails.totalPrice}{" "}
-                </span>
-                <SaudiRiyal />
-                <span className="mx-1 text-Grey500 text-sm">
-                  ({rentalDays}{" "}
-                  {rentalDays > 1 && rentalDays < 11 ? "أيام" : "يوم"} / حجز{" "}
-                  {pricingTypeLabels[pricingDetails.pricingType]})
-                </span>
-              </div>
-              <Button
-                startIcon={
-                  activeStep === 3 ? <HandCoins className="h-5! w-5!" /> : ""
-                }
-                onClick={handleNext}
-                className="text-base!"
-                loading={isLoading}
-                icon={<ChevronLeft className="w-5! h-5!" />}
-              >
-                <span className="mx-2">
-                  {activeStep === 3 ? "إتمام الحجز" : "التالي"}
-                </span>
-              </Button>
-            </div>
-            <Separator className="my-3" />
-            <StepContent ref={stepContentRef} activeStep={activeStep} />
-          </div>
-          <div className="w-1/4">
-            <div className="">
-              <CarsCard
-                freeKm={carDetails?.allowedKm}
-                carName={carDetails?.car.carName}
-                companyName={carDetails?.company.arabicName}
-                companyLogo={`${process.env.NEXT_PUBLIC_IMAGES_PREFIX_URL}${carDetails?.company.logo}`}
-                carBrand={carDetails?.car.brandNameArabic}
-                carImage={`${process.env.NEXT_PUBLIC_IMAGES_PREFIX_URL}${carDetails?.car.image}`}
-                pricingType={pricingDetails.pricingType}
-                carPrice={pricingDetails.pricePerDay}
-                priceBeforeOffer={pricingDetails.originalPricePerDay}
-                rentalDays={rentalDays}
-                totalPrice={pricingDetails.totalPrice}
-                firstBadgeTitle={discountBadge}
-                firstBadgeColor="green"
-                extraContent={
-                  <div className="mt-2 w-full h-50 rounded-2xl overflow-hidden">
-                    <GoogleMapsLocation />
-                  </div>
-                }
+            {!isStepTwoSkipped && (
+              <Stepper
+                stepNum="2"
+                title="تفاصيل المستأجر"
+                description="كان لوريم إيبسوم ولايزال المعيار للنص"
+                isActive={activeStep === 2}
+                onClick={() => handleStepNavigation(2)}
               />
+            )}
+            <Stepper
+              stepNum={isStepTwoSkipped ? "2" : "3"}
+              title="تحديد الخدمات"
+              description="كان لوريم إيبسوم ولايزال المعيار للنص"
+              isActive={activeStep === 3}
+              onClick={() => handleStepNavigation(3)}
+            />
+          </div>
+
+          <div className="flex gap-4 w-full mt-10">
+            <div className="w-3/4 bg-white h-fit rounded-2xl p-4">
+              <div className="flex justify-between">
+                <div className="flex items-center">
+                  <span className="mx-2 text-base">أجمالي التكلفة:</span>
+                  {pricingDetails.totalPrice <
+                    pricingDetails.originalTotalPrice && (
+                    <span className="text-Grey500 mx-2 line-through text-sm">
+                      {pricingDetails.originalTotalPrice}
+                    </span>
+                  )}
+                  <span className="text-lg font-bold">
+                    {pricingDetails.totalPrice}{" "}
+                  </span>
+                  <SaudiRiyal />
+                  <span className="mx-1 text-Grey500 text-sm">
+                    ({rentalDays}{" "}
+                    {rentalDays > 1 && rentalDays < 11 ? "أيام" : "يوم"} / حجز{" "}
+                    {pricingTypeLabels[pricingDetails.pricingType]})
+                  </span>
+                </div>
+                <Button
+                  startIcon={
+                    activeStep === 3 ? <HandCoins className="h-5! w-5!" /> : ""
+                  }
+                  onClick={handleNext}
+                  className="text-base!"
+                  loading={isLoading}
+                  icon={<ChevronLeft className="w-5! h-5!" />}
+                >
+                  <span className="mx-2">
+                    {activeStep === 3 ? "إتمام الحجز" : "التالي"}
+                  </span>
+                </Button>
+              </div>
+              <Separator className="my-3" />
+              <StepContent ref={stepContentRef} activeStep={activeStep} />
+            </div>
+            <div className="w-1/4">
+              <div className="">
+                <CarsCard
+                  freeKm={carDetails?.allowedKm}
+                  carName={carDetails?.car.carName}
+                  companyName={carDetails?.company.arabicName}
+                  companyLogo={`${process.env.NEXT_PUBLIC_IMAGES_PREFIX_URL}${carDetails?.company.logo}`}
+                  carBrand={carDetails?.car.brandNameArabic}
+                  carImage={`${process.env.NEXT_PUBLIC_IMAGES_PREFIX_URL}${carDetails?.car.image}`}
+                  pricingType={pricingDetails.pricingType}
+                  carPrice={pricingDetails.pricePerDay}
+                  priceBeforeOffer={pricingDetails.originalPricePerDay}
+                  rentalDays={rentalDays}
+                  totalPrice={pricingDetails.totalPrice}
+                  firstBadgeTitle={discountBadge}
+                  firstBadgeColor="green"
+                  extraContent={
+                    <div className="mt-2 w-full h-50 rounded-2xl overflow-hidden">
+                      <GoogleMapsLocation />
+                    </div>
+                  }
+                />
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </WrapperContainer>
+      </WrapperContainer>
+    </>
   );
 };
 
