@@ -3,9 +3,12 @@
 import WrapperContainer from "@/app/(components)/wrapperContainer/WrapperContainer";
 import { getAuthToken } from "@/util/auth";
 import { useEffect, useState } from "react";
-import ReservationDrawer from "../(mainpages)/reservation/components/reservationDrawer/ReservationDrawer";
+import { useBookedCarDetailsStore } from "@/lib/stores/useBookedCarDetailsStore";
 
 const Page = () => {
+  const store = useBookedCarDetailsStore();
+  console.log("store", store.formData);
+
   const [userToken, setUserToken] = useState<string | null>(null);
 
   useEffect(() => {
@@ -18,8 +21,6 @@ const Page = () => {
       exceedNav
       className="p-10 flex flex-col gap-8 max-w-4xl mx-auto"
     >
-
-
       <h1 className="text-3xl font-bold text-gray-800">Token Debug Page</h1>
 
       <section className="flex flex-col gap-4">

@@ -96,10 +96,14 @@ export const useBookedCarDetailsStore = create<BookedCarDetailsState>()(
     }),
     {
       name: "booked-car-details-storage",
-      storage: createJSONStorage(() => sessionStorage),
+      storage: createJSONStorage(() => localStorage),
       partialize: (state) => ({
         carDetails: state.carDetails,
         services: state.services,
+        formData: {
+          ...state.formData,
+          licenseImageFile: null,
+        },
       }), // Don't persist formData to avoid serializing File objects
     },
   ),

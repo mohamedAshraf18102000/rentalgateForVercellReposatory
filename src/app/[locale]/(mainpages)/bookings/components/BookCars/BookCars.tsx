@@ -11,6 +11,7 @@ import CarsGrid from "../CarsGrid";
 import LoadMoreButton from "../LoadMoreButton";
 import { Skeleton } from "@/app/(components)/ui/skeleton";
 import { useLocationStore } from "@/lib/stores/useLocationStore";
+import { useBookedCarDetailsStore } from "@/lib/stores/useBookedCarDetailsStore";
 
 interface FormValues {
   location: string;
@@ -19,18 +20,45 @@ interface FormValues {
 }
 
 const BookCars = () => {
+  const store = useBookedCarDetailsStore();
+  console.log("store form data", store.formData);
+
   const [rentalDays, setRentalDays] = useState<number>(0);
   const { appliedFilters, filters, setFilter } = useUserPreferedFiltersStore();
   const longitude = useLocationStore((state) => state.longitude);
   const latitude = useLocationStore((state) => state.latitude);
   const address = useLocationStore((state) => state.address);
+  const setBookedFormData = useBookedCarDetailsStore(
+    (state) => state.setFormData,
+  );
 
   // Auto-set pickup location name when address is resolved
   useEffect(() => {
+    console.log("in the use effect");
+
     if (address && filters.pickupType === "currentLocation") {
+      console.log("in the use effect inside condition");
+
       setFilter("pickupName", address);
+
+      // Sync with BookedCarDetailsStore
+      setBookedFormData({
+        pickupName: address,
+        pickupLat: latitude,
+        pickupLong: longitude,
+        carReturnLocation: address,
+        returnLat: latitude,
+        returnLong: longitude,
+      });
     }
-  }, [address]);
+  }, [
+    address,
+    longitude,
+    latitude,
+    filters.pickupType,
+    setFilter,
+    setBookedFormData,
+  ]);
 
   const apiFilters = {
     longitude: longitude ?? undefined,
