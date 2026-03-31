@@ -53,6 +53,9 @@ const ReservationDrawer = ({ open, onOpenChange }: ReservationDrawerProps) => {
               <Discounts />
             </div>
             <div className="mt-6">
+              <Separator className="my-2" />
+            </div>
+            <div className="mt-6 bg-Grey100 rounded-xl">
               <WalletBalance />
             </div>
             <div className="mt-6">

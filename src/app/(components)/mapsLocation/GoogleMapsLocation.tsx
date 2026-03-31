@@ -1,9 +1,9 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
 import {
+  Autocomplete,
   GoogleMap,
   Marker,
-  Autocomplete,
   useJsApiLoader,
 } from "@react-google-maps/api";
 import { Input } from "../ui/input";
@@ -14,7 +14,7 @@ import { reverseGeocode } from "@/lib/utils/reverseGeocode";
 
 const mapStyle = {
   width: "100%",
-  height: "100%",
+  height: "400px",
 };
 
 const defaultLocation = { lat: 0, lng: 0 };

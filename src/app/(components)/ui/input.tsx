@@ -47,7 +47,6 @@ interface InputProps extends Omit<
   errorMessage?: string;
 }
 
-
 function Input({
   className,
   type,
@@ -63,7 +62,6 @@ function Input({
   errorMessage,
   ...props
 }: InputProps) {
-
   const [showPassword, setShowPassword] = React.useState(false);
 
   const isPassword = type === "password";
@@ -157,14 +155,14 @@ function Input({
         size === "sm" && "h-7",
         size === "md" && "h-10",
         size === "lg" && "h-11",
-        errorMessage && "border-red-500 focus-visible:border-red-500 focus-visible:ring-red-500/30",
+        errorMessage &&
+          "border-red-500 focus-visible:border-red-500 focus-visible:ring-red-500/30",
         inputPadding,
         className,
       )}
       {...props}
     />
   );
-
 
   // Simple input without icons/buttons/label
   const needsWrapper =
@@ -237,7 +235,6 @@ function Input({
     </div>
   );
 }
-
 
 export { Input };
 export type { InputProps };

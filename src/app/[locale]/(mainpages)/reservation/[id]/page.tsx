@@ -204,6 +204,11 @@ const page = () => {
                   {pricingDetails.totalPrice}{" "}
                 </span>
                 <SaudiRiyal />
+                <span className="mx-1 text-Grey500 text-sm">
+                  ({rentalDays}{" "}
+                  {rentalDays > 1 && rentalDays < 11 ? "أيام" : "يوم"} / حجز{" "}
+                  {pricingTypeLabels[pricingDetails.pricingType]})
+                </span>
               </div>
               <Button
                 startIcon={
