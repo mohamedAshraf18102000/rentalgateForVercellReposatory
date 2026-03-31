@@ -2,7 +2,7 @@
 
 import { Button } from "@/app/(components)/ui/button";
 import { CardContent } from "@/app/(components)/ui/card";
-import { useSharedStore } from "@/lib/api/stores/shared.store";
+// import { useSharedStore } from "@/lib/api/stores/shared.store";
 import { URL } from "@/util/api";
 import { getUserData, isAuthenticated } from "@/util/auth";
 import { useTranslations } from "next-intl";
@@ -23,20 +23,15 @@ export function CompanyQuotationForm({ locale }: CompanyQuotationFormProps) {
   const isRTL = locale === "ar";
 
   // Cookie management
-  const {
-    loadFormData,
-    loadStep,
-    saveFormData,
-    saveStep,
-    clearCookies,
-  } = useFormCookies();
+  const { loadFormData, loadStep, saveFormData, saveStep, clearCookies } =
+    useFormCookies();
 
   // Fetch shared data (brands and cities)
-  const {
-    sharedData,
-    fetchSharedData,
-    isLoading: isLoadingSharedData,
-  } = useSharedStore();
+  // const {
+  //   sharedData,
+  //   fetchSharedData,
+  //   isLoading: isLoadingSharedData,
+  // } = useSharedStore();
 
   // Component state
   const [currentStep, setCurrentStep] = useState(1);
@@ -68,11 +63,11 @@ export function CompanyQuotationForm({ locale }: CompanyQuotationFormProps) {
   });
 
   // Fetch shared data on mount
-  useEffect(() => {
-    if (!sharedData) {
-      fetchSharedData();
-    }
-  }, [sharedData, fetchSharedData]);
+  // useEffect(() => {
+  //   if (!sharedData) {
+  //     fetchSharedData();
+  //   }
+  // }, [sharedData, fetchSharedData]);
 
   // Load saved form data and step on mount (only once)
   useEffect(() => {
@@ -89,10 +84,13 @@ export function CompanyQuotationForm({ locale }: CompanyQuotationFormProps) {
       // If user is authenticated and fields are empty, fill from user data
       if (userData) {
         // Fill responsibleName from firstName + lastName or firstName only
-        if (!formValues.responsibleName && (userData.firstName || userData.lastName)) {
+        if (
+          !formValues.responsibleName &&
+          (userData.firstName || userData.lastName)
+        ) {
           const fullName = [userData.firstName, userData.lastName]
             .filter(Boolean)
-            .join(' ')
+            .join(" ")
             .trim();
           if (fullName) {
             formValues.responsibleName = fullName;
@@ -113,7 +111,7 @@ export function CompanyQuotationForm({ locale }: CompanyQuotationFormProps) {
       // Restore form values
       if (Object.keys(formValues).length > 0) {
         Object.entries(formValues).forEach(([key, value]) => {
-          if (value !== undefined && value !== null && value !== '') {
+          if (value !== undefined && value !== null && value !== "") {
             setValue(key as keyof FormData, value as any, {
               shouldValidate: false,
               shouldDirty: false,
@@ -193,7 +191,7 @@ export function CompanyQuotationForm({ locale }: CompanyQuotationFormProps) {
       toast.error(
         isRTL
           ? "يرجى إكمال جميع الحقول المطلوبة بشكل صحيح"
-          : "Please complete all required fields correctly"
+          : "Please complete all required fields correctly",
       );
       return;
     }
@@ -205,7 +203,7 @@ export function CompanyQuotationForm({ locale }: CompanyQuotationFormProps) {
         toast.error(
           isRTL
             ? "يرجى إدخال رقم هاتف صحيح"
-            : "Please enter a valid phone number"
+            : "Please enter a valid phone number",
         );
         return;
       }
@@ -229,7 +227,7 @@ export function CompanyQuotationForm({ locale }: CompanyQuotationFormProps) {
       toast.error(
         isRTL
           ? "يرجى إكمال جميع الحقول المطلوبة بشكل صحيح"
-          : "Please complete all required fields correctly"
+          : "Please complete all required fields correctly",
       );
       return;
     }
@@ -241,18 +239,14 @@ export function CompanyQuotationForm({ locale }: CompanyQuotationFormProps) {
 
       // Validate phone
       if (!formData.phone || !validatePhone(formData.phone)) {
-        toast.error(
-          isRTL ? "رقم الهاتف غير صحيح" : "Invalid phone number"
-        );
+        toast.error(isRTL ? "رقم الهاتف غير صحيح" : "Invalid phone number");
         setIsSubmitting(false);
         return;
       }
 
       // Validate brand selection
       if (!formData.selectedBrandId || formData.selectedBrandId.length === 0) {
-        toast.error(
-          isRTL ? "يرجى اختيار الماركة" : "Please select a brand"
-        );
+        toast.error(isRTL ? "يرجى اختيار الماركة" : "Please select a brand");
         setIsSubmitting(false);
         return;
       }
@@ -285,13 +279,13 @@ export function CompanyQuotationForm({ locale }: CompanyQuotationFormProps) {
       if (!response.ok) {
         throw new Error(
           result.message ||
-          (isRTL ? "فشل في إرسال الطلب" : "Failed to submit request")
+            (isRTL ? "فشل في إرسال الطلب" : "Failed to submit request"),
         );
       }
 
       // Success
       toast.success(
-        isRTL ? "تم إرسال الطلب بنجاح" : "Request submitted successfully"
+        isRTL ? "تم إرسال الطلب بنجاح" : "Request submitted successfully",
       );
 
       // Clear cookies and reset form
@@ -337,14 +331,16 @@ export function CompanyQuotationForm({ locale }: CompanyQuotationFormProps) {
         );
       case 3:
         return (
-          <Step3
-            control={control}
-            errors={errors}
-            isRTL={isRTL}
-            brands={sharedData?.carBrands || []}
-            isLoadingBrands={isLoadingSharedData}
-            onFieldChange={handleFieldChange}
-          />
+          <>
+            {/* <Step3
+              control={control}
+              errors={errors}
+              isRTL={isRTL}
+              brands={sharedData?.carBrands || []}
+              isLoadingBrands={isLoadingSharedData}
+              onFieldChange={handleFieldChange}
+            /> */}
+          </>
         );
       default:
         return null;
@@ -388,15 +384,21 @@ export function CompanyQuotationForm({ locale }: CompanyQuotationFormProps) {
                       {t("buttons.next")}
                     </Button>
                   ) : (
-                    <Button
-                      type="button"
-                      onClick={onSubmit}
-                      className="flex-1 w-full sm:w-auto min-h-[48px] sm:min-h-[44px] bg-[#110000] hover:bg-primary-hover active:bg-[#B02A08] disabled:opacity-50 disabled:cursor-not-allowed text-white text-base sm:text-sm font-medium touch-manipulation active:scale-[0.98] transition-transform shadow-sm hover:shadow-md"
-                      size="lg"
-                      disabled={isSubmitting || isLoadingSharedData}
-                    >
-                      {isSubmitting ? (isRTL ? "جاري الإرسال..." : "Submitting...") : t("buttons.submit")}
-                    </Button>
+                    <>
+                      {/* <Button
+                        type="button"
+                        onClick={onSubmit}
+                        className="flex-1 w-full sm:w-auto min-h-[48px] sm:min-h-[44px] bg-[#110000] hover:bg-primary-hover active:bg-[#B02A08] disabled:opacity-50 disabled:cursor-not-allowed text-white text-base sm:text-sm font-medium touch-manipulation active:scale-[0.98] transition-transform shadow-sm hover:shadow-md"
+                        size="lg"
+                        disabled={isSubmitting || isLoadingSharedData}
+                      >
+                        {isSubmitting
+                          ? isRTL
+                            ? "جاري الإرسال..."
+                            : "Submitting..."
+                          : t("buttons.submit")}
+                      </Button> */}
+                    </>
                   )}
                 </div>
               </CardContent>
@@ -421,4 +423,3 @@ export function CompanyQuotationForm({ locale }: CompanyQuotationFormProps) {
     </div>
   );
 }
-

@@ -9,7 +9,11 @@ import { useDialog } from "../../../hooks/useDialog";
 import { resetPassword } from "../ForgotPassword/services/forgot-password.service";
 import { ConfirmationChannelTabs } from "../SignUp/components/ConfirmationChannelTabs";
 import type { AccountRecoveryProps } from "./Recovery.types";
-import { accountRecovery, resetPasswordVerification, verifyAccountRecovery } from "./services/recovery.service";
+import {
+  accountRecovery,
+  resetPasswordVerification,
+  verifyAccountRecovery,
+} from "./services/recovery.service";
 
 type Step = "request" | "verify" | "reset";
 
@@ -22,7 +26,9 @@ export function AccountRecoveryDialog({
 }: AccountRecoveryProps) {
   const { openDialog } = useDialog();
   const [step, setStep] = React.useState<Step>("request");
-  const [channel, setChannel] = React.useState<"EMAIL" | "WHATSAPP">(initialChannel || "EMAIL");
+  const [channel, setChannel] = React.useState<"EMAIL" | "WHATSAPP">(
+    initialChannel || "EMAIL",
+  );
   const [email, setEmail] = React.useState(initialEmail || "");
   const [mobile, setMobile] = React.useState(initialMobile || "");
   const [isPhoneValid, setIsPhoneValid] = React.useState(false);
@@ -48,12 +54,16 @@ export function AccountRecoveryDialog({
   // Step 1: Request Recovery OTP
   const handleRequestRecovery = async () => {
     if (channel === "EMAIL" && !email) {
-      toast.error(tValidation("EMAIL_IS_REQUIRED") || "يرجى إدخال البريد الإلكتروني");
+      toast.error(
+        tValidation("EMAIL_IS_REQUIRED") || "يرجى إدخال البريد الإلكتروني",
+      );
       return;
     }
 
     if (channel === "WHATSAPP" && (!mobile || !isPhoneValid)) {
-      toast.error(tValidation("MOBILE_IS_REQUIRED") || "يرجى إدخال رقم جوال صحيح");
+      toast.error(
+        tValidation("MOBILE_IS_REQUIRED") || "يرجى إدخال رقم جوال صحيح",
+      );
       return;
     }
 
@@ -67,16 +77,18 @@ export function AccountRecoveryDialog({
 
       const response = await accountRecovery(payload);
 
-      console.log('Account Recovery Response:', response);
+      console.log("Account Recovery Response:", response);
 
       // Check for success: either status is true OR message is SUCCESS
-      const isSuccess = response.status === true || response.message === "SUCCESS";
+      const isSuccess =
+        response.status === true || response.message === "SUCCESS";
 
       if (isSuccess) {
         // Extract clientId from response.data (similar to ForgotPassword)
-        const clientIdValue = typeof response.data === 'number'
-          ? response.data
-          : response.data?.clientId;
+        const clientIdValue =
+          typeof response.data === "number"
+            ? response.data
+            : response.data?.clientId;
 
         if (clientIdValue) {
           setClientId(clientIdValue);
@@ -84,13 +96,15 @@ export function AccountRecoveryDialog({
 
         setStep("verify");
         setResendTimer(60); // 60 seconds timer
-        toast.success(t('messages.otpSentSuccess'));
+        toast.success(t("messages.otpSentSuccess"));
       } else {
         throw new Error(response.message || "فشل في إرسال رمز التحقق");
       }
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : "";
-      const translatedMessage = errorMessage ? tValidation(errorMessage as any) : tValidation("DEFAULT");
+      const translatedMessage = errorMessage
+        ? tValidation(errorMessage as any)
+        : tValidation("DEFAULT");
       toast.error(translatedMessage);
     } finally {
       setIsLoading(false);
@@ -121,10 +135,11 @@ export function AccountRecoveryDialog({
 
       const response = await verifyAccountRecovery(payload);
 
-      console.log('Verify Account Recovery Response:', response);
+      console.log("Verify Account Recovery Response:", response);
 
       // Check for success: either status is true OR message is SUCCESS
-      const isSuccess = response.status === true || response.message === "SUCCESS";
+      const isSuccess =
+        response.status === true || response.message === "SUCCESS";
 
       // If message is SUCCESS but data is false, OTP is incorrect
       if (isSuccess && response.data === false) {
@@ -134,7 +149,11 @@ export function AccountRecoveryDialog({
 
       if (isSuccess) {
         // If we don't have clientId yet, try to get it from response
-        if (!clientId && typeof response.data === 'object' && response.data !== null) {
+        if (
+          !clientId &&
+          typeof response.data === "object" &&
+          response.data !== null
+        ) {
           const clientIdValue = response.data.clientId;
 
           if (clientIdValue) {
@@ -145,7 +164,7 @@ export function AccountRecoveryDialog({
         // Move to reset step if we have clientId, otherwise show error
         if (clientId) {
           setStep("reset");
-          toast.success(t('messages.otpVerifiedSuccess'));
+          toast.success(t("messages.otpVerifiedSuccess"));
         } else {
           throw new Error("لم يتم العثور على معرف العميل");
         }
@@ -155,7 +174,9 @@ export function AccountRecoveryDialog({
       }
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : "";
-      const translatedMessage = errorMessage ? tValidation(errorMessage as any) : tValidation("DEFAULT");
+      const translatedMessage = errorMessage
+        ? tValidation(errorMessage as any)
+        : tValidation("DEFAULT");
       toast.error(translatedMessage);
     } finally {
       setIsLoading(false);
@@ -165,12 +186,16 @@ export function AccountRecoveryDialog({
   // Step 3: Reset Password
   const handleResetPassword = async () => {
     if (!newPassword) {
-      toast.error(tValidation("PASSWORD_IS_REQUIRED") || "يرجى إدخال كلمة المرور");
+      toast.error(
+        tValidation("PASSWORD_IS_REQUIRED") || "يرجى إدخال كلمة المرور",
+      );
       return;
     }
 
     if (newPassword !== confirmPassword) {
-      toast.error(tValidation("PASSWORDS_DO_NOT_MATCH") || "كلمات المرور غير متطابقة");
+      toast.error(
+        tValidation("PASSWORDS_DO_NOT_MATCH") || "كلمات المرور غير متطابقة",
+      );
       return;
     }
 
@@ -193,25 +218,31 @@ export function AccountRecoveryDialog({
         code: otpCode,
       });
 
-      console.log('Reset Password Verification Response:', verificationResponse);
+      console.log(
+        "Reset Password Verification Response:",
+        verificationResponse,
+      );
 
       // Check for success
-      const isVerificationSuccess = verificationResponse.status === true || verificationResponse.message === "SUCCESS";
+      const isVerificationSuccess =
+        verificationResponse.status === true ||
+        verificationResponse.message === "SUCCESS";
 
       if (isVerificationSuccess) {
         // Then reset the password
         const response = await resetPassword({
-          clientId,
+          email: "123",
           password: newPassword,
         });
 
-        console.log('Reset Password Response:', response);
+        console.log("Reset Password Response:", response);
 
         // Check for success: either status is true OR message is SUCCESS
-        const isSuccess = response.status === true || response.message === "SUCCESS";
+        const isSuccess =
+          response.status === true || response.message === "SUCCESS";
 
         if (isSuccess) {
-          toast.success(t('messages.passwordResetSuccess'));
+          toast.success(t("messages.passwordResetSuccess"));
           onSuccess?.();
 
           // Close current dialog and open login after a short delay
@@ -225,11 +256,15 @@ export function AccountRecoveryDialog({
           throw new Error(response.message || "فشل في إعادة تعيين كلمة المرور");
         }
       } else {
-        throw new Error(verificationResponse.message || "فشل في التحقق من الرمز");
+        throw new Error(
+          verificationResponse.message || "فشل في التحقق من الرمز",
+        );
       }
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : "";
-      const translatedMessage = errorMessage ? tValidation(errorMessage as any) : tValidation("DEFAULT");
+      const translatedMessage = errorMessage
+        ? tValidation(errorMessage as any)
+        : tValidation("DEFAULT");
       toast.error(translatedMessage);
     } finally {
       setIsLoading(false);
@@ -247,17 +282,20 @@ export function AccountRecoveryDialog({
       case "request":
         return (
           <div className="grid gap-4 mt-2">
-            <ConfirmationChannelTabs value={channel} onValueChange={setChannel} />
+            <ConfirmationChannelTabs
+              value={channel}
+              onValueChange={setChannel}
+            />
 
             {channel === "EMAIL" ? (
               <div className="grid gap-2 mt-3">
                 <Input
-                  label={t('form.emailLabel')}
+                  label={t("form.emailLabel")}
                   id="recovery-email"
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder={t('form.emailPlaceholder')}
+                  placeholder={t("form.emailPlaceholder")}
                 />
               </div>
             ) : (
@@ -265,11 +303,11 @@ export function AccountRecoveryDialog({
                 <CountryPhone
                   value={mobile}
                   onChange={setMobile}
-                  placeholder={t('form.mobilePlaceholder')}
+                  placeholder={t("form.mobilePlaceholder")}
                   defaultCountry="sa"
                   showValidation={true}
                   onValidationChange={setIsPhoneValid}
-                  label={t('form.mobileLabel')}
+                  label={t("form.mobileLabel")}
                 />
               </div>
             )}
@@ -296,27 +334,27 @@ export function AccountRecoveryDialog({
           <div className="grid gap-4">
             <div className="grid gap-2">
               <Input
-                label={t('form.newPasswordLabel')}
+                label={t("form.newPasswordLabel")}
                 id="new-password"
                 type="password"
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
-                placeholder={t('form.newPasswordPlaceholder')}
+                placeholder={t("form.newPasswordPlaceholder")}
               />
             </div>
 
             <div className="grid gap-2">
               <Input
-                label={t('form.confirmPasswordLabel')}
+                label={t("form.confirmPasswordLabel")}
                 id="confirm-password"
                 type="password"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                placeholder={t('form.confirmPasswordPlaceholder')}
+                placeholder={t("form.confirmPasswordPlaceholder")}
               />
               {confirmPassword && newPassword !== confirmPassword && (
                 <p className="text-sm text-destructive mt-1">
-                  {t('form.passwordsDoNotMatch')}
+                  {t("form.passwordsDoNotMatch")}
                 </p>
               )}
             </div>
@@ -335,12 +373,15 @@ export function AccountRecoveryDialog({
           <div className="w-full mt-3">
             <Button
               onClick={handleRequestRecovery}
-              disabled={isLoading || (channel === "EMAIL" ? !email : (!mobile || !isPhoneValid))}
+              disabled={
+                isLoading ||
+                (channel === "EMAIL" ? !email : !mobile || !isPhoneValid)
+              }
               loading={isLoading}
               className="w-full"
               size="lg"
             >
-              {t('buttons.send')}
+              {t("buttons.send")}
             </Button>
           </div>
         );
@@ -355,23 +396,23 @@ export function AccountRecoveryDialog({
               className="w-full"
               size="lg"
             >
-              {t('buttons.confirm')}
+              {t("buttons.confirm")}
             </Button>
             <div className="flex items-center justify-center">
               {resendTimer > 0 ? (
                 <p className="text-sm text-[#595959]">
-                  {t('messages.resendAfter')} {formatTime(resendTimer)}
+                  {t("messages.resendAfter")} {formatTime(resendTimer)}
                 </p>
               ) : (
                 <p className="text-sm text-gray-600">
-                  {t('messages.didNotReceive')}{" "}
+                  {t("messages.didNotReceive")}{" "}
                   <button
                     type="button"
                     onClick={handleRequestRecovery}
                     disabled={isLoading}
                     className="text-[#1A1A1A] text-sm font-semibold underline hover:text-[#110000]/80 disabled:opacity-50"
                   >
-                    {t('buttons.resend')}
+                    {t("buttons.resend")}
                   </button>
                 </p>
               )}
@@ -384,12 +425,14 @@ export function AccountRecoveryDialog({
           <div className="w-full mt-4">
             <Button
               onClick={handleResetPassword}
-              disabled={isLoading || !newPassword || newPassword !== confirmPassword}
+              disabled={
+                isLoading || !newPassword || newPassword !== confirmPassword
+              }
               loading={isLoading}
               className="w-full"
               size="lg"
             >
-              {t('buttons.resetPassword')}
+              {t("buttons.resetPassword")}
             </Button>
           </div>
         );
@@ -402,13 +445,13 @@ export function AccountRecoveryDialog({
   const getHeaderTitle = () => {
     switch (step) {
       case "request":
-        return t('title.request');
+        return t("title.request");
       case "verify":
-        return t('title.verify');
+        return t("title.verify");
       case "reset":
-        return t('title.reset');
+        return t("title.reset");
       default:
-        return t('title.request');
+        return t("title.request");
     }
   };
 
@@ -428,11 +471,11 @@ export function AccountRecoveryDialog({
   const getHeaderDescription = () => {
     switch (step) {
       case "request":
-        return t('description.request');
+        return t("description.request");
       case "verify":
-        return t('description.verify');
+        return t("description.verify");
       case "reset":
-        return t('description.reset');
+        return t("description.reset");
       default:
         return "";
     }
@@ -448,13 +491,8 @@ export function AccountRecoveryDialog({
         description: getHeaderDescription(),
       }}
       content={renderStepContent()}
-      footer={
-        <div className="mt-5 w-full">
-          {renderFooter()}
-        </div>
-      }
+      footer={<div className="mt-5 w-full">{renderFooter()}</div>}
       size={getSize()}
     />
   );
 }
-

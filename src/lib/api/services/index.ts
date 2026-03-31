@@ -3,7 +3,6 @@
  */
 
 export { getClientData } from "./client.service";
-export { getSharedData } from "./shared.service";
 export {
   getCancellationReasons,
   cancelReservation,
@@ -11,4 +10,3 @@ export {
   getTicketReasons,
   submitCRMTicket,
 } from "./reservation-actions.service";
-

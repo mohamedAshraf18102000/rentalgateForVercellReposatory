@@ -20,14 +20,15 @@ const RadioOfferCard = ({
   return (
     <label
       htmlFor={id || value}
-      className="border-2 border-primary w-full flex justify-between items-center gap-5 rounded-2xl relative overflow-hidden h-[90px] px-4 cursor-pointer  hover:bg-Grey50 transition-all duration-300 group"
+      className="border-2 border-primary w-full flex justify-between items-center gap-5 rounded-2xl relative overflow-hidden h-[90px] cursor-pointer hover:bg-Grey50 transition-all duration-300 group"
     >
-      <RadioGroupItem
-        value={value}
-        id={id || value}
-        className="w-6 h-6 border-2 border-Grey300 data-[state=checked]:border-primary data-[state=checked]:text-primary shrink-0"
-      />
-
+      <div>
+        <RadioGroupItem
+          value={value}
+          id={id || value}
+          className="w-6 h-6 border-2 border-Grey300 data-[state=checked]:border-primary data-[state=checked]:text-primary shrink-0"
+        />
+      </div>
       {/* <div className="">
         <p className="text-base font-bold text-Grey900 truncate mb-1">
           {title}
@@ -41,12 +42,12 @@ const RadioOfferCard = ({
         </p>
       </div> */}
 
-      <div className="relative w-[100px] h-full overflow-hidden shrink-0 bg-gray-200">
+      <div className="relative w-[100px] h-full overflow-hidden bg-gray-200">
         <Image
           src={image}
           alt="offer"
           fill
-          className="object-contain p-1 group-hover:scale-105 transition-transform duration-300"
+          className="object-contain group-hover:scale-105 transition-transform duration-300"
         />
       </div>
     </label>
