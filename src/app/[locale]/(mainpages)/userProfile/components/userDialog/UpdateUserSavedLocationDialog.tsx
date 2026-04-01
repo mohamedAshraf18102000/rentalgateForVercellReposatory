@@ -28,6 +28,8 @@ import {
 } from "@/schemas/userAddressSchema";
 import { addAddress } from "@/services/userProfile/addAddress.service";
 import { toast } from "sonner";
+import useUserAddreses from "@/hooks/api/useUserAddreses";
+import { useLocationStore } from "@/lib/stores/useLocationStore";
 
 interface UpdatePasswordDialogProps {
   open: boolean;
@@ -41,11 +43,10 @@ const UpdateUserSavedLocationDialog = ({
   const [showAddForm, setShowAddForm] = useState(false);
   const queryClient = useQueryClient();
 
-  const { data: userAddresses, isLoading: isLoadingAddresses } = useQuery({
-    queryKey: ["userAddresses"],
-    queryFn: () => getUserAddress(),
-    enabled: open,
-  });
+  const { setLocation, latitude, longitude } = useLocationStore();
+
+  const { data: userAddresses, isLoading: isLoadingAddresses } =
+    useUserAddreses(open);
 
   const {
     register,
@@ -153,7 +154,15 @@ const UpdateUserSavedLocationDialog = ({
                 ) : (
                   userAddresses?.map((address) => (
                     <ProfileActionCard
+                      onClick={() => {
+                        setLocation(
+                          address.latitude,
+                          address.longitude,
+                          address.address,
+                        );
+                      }}
                       bg_gray
+                      active={address.latitude === latitude && address.longitude === longitude}
                       key={address.addressId}
                       title={address.addressName}
                       description={address.address}

@@ -6,6 +6,7 @@ interface ProfileActionCardProps {
   description: string;
   icon?: string;
   bg_gray?: boolean;
+  active?: boolean;
   onClick?: () => void;
 }
 
@@ -15,11 +16,12 @@ const ProfileActionCard = ({
   icon,
   onClick,
   bg_gray,
+  active,
 }: ProfileActionCardProps) => {
   return (
     <div
       onClick={onClick}
-      className={`rounded-2xl p-3 flex items-center justify-between cursor-pointer ${bg_gray ? "bg-Grey100" : "bg-white shadow-lg"}`}
+      className={`rounded-2xl p-3 flex items-center justify-between cursor-pointer border ${active ? "border-black" : "border-transparent"} ${bg_gray ? "bg-Grey100" : "bg-white shadow-lg"}`}
     >
       <div className="flex items-center gap-2">
         {icon && <img src={icon} alt="img" className="w-[40px] h-[40px]" />}
