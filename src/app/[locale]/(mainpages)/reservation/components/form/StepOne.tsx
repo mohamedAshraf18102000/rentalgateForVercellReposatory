@@ -35,11 +35,11 @@ const StepOne = ({ control, errors, watch, setValue }: StepOneProps) => {
       const { filters: updatedFilters } =
         useUserPreferedFiltersStore.getState();
       const { latitude, longitude, address } = useLocationStore.getState();
-      
+
       const locationName =
-        (updatedFilters.carReturnLocationType === "currentLocation" ||
-          !updatedFilters.carReturnLocation ||
-          updatedFilters.carReturnLocation === "الموقع الحالي") &&
+        (updatedFilters.carReturnLocationType === "currentLocation" &&
+          (!updatedFilters.carReturnLocation ||
+            updatedFilters.carReturnLocation === "الموقع الحالي")) &&
         address
           ? address
           : updatedFilters.carReturnLocation || "الموقع الحالي";
@@ -47,13 +47,17 @@ const StepOne = ({ control, errors, watch, setValue }: StepOneProps) => {
       setValue("carReturnLocation", locationName, { shouldValidate: true });
       setValue(
         "returnLat",
-        updatedFilters.carReturnLocationType === "currentLocation"
+        (updatedFilters.carReturnLocationType === "currentLocation" &&
+          (!updatedFilters.carReturnLocationLat ||
+            updatedFilters.carReturnLocation === "الموقع الحالي"))
           ? latitude
           : updatedFilters.carReturnLocationLat || null,
       );
       setValue(
         "returnLong",
-        updatedFilters.carReturnLocationType === "currentLocation"
+        (updatedFilters.carReturnLocationType === "currentLocation" &&
+          (!updatedFilters.carReturnLocationLng ||
+            updatedFilters.carReturnLocation === "الموقع الحالي"))
           ? longitude
           : updatedFilters.carReturnLocationLng || null,
       );

@@ -15,6 +15,7 @@ import {
   LocateFixed,
   MapPin,
   MapPinPlusInside,
+  Trash,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import GoogleMapsLocation from "@/app/(components)/mapsLocation/GoogleMapsLocation";
@@ -27,6 +28,7 @@ import {
   UserSavedLocationFormValues,
 } from "@/schemas/userAddressSchema";
 import { addAddress } from "@/services/userProfile/addAddress.service";
+import { deleteAddress } from "@/services/userProfile/useDeleteAddress.service";
 import { toast } from "sonner";
 import useUserAddreses from "@/hooks/api/useUserAddreses";
 import { useLocationStore } from "@/lib/stores/useLocationStore";
@@ -86,6 +88,25 @@ const UpdateUserSavedLocationDialog = ({
       toast.error(error.message || "حدث خطأ أثناء إضافة العنوان");
     },
   });
+
+  const deleteMutation = useMutation({
+    mutationFn: (addressId: string | number) => deleteAddress(addressId),
+    onSuccess: () => {
+      toast.success("تم حذف العنوان بنجاح");
+      queryClient.invalidateQueries({ queryKey: ["userAddresses"] });
+    },
+    onError: (error: Error) => {
+      toast.error(error.message || "حدث خطأ أثناء حذف العنوان");
+    },
+  });
+
+  const { mutate: handleDeleteAddress, isPending: isDeleting } = deleteMutation;
+
+  const handleDelete = (addressId: string | number) => {
+    if (window.confirm("هل أنت متأكد من حذف هذا العنوان؟")) {
+      handleDeleteAddress(addressId);
+    }
+  };
 
   const onSubmit = (values: UserSavedLocationFormValues) => {
     handleAddAddress(values);
@@ -152,22 +173,39 @@ const UpdateUserSavedLocationDialog = ({
                     لا توجد عناوين مسجلة
                   </div>
                 ) : (
-                  userAddresses?.map((address) => (
-                    <ProfileActionCard
-                      onClick={() => {
-                        setLocation(
-                          address.latitude,
-                          address.longitude,
-                          address.address,
-                        );
-                      }}
-                      bg_gray
-                      active={address.latitude === latitude && address.longitude === longitude}
-                      key={address.addressId}
-                      title={address.addressName}
-                      description={address.address}
-                    />
-                  ))
+                  userAddresses?.map((address) => {
+                    const beingDeleted =
+                      isDeleting &&
+                      deleteMutation.variables === address.addressId;
+                    return (
+                      <ProfileActionCard
+                        customIcon={
+                          beingDeleted ? (
+                            <div className="w-4 h-4 border-2 border-red-500 border-t-transparent rounded-full animate-spin" />
+                          ) : (
+                            <Trash className="w-4 h-4 text-red-500" />
+                          )
+                        }
+                        trash
+                        onIconClick={() => handleDelete(address.addressId)}
+                        onClick={() => {
+                          setLocation(
+                            address.latitude,
+                            address.longitude,
+                            address.address,
+                          );
+                        }}
+                        bg_gray
+                        active={
+                          address.latitude === latitude &&
+                          address.longitude === longitude
+                        }
+                        key={address.addressId}
+                        title={address.addressName}
+                        description={address.address}
+                      />
+                    );
+                  })
                 )}
               </div>
             </div>

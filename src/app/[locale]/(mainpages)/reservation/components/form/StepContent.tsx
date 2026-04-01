@@ -66,21 +66,27 @@ const StepContent = forwardRef<StepContentRef, StepContentProps>(
         borderNumber: formData.borderNumber || "",
         services: formData.services || [],
         pickupLat:
-          filters.pickupType === "currentLocation"
+          (filters.pickupType === "currentLocation" &&
+            (!filters.pickupLat || filters.pickupName === "الموقع الحالي"))
             ? latitude
             : filters.pickupLat || (carDetails?.latitude ?? undefined),
         pickupLong:
-          filters.pickupType === "currentLocation"
+          (filters.pickupType === "currentLocation" &&
+            (!filters.pickupLng || filters.pickupName === "الموقع الحالي"))
             ? longitude
             : filters.pickupLng || (carDetails?.longitude ?? undefined),
         returnLat:
-          filters.carReturnLocationType === "currentLocation"
+          (filters.carReturnLocationType === "currentLocation" &&
+            (!filters.carReturnLocationLat ||
+              filters.carReturnLocation === "الموقع الحالي"))
             ? latitude
-            : (filters.carReturnLocationLat ?? undefined),
+            : filters.carReturnLocationLat ?? undefined,
         returnLong:
-          filters.carReturnLocationType === "currentLocation"
+          (filters.carReturnLocationType === "currentLocation" &&
+            (!filters.carReturnLocationLng ||
+              filters.carReturnLocation === "الموقع الحالي"))
             ? longitude
-            : (filters.carReturnLocationLng ?? undefined),
+            : filters.carReturnLocationLng ?? undefined,
       },
     });
 
@@ -121,7 +127,8 @@ const StepContent = forwardRef<StepContentRef, StepContentProps>(
 
       // Sync Lat/Lng
       const targetPickupLat =
-        filters.pickupType === "currentLocation"
+        (filters.pickupType === "currentLocation" &&
+          (!filters.pickupLat || filters.pickupName === "الموقع الحالي"))
           ? latitude
           : filters.pickupLat || (carDetails?.latitude ?? undefined);
       if (
@@ -132,7 +139,8 @@ const StepContent = forwardRef<StepContentRef, StepContentProps>(
       }
 
       const targetPickupLong =
-        filters.pickupType === "currentLocation"
+        (filters.pickupType === "currentLocation" &&
+          (!filters.pickupLng || filters.pickupName === "الموقع الحالي"))
           ? longitude
           : filters.pickupLng || (carDetails?.longitude ?? undefined);
       if (
@@ -143,7 +151,9 @@ const StepContent = forwardRef<StepContentRef, StepContentProps>(
       }
 
       const targetReturnLat =
-        filters.carReturnLocationType === "currentLocation"
+        (filters.carReturnLocationType === "currentLocation" &&
+          (!filters.carReturnLocationLat ||
+            filters.carReturnLocation === "الموقع الحالي"))
           ? latitude
           : (filters.carReturnLocationLat ?? undefined);
       if (
@@ -160,7 +170,9 @@ const StepContent = forwardRef<StepContentRef, StepContentProps>(
       }
 
       const targetReturnLong =
-        filters.carReturnLocationType === "currentLocation"
+        (filters.carReturnLocationType === "currentLocation" &&
+          (!filters.carReturnLocationLng ||
+            filters.carReturnLocation === "الموقع الحالي"))
           ? longitude
           : (filters.carReturnLocationLng ?? undefined);
       if (
