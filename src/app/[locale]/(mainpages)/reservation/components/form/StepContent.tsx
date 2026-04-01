@@ -118,7 +118,64 @@ const StepContent = forwardRef<StepContentRef, StepContentProps>(
           setValue("toDate", storeDate);
         }
       }
-    }, [filters, setValue, getValues]);
+
+      // Sync Lat/Lng
+      const targetPickupLat =
+        filters.pickupType === "currentLocation"
+          ? latitude
+          : filters.pickupLat || (carDetails?.latitude ?? undefined);
+      if (
+        targetPickupLat !== undefined &&
+        targetPickupLat !== getValues("pickupLat")
+      ) {
+        setValue("pickupLat", targetPickupLat);
+      }
+
+      const targetPickupLong =
+        filters.pickupType === "currentLocation"
+          ? longitude
+          : filters.pickupLng || (carDetails?.longitude ?? undefined);
+      if (
+        targetPickupLong !== undefined &&
+        targetPickupLong !== getValues("pickupLong")
+      ) {
+        setValue("pickupLong", targetPickupLong);
+      }
+
+      const targetReturnLat =
+        filters.carReturnLocationType === "currentLocation"
+          ? latitude
+          : (filters.carReturnLocationLat ?? undefined);
+      if (
+        targetReturnLat !== undefined &&
+        targetReturnLat !== getValues("returnLat")
+      ) {
+        setValue("returnLat", targetReturnLat);
+      } else if (
+        targetPickupLat !== undefined &&
+        targetPickupLat !== getValues("returnLat") &&
+        !filters.carReturnLocationLat
+      ) {
+        setValue("returnLat", targetPickupLat);
+      }
+
+      const targetReturnLong =
+        filters.carReturnLocationType === "currentLocation"
+          ? longitude
+          : (filters.carReturnLocationLng ?? undefined);
+      if (
+        targetReturnLong !== undefined &&
+        targetReturnLong !== getValues("returnLong")
+      ) {
+        setValue("returnLong", targetReturnLong);
+      } else if (
+        targetPickupLong !== undefined &&
+        targetPickupLong !== getValues("returnLong") &&
+        !filters.carReturnLocationLng
+      ) {
+        setValue("returnLong", targetPickupLong);
+      }
+    }, [filters, carDetails, latitude, longitude, setValue, getValues]);
 
     useImperativeHandle(ref, () => ({
       validateStep: async () => {
