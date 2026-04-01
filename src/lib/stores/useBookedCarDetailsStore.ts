@@ -13,6 +13,9 @@ export interface ReservationFormData {
   returnLong: number | null;
   fromDate: Date | null;
   toDate: Date | null;
+  price: number | null;
+  originalPrice: number | null;
+  promoCode: string | null;
 
   // Step 2
   fullName: string;
@@ -40,6 +43,9 @@ const initialFormData: ReservationFormData = {
   returnLong: null,
   fromDate: null,
   toDate: null,
+  price: null,
+  originalPrice: null,
+  promoCode: null,
   fullName: "",
   phoneNumber: "",
   idNumber: "",

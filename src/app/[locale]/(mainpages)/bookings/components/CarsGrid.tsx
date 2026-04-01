@@ -72,6 +72,20 @@ const getCarPricing = (car: CarContent, rentalDays: number) => {
     offerYearlyPrice: car.offerYearlyPrice ?? 0,
   });
 
+  const originalPriceResult = calculateRentalPrice({
+    days: effectiveDays,
+    dailyPrice: car.dailyPrice ?? 0,
+    weeklyPrice: car.weeklyPrice ?? 0,
+    halfMonthlyPrice: car.halfMonthPrice ?? 0,
+    monthlyPrice: car.monthlyPrice ?? 0,
+    yearlyPrice: car.yearlyPrice ?? 0,
+    offerDailyPrice: 0,
+    offerWeeklyPrice: 0,
+    offerHalfMonthlyPrice: 0,
+    offerMonthlyPrice: 0,
+    offerYearlyPrice: 0,
+  });
+
   const { originalPrice, offerPrice } = getOriginalAndOfferPrice(
     car,
     priceResult.pricingType,
@@ -84,7 +98,7 @@ const getCarPricing = (car: CarContent, rentalDays: number) => {
     totalPrice: priceResult.totalPrice,
     pricingType: priceResult.pricingType,
     discountPercentage: discountResult.discountPercentage,
-    originalPrice,
+    originalPrice: originalPriceResult.pricePerDay,
   };
 };
 
@@ -127,11 +141,11 @@ const CarsGrid = ({ cars, isLoading, rentalDays }: CarsGridProps) => {
               companyLogo={car.companyLogo}
               companyName={car.companyName}
               deliveryInMinutes={car.deliveryInMinutes ?? 0}
-              carPrice={Math.round(pricePerDay)}
-              priceBeforeOffer={Math.round(originalPrice)}
+              carPrice={pricePerDay}
+              priceBeforeOffer={originalPrice}
               freeKm={car.allowedKm ?? 0}
               pricingType={pricingType}
-              totalPrice={Math.round(totalPrice)}
+              totalPrice={totalPrice}
               rentalDays={rentalDays}
             />
           </Link>

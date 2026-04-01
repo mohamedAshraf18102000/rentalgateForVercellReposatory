@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { Button } from "@/app/(components)/ui/button";
 import { Separator } from "@/app/(components)/ui/separator";
 import {
@@ -15,6 +16,8 @@ import Coupon from "./components/Coupon";
 import Discounts from "./components/Discounts";
 import WalletBalance from "./components/WalletBalance";
 import PaymentGateway from "./components/PaymentGateway";
+import { useBookedCarDetailsStore } from "@/lib/stores/useBookedCarDetailsStore";
+import { formatPrice } from "@/lib/utils/formatPrice";
 
 type ReservationDrawerProps = {
   open?: boolean;
@@ -22,6 +25,16 @@ type ReservationDrawerProps = {
 };
 
 const ReservationDrawer = ({ open, onOpenChange }: ReservationDrawerProps) => {
+  const { formData, services: allServices } = useBookedCarDetailsStore();
+
+  const servicesCost = useMemo(() => {
+    return allServices
+      .filter((s) => formData.services.includes(String(s.csId)))
+      .reduce((acc, curr) => acc + (curr.price || 0), 0);
+  }, [allServices, formData.services]);
+
+  const totalToPay = (formData.price || 0) + servicesCost;
+
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetTrigger dir="rtl" asChild>
@@ -73,7 +86,7 @@ const ReservationDrawer = ({ open, onOpenChange }: ReservationDrawerProps) => {
               type="submit"
             >
               <span> دفع: </span>
-              <span className="mx-1">500</span>
+              <span className="mx-1">{formatPrice(totalToPay)}</span>
               <SaudiRiyal className="h-6! w-6!" />
             </Button>
           </SheetClose>

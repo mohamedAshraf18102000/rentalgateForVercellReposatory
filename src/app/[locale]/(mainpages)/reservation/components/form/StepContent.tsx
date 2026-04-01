@@ -18,6 +18,7 @@ import StepOne from "./StepOne";
 import StepTwo from "./StepTwo";
 import StepThree from "./StepThree";
 import { useClientStore } from "@/lib/api/stores";
+import { calculateRentalPrice } from "@/lib/utils/calculateRentalPrice";
 
 interface StepContentProps {
   activeStep: number;
@@ -199,7 +200,48 @@ const StepContent = forwardRef<StepContentRef, StepContentProps>(
             "fromDate",
             "toDate",
           ];
-          return await trigger(fieldsToValidate);
+          const isValid = await trigger(fieldsToValidate);
+          if (isValid) {
+            const values = getValues();
+            if (values.fromDate && values.toDate && carDetails) {
+              const diffTime = Math.abs(values.toDate.getTime() - values.fromDate.getTime());
+              const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) || 1;
+
+              const effectivePricing = calculateRentalPrice({
+                days: diffDays,
+                dailyPrice: carDetails.dailyPrice,
+                weeklyPrice: carDetails.weeklyPrice,
+                halfMonthlyPrice: carDetails.halfMonthPrice,
+                monthlyPrice: carDetails.monthlyPrice,
+                yearlyPrice: carDetails.yearlyPrice,
+                offerDailyPrice: carDetails.offerDailyPrice,
+                offerWeeklyPrice: carDetails.offerWeeklyPrice,
+                offerHalfMonthlyPrice: carDetails.offerHalfMonthPrice,
+                offerMonthlyPrice: carDetails.offerMonthlyPrice,
+                offerYearlyPrice: carDetails.offerYearlyPrice,
+              });
+
+              const originalPricing = calculateRentalPrice({
+                days: diffDays,
+                dailyPrice: carDetails.dailyPrice,
+                weeklyPrice: carDetails.weeklyPrice,
+                halfMonthlyPrice: carDetails.halfMonthPrice,
+                monthlyPrice: carDetails.monthlyPrice,
+                yearlyPrice: carDetails.yearlyPrice,
+                offerDailyPrice: 0,
+                offerWeeklyPrice: 0,
+                offerHalfMonthlyPrice: 0,
+                offerMonthlyPrice: 0,
+                offerYearlyPrice: 0,
+              });
+
+              setFormData({
+                price: effectivePricing.totalPrice,
+                originalPrice: originalPricing.totalPrice,
+              });
+            }
+          }
+          return isValid;
         } else if (displayStep === 2) {
           fieldsToValidate = [
             "idNumber",

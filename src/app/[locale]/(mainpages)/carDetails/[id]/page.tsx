@@ -81,49 +81,50 @@ const page = () => {
     });
   }, [data, rentalDays]);
 
+  const originalPricing = useMemo(() => {
+    const effectiveDays = rentalDays > 0 ? rentalDays : 1;
+    return calculateRentalPrice({
+      days: effectiveDays,
+      dailyPrice: data?.dailyPrice ?? 0,
+      weeklyPrice: data?.weeklyPrice ?? 0,
+      halfMonthlyPrice: data?.halfMonthPrice ?? 0,
+      monthlyPrice: data?.monthlyPrice ?? 0,
+      yearlyPrice: data?.yearlyPrice ?? 0,
+      offerDailyPrice: 0,
+      offerWeeklyPrice: 0,
+      offerHalfMonthlyPrice: 0,
+      offerMonthlyPrice: 0,
+      offerYearlyPrice: 0,
+    });
+  }, [data, rentalDays]);
+
   const pricingType = pricing.pricingType;
-
-  const originalPriceForType = useMemo(() => {
-    switch (pricingType) {
-      case "daily":
-        return data?.dailyPrice ?? 0;
-      case "weekly":
-        return data?.weeklyPrice ?? 0;
-      case "halfMonthly":
-        return data?.halfMonthPrice ?? 0;
-      case "monthly":
-        return data?.monthlyPrice ?? 0;
-      case "yearly":
-        return data?.yearlyPrice ?? 0;
-      default:
-        return data?.dailyPrice ?? 0;
-    }
-  }, [pricingType, data]);
-
-  const offerPriceForType = useMemo(() => {
-    switch (pricingType) {
-      case "daily":
-        return data?.offerDailyPrice ?? 0;
-      case "weekly":
-        return data?.offerWeeklyPrice ?? 0;
-      case "halfMonthly":
-        return data?.offerHalfMonthPrice ?? 0;
-      case "monthly":
-        return data?.offerMonthlyPrice ?? 0;
-      case "yearly":
-        return data?.offerYearlyPrice ?? 0;
-      default:
-        return data?.offerDailyPrice ?? 0;
-    }
-  }, [pricingType, data]);
 
   const { discountPercentage } = useMemo(
     () =>
       calculateDiscount({
-        originalPrice: originalPriceForType,
-        offerPrice: offerPriceForType,
+        originalPrice:
+          pricingType === "daily"
+            ? data?.dailyPrice ?? 0
+            : pricingType === "weekly"
+              ? data?.weeklyPrice ?? 0
+              : pricingType === "halfMonthly"
+                ? data?.halfMonthPrice ?? 0
+                : pricingType === "monthly"
+                  ? data?.monthlyPrice ?? 0
+                  : data?.yearlyPrice ?? 0,
+        offerPrice:
+          pricingType === "daily"
+            ? data?.offerDailyPrice ?? 0
+            : pricingType === "weekly"
+              ? data?.offerWeeklyPrice ?? 0
+              : pricingType === "halfMonthly"
+                ? data?.offerHalfMonthPrice ?? 0
+                : pricingType === "monthly"
+                  ? data?.offerMonthlyPrice ?? 0
+                  : data?.offerYearlyPrice ?? 0,
       }),
-    [originalPriceForType, offerPriceForType],
+    [pricingType, data],
   );
 
   const discountBadge =
@@ -158,12 +159,14 @@ const page = () => {
           extraKmPrice={data?.extraKmPrice}
           unlimitedKm={data?.unlimitedKm}
           ccbId={data.ccbId}
-          carPrice={Math.round(pricing.pricePerDay)}
-          priceBeforeOffer={Math.round(originalPriceForType)}
+          carPrice={pricing.pricePerDay}
+          priceBeforeOffer={originalPricing.pricePerDay}
+          originalPrice={originalPricing.pricePerDay}
           firstBadgeTitle={discountBadge}
           firstBadgeColor="green"
           pricingType={pricingType}
-          totalPrice={Math.round(pricing.totalPrice)}
+          totalPrice={pricing.totalPrice}
+          originalTotalPrice={originalPricing.totalPrice}
           rentalDays={rentalDays}
         />
       </div>

@@ -2,6 +2,7 @@
 
 import { Input } from "@/app/(components)";
 import { validatePromoCode } from "@/services/promotion/promotion.service";
+import { useBookedCarDetailsStore } from "@/lib/stores/useBookedCarDetailsStore";
 import { Button } from "@base-ui/react";
 import { ChevronLeft, TicketPercent, Loader2, X } from "lucide-react";
 import { toast } from "sonner";
@@ -29,10 +30,13 @@ const Coupon = () => {
     },
   });
 
+  const { setFormField } = useBookedCarDetailsStore();
+
   const { mutate, isPending, isError, error } = useMutation({
     mutationFn: validatePromoCode,
-    onSuccess: (isValid) => {
+    onSuccess: (isValid, variables) => {
       if (isValid) {
+        setFormField("promoCode", variables);
         toast.success("تم تفعيل كود الخصم بنجاح", { position: "top-center" });
       } else {
         toast.error("كود الخصم غير صحيح", { position: "top-center" });

@@ -14,6 +14,7 @@ import { Car, Company } from "@/types/companyCars/carDetails";
 import CarCategoryBadge from "../../carCategoryBadge/CarCategoryBadge";
 import DOMPurify from "dompurify";
 import { PricingType } from "@/lib/utils/calculateRentalPrice";
+import { formatPrice } from "@/lib/utils/formatPrice";
 
 interface CarDetailsCardProps {
   car: Car;
@@ -38,8 +39,10 @@ interface CarDetailsCardProps {
   deliveryInMinutes?: number;
   freeKm?: number;
   carPrice?: number;
+  originalPrice?: number;
   pricingType?: PricingType;
   totalPrice?: number;
+  originalTotalPrice?: number;
   rentalDays?: number;
 }
 
@@ -67,6 +70,7 @@ const CarDetailsCard = ({
   carPrice,
   pricingType = "daily",
   totalPrice,
+  originalTotalPrice,
   rentalDays,
 }: CarDetailsCardProps) => {
   const router = useRouter();
@@ -149,21 +153,22 @@ const CarDetailsCard = ({
           <div className="flex flex-col gap-1">
             <div className="flex items-center">
               <span>السعر شامل الضريبة:</span>
-              <span className="text-Grey500 line-through mx-1">
-                {priceBeforeOffer}
-              </span>
-              <span className="font-bold">{carPrice ?? 200}</span>
-              <SaudiRiyal />
-              <span className="mx-1">/ {pricingTypeLabels[pricingType]}</span>
-            </div>
-            {/* {rentalDays && rentalDays > 0 && totalPrice && (
-              <div className="text-sm font-medium text-Grey600">
-                <span>إجمالي السعر لـ {rentalDays} أيام: </span>
-                <span className="font-bold text-foreground">
-                  {totalPrice} <SaudiRiyal className="inline w-3 h-3" />
+              {(rentalDays && rentalDays > 1 ? originalTotalPrice : priceBeforeOffer) &&
+                (rentalDays && rentalDays > 1 ? originalTotalPrice : priceBeforeOffer)! > (rentalDays && rentalDays > 1 ? totalPrice! : carPrice || 0) && (
+                <span className="text-Grey500 line-through mx-1 text-sm">
+                  {formatPrice(rentalDays && rentalDays > 1 ? originalTotalPrice! : priceBeforeOffer!)}
                 </span>
-              </div>
-            )} */}
+              )}
+              <span className="font-bold mx-1">
+                {formatPrice(rentalDays && rentalDays > 1 ? totalPrice! : carPrice || 0)}
+              </span>
+              <SaudiRiyal className="w-5 h-5" />
+              <span className="mx-1 text-sm text-Grey500">
+                {rentalDays && rentalDays > 1
+                  ? `( لـ ${rentalDays} يوم )`
+                  : `/ ${pricingTypeLabels[pricingType]}`}
+              </span>
+            </div>
           </div>
 
           <div className="flex items-center gap-2.5">

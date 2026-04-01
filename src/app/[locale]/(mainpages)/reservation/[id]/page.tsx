@@ -23,6 +23,7 @@ import {
 } from "@/lib/utils/calculateRentalPrice";
 import { calculateDiscount } from "@/lib/utils/calculateDiscount";
 import ReservationDrawer from "../components/reservationDrawer/ReservationDrawer";
+import { formatPrice } from "@/lib/utils/formatPrice";
 
 const pricingTypeLabels: Record<PricingType, string> = {
   daily: "يومي",
@@ -90,10 +91,10 @@ const page = () => {
     });
 
     return {
-      totalPrice: Math.round(effectivePricing.totalPrice),
-      originalTotalPrice: Math.round(originalPricing.totalPrice),
-      pricePerDay: Math.round(effectivePricing.pricePerDay),
-      originalPricePerDay: Math.round(originalPricing.pricePerDay),
+      totalPrice: effectivePricing.totalPrice,
+      originalTotalPrice: originalPricing.totalPrice,
+      pricePerDay: effectivePricing.pricePerDay,
+      originalPricePerDay: originalPricing.pricePerDay,
       pricingType: effectivePricing.pricingType,
     };
   }, [carDetails, rentalDays]);
@@ -204,11 +205,11 @@ const page = () => {
                   {pricingDetails.totalPrice <
                     pricingDetails.originalTotalPrice && (
                     <span className="text-Grey500 mx-2 line-through text-sm">
-                      {pricingDetails.originalTotalPrice}
+                      {formatPrice(pricingDetails.originalTotalPrice)}
                     </span>
                   )}
                   <span className="text-lg font-bold">
-                    {pricingDetails.totalPrice}{" "}
+                    {formatPrice(pricingDetails.totalPrice)}{" "}
                   </span>
                   <SaudiRiyal />
                   <span className="mx-1 text-Grey500 text-sm">

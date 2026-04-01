@@ -13,6 +13,7 @@ import FreeKmIcon from "../../../../constants/icons/FreeKmIcon";
 import StarIcon from "../../../../constants/icons/StarIcon";
 
 import { PricingType } from "@/lib/utils/calculateRentalPrice";
+import { formatPrice } from "@/lib/utils/formatPrice";
 
 interface carsCard {
   advancedCard?: boolean;
@@ -148,19 +149,19 @@ const CarsCard = ({
             {/* Price */}
             <div className="flex flex-col mt-3">
               <div className="flex items-center">
-                <span className="line-through text-sm text-Grey500">
-                  {priceBeforeOffer}
-                </span>
+                {priceBeforeOffer && priceBeforeOffer > (carPrice || 0) && (
+                  <span className="line-through text-sm text-Grey500">
+                    {formatPrice(priceBeforeOffer)}
+                  </span>
+                )}
 
                 <data value="10.56" className="text-base mx-2 font-bold">
-                  {carPrice}
+                  {formatPrice(carPrice)}
                 </data>
 
                 <p className="flex items-center text-base">
                   <SaudiRiyal className="w-5 h-5" />
-                  <span className="mx-1">
-                    / {pricingTypeLabels[pricingType]}
-                  </span>
+                  <span className="mx-1">/ يوم</span>
                 </p>
               </div>
               {/* {rentalDays && rentalDays > 0 && totalPrice && (
