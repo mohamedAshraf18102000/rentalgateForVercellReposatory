@@ -1,8 +1,8 @@
-import { SaudiRiyal } from "lucide-react";
 import { useBookedCarDetailsStore } from "@/lib/stores/useBookedCarDetailsStore";
 import { formatPrice } from "@/lib/utils/formatPrice";
-import { ReactNode, useMemo } from "react";
+import { useMemo } from "react";
 import ReservationFinalDetailsItem from "./ReservationFinalDetailsItem";
+import { BadgePercent, Percent } from "lucide-react";
 
 const ReservationFinalDetails = () => {
   const { formData, services: allServices } = useBookedCarDetailsStore();
@@ -45,24 +45,51 @@ const ReservationFinalDetails = () => {
         />
       )}
 
-      {formData.originalPrice &&
-        formData.price &&
-        formData.originalPrice > formData.price && (
-          <ReservationFinalDetailsItem
-            offer
-            itemHeader="الخصومات و العروض:"
-            items={[
-              {
-                label: `خصم عرض ال ( ${rentalDays} يوم )`,
-                value: (
-                  <span dir="ltr" className="p-1 rounded-lg">
-                    -{formatPrice(formData.originalPrice - formData.price)}
-                  </span>
-                ),
-              },
-            ]}
-          />
-        )}
+      <ReservationFinalDetailsItem
+        offer
+        itemHeader="الخصومات و العروض:"
+        items={[
+          {
+            label: `خصم عرض ال ( ${rentalDays} يوم )`,
+            isAvailable: true,
+            value: (
+              <>
+                <span dir="ltr" className="p-1 rounded-lg">
+                  -
+                  {formatPrice(
+                    (formData.originalPrice ?? 0) - (formData.price ?? 0),
+                  )}
+                </span>
+              </>
+            ),
+          },
+          {
+            label: "كود الخصم",
+            isAvailable: formData.promoData !== null,
+            value: (
+              <span dir="ltr" className="p-1 rounded-lg">
+                <span>-</span>
+                {formData.promoData?.discountValue}
+              </span>
+            ),
+            icon:
+              formData.promoData?.codeType === 1 ? (
+                <span className="text-sm font-bold">
+                  <Percent className="h-5 w-5" />
+                </span>
+              ) : undefined,
+          },
+          {
+            label: "خصم النقاط",
+            isAvailable: formData.points !== null,
+            value: (
+              <span dir="ltr" className="p-1 rounded-lg">
+                -{formData.points?.value}
+              </span>
+            ),
+          },
+        ]}
+      />
     </div>
   );
 };

@@ -1,7 +1,7 @@
 
 const PaymentGateway = () => {
   return (
-    <div>PaymentGateway</div>
+    <div>PaymentGateways</div>
   )
 }
 

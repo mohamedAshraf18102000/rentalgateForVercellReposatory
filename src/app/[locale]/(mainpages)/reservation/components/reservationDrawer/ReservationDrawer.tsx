@@ -18,6 +18,7 @@ import WalletBalance from "./components/WalletBalance";
 import PaymentGateway from "./components/PaymentGateway";
 import { useBookedCarDetailsStore } from "@/lib/stores/useBookedCarDetailsStore";
 import { formatPrice } from "@/lib/utils/formatPrice";
+import { applyPromoCodeValueChecker } from "@/lib/utils/promoCodeValueChecker";
 
 type ReservationDrawerProps = {
   open?: boolean;
@@ -48,7 +49,11 @@ const ReservationDrawer = ({ open, onOpenChange }: ReservationDrawerProps) => {
           </div>
         </button>
       </SheetTrigger>
-      <SheetContent dir="rtl" className="flex flex-col p-0 ">
+      <SheetContent
+        dir="rtl"
+        className="flex flex-col p-0 "
+        onOpenAutoFocus={(e) => e.preventDefault()}
+      >
         <SheetHeader className="text-start! mt-10 px-6 ">
           <SheetTitle>إتمام الدفع</SheetTitle>
           <Separator className="my-2" />
@@ -61,6 +66,24 @@ const ReservationDrawer = ({ open, onOpenChange }: ReservationDrawerProps) => {
             </div>
             <div className="mt-6">
               <Coupon />
+            </div>
+            <div className="mt-6">
+              <Separator className="my-2" />
+            </div>
+            <div className="flex justify-between items-center bg-red-100 py-2 px-2 rounded-lg">
+              <p className="text-base font-bold">
+                المجموع: هنا معمول apply علي قيمة وهمية{" "}
+              </p>
+              <p className="text-base font-bold">
+                {applyPromoCodeValueChecker(
+                  formData.price || 0,
+                  formData.promoData?.codeType || 1,
+                  formData.promoData?.discountValue || 0,
+                )}
+              </p>
+            </div>
+            <div className="mt-6">
+              <Separator className="my-2" />
             </div>
             <div className="mt-6">
               <Discounts />

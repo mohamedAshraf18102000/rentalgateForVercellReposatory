@@ -7,14 +7,23 @@ const ReservationFinalDetailsItem = ({
   offer,
 }: {
   itemHeader?: string;
-  items: { label: string; value: ReactNode }[];
+  items: {
+    label: string;
+    value: ReactNode;
+    isAvailable?: boolean;
+    icon?: ReactNode;
+  }[];
   offer?: boolean;
 }) => {
+  const filteredItems = items.filter((item) => item.isAvailable !== false);
+
+  if (filteredItems.length === 0) return null;
+
   return (
     <div className="flex flex-col gap-2">
       {itemHeader && <p className="text-base font-bold">{itemHeader}</p>}
       <div className="flex flex-col gap-3">
-        {items.map((item, index) => (
+        {filteredItems.map((item, index) => (
           <div
             key={index}
             className="flex justify-between items-center text-base"
@@ -24,7 +33,7 @@ const ReservationFinalDetailsItem = ({
               className={`flex items-center gap-1 ${offer ? "bg-StatusGreen" : ""} p-1 rounded-lg`}
             >
               <p>{item.value}</p>
-              <SaudiRiyal className="h-6 w-6" />
+              {item.icon ?? <SaudiRiyal className="h-6 w-6" />}
             </div>
           </div>
         ))}

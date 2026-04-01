@@ -11,15 +11,20 @@ import {
   CarouselNext,
   type CarouselApi,
 } from "@/app/(components)/ui/carousel";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useUserPoints } from "@/hooks/api/useUserPoints";
 import { usePointPackages } from "@/hooks/api/usePointPackages";
+import { useBookedCarDetailsStore } from "@/lib/stores/useBookedCarDetailsStore";
+import { X } from "lucide-react";
 
 const Discounts = () => {
   const { data: pointPackages } = usePointPackages();
   const { data: userPointsData } = useUserPoints();
   const locale = useLocale();
   const isRtl = locale === "ar";
+  const t = useTranslations();
+
+  const { formData, setFormField } = useBookedCarDetailsStore();
 
   const [api, setApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
@@ -41,7 +46,18 @@ const Discounts = () => {
   }, [api]);
   return (
     <div className="">
-      <p className="text-base font-bold mb-2"> القسائم و الخصومات:</p>
+      <div className="flex items-center gap-4 mb-2">
+        <p className="text-base font-bold"> القسائم و الخصومات:</p>
+        {formData.points?.pointsPkId && (
+          <button
+            onClick={() => setFormField("points", null)}
+            className="flex items-center gap-1 text-xs text-red-500 hover:text-red-700 transition-colors font-medium"
+          >
+            <X size={14} />
+            {isRtl ? "إلغاء التحديد" : "Clear selection"}
+          </button>
+        )}
+      </div>
       <div className="w-fit bg-StatusGreen px-3 py-1 rounded-lg font-bold text-StatusDarkGreen border-2 border-StatusDarkGreen flex items-center">
         <span>لديك {userPointsData?.availablePoints} نقطة</span>
         <LucideEqualApproximately className="mx-2" />
@@ -52,6 +68,17 @@ const Discounts = () => {
       <RadioGroup
         dir={isRtl ? "rtl" : "ltr"}
         className="w-full mt-2 block relative"
+        value={formData.points?.pointsPkId?.toString() || ""}
+        onValueChange={(val) => {
+          const selectedPkg = filteredPointPackages?.find(
+            (p) => p.packageId.toString() === val,
+          );
+          setFormField("points", {
+            type: "PACKAGE",
+            pointsPkId: parseInt(val),
+            value: selectedPkg?.pointsValue || 0,
+          });
+        }}
       >
         {filteredPointPackages && filteredPointPackages.length > 0 ? (
           <Carousel

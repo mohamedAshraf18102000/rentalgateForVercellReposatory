@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import { Input } from "@/app/(components)";
 import { validatePromoCode } from "@/services/promotion/promotion.service";
 import { useBookedCarDetailsStore } from "@/lib/stores/useBookedCarDetailsStore";
@@ -22,6 +23,7 @@ const Coupon = () => {
     register,
     handleSubmit,
     reset,
+    setValue,
     formState: { errors },
   } = useForm<CouponFormValues>({
     resolver: zodResolver(couponSchema),
@@ -30,13 +32,23 @@ const Coupon = () => {
     },
   });
 
-  const { setFormField } = useBookedCarDetailsStore();
+  const { setFormField, formData } = useBookedCarDetailsStore();
+
+  useEffect(() => {
+    if (formData.promoData) {
+      setValue("code", formData.promoData.code);
+    }
+  }, [formData.promoData, setValue]);
 
   const { mutate, isPending, isError, error } = useMutation({
     mutationFn: validatePromoCode,
-    onSuccess: (isValid, variables) => {
-      if (isValid) {
-        setFormField("promoCode", variables);
+    onSuccess: (res) => {
+      if (res.PromoCodeValid) {
+        setFormField("promoData", {
+          code: res.promo.code,
+          codeType: res.promo.codeType,
+          discountValue: res.promo.discountValue,
+        });
         toast.success("تم تفعيل كود الخصم بنجاح", { position: "top-center" });
       } else {
         toast.error("كود الخصم غير صحيح", { position: "top-center" });
@@ -72,6 +84,7 @@ const Coupon = () => {
           <button
             onClick={() => {
               reset();
+              setFormField("promoData", null);
             }}
             type="button"
             className="absolute top-1/2 -translate-y-1/2 right-2 rtl:left-2 rtl:right-auto"
@@ -94,6 +107,12 @@ const Coupon = () => {
           )}
         </Button>
       </form>
+      {formData.promoData && (
+        <p className="text-StatusDarkGreen text-sm mt-1">
+          تم تطبيق كود الخصم بقيمة {formData.promoData.discountValue}{" "}
+          {formData.promoData.codeType === 1 ? "%" : "ريال"}
+        </p>
+      )}
       {isError && <p className="text-red-600 mt-2">{error?.message}</p>}
     </>
   );

@@ -15,7 +15,11 @@ export interface ReservationFormData {
   toDate: Date | null;
   price: number | null;
   originalPrice: number | null;
-  promoCode: string | null;
+  promoData: {
+    code: string;
+    codeType: number;
+    discountValue: number;
+  } | null;
 
   // Step 2
   fullName: string;
@@ -32,6 +36,11 @@ export interface ReservationFormData {
 
   // Step 3
   services: string[];
+  points: {
+    type: "PACKAGE" | "COUPON" | null;
+    pointsPkId: number | null;
+    value: number | null;
+  } | null;
 }
 
 const initialFormData: ReservationFormData = {
@@ -45,7 +54,7 @@ const initialFormData: ReservationFormData = {
   toDate: null,
   price: null,
   originalPrice: null,
-  promoCode: null,
+  promoData: null,
   fullName: "",
   phoneNumber: "",
   idNumber: "",
@@ -58,6 +67,7 @@ const initialFormData: ReservationFormData = {
   passportNumber: "",
   borderNumber: "",
   services: [],
+  points: null,
 };
 
 export interface BookedCarDetailsState {

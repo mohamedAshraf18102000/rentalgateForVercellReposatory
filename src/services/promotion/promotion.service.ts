@@ -1,20 +1,37 @@
 import { fetcher } from "../api";
 
+export interface Promo {
+  codeId: number;
+  code: string;
+  codeType: number;
+  discountValue: number;
+  creationDate: string;
+  startDate: string;
+  endDate: string;
+  minDiscountAmount: number;
+  maxDiscountAmount: number;
+  maxUse: number;
+  maxUsed: number;
+  maxUseToClient: number;
+  clientMobile: string;
+  notes: string | null;
+  status: "ACTIVE" | "INACTIVE" | string;
+  active: boolean;
+}
 type ValidatePromoResponse = {
   PromoCodeValid: boolean;
+  promo: Promo;
 };
 
-type ErrorResponse = {
-  message: string;
-};
-
-export const validatePromoCode = async (code: string): Promise<boolean> => {
+export const validatePromoCode = async (
+  code: string,
+): Promise<ValidatePromoResponse> => {
   try {
     const res = await fetcher<ValidatePromoResponse>(
       `/promo-codes/validate?code=${code}`,
     );
 
-    return res.PromoCodeValid;
+    return res;
   } catch (error) {
     // لو الـ fetcher بيرجع error فيه response
     const message: string =
