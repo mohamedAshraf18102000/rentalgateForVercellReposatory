@@ -27,7 +27,6 @@ export default async function HomePage({ params }: Props) {
 
   try {
     homeData = await getHomePageDetails();
-    console.log("homeData", homeData);
   } catch (error) {
     console.error("Error fetching home data:", error);
   }

@@ -7,9 +7,7 @@ import Autoplay from "embla-carousel-autoplay";
 import { ProtectedLink } from "../../../(components)/ProtectedLink";
 import { useTranslations } from "next-intl";
 import { fetchHomeData, type CarCardData } from "@/constants/api";
-import {
-  type CarouselApi,
-} from "@/app/(components)/ui/carousel";
+import { type CarouselApi } from "@/app/(components)/ui/carousel";
 import MoreRequestedCarsCarousel from "@/app/(components)/mostRequestedCars/MoreRequestedCarsCarousel";
 
 export const MostRequestedCars = ({ locale }: { locale: string }) => {
@@ -19,7 +17,6 @@ export const MostRequestedCars = ({ locale }: { locale: string }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [api, setApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
-  const plugin = useRef(Autoplay({ delay: 2000, stopOnInteraction: true }));
 
   useEffect(() => {
     if (!api) {
@@ -33,22 +30,22 @@ export const MostRequestedCars = ({ locale }: { locale: string }) => {
     });
   }, [api]);
 
-  useEffect(() => {
-    const loadCars = async () => {
-      try {
-        setIsLoading(true);
-        const data = await fetchHomeData(locale);
-        setCars(data);
-      } catch (error) {
-        console.error("Error fetching cars:", error);
-        setCars([]);
-      } finally {
-        setIsLoading(false);
-      }
-    };
+  // useEffect(() => {
+  //   const loadCars = async () => {
+  //     try {
+  //       setIsLoading(true);
+  //       const data = await fetchHomeData(locale);
+  //       setCars(data);
+  //     } catch (error) {
+  //       console.error("Error fetching cars:", error);
+  //       setCars([]);
+  //     } finally {
+  //       setIsLoading(false);
+  //     }
+  //   };
 
-    loadCars();
-  }, []);
+  //   loadCars();
+  // }, []);
 
   if (isLoading) {
     return (
@@ -72,7 +69,24 @@ export const MostRequestedCars = ({ locale }: { locale: string }) => {
   }
 
   if (cars.length === 0) {
-    return null;
+    return (
+      <section className="bg-white py-[60px]">
+        <section className="container-custom">
+          <header className="flex items-center justify-between mb-4">
+            <h2
+              className={`text-2xl font-bold text-gray-900 align-middle leading-[130%] tracking-normal [font-family:var(--font-zain)] ${isRTL ? "text-right" : "text-left"}`}
+            >
+              {t("mostRequestedCars")}
+            </h2>
+          </header>
+          <div className="text-center py-8">
+            <p className="text-gray-500">
+              {locale === "ar" ? "لا يوجد سيارات حاليا" : "No cars available"}
+            </p>
+          </div>
+        </section>
+      </section>
+    );
   }
 
   return (

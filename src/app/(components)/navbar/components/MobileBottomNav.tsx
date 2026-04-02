@@ -2,25 +2,47 @@
 // Components - MobileBottomNav
 // ============================================================================
 
-'use client';
+"use client";
 
-import React from 'react';
-import { usePathname, useRouter } from '@/i18n/routing';
-import { Link } from '@/i18n/routing';
-import { Home, Car, ClipboardList, Menu, User, LogOut, Globe, Briefcase, X, UserCircle, Coins, CreditCard, Gift, MessageCircle, Users, Phone, Shield, FileText, Ticket, LogIn, Building2 } from 'lucide-react';
-import { useTranslations } from 'next-intl';
-import { useLocale } from 'next-intl';
-import { useAuth } from '../hooks/useAuth';
-import { logout } from '@/util/auth';
-import { useClientStore } from '@/lib/api/stores';
-import { useDialog } from '@/app/[locale]/(dialogs)'; 
-import { ContactUsDialog } from '@/app/(components)/ContactUsDialog';
+import React from "react";
+import { usePathname, useRouter } from "@/i18n/routing";
+import { Link } from "@/i18n/routing";
+import {
+  Home,
+  Car,
+  ClipboardList,
+  Menu,
+  User,
+  LogOut,
+  Globe,
+  Briefcase,
+  X,
+  UserCircle,
+  Coins,
+  CreditCard,
+  Gift,
+  MessageCircle,
+  Users,
+  Phone,
+  Shield,
+  FileText,
+  Ticket,
+  LogIn,
+  Building2,
+} from "lucide-react";
+import { useTranslations } from "next-intl";
+import { useLocale } from "next-intl";
+import { useAuth } from "../hooks/useAuth";
+import { logout } from "@/util/auth";
+import { useClientStore } from "@/lib/api/stores";
+import { useDialog } from "@/app/[locale]/(dialogs)";
+import { ContactUsDialog } from "@/app/(components)/ContactUsDialog";
 import {
   Drawer,
   DrawerClose,
-  DrawerContent, 
+  DrawerContent,
   DrawerTrigger,
-} from '@/app/(components)/ui/drawer';
+} from "@/app/(components)/ui/drawer";
 
 interface NavItem {
   href: string;
@@ -33,7 +55,7 @@ export const MobileBottomNav: React.FC = () => {
   const pathname = usePathname();
   const router = useRouter();
   const locale = useLocale();
-  const t = useTranslations('common');
+  const t = useTranslations("common");
   const { authenticated, userData } = useAuth();
   const { clearClientData } = useClientStore();
   const { openDialog } = useDialog();
@@ -43,33 +65,33 @@ export const MobileBottomNav: React.FC = () => {
   // Navigation items - order matters for RTL (right to left)
   const navItems: NavItem[] = [
     {
-      href: '/',
+      href: "/",
       icon: Home,
-      label: t('home'),
-      labelKey: 'home',
+      label: t("home"),
+      labelKey: "home",
     },
     {
-      href: '/cars',
-      icon: Car,
-      label: locale === 'ar' ? 'أسطول رينتال جيت' : 'Cars',
-      labelKey: 'cars',
-    },
-    {
-      href: '/profile/my-bookings',
+      href: "/bookings",
       icon: ClipboardList,
-      label: t('myBookings'),
-      labelKey: 'myBookings',
+      label: locale === "ar" ? "الحجز" : "Bookings",
+      labelKey: "bookings",
+    },
+    {
+      href: "/bussinessAccounts",
+      icon: Building2,
+      label: locale === "ar" ? "حساب الاعمال" : "Bussiness Account",
+      labelKey: "bussinessAccounts",
     },
   ];
 
   const isActive = (href: string): boolean => {
     // Normalize pathname - remove locale if present
-    const normalizedPath = pathname.replace(`/${locale}`, '') || '/';
-    
-    if (href === '/') {
-      return normalizedPath === '/' || normalizedPath === '';
+    const normalizedPath = pathname.replace(`/${locale}`, "") || "/";
+
+    if (href === "/") {
+      return normalizedPath === "/" || normalizedPath === "";
     }
-    
+
     // Check exact match or if pathname starts with the href
     return normalizedPath === href || normalizedPath.startsWith(`${href}/`);
   };
@@ -78,13 +100,13 @@ export const MobileBottomNav: React.FC = () => {
     setLanguageDrawerOpen(true);
   };
 
-  const handleSelectLanguage = (selectedLocale: 'ar' | 'en') => {
+  const handleSelectLanguage = (selectedLocale: "ar" | "en") => {
     router.push(pathname, { locale: selectedLocale });
     setLanguageDrawerOpen(false);
   };
 
   const handleLogin = () => {
-    openDialog('Login', {
+    openDialog("Login", {
       onSuccess: () => {
         // Login success handled by dialog
       },
@@ -94,96 +116,33 @@ export const MobileBottomNav: React.FC = () => {
   const handleLogout = () => {
     logout();
     clearClientData();
-    router.push('/');
+    router.push("/");
   };
 
   const handleProfileClick = () => {
-    router.push('/profile');
+    router.push("/userProfile");
   };
 
   const handleNavigation = (href: string) => {
     router.push(href);
   };
 
-  const handleChangePassword = () => {
-    if (authenticated) {
-      openDialog('ChangePassword', {});
-    }
-  };
-
   // All menu items matching Al-Ghazal design
   const allMenuItems = [
     {
-      href: '/profile',
+      href: "/userProfile",
       icon: UserCircle,
-      label: locale === 'ar' ? 'البيانات الشخصية' : 'Personal Data',
-      labelKey: 'personalData',
+      label: locale === "ar" ? "الملف الشخصي" : "Profile",
+      labelKey: "profile",
       onClick: handleProfileClick,
       showOnlyWhenAuthenticated: true,
     },
     {
-      href: '/profile/my-bookings',
+      href: "/myBookings",
       icon: Car,
-      label: locale === 'ar' ? 'حجوزات السيارة' : 'Car Reservations',
-      labelKey: 'carBookings',
+      label: locale === "ar" ? "حجوزاتي" : "My Bookings",
+      labelKey: "myBookings",
       showOnlyWhenAuthenticated: true,
-    }, 
-    {
-      href: '#',
-      icon: Shield,
-      label: locale === 'ar' ? 'تعديل كلمة المرور' : 'Change Password',
-      labelKey: 'changePassword',
-      onClick: handleChangePassword,
-      showOnlyWhenAuthenticated: true,
-    }, 
-    {
-      href: '/cars',
-      icon: Car,
-      label: locale === 'ar' ? 'أسطول رينتال جيت' : 'Rental Gate Fleet',
-      labelKey: 'fleet',
-    }, 
-    {
-      href: '/company-quotation',
-      icon: Building2,
-      label: locale === 'ar' ? 'حجز شركات' : 'Company Quotation',
-      labelKey: 'companyQuotation',
-    },
-    {
-      href: '#',
-      icon: MessageCircle,
-      label: locale === 'ar' ? 'تحدث معنا' : 'Talk to Us',
-      labelKey: 'talkToUs',
-      onClick: () => {
-        const whatsappUrl = `https://wa.me/966123456789?text=${encodeURIComponent(locale === 'ar' ? 'مرحباً' : 'Hello')}`;
-        window.open(whatsappUrl, '_blank');
-      },
-    },
-    {
-      href: '#',
-      icon: Globe,
-      label: locale === 'ar' ? 'تغيير اللغة' : 'Change Language',
-      labelKey: 'changeLanguage',
-      onClick: handleLanguageChange,
-      showDrawer: true,
-    },
-    // {
-    //   href: '/about',
-    //   icon: Users,
-    //   label: locale === 'ar' ? 'من نحن' : 'About Us',
-    //   labelKey: 'about',
-    // },
-    {
-      href: '#',
-      icon: Phone,
-      label: locale === 'ar' ? 'تواصل معنا' : 'Contact Us',
-      labelKey: 'contact',
-      onClick: () => setContactDialogOpen(true),
-    },
-    {
-      href: '/branches',
-      icon: Briefcase,
-      label: locale === 'ar' ? 'الفروع' : 'Branches',
-      labelKey: 'branches',
     },
   ];
 
@@ -198,20 +157,23 @@ export const MobileBottomNav: React.FC = () => {
             <Link
               key={item.href}
               href={item.href}
-              className={`flex flex-col items-center justify-center flex-1 h-full transition-all duration-200 py-2 active:scale-95 ${active ? 'text-primary' : 'text-gray-600'
-                }`}
+              className={`flex flex-col items-center justify-center flex-1 h-full transition-all duration-200 py-2 active:scale-95 ${
+                active ? "text-primary" : "text-gray-600"
+              }`}
             >
               <Icon
-                className={`w-5 h-5 mb-1 transition-all duration-200 ${active
-                    ? 'text-primary stroke-primary'
-                    : 'text-gray-600 stroke-gray-600'
-                  }`}
+                className={`w-5 h-5 mb-1 transition-all duration-200 ${
+                  active
+                    ? "text-primary stroke-primary"
+                    : "text-gray-600 stroke-gray-600"
+                }`}
                 strokeWidth={active ? 1.5 : 1.5}
                 fill="none"
               />
               <span
-                className={`text-[11px] font-medium leading-tight transition-all duration-200 ${active ? 'text-primary font-' : 'text-gray-600'
-                  }`}
+                className={`text-[11px] font-medium leading-tight transition-all duration-200 ${
+                  active ? "text-primary font-" : "text-gray-600"
+                }`}
               >
                 {item.label}
               </span>
@@ -222,47 +184,31 @@ export const MobileBottomNav: React.FC = () => {
         {/* Menu Button with Drawer */}
         <Drawer>
           <DrawerTrigger asChild>
-            <button
-              className="flex flex-col items-center justify-center flex-1 h-full transition-colors py-2 text-gray-600"
-            >
+            <button className="flex flex-col items-center justify-center flex-1 h-full transition-colors py-2 text-gray-600">
               <Menu
                 className="w-5 h-5 mb-1 transition-colors text-gray-600 stroke-gray-600"
                 strokeWidth={1.5}
               />
               <span className="text-[11px] font-medium leading-tight text-gray-600">
-                {t('menu') || 'Menu'}
+                {t("menu") || "Menu"}
               </span>
             </button>
           </DrawerTrigger>
-          <DrawerContent> 
+          <DrawerContent>
             {/* Menu Content with white container */}
             <div className="flex-1 overflow-y-auto bg-white mx-3 mb-3">
               <div className="py-4 pt-6 px-4">
                 {/* Menu Items */}
                 <div className="flex flex-col">
                   {allMenuItems
-                    .filter(item => !item.showOnlyWhenAuthenticated || authenticated)
+                    .filter(
+                      (item) =>
+                        !item.showOnlyWhenAuthenticated || authenticated,
+                    )
                     .map((item) => {
                       const Icon = item.icon;
-                      const handleClick = item.onClick || (() => handleNavigation(item.href));
-
-                      // Don't wrap in DrawerClose if item has showDrawer (like language selector)
-                      if (item.showDrawer) {
-                        return (
-                          <React.Fragment key={item.labelKey}>
-                            <button
-                              onClick={handleClick}
-                              className={`w-full flex items-center gap-3 text-sm text-gray-700 hover:text-primary transition-colors py-3  `}
-                            >
-                              <div className="w-5 h-5 shrink-0 text-[#606060]">
-                                <Icon className="w-full h-full" strokeWidth={1} />
-                              </div>
-                              <span className={`flex-1 ${locale === 'ar' ? 'text-right' : 'text-left'}`}>{item.label}</span>
-                            </button>
-                            <hr className="border-gray-200 my-1" />
-                          </React.Fragment>
-                        );
-                      }
+                      const handleClick =
+                        item.onClick || (() => handleNavigation(item.href));
 
                       return (
                         <React.Fragment key={item.labelKey}>
@@ -272,9 +218,16 @@ export const MobileBottomNav: React.FC = () => {
                               className={`w-full flex items-center gap-3 text-sm text-gray-700 hover:text-primary transition-colors py-3  `}
                             >
                               <div className="w-5 h-5 shrink-0 text-[#606060]">
-                                <Icon className="w-full h-full" strokeWidth={1} />
+                                <Icon
+                                  className="w-full h-full"
+                                  strokeWidth={1}
+                                />
                               </div>
-                              <span className={`flex-1 ${locale === 'ar' ? 'text-right' : 'text-left'}`}>{item.label}</span>
+                              <span
+                                className={`flex-1 ${locale === "ar" ? "text-right" : "text-left"}`}
+                              >
+                                {item.label}
+                              </span>
                             </button>
                           </DrawerClose>
                           <hr className="border-gray-200 my-1" />
@@ -287,9 +240,13 @@ export const MobileBottomNav: React.FC = () => {
                     <DrawerClose asChild>
                       <button
                         onClick={handleLogout}
-                        className={`w-full flex items-center gap-3 text-sm text-gray-700 hover:text-primary transition-colors cursor-pointer py-3 ${locale === 'ar' ? 'flex-row-reverse' : 'flex-row'}`}
+                        className={`w-full flex items-center gap-3 text-sm text-gray-700 hover:text-primary transition-colors cursor-pointer py-3 ${locale === "ar" ? "flex-row-reverse" : "flex-row"}`}
                       >
-                        <span className={`flex-1 ${locale === 'ar' ? 'text-right' : 'text-left'}`}>{t('logout')}</span>
+                        <span
+                          className={`flex-1 ${locale === "ar" ? "text-right" : "text-left"}`}
+                        >
+                          {t("logout")}
+                        </span>
                         <LogOut className="w-5 h-5 shrink-0 text-[#606060]" />
                       </button>
                     </DrawerClose>
@@ -297,10 +254,17 @@ export const MobileBottomNav: React.FC = () => {
                     <DrawerClose asChild>
                       <button
                         onClick={handleLogin}
-                        className={`w-full flex items-center gap-3 text-sm text-gray-700 hover:text-primary transition-colors cursor-pointer py-3 ${locale === 'ar' ? 'flex-row-reverse' : 'flex-row'}`}
+                        className={`w-full flex items-center gap-3 text-sm text-gray-700 hover:text-primary transition-colors cursor-pointer py-3 ${locale === "ar" ? "flex-row-reverse" : "flex-row"}`}
                       >
-                        <span className={`flex-1 ${locale === 'ar' ? 'text-right' : 'text-left'}`}>{t('login')}</span>
-                        <LogIn className="w-5 h-5 shrink-0 text-[#606060]" strokeWidth={1} />
+                        <span
+                          className={`flex-1 ${locale === "ar" ? "text-right" : "text-left"}`}
+                        >
+                          {t("login")}
+                        </span>
+                        <LogIn
+                          className="w-5 h-5 shrink-0 text-[#606060]"
+                          strokeWidth={1}
+                        />
                       </button>
                     </DrawerClose>
                   )}
@@ -310,7 +274,7 @@ export const MobileBottomNav: React.FC = () => {
           </DrawerContent>
         </Drawer>
       </div>
-      
+
       {/* Contact Us Dialog */}
       <ContactUsDialog
         open={contactDialogOpen}
@@ -323,41 +287,45 @@ export const MobileBottomNav: React.FC = () => {
           <div className="px-4 pb-4">
             <div className="py-4">
               <h2 className={`text-lg font-semibold mb-4  text-center`}>
-                {locale === 'ar' ? 'اختر اللغة' : 'Select Language'}
+                {locale === "ar" ? "اختر اللغة" : "Select Language"}
               </h2>
               <div className="space-y-2">
                 {/* Arabic Option */}
                 <button
-                  onClick={() => handleSelectLanguage('ar')}
+                  onClick={() => handleSelectLanguage("ar")}
                   className={`w-full flex items-center gap-3 p-3 rounded-lg transition-colors ${
-                    locale === 'ar'
-                      ? 'bg-primary/10 text-primary'
-                      : 'hover:bg-gray-100 text-gray-700'
+                    locale === "ar"
+                      ? "bg-primary/10 text-primary"
+                      : "hover:bg-gray-100 text-gray-700"
                   }`}
                 >
                   <span className="text-xl">🇸🇦</span>
-                  <span className={`flex-1 font-medium ${locale === 'ar' ? 'text-right' : 'text-left'}`}>
+                  <span
+                    className={`flex-1 font-medium ${locale === "ar" ? "text-right" : "text-left"}`}
+                  >
                     العربية
                   </span>
-                  {locale === 'ar' && (
+                  {locale === "ar" && (
                     <div className="w-2 h-2 rounded-full bg-primary"></div>
                   )}
                 </button>
 
                 {/* English Option */}
                 <button
-                  onClick={() => handleSelectLanguage('en')}
+                  onClick={() => handleSelectLanguage("en")}
                   className={`w-full flex items-center gap-3 p-3 rounded-lg transition-colors ${
-                    locale === 'en'
-                      ? 'bg-primary/10 text-primary'
-                      : 'hover:bg-gray-100 text-gray-700'
+                    locale === "en"
+                      ? "bg-primary/10 text-primary"
+                      : "hover:bg-gray-100 text-gray-700"
                   }`}
                 >
                   <span className="text-xl">🇬🇧</span>
-                  <span className={`flex-1 font-medium ${locale === 'ar' ? 'text-right' : 'text-left'}`}>
+                  <span
+                    className={`flex-1 font-medium ${locale === "ar" ? "text-right" : "text-left"}`}
+                  >
                     English
                   </span>
-                  {locale === 'en' && (
+                  {locale === "en" && (
                     <div className="w-2 h-2 rounded-full bg-primary"></div>
                   )}
                 </button>
@@ -369,4 +337,3 @@ export const MobileBottomNav: React.FC = () => {
     </nav>
   );
 };
-
