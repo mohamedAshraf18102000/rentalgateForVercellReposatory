@@ -11,6 +11,39 @@ body,
   height: 100%;
 }
 
+.pac-container {
+  z-index: 99999 !important;
+  pointer-events: auto;
+  cursor: pointer !important;
+}
+
+.gm-style {
+  pointer-events: auto;
+}
+
+.pac-container {
+  border-radius: 16px !important;
+  margin-top: 10px;
+  background: #ffffff;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+  text-align: start;
+}
+
+.pac-item {
+  justify-content: start !important;
+  display: flex;
+  flex-direction: column;
+}
+
+.pac-item:hover {
+  background: #f8fafc;
+  cursor: pointer !important;
+}
+
+.pac-icon {
+  display: none !important;
+}
+
 body {
   background: #eceef2 !important;
 }

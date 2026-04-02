@@ -16,8 +16,6 @@ const CarPickupDialogTabs = ({
   const { setFilter } = useUserPreferedFiltersStore();
   const { target } = usePickupDialogStore();
 
-
-
   return (
     <Tabs
       dir="rtl"
@@ -40,10 +38,6 @@ const CarPickupDialogTabs = ({
         </TabsList>
 
         <div className="relative h-[450px] my-2 rounded-2xl overflow-hidden border border-Grey100 shadow-sm">
-          <div className="absolute top-4 left-4 right-4 z-10 pointer-events-auto">
-            <SearchPickUpDialog />
-          </div>
-
           <TabsContent
             className="w-full h-full mt-0! flex"
             value="currentLocation"

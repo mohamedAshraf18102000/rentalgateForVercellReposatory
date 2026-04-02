@@ -1,24 +1,16 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
-import {
-  Autocomplete,
-  GoogleMap,
-  Marker,
-  useJsApiLoader,
-} from "@react-google-maps/api";
+import { GoogleMap, Marker, useJsApiLoader } from "@react-google-maps/api";
 import { Input } from "../ui/input";
-import { LocateFixed, Search } from "lucide-react";
+import { LocateFixed, Loader2, Search } from "lucide-react";
 import { Skeleton } from "../ui/skeleton";
 import { useLocationStore } from "@/lib/stores/useLocationStore";
 import { reverseGeocode } from "@/lib/utils/reverseGeocode";
+import { useDebounce } from "./hooks/useDebounce";
+import { usePlacesAutocomplete } from "./hooks/usePlacesAutocomplete";
 
-const mapStyle = {
-  width: "100%",
-  height: "400px",
-};
-
+const mapStyle = { width: "100%", height: "400px" };
 const defaultLocation = { lat: 0, lng: 0 };
-
 const libraries: "places"[] = ["places"];
 
 const GoogleMapsLocation = ({
@@ -52,7 +44,7 @@ const GoogleMapsLocation = ({
   const [locationLoading, setLocationLoading] = useState(
     !(initialLat && initialLng) && !latitude && !longitude,
   );
-  const autocompleteRef = useRef<any>(null);
+  const [isLocating, setIsLocating] = useState(false);
   const mapRef = useRef<google.maps.Map | null>(null);
   const onLocationChangeRef = useRef(onLocationChange);
   const hasCalledInitialChange = useRef(false);
@@ -70,51 +62,41 @@ const GoogleMapsLocation = ({
     lat: number,
     lng: number,
     address: string | null,
-    isManual: boolean = false,
+    isManual = false,
   ) => {
-    if (!storeless) {
-      setLocation(lat, lng, address);
-    }
-    if (onLocationChangeRef.current) {
+    if (!storeless) setLocation(lat, lng, address);
+    if (onLocationChangeRef.current)
       onLocationChangeRef.current(lat, lng, address || "", isManual);
+  };
+
+  const initializeLocation = async (lat?: number, lng?: number) => {
+    const pos = {
+      lat: lat || latitude || defaultLocation.lat,
+      lng: lng || longitude || defaultLocation.lng,
+    };
+    setCurrentLocation(pos);
+    setLocationLoading(false);
+
+    if (!hasCalledInitialChange.current) {
+      hasCalledInitialChange.current = true;
+      const address = storeAddress || (await reverseGeocode(pos.lat, pos.lng));
+      handleSetLocation(pos.lat, pos.lng, address, false);
     }
   };
 
   useEffect(() => {
-    const initializeLocation = async () => {
+    const setup = async () => {
       if (initialLat && initialLng) {
-        const pos = { lat: initialLat, lng: initialLng };
-        setCurrentLocation(pos);
-        setLocationLoading(false);
-        if (!hasCalledInitialChange.current) {
-          hasCalledInitialChange.current = true;
-          const address = await reverseGeocode(pos.lat, pos.lng);
-          handleSetLocation(pos.lat, pos.lng, address, false);
-        }
+        await initializeLocation(initialLat, initialLng);
       } else if (latitude && longitude) {
-        const pos = { lat: latitude, lng: longitude };
-        setCurrentLocation(pos);
-        setLocationLoading(false);
-        if (!hasCalledInitialChange.current) {
-          hasCalledInitialChange.current = true;
-          const address =
-            storeAddress || (await reverseGeocode(pos.lat, pos.lng));
-          handleSetLocation(pos.lat, pos.lng, address, false);
-        }
+        await initializeLocation();
       } else if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
-          async (position) => {
-            const newPos = {
-              lat: position.coords.latitude,
-              lng: position.coords.longitude,
-            };
-            setCurrentLocation(newPos);
-            const address = await reverseGeocode(newPos.lat, newPos.lng);
-            handleSetLocation(newPos.lat, newPos.lng, address, false);
-            setLocationLoading(false);
+          async (pos) => {
+            await initializeLocation(pos.coords.latitude, pos.coords.longitude);
           },
-          (error) => {
-            console.error(error);
+          (err) => {
+            console.error(err);
             setLocationLoading(false);
           },
         );
@@ -123,52 +105,70 @@ const GoogleMapsLocation = ({
       }
     };
 
-    initializeLocation();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    setup();
   }, [latitude, longitude, initialLat, initialLng, storeAddress]);
 
   useEffect(() => {
-    if (mapRef.current) {
-      mapRef.current.panTo(currentLocation);
-    }
+    if (mapRef.current) mapRef.current.panTo(currentLocation);
   }, [currentLocation]);
-
-  const onPlaceChanged = () => {
-    const place = autocompleteRef.current.getPlace();
-    if (place.geometry) {
-      const location = place.geometry.location;
-      const newPos = { lat: location.lat(), lng: location.lng() };
-      setCurrentLocation(newPos);
-      handleSetLocation(
-        newPos.lat,
-        newPos.lng,
-        place.formatted_address || "",
-        true,
-      );
-      console.log(newPos);
-    }
-  };
 
   const handleLocateUser = () => {
     if (!navigator.geolocation) return;
+    setIsLocating(true);
     navigator.geolocation.getCurrentPosition(
-      async (position) => {
-        const newPos = {
-          lat: position.coords.latitude,
-          lng: position.coords.longitude,
-        };
+      async (pos) => {
+        const newPos = { lat: pos.coords.latitude, lng: pos.coords.longitude };
         setCurrentLocation(newPos);
         mapRef.current?.panTo(newPos);
         const address = await reverseGeocode(newPos.lat, newPos.lng);
         handleSetLocation(newPos.lat, newPos.lng, address, true);
+        setIsLocating(false);
       },
-      (error) => {
-        console.error("Error getting location:", error);
+      (err) => {
+        console.error(err);
+        setIsLocating(false);
       },
     );
   };
 
-  if (!isLoaded || locationLoading) {
+  const [inputValue, setInputValue] = useState("");
+  const debouncedValue = useDebounce(inputValue);
+  const { predictions, setPredictions: clearPredictions } =
+    usePlacesAutocomplete(debouncedValue, isLoaded);
+
+  const geocodePlace = (placeId: string) =>
+    new Promise<{ lat: number; lng: number; address: string }>(
+      (resolve, reject) => {
+        const geocoder = new google.maps.Geocoder();
+        geocoder.geocode({ placeId }, (results, status) => {
+          if (status === "OK" && results && results[0]) {
+            const loc = results[0].geometry.location;
+            resolve({
+              lat: loc.lat(),
+              lng: loc.lng(),
+              address: results[0].formatted_address,
+            });
+          } else reject(status);
+        });
+      },
+    );
+
+  const handleSelectPlace = async (
+    place: google.maps.places.AutocompletePrediction,
+  ) => {
+    try {
+      const { lat, lng, address } = await geocodePlace(place.place_id);
+      setCurrentLocation({ lat, lng });
+      mapRef.current?.panTo({ lat, lng });
+      handleSetLocation(lat, lng, address, true);
+      clearPredictions();
+      setInputValue(address);
+    } catch (err) {
+      console.error("Geocode failed:", err);
+    }
+  };
+
+  if (!isLoaded || locationLoading)
     return (
       <div className="w-full h-full relative">
         <div className="flex items-center justify-center h-full min-h-[300px]">
@@ -176,32 +176,47 @@ const GoogleMapsLocation = ({
         </div>
       </div>
     );
-  }
 
   return (
     <div className="w-full h-full flex flex-col relative">
-      <div className="z-50">
-        <Autocomplete
-          onLoad={(autocomplete) => (autocompleteRef.current = autocomplete)}
-          onPlaceChanged={onPlaceChanged}
-        >
-          <Input
-            wrapperClassName="mb-3!"
-            className="bg-white! text-sm! rounded-xl w-full!"
-            type="search"
-            placeholder="بحث ..."
-            startIcon={<Search className="w-6! h-6!" />}
-          />
-        </Autocomplete>
+      <div className="relative z-50">
+        <Input
+          value={inputValue}
+          onChange={(e) => setInputValue(e.target.value)}
+          wrapperClassName="mb-3"
+          className="bg-white text-sm rounded-xl w-full"
+          type="search"
+          placeholder="بحث ..."
+          startIcon={<Search className="w-6 h-6" />}
+        />
+        {predictions.length > 0 && (
+          <div className="absolute top-full left-0 w-full bg-white shadow-lg rounded-xl mt-2 overflow-hidden">
+            {predictions.map((item) => (
+              <div
+                key={item.place_id}
+                className="p-3 hover:bg-gray-100 cursor-pointer text-sm"
+                onClick={() => handleSelectPlace(item)}
+              >
+                {item.description}
+              </div>
+            ))}
+          </div>
+        )}
       </div>
+
       <div className="relative w-full rounded-2xl overflow-hidden flex-1 min-h-[250px]">
         <button
           type="button"
           onClick={handleLocateUser}
-          className="rounded-full z-9999 absolute top-4 right-4 bg-white/80 p-2 shadow-md hover:bg-white transition-all active:scale-95"
+          disabled={isLocating}
+          className="rounded-full z-[9999] absolute top-4 right-4 bg-white/80 p-2 shadow-md hover:bg-white transition-all active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed"
           title="الموقع الحالي"
         >
-          <LocateFixed className="w-6 h-6 text-blue-600" />
+          {isLocating ? (
+            <Loader2 className="w-6 h-6 text-blue-600 animate-spin" />
+          ) : (
+            <LocateFixed className="w-6 h-6 text-blue-600" />
+          )}
         </button>
         <GoogleMap
           mapContainerStyle={mapStyle}
@@ -216,11 +231,10 @@ const GoogleMapsLocation = ({
             mapRef.current = map;
           }}
           onClick={async (e) => {
-            const newPos = {
-              lat: e.latLng?.lat() || 0,
-              lng: e.latLng?.lng() || 0,
-            };
+            const newPos = { lat: e.latLng!.lat(), lng: e.latLng!.lng() };
             setCurrentLocation(newPos);
+            clearPredictions();
+            setInputValue("");
             const address = await reverseGeocode(newPos.lat, newPos.lng);
             handleSetLocation(newPos.lat, newPos.lng, address, true);
           }}

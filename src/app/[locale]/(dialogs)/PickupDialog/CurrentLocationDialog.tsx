@@ -1,36 +1,36 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { DialogWrapper } from "@/app/(components)";
 import GoogleMapsLocation from "@/app/(components)/mapsLocation/GoogleMapsLocation";
 import { useLocationStore } from "@/lib/stores/useLocationStore";
-import { reverseGeocode } from "@/lib/utils/reverseGeocode";
 import { LocateFixed } from "lucide-react";
 
 export function CurrentLocationDialog() {
   const { address, isDialogOpen, openDialog, closeDialog, setLocation } =
     useLocationStore();
 
-  useEffect(() => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        async (position) => {
-          const { latitude, longitude } = position.coords;
-          const address = await reverseGeocode(latitude, longitude);
-          setLocation(latitude, longitude, address);
-        },
-        (error) => {
-          console.error("Error getting location:", error);
-        },
-      );
-    }
+  // Temporary state — only committed to the store on save
+  const [tempLocation, setTempLocation] = useState<{
+    lat: number;
+    lng: number;
+    address: string;
+  } | null>(null);
 
+  useEffect(() => {
     const hasClosed = sessionStorage.getItem("hasClosedLocationDialog");
     if (!hasClosed) {
       const timer = setTimeout(() => openDialog(), 3000);
       return () => clearTimeout(timer);
     }
-  }, [setLocation, openDialog]);
+  }, [openDialog]);
+
+  // Reset temp state whenever the dialog opens so we start fresh
+  useEffect(() => {
+    if (isDialogOpen) {
+      setTempLocation(null);
+    }
+  }, [isDialogOpen]);
 
   const handleOpenChange = (isOpen: boolean) => {
     if (isOpen) {
@@ -42,6 +42,15 @@ export function CurrentLocationDialog() {
 
   const handleClose = () => {
     closeDialog();
+    setTempLocation(null);
+    sessionStorage.setItem("hasClosedLocationDialog", "true");
+  };
+
+  const handleSave = () => {
+    if (tempLocation) {
+      setLocation(tempLocation.lat, tempLocation.lng, tempLocation.address);
+    }
+    closeDialog();
     sessionStorage.setItem("hasClosedLocationDialog", "true");
   };
 
@@ -49,15 +58,21 @@ export function CurrentLocationDialog() {
     <DialogWrapper
       open={isDialogOpen}
       onOpenChange={handleOpenChange}
+      closeOnOutsideClick={false}
       size="xl"
       header={{ mainTitle: "موقعك الحالي" }}
       content={
         <div className="overflow-hidden">
           <div className="flex p-2 gap-2">
             <LocateFixed />
-            {address}
+            {tempLocation?.address ?? address}
           </div>
-          <GoogleMapsLocation />
+          <GoogleMapsLocation
+            storeless
+            onLocationChange={(lat, lng, addr) =>
+              setTempLocation({ lat, lng, address: addr })
+            }
+          />
         </div>
       }
       footer={
@@ -69,7 +84,10 @@ export function CurrentLocationDialog() {
             إغلاق
           </button>
 
-          <button className="rounded-xl py-3 bg-primary text-white font-bold w-fit px-5">
+          <button
+            onClick={handleSave}
+            className="rounded-xl py-3 bg-primary text-white font-bold w-fit px-5"
+          >
             حفظ
           </button>
         </div>
