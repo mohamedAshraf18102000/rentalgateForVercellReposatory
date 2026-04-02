@@ -162,7 +162,7 @@ const GoogleMapsLocation = ({
       mapRef.current?.panTo({ lat, lng });
       handleSetLocation(lat, lng, address, true);
       clearPredictions();
-      setInputValue(address);
+      setInputValue("");
     } catch (err) {
       console.error("Geocode failed:", err);
     }
@@ -209,7 +209,7 @@ const GoogleMapsLocation = ({
           type="button"
           onClick={handleLocateUser}
           disabled={isLocating}
-          className="rounded-full z-[9999] absolute top-4 right-4 bg-white/80 p-2 shadow-md hover:bg-white transition-all active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed"
+          className="rounded-full z-9999 absolute top-4 right-4 bg-white/80 p-2 shadow-md hover:bg-white transition-all active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed"
           title="الموقع الحالي"
         >
           {isLocating ? (
