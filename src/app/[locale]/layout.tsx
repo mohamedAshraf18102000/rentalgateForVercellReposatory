@@ -11,12 +11,12 @@ import SideToChat from "../(components)/sideToChat/SideToChat";
 import { CurrentLocationDialog } from "./(dialogs)/PickupDialog/CurrentLocationDialog";
 import ReactQueryProvider from "@/provider/ReactQueryProvider";
 
-const fontZain = Zain({
-  subsets: ["arabic", "latin"],
-  weight: ["400", "200", "300", "700"],
-  display: "swap",
-  variable: "--font-zain",
-});
+// const fontZain = Zain({
+//   subsets: ["arabic", "latin"],
+//   weight: ["400", "200", "300", "700"],
+//   display: "swap",
+//   variable: "--font-zain",
+// });
 
 const fontAlmarai = Almarai({
   weight: ["400", "700", "800"],
@@ -157,7 +157,8 @@ export default async function LocaleLayout({
     <html
       lang={locale}
       dir={locale === "ar" ? "rtl" : "ltr"}
-      className={` ${fontAlmarai.variable} ${fontZain.variable}`}
+      // className={` ${fontAlmarai.variable} ${fontZain.variable}`}
+      className={` ${fontAlmarai.variable}`}
     >
       <head>
         {/* Favicon */}

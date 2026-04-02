@@ -76,12 +76,12 @@ const CarsCard = ({
           <img
             src={carImage}
             alt="سيارة للإيجار"
-            className="relative z-20 mt-10 w-full object-cover scale-90 min-h-[210px] max-h-[210px]"
+            className="relative z-20 w-full object-cover scale-90 min-h-[250px] max-h-[250px]"
           />
           {typeof firstBadgeTitle === "string" &&
             firstBadgeTitle.length > 0 && (
               <Badge
-                className={`text-sm font-bold absolute top-0 -right-2  p-4 ${firstBadgeColor === "red" ? "bg-StatusBrownBG text-StatusBrown200" : "bg-StatusGreen text-StatusDarkGreen"}`}
+                className={`text-sm z-30 font-bold absolute top-0 -right-2  p-4 ${firstBadgeColor === "red" ? "bg-StatusBrownBG text-StatusBrown200" : "bg-StatusGreen text-StatusDarkGreen"}`}
               >
                 {firstBadgeTitle}
               </Badge>
