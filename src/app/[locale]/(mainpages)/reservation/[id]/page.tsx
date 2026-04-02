@@ -39,12 +39,10 @@ const page = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
   const stepContentRef = useRef<StepContentRef>(null);
-  const bookingStore = useBookedCarDetailsStore();
-  console.log("bookingStore", bookingStore);
-
   const carDetails = useBookedCarDetailsStore((s) => s.carDetails);
+  const formData = useBookedCarDetailsStore((s) => s.formData);
   const { filters } = useUserPreferedFiltersStore();
-  const resetReservationForm = useBookedCarDetailsStore((s) => s.resetForm);
+  // const resetReservationForm = useBookedCarDetailsStore((s) => s.resetForm);
   const bookedCarDetails = useBookedCarDetailsStore();
 
   const rentalDays = useMemo(() => {
@@ -175,7 +173,7 @@ const page = () => {
             <Stepper
               stepNum="1"
               title="تأكيد مكان و ميعاد الأستلام و التسليم"
-              description="كان لوريم إيبسوم ولايزال المعيار للنص"
+              description={`${formData.pickupName} - ${formData.carReturnLocation}`}
               isActive={activeStep === 1}
               onClick={() => handleStepNavigation(1)}
             />

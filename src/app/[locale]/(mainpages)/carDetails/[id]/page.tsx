@@ -17,6 +17,7 @@ import {
   calculateRentalPrice,
   PricingType,
 } from "@/lib/utils/calculateRentalPrice";
+import DriverCard from "@/app/(components)/customCards/DriverCard";
 
 const pricingTypeLabels: Record<PricingType, string> = {
   daily: "يومي",
@@ -105,24 +106,24 @@ const page = () => {
       calculateDiscount({
         originalPrice:
           pricingType === "daily"
-            ? data?.dailyPrice ?? 0
+            ? (data?.dailyPrice ?? 0)
             : pricingType === "weekly"
-              ? data?.weeklyPrice ?? 0
+              ? (data?.weeklyPrice ?? 0)
               : pricingType === "halfMonthly"
-                ? data?.halfMonthPrice ?? 0
+                ? (data?.halfMonthPrice ?? 0)
                 : pricingType === "monthly"
-                  ? data?.monthlyPrice ?? 0
-                  : data?.yearlyPrice ?? 0,
+                  ? (data?.monthlyPrice ?? 0)
+                  : (data?.yearlyPrice ?? 0),
         offerPrice:
           pricingType === "daily"
-            ? data?.offerDailyPrice ?? 0
+            ? (data?.offerDailyPrice ?? 0)
             : pricingType === "weekly"
-              ? data?.offerWeeklyPrice ?? 0
+              ? (data?.offerWeeklyPrice ?? 0)
               : pricingType === "halfMonthly"
-                ? data?.offerHalfMonthPrice ?? 0
+                ? (data?.offerHalfMonthPrice ?? 0)
                 : pricingType === "monthly"
-                  ? data?.offerMonthlyPrice ?? 0
-                  : data?.offerYearlyPrice ?? 0,
+                  ? (data?.offerMonthlyPrice ?? 0)
+                  : (data?.offerYearlyPrice ?? 0),
       }),
     [pricingType, data],
   );
@@ -181,6 +182,21 @@ const page = () => {
           ))}
         </div>
       )}
+      <div className="grid grid-cols-4 gap-4">
+        <DriverCard
+          image={"/driver/driverImage.png"}
+          serviceName={"خدمة سائق"}
+          status={data?.company?.driverServiceOutside === "active"}
+          badgeTitle={"خارج المدينة"}
+        />
+
+        <DriverCard
+          image={"/driver/driverImage.png"}
+          serviceName={"خدمة سائق"}
+          status={data?.company?.driverService === "active"}
+          badgeTitle={"داخل المدينة"}
+        />
+      </div>
       <Panner />
     </WrapperContainer>
   );

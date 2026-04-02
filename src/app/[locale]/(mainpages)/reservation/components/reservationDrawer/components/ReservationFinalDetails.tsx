@@ -2,7 +2,7 @@ import { useBookedCarDetailsStore } from "@/lib/stores/useBookedCarDetailsStore"
 import { formatPrice } from "@/lib/utils/formatPrice";
 import { useMemo } from "react";
 import ReservationFinalDetailsItem from "./ReservationFinalDetailsItem";
-import { BadgePercent, Percent } from "lucide-react";
+import { Percent } from "lucide-react";
 
 const ReservationFinalDetails = () => {
   const { formData, services: allServices } = useBookedCarDetailsStore();
@@ -51,11 +51,13 @@ const ReservationFinalDetails = () => {
         items={[
           {
             label: `خصم عرض ال ( ${rentalDays} يوم )`,
-            isAvailable: true,
+            isAvailable:
+              !!formData.originalPrice &&
+              !!formData.price &&
+              formData.originalPrice > formData.price,
             value: (
               <>
                 <span dir="ltr" className="p-1 rounded-lg">
-                  -
                   {formatPrice(
                     (formData.originalPrice ?? 0) - (formData.price ?? 0),
                   )}
