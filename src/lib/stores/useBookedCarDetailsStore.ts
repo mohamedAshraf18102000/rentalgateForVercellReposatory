@@ -41,6 +41,11 @@ export interface ReservationFormData {
     pointsPkId: number | null;
     value: number | null;
   } | null;
+
+  carDetails: {
+    unlimitedKm: number;
+    unlimitedKmPrice: number;
+  } | null;
 }
 
 const initialFormData: ReservationFormData = {
@@ -68,6 +73,7 @@ const initialFormData: ReservationFormData = {
   borderNumber: "",
   services: [],
   points: null,
+  carDetails: null,
 };
 
 export interface BookedCarDetailsState {

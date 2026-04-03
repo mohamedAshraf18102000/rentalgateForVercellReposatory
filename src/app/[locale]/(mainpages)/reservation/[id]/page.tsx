@@ -45,6 +45,8 @@ const page = () => {
   // const resetReservationForm = useBookedCarDetailsStore((s) => s.resetForm);
   const bookedCarDetails = useBookedCarDetailsStore();
 
+  console.log("formData", formData);
+
   const rentalDays = useMemo(() => {
     if (filters.fromDate && filters.toDate) {
       const from = new Date(filters.fromDate);

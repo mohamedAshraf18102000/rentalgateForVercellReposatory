@@ -8,12 +8,14 @@ interface SelectableServiceDriverCardProps {
   service?: CompanyService;
   selected?: boolean;
   onToggle?: () => void;
+  badge?: string;
 }
 
 const SelectableServiceDriverCard = ({
   service,
   selected,
   onToggle,
+  badge,
 }: SelectableServiceDriverCardProps) => {
   return (
     <>
@@ -113,7 +115,7 @@ const SelectableServiceDriverCard = ({
             <div className=" w-fit flex items-center rounded-lg gap-1 mt-2">
               <CircleAlert className="h-4 w-4 text-StatusRed" />
               <p className="text-xs text-StatusRed font-medium line-clamp-2 leading-relaxed">
-                حد اقصى لعدد ساعات اليوم 12 ساعة
+                مدة الحجز الخاصة بك هي (3 أيام)
               </p>
             </div>
 
@@ -125,10 +127,11 @@ const SelectableServiceDriverCard = ({
               <p className="">يوم</p>
             </div>
           </div>
-
-          <Badge className="text-sm font-bold absolute top-2 left-2 bg-StatusGreen text-StatusDarkGreen border-2 border-StatusDarkGreen p-4 rounded-lg">
-            خارج المدينة
-          </Badge>
+          {badge && (
+            <Badge className="text-sm font-bold absolute top-2 left-2 bg-StatusGreen text-StatusDarkGreen border-2 border-StatusDarkGreen p-4 rounded-lg">
+              {badge}
+            </Badge>
+          )}
         </div>
       </label>
     </>

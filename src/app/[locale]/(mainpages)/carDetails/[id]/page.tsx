@@ -30,6 +30,7 @@ const pricingTypeLabels: Record<PricingType, string> = {
 const page = () => {
   const { id } = useParams();
   const setCarDetails = useBookedCarDetailsStore((s) => s.setCarDetails);
+  const setFormData = useBookedCarDetailsStore((s) => s.setFormData);
   const setServices = useBookedCarDetailsStore((s) => s.setServices);
   const { filters } = useUserPreferedFiltersStore();
 
@@ -41,8 +42,14 @@ const page = () => {
   useEffect(() => {
     if (data) {
       setCarDetails(data);
+      setFormData({
+        carDetails: {
+          unlimitedKm: data.unlimitedKm,
+          unlimitedKmPrice: data.unlimitedKmPrice,
+        },
+      });
     }
-  }, [data, setCarDetails]);
+  }, [data, setCarDetails, setFormData]);
 
   const { data: services, isLoading: servicesLoading } = useQuery({
     queryKey: ["company-cars-services", id],
