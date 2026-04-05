@@ -37,7 +37,7 @@ const CarPickupDialogTabs = ({
           <TabsTrigger value="branches">الفروع</TabsTrigger>
         </TabsList>
 
-        <div className="relative h-[450px] my-2 rounded-2xl overflow-hidden border border-Grey100 shadow-sm">
+        <div className="relative min-h-[450px] max-h-[450px] rounded-2xl overflow-hidden border border-Grey100 shadow-sm">
           <TabsContent
             className="w-full h-full mt-0! flex"
             value="currentLocation"
@@ -46,21 +46,21 @@ const CarPickupDialogTabs = ({
           </TabsContent>
 
           <TabsContent
-            className="w-full h-full mt-0! flex flex-col pt-17"
+            className="w-full h-full mt-0! flex flex-col"
             value="airport"
           >
             <AirportLocations />
           </TabsContent>
 
           <TabsContent
-            className="w-full h-full mt-0! flex flex-col pt-17"
+            className="w-full h-full mt-0! flex flex-col"
             value="trainStation"
           >
             <TrainLocations />
           </TabsContent>
 
           <TabsContent
-            className="w-full h-full mt-0! flex flex-col pt-17"
+            className="w-full h-full mt-0! flex flex-col pt-2"
             value="branches"
           >
             <BranchesLocations />

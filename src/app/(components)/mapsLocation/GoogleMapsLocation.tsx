@@ -21,6 +21,7 @@ const GoogleMapsLocation = ({
   hideSearch = false,
   hideUserLocation = false,
   containerHeight = "400px",
+  className = "",
 }: {
   zoomPercent?: number;
   storeless?: boolean;
@@ -35,6 +36,7 @@ const GoogleMapsLocation = ({
   hideSearch?: boolean;
   hideUserLocation?: boolean;
   containerHeight?: string;
+  className?: string;
 }) => {
   const {
     latitude,
@@ -185,7 +187,7 @@ const GoogleMapsLocation = ({
 
   return (
     <div
-      className="w-full flex flex-col relative"
+      className={`w-full flex flex-col relative ${className}`}
       style={{ height: containerHeight }}
     >
       {!hideSearch && (
