@@ -9,7 +9,6 @@ import { reverseGeocode } from "@/lib/utils/reverseGeocode";
 import { useDebounce } from "./hooks/useDebounce";
 import { usePlacesAutocomplete } from "./hooks/usePlacesAutocomplete";
 
-const mapStyle = { width: "100%", height: "400px" };
 const defaultLocation = { lat: 0, lng: 0 };
 const libraries: "places"[] = ["places"];
 
@@ -19,6 +18,9 @@ const GoogleMapsLocation = ({
   onLocationChange,
   initialLat,
   initialLng,
+  hideSearch = false,
+  hideUserLocation = false,
+  containerHeight = "400px",
 }: {
   zoomPercent?: number;
   storeless?: boolean;
@@ -30,6 +32,9 @@ const GoogleMapsLocation = ({
   ) => void;
   initialLat?: number;
   initialLng?: number;
+  hideSearch?: boolean;
+  hideUserLocation?: boolean;
+  containerHeight?: string;
 }) => {
   const {
     latitude,
@@ -41,6 +46,7 @@ const GoogleMapsLocation = ({
     lat: initialLat || latitude || defaultLocation.lat,
     lng: initialLng || longitude || defaultLocation.lng,
   });
+
   const [locationLoading, setLocationLoading] = useState(
     !(initialLat && initialLng) && !latitude && !longitude,
   );
@@ -178,48 +184,55 @@ const GoogleMapsLocation = ({
     );
 
   return (
-    <div className="w-full h-full flex flex-col relative">
-      <div className="relative z-50">
-        <Input
-          value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
-          wrapperClassName="mb-3"
-          className="bg-white text-sm rounded-xl w-full"
-          type="search"
-          placeholder="بحث ..."
-          startIcon={<Search className="w-6 h-6" />}
-        />
-        {predictions.length > 0 && (
-          <div className="absolute top-full left-0 w-full bg-white shadow-lg rounded-xl mt-2 overflow-hidden">
-            {predictions.map((item) => (
-              <div
-                key={item.place_id}
-                className="p-3 hover:bg-gray-100 cursor-pointer text-sm"
-                onClick={() => handleSelectPlace(item)}
-              >
-                {item.description}
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-
-      <div className="relative w-full rounded-2xl overflow-hidden flex-1 min-h-[250px]">
-        <button
-          type="button"
-          onClick={handleLocateUser}
-          disabled={isLocating}
-          className="rounded-full z-9999 absolute top-4 right-4 bg-white/80 p-2 shadow-md hover:bg-white transition-all active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed"
-          title="الموقع الحالي"
-        >
-          {isLocating ? (
-            <Loader2 className="w-6 h-6 text-blue-600 animate-spin" />
-          ) : (
-            <LocateFixed className="w-6 h-6 text-blue-600" />
+    <div
+      className="w-full flex flex-col relative"
+      style={{ height: containerHeight }}
+    >
+      {!hideSearch && (
+        <div className="relative z-50">
+          <Input
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+            wrapperClassName="mb-3"
+            className="bg-white text-sm rounded-xl w-full"
+            type="search"
+            placeholder="بحث ..."
+            startIcon={<Search className="w-6 h-6" />}
+          />
+          {predictions.length > 0 && (
+            <div className="absolute top-full left-0 w-full bg-white shadow-lg rounded-xl mt-2 overflow-hidden">
+              {predictions.map((item) => (
+                <div
+                  key={item.place_id}
+                  className="p-3 hover:bg-gray-100 cursor-pointer text-sm"
+                  onClick={() => handleSelectPlace(item)}
+                >
+                  {item.description}
+                </div>
+              ))}
+            </div>
           )}
-        </button>
+        </div>
+      )}
+
+      <div className="relative w-full rounded-2xl overflow-hidden flex-1">
+        {!hideUserLocation && (
+          <button
+            type="button"
+            onClick={handleLocateUser}
+            disabled={isLocating}
+            className="rounded-full z-9999 absolute top-4 right-4 bg-white/80 p-2 shadow-md hover:bg-white transition-all active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed"
+            title="الموقع الحالي"
+          >
+            {isLocating ? (
+              <Loader2 className="w-6 h-6 text-blue-600 animate-spin" />
+            ) : (
+              <LocateFixed className="w-6 h-6 text-blue-600" />
+            )}
+          </button>
+        )}
         <GoogleMap
-          mapContainerStyle={mapStyle}
+          mapContainerStyle={{ width: "100%", height: "100%" }}
           center={currentLocation}
           zoom={zoomPercent}
           options={{
@@ -240,6 +253,15 @@ const GoogleMapsLocation = ({
           }}
         >
           <Marker position={currentLocation} />
+          {/* <Marker
+            position={currentLocation}
+            icon={{
+              url: "/images/car-marker.png",
+              scaledSize: new google.maps.Size(40, 40),
+              origin: new google.maps.Point(0, 0),
+              anchor: new google.maps.Point(20, 20),
+            }}
+          /> */}
         </GoogleMap>
       </div>
     </div>

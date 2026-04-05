@@ -256,8 +256,14 @@ const page = () => {
                   firstBadgeTitle={discountBadge}
                   firstBadgeColor="green"
                   extraContent={
-                    <div className="mt-2 w-full h-50 rounded-2xl overflow-hidden">
-                      <GoogleMapsLocation />
+                    <div className="mt-2 w-full h-[200px] rounded-2xl overflow-hidden flex items-center justify-center">
+                      <GoogleMapsLocation
+                        hideSearch
+                        hideUserLocation
+                        containerHeight="100%"
+                        initialLat={formData.pickupLat || undefined}
+                        initialLng={formData.pickupLong || undefined}
+                      />
                     </div>
                   }
                 />
