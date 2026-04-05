@@ -2,9 +2,11 @@ import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import { CarDetailsResponse } from "@/types/companyCars/carDetails";
 import { CompanyService } from "@/types/companyCars/carServices";
+import { PricingType } from "@/lib/utils/calculateRentalPrice";
 
 export interface ReservationFormData {
   // Step 1
+  company_id: number | null;
   pickupName: string;
   pickupLat: number | null;
   pickupLong: number | null;
@@ -35,7 +37,10 @@ export interface ReservationFormData {
   borderNumber: string;
 
   // Step 3
-  services: string[];
+  plan: PricingType | null;
+  services: number[];
+  driver: { id: number; hours: number; days: number; type?: "in" | "out" } | null;
+  unlimitedKm: boolean;
   points: {
     type: "PACKAGE" | "COUPON" | null;
     pointsPkId: number | null;
@@ -45,10 +50,16 @@ export interface ReservationFormData {
   carDetails: {
     unlimitedKm: number;
     unlimitedKmPrice: number;
+    ccbId: number;
   } | null;
+
+  pickupType: "BRANCH" | "MY_LOCATION" | "TRAIN_STATION" | "AIRPORT" | null;
+  returnType: "BRANCH" | "MY_LOCATION" | "TRAIN_STATION" | "AIRPORT" | null;
+  referalcode: string | null;
 }
 
 const initialFormData: ReservationFormData = {
+  company_id: null,
   pickupName: "",
   pickupLat: null,
   pickupLong: null,
@@ -71,9 +82,15 @@ const initialFormData: ReservationFormData = {
   personalId: "",
   passportNumber: "",
   borderNumber: "",
+  plan: null,
   services: [],
+  driver: null,
+  unlimitedKm: false,
   points: null,
   carDetails: null,
+  pickupType: null,
+  returnType: null,
+  referalcode: null,
 };
 
 export interface BookedCarDetailsState {

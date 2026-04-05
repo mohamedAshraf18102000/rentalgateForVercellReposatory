@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import WrapperContainer from "@/app/(components)/wrapperContainer/WrapperContainer";
 import Stepper from "../../../../(components)/rentalStepper/Stepper";
 import CarsCard from "@/app/(components)/customCards/CarsCard/CarsCard";
@@ -26,11 +26,11 @@ import ReservationDrawer from "../components/reservationDrawer/ReservationDrawer
 import { formatPrice } from "@/lib/utils/formatPrice";
 
 const pricingTypeLabels: Record<PricingType, string> = {
-  daily: "يومي",
-  weekly: "أسبوعي",
-  halfMonthly: "نصف شهري",
-  monthly: "شهري",
-  yearly: "سنوي",
+  DAILY: "يومي",
+  WEEKLY: "أسبوعي",
+  HALF_MONTHLY: "نصف شهري",
+  MONTHLY: "شهري",
+  YEARLY: "سنوي",
 };
 
 const page = () => {
@@ -44,8 +44,11 @@ const page = () => {
   const { filters } = useUserPreferedFiltersStore();
   // const resetReservationForm = useBookedCarDetailsStore((s) => s.resetForm);
   const bookedCarDetails = useBookedCarDetailsStore();
+  const setFormField = useBookedCarDetailsStore((s) => s.setFormField);
 
-  console.log("formData", formData);
+  console.log(formData);
+
+  // sync plan into store whenever pricingType changes
 
   const rentalDays = useMemo(() => {
     if (filters.fromDate && filters.toDate) {
@@ -99,6 +102,10 @@ const page = () => {
     };
   }, [carDetails, rentalDays]);
 
+  useEffect(() => {
+    setFormField("plan", pricingDetails.pricingType);
+  }, [pricingDetails.pricingType]);
+
   const { discountPercentage } = useMemo(
     () =>
       calculateDiscount({
@@ -148,9 +155,6 @@ const page = () => {
     const isValid = await stepContentRef.current?.validateStep();
     if (!isValid) return;
 
-    const rawData = buildReservationRawData(bookedCarDetails);
-
-    console.log(rawData);
     setIsDrawerOpen(true);
   };
 

@@ -15,11 +15,11 @@ interface CarsGridProps {
 }
 
 const pricingTypeLabels: Record<PricingType, string> = {
-  daily: "يومي",
-  weekly: "أسبوعي",
-  halfMonthly: "نصف شهري",
-  monthly: "شهري",
-  yearly: "سنوي",
+  DAILY: "يومي",
+  WEEKLY: "أسبوعي",
+  HALF_MONTHLY: "نصف شهري",
+  MONTHLY: "شهري",
+  YEARLY: "سنوي",
 };
 
 const getOriginalAndOfferPrice = (
@@ -27,27 +27,27 @@ const getOriginalAndOfferPrice = (
   pricingType: PricingType,
 ): { originalPrice: number; offerPrice: number } => {
   switch (pricingType) {
-    case "daily":
+    case "DAILY":
       return {
         originalPrice: car.dailyPrice ?? 0,
         offerPrice: car.offerDailyPrice ?? 0,
       };
-    case "weekly":
+    case "WEEKLY":
       return {
         originalPrice: car.weeklyPrice ?? 0,
-        offerPrice: car.offerWeeklyPrice ?? 0,
+        offerPrice: car.offerWeeklyPrice ?? 0,  
       };
-    case "halfMonthly":
+    case "HALF_MONTHLY":
       return {
         originalPrice: car.halfMonthPrice ?? 0,
         offerPrice: car.offerHalfMonthPrice ?? 0,
       };
-    case "monthly":
+    case "MONTHLY":
       return {
         originalPrice: car.monthlyPrice ?? 0,
         offerPrice: car.offerMonthlyPrice ?? 0,
       };
-    case "yearly":
+    case "YEARLY":
       return {
         originalPrice: car.yearlyPrice ?? 0,
         offerPrice: car.offerYearlyPrice ?? 0,

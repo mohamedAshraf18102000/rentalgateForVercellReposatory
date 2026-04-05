@@ -38,11 +38,11 @@ interface carsCard {
 }
 
 const pricingTypeLabels: Record<PricingType, string> = {
-  daily: "يومي",
-  weekly: "أسبوعي",
-  halfMonthly: "نصف شهري",
-  monthly: "شهري",
-  yearly: "سنوي",
+  DAILY: "يومي",
+  WEEKLY: "أسبوعي",
+  HALF_MONTHLY: "نصف شهري",
+  MONTHLY: "شهري",
+  YEARLY: "سنوي",
 };
 
 const CarsCard = ({
@@ -60,7 +60,7 @@ const CarsCard = ({
   firstBadgeTitle,
   firstBadgeColor,
   priceBeforeOffer,
-  pricingType = "daily",
+  pricingType = "DAILY",
   totalPrice,
   rentalDays,
 }: carsCard) => {

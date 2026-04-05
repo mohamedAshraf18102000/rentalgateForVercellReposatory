@@ -30,7 +30,7 @@ const ReservationDrawer = ({ open, onOpenChange }: ReservationDrawerProps) => {
 
   const servicesCost = useMemo(() => {
     return allServices
-      .filter((s) => formData.services.includes(String(s.csId)))
+      .filter((s) => formData.services.includes(s.csId))
       .reduce((acc, curr) => acc + (curr.price || 0), 0);
   }, [allServices, formData.services]);
 

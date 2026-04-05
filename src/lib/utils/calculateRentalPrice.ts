@@ -1,9 +1,9 @@
 export type PricingType =
-  | "daily"
-  | "weekly"
-  | "halfMonthly"
-  | "monthly"
-  | "yearly";
+  | "DAILY"
+  | "WEEKLY"
+  | "HALF_MONTHLY"
+  | "MONTHLY"
+  | "YEARLY";
 
 interface PriceInput {
   days: number;
@@ -50,35 +50,35 @@ export const calculateRentalPrice = ({
     return {
       totalPrice: 0,
       pricePerDay: 0,
-      pricingType: "daily",
+      pricingType: "DAILY",
     };
   }
 
   let pricePerDay = 0;
-  let pricingType: PricingType = "daily";
+  let pricingType: PricingType = "DAILY";
 
   if (days <= 6) {
-    pricingType = "daily";
+    pricingType = "DAILY";
 
     const price = getEffectivePrice(dailyPrice, offerDailyPrice);
     pricePerDay = price;
   } else if (days <= 14) {
-    pricingType = "weekly";
+    pricingType = "WEEKLY";
 
     const price = getEffectivePrice(weeklyPrice, offerWeeklyPrice);
     pricePerDay = price / 7;
   } else if (days <= 29) {
-    pricingType = "halfMonthly";
+    pricingType = "HALF_MONTHLY";
 
     const price = getEffectivePrice(halfMonthlyPrice, offerHalfMonthlyPrice);
     pricePerDay = price / 15;
   } else if (days <= 359) {
-    pricingType = "monthly";
+    pricingType = "MONTHLY";
 
     const price = getEffectivePrice(monthlyPrice, offerMonthlyPrice);
     pricePerDay = price / 30;
   } else {
-    pricingType = "yearly";
+    pricingType = "YEARLY";
 
     const price = getEffectivePrice(yearlyPrice, offerYearlyPrice);
     pricePerDay = price / 360;

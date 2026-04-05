@@ -1,25 +1,71 @@
 "use client";
 
-import { CompanyService } from "@/types/companyCars/carServices";
 import { CircleAlert, Minus, Plus, SaudiRiyal } from "lucide-react";
+import { useState } from "react";
 import { Badge } from "../ui/badge";
+import { CompanyService } from "@/types/companyDrivers";
 
 interface SelectableServiceDriverCardProps {
-  service?: CompanyService;
+  driver?: CompanyService;
   selected?: boolean;
   onToggle?: () => void;
   badge?: string;
+  hoursPerDay?: number;
+  numberOfDays?: number;
+  onHoursChange?: (hours: number) => void;
+  onDaysChange?: (days: number) => void;
 }
 
 const SelectableServiceDriverCard = ({
-  service,
+  driver,
   selected,
   onToggle,
   badge,
+  hoursPerDay: hoursPerDayProp,
+  numberOfDays: numberOfDaysProp,
+  onHoursChange,
+  onDaysChange,
 }: SelectableServiceDriverCardProps) => {
+  const checkboxId = `driver-service-${driver?.cdsId ?? Math.random()}`;
+
+  const minHours = 1;
+  const maxHours = driver?.dayNumberHours ?? 24;
+
+  const hoursPerDay = hoursPerDayProp ?? 1;
+  const numberOfDays = numberOfDaysProp ?? 1;
+
+  const handleHoursDecrement = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    e.preventDefault();
+    const next = Math.max(minHours, hoursPerDay - 1);
+    onHoursChange?.(next);
+  };
+
+  const handleHoursIncrement = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    e.preventDefault();
+    const next = Math.min(maxHours, hoursPerDay + 1);
+    onHoursChange?.(next);
+  };
+
+  const handleDaysDecrement = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    e.preventDefault();
+    const next = Math.max(1, numberOfDays - 1);
+    onDaysChange?.(next);
+  };
+
+  const handleDaysIncrement = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    e.preventDefault();
+    const next = numberOfDays + 1;
+    onDaysChange?.(next);
+  };
+
   return (
     <>
       <label
+        htmlFor={checkboxId}
         dir="rtl"
         className={`
         w-full text-right rounded-lg py-2 px-4 flex flex-col gap-2 transition-all duration-300 relative overflow-hidden cursor-pointer
@@ -31,6 +77,7 @@ const SelectableServiceDriverCard = ({
       `}
       >
         <input
+          id={checkboxId}
           type="checkbox"
           checked={selected}
           onChange={onToggle}
@@ -66,21 +113,35 @@ const SelectableServiceDriverCard = ({
             <p className="font-bold text-base text-gray-900 leading-tight">
               سائق خاص
               <span className="text-base font-normal mx-1">
-                (اليوم = 8 ساعات)
+                (اليوم = {driver?.dayNumberHours} ساعات)
               </span>
             </p>
             <p className="text-xs text-gray-500 mt-1 font-medium line-clamp-2 leading-relaxed">
-              لا يمكن الإستفادة من خدمة السائق إلا داخل المدينة المحددة
+              <span className="mx-1">لا يمكن الإستفادة من خدمة السائق إلا</span>
+              <span>{driver?.cdsType === "in" ? "داخل" : "خارج"}</span>{" "}
+              <span>المدينة المحددة</span>
             </p>
 
             <div className="bg-white p-2 w-fit flex items-center rounded-lg mt-3">
               <p className="font-bold">عدد الساعات في اليوم:</p>
               <div className="flex items-center gap-2 mx-2">
-                <button className="bg-gray-100 p-2 rounded-lg w-8 h-8 flex items-center justify-center font-bold hover:bg-red-200 transition duration-300 cursor-pointer">
+                <button
+                  type="button"
+                  onClick={handleHoursDecrement}
+                  disabled={hoursPerDay <= minHours}
+                  className="bg-gray-100 p-2 rounded-lg w-8 h-8 flex items-center justify-center font-bold hover:bg-red-200 transition duration-300 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
+                >
                   <Minus />
                 </button>
-                <span className="font-bold">1</span>
-                <button className="bg-gray-100 p-2 rounded-lg w-8 h-8 flex items-center justify-center font-bold hover:bg-green-200 transition duration-300 cursor-pointer">
+                <span className="font-bold min-w-6 text-center">
+                  {hoursPerDay}
+                </span>
+                <button
+                  type="button"
+                  onClick={handleHoursIncrement}
+                  disabled={hoursPerDay >= maxHours}
+                  className="bg-gray-100 p-2 rounded-lg w-8 h-8 flex items-center justify-center font-bold hover:bg-green-200 transition duration-300 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
+                >
                   <Plus />
                 </button>
               </div>
@@ -89,25 +150,37 @@ const SelectableServiceDriverCard = ({
             <div className="w-fit flex items-center rounded-lg gap-1 mt-2">
               <CircleAlert className="h-4 w-4 text-StatusRed" />
               <p className="text-xs text-StatusRed font-medium line-clamp-2 leading-relaxed">
-                خدمة السائق محددة ب 8 ساعات و إن زادت تكون بتكلفة إضافية أخرى.
+                خدمة السائق محددة ب {driver?.minHours} ساعات و إن زادت تكون
+                بتكلفة إضافية أخرى.
               </p>
             </div>
 
             <div className=" w-fit flex items-center rounded-lg gap-1">
               <CircleAlert className="h-4 w-4 text-StatusRed" />
               <p className="text-xs text-StatusRed font-medium line-clamp-2 leading-relaxed">
-                حد اقصى لعدد ساعات اليوم 12 ساعة
+                حد اقصى لعدد ساعات اليوم {driver?.dayNumberHours} ساعة
               </p>
             </div>
 
             <div className="bg-white p-2 w-fit flex items-center rounded-lg mt-3">
               <p className="font-bold">عدد الأيام:</p>
               <div className="flex items-center gap-2 mx-2">
-                <button className="bg-gray-100 p-2 rounded-lg w-8 h-8 flex items-center justify-center font-bold hover:bg-red-200 transition duration-300 cursor-pointer">
+                <button
+                  type="button"
+                  onClick={handleDaysDecrement}
+                  disabled={numberOfDays <= 1}
+                  className="bg-gray-100 p-2 rounded-lg w-8 h-8 flex items-center justify-center font-bold hover:bg-red-200 transition duration-300 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
+                >
                   <Minus />
                 </button>
-                <span className="font-bold">1</span>
-                <button className="bg-gray-100 p-2 rounded-lg w-8 h-8 flex items-center justify-center font-bold hover:bg-green-200 transition duration-300 cursor-pointer">
+                <span className="font-bold min-w-6 text-center">
+                  {numberOfDays}
+                </span>
+                <button
+                  type="button"
+                  onClick={handleDaysIncrement}
+                  className="bg-gray-100 p-2 rounded-lg w-8 h-8 flex items-center justify-center font-bold hover:bg-green-200 transition duration-300 cursor-pointer"
+                >
                   <Plus />
                 </button>
               </div>
@@ -115,13 +188,12 @@ const SelectableServiceDriverCard = ({
             <div className=" w-fit flex items-center rounded-lg gap-1 mt-2">
               <CircleAlert className="h-4 w-4 text-StatusRed" />
               <p className="text-xs text-StatusRed font-medium line-clamp-2 leading-relaxed">
-                مدة الحجز الخاصة بك هي (3 أيام)
+                مدة الحجز الخاصة بك هي ({numberOfDays} أيام)
               </p>
             </div>
 
             <div className=" w-fit flex items-center rounded-lg gap-1 mt-2">
-              <p className="line-through text-base text-Grey500">15</p>
-              <p className="font-bold text-lg">15</p>
+              <p className="font-bold text-lg">{driver?.dailyPrice}</p>
               <SaudiRiyal className="w-5 h-5" />
               <p className="">/</p>
               <p className="">يوم</p>

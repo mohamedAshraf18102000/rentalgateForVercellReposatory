@@ -1,11 +1,13 @@
 "use client";
 
+import { useState } from "react";
 import { Control, FieldErrors, useController } from "react-hook-form";
 import { ReservationFormValues } from "@/lib/validations/reservationSchema";
 import { useBookedCarDetailsStore } from "@/lib/stores/useBookedCarDetailsStore";
 import SelectableServiceCard from "@/app/(components)/customCards/SelectableServiceCard";
 import SelectableServiceDriverCard from "@/app/(components)/customCards/SelectableServiceDriverCard";
 import { Flame } from "lucide-react";
+import { useCompanyDriversPricing } from "@/hooks/api/useCompanyDriversPricing";
 
 interface StepThreeProps {
   control: Control<ReservationFormValues>;
@@ -15,22 +17,97 @@ interface StepThreeProps {
 const StepThree = ({ control, errors }: StepThreeProps) => {
   const services = useBookedCarDetailsStore((s) => s.services);
   const formdata = useBookedCarDetailsStore((s) => s.formData);
+  const { data: companyDriversPricing } = useCompanyDriversPricing(
+    formdata.company_id!,
+  );
 
   const {
-    field: { value: selectedIds, onChange },
+    field: { value: selectedServiceIds, onChange: onChangeServices },
   } = useController({
     name: "services",
     control,
     defaultValue: [],
   });
 
-  const toggleService = (id: string) => {
-    const current = selectedIds ?? [];
-    if (current.includes(id)) {
-      onChange(current.filter((s) => s !== id));
-    } else {
-      onChange([...current, id]);
+  const {
+    field: { value: selectedDriver, onChange: onChangeDriver },
+  } = useController({
+    name: "driver",
+    control,
+    defaultValue: null,
+  });
+
+  const {
+    field: { value: unlimitedKm, onChange: onChangeUnlimited },
+  } = useController({
+    name: "unlimitedKm",
+    control,
+    defaultValue: false,
+  });
+
+  const setFormData = useBookedCarDetailsStore((s) => s.setFormData);
+
+  // Lifted state: keyed by drvId
+  const [driverHours, setDriverHours] = useState<Record<number, number>>({});
+  const [driverDays, setDriverDays] = useState<Record<number, number>>({});
+
+  const toggleService = (
+    id: number,
+    type: "service" | "driver" | "unlimited",
+  ) => {
+    if (type === "service") {
+      const current = selectedServiceIds ?? [];
+      const isSelected = current.includes(id);
+      const next = isSelected
+        ? current.filter((sid: number) => sid !== id)
+        : [...current, id];
+
+      onChangeServices(next);
+      setFormData({ services: next });
+    } else if (type === "driver") {
+      const isSelected = selectedDriver?.id === id;
+      if (isSelected) {
+        onChangeDriver(null);
+        setFormData({ driver: null });
+      } else {
+        const driverInfo = companyDriversPricing?.find((d) => d.cdsId === id);
+        const nextDriver = {
+          id,
+          hours: driverHours[id] ?? 1,
+          days: driverDays[id] ?? 1,
+          type: driverInfo?.cdsType as "in" | "out",
+        };
+        onChangeDriver(nextDriver);
+        setFormData({ driver: nextDriver });
+      }
+    } else if (type === "unlimited") {
+      const next = !unlimitedKm;
+      onChangeUnlimited(next);
+      setFormData({ unlimitedKm: next });
     }
+  };
+
+  const handleLogServices = () => {
+    console.group("الخدمات المختارة");
+    console.log("الخدمات العادية (Form State):", selectedServiceIds);
+    console.log("الخدمات العادية (Store State):", formdata.services);
+
+    if (selectedDriver) {
+      const drvId = selectedDriver.id;
+      const driver = companyDriversPricing?.find((d) => d.cdsId === drvId);
+      console.log("خدمة السائق:", {
+        driverRequested: true,
+        id: drvId,
+        type: driver?.cdsType === "in" ? "داخل المدينة" : "خارج المدينة",
+        hoursPerDay: selectedDriver.hours,
+        numberOfDays: selectedDriver.days,
+      });
+    } else {
+      console.log("لم يتم اختيار خدمة سائق");
+    }
+
+    console.log("كيلومترات غير محدودة:", unlimitedKm);
+    console.groupEnd();
   };
 
   return (
@@ -64,32 +141,79 @@ const StepThree = ({ control, errors }: StepThreeProps) => {
                   percentage: 0,
                 } as any
               }
-              selected={false}
+              selected={unlimitedKm ?? false}
               badge={
                 <p className="text-sm p-2 bg-StatusBrownBG rounded-[8px] text-StatusBrown200 font-bold flex items-center gap-1">
                   <Flame />
                   <span>قيادة بلا نهاية</span>
                 </p>
               }
-              onToggle={() => console.log("clicked")}
+              onToggle={() => toggleService(0, "unlimited")}
             />
           )}
           {services.map((service) => {
-            const id = String(service.csId);
+            const id = service.csId;
             return (
               <SelectableServiceCard
                 key={service.csId}
                 service={service}
-                selected={(selectedIds ?? []).includes(id)}
-                onToggle={() => toggleService(id)}
+                selected={!!selectedServiceIds?.includes(id)}
+                onToggle={() => toggleService(id, "service")}
               />
             );
           })}
 
-          <SelectableServiceDriverCard badge="داخل المدينة" />
-          <SelectableServiceDriverCard badge="خارج المدينة" />
+          {companyDriversPricing?.map((driver) => {
+            const drvId = driver.cdsId;
+            const isSelected = selectedDriver?.id === drvId;
+            return (
+              <SelectableServiceDriverCard
+                key={driver.cdsId}
+                driver={driver}
+                selected={isSelected}
+                onToggle={() => toggleService(drvId, "driver")}
+                badge={
+                  driver.cdsType === "in" ? "داخل المدينة" : "خارج المدينة"
+                }
+                hoursPerDay={driverHours[drvId] ?? selectedDriver?.hours ?? 1}
+                numberOfDays={driverDays[drvId] ?? selectedDriver?.days ?? 1}
+                onHoursChange={(h) => {
+                  setDriverHours((prev) => ({ ...prev, [drvId]: h }));
+                  if (isSelected) {
+                    const next = {
+                      ...selectedDriver,
+                      hours: h,
+                      type: driver.cdsType as "in" | "out",
+                    };
+                    onChangeDriver(next);
+                    setFormData({ driver: next });
+                  }
+                }}
+                onDaysChange={(d) => {
+                  setDriverDays((prev) => ({ ...prev, [drvId]: d }));
+                  if (isSelected) {
+                    const next = {
+                      ...selectedDriver,
+                      days: d,
+                      type: driver.cdsType as "in" | "out",
+                    };
+                    onChangeDriver(next);
+                    setFormData({ driver: next });
+                  }
+                }}
+              />
+            );
+          })}
         </div>
       )}
+
+      <button
+        type="button"
+        onClick={handleLogServices}
+        className="bg-blue-200 w-full p-2 rounded-xl"
+      >
+        Click here to log the services
+      </button>
 
       {errors.services && (
         <p className="text-sm text-red-500">

@@ -44,7 +44,17 @@ export const reservationSchema = z.object({
 
   // Step 3 - Additional Services (Can be optional/required)
   // For now, let's keep it simple
-  services: z.array(z.string()).optional(),
+  services: z.array(z.number()).optional(),
+  driver: z
+    .object({
+      id: z.number(),
+      hours: z.number(),
+      days: z.number(),
+      type: z.enum(["in", "out"]).optional(),
+    })
+    .nullable()
+    .optional(),
+  unlimitedKm: z.boolean().optional(),
 }).superRefine((data, ctx) => {
   // 0: Citizen, 1: Resident, 2: Visitor, 3: Gulf Citizen
 

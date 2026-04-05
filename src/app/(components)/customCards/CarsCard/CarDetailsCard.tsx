@@ -47,11 +47,11 @@ interface CarDetailsCardProps {
 }
 
 const pricingTypeLabels: Record<PricingType, string> = {
-  daily: "يومي",
-  weekly: "أسبوعي",
-  halfMonthly: "نصف شهري",
-  monthly: "شهري",
-  yearly: "سنوي",
+  DAILY: "يومي",
+  WEEKLY: "أسبوعي",
+  HALF_MONTHLY: "نصف شهري",
+  MONTHLY: "شهري",
+  YEARLY: "سنوي",
 };
 
 const CarDetailsCard = ({
@@ -68,7 +68,7 @@ const CarDetailsCard = ({
   priceBeforeOffer,
   freeKm,
   carPrice,
-  pricingType = "daily",
+  pricingType = "DAILY",
   totalPrice,
   originalTotalPrice,
   rentalDays,
@@ -153,14 +153,27 @@ const CarDetailsCard = ({
           <div className="flex flex-col gap-1">
             <div className="flex items-center">
               <span>السعر شامل الضريبة:</span>
-              {(rentalDays && rentalDays > 1 ? originalTotalPrice : priceBeforeOffer) &&
-                (rentalDays && rentalDays > 1 ? originalTotalPrice : priceBeforeOffer)! > (rentalDays && rentalDays > 1 ? totalPrice! : carPrice || 0) && (
-                <span className="text-Grey500 line-through mx-1 text-sm">
-                  {formatPrice(rentalDays && rentalDays > 1 ? originalTotalPrice! : priceBeforeOffer!)}
-                </span>
-              )}
+              {(rentalDays && rentalDays > 1
+                ? originalTotalPrice
+                : priceBeforeOffer) &&
+                (rentalDays && rentalDays > 1
+                  ? originalTotalPrice
+                  : priceBeforeOffer)! >
+                  (rentalDays && rentalDays > 1
+                    ? totalPrice!
+                    : carPrice || 0) && (
+                  <span className="text-Grey500 line-through mx-1 text-sm">
+                    {formatPrice(
+                      rentalDays && rentalDays > 1
+                        ? originalTotalPrice!
+                        : priceBeforeOffer!,
+                    )}
+                  </span>
+                )}
               <span className="font-bold mx-1">
-                {formatPrice(rentalDays && rentalDays > 1 ? totalPrice! : carPrice || 0)}
+                {formatPrice(
+                  rentalDays && rentalDays > 1 ? totalPrice! : carPrice || 0,
+                )}
               </span>
               <SaudiRiyal className="w-5 h-5" />
               <span className="mx-1 text-sm text-Grey500">

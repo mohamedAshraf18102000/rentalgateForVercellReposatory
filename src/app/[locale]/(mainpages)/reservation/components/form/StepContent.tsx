@@ -1,7 +1,10 @@
 "use client";
 import { useStepAnimation } from "../../../../../(components)/rentalStepper/hooks/useStepAnimation";
 import { useUserPreferedFiltersStore } from "@/lib/stores/useUserPreferedFiltersStore";
-import { useBookedCarDetailsStore } from "@/lib/stores/useBookedCarDetailsStore";
+import {
+  useBookedCarDetailsStore,
+  ReservationFormData,
+} from "@/lib/stores/useBookedCarDetailsStore";
 import { usePickupDialogStore } from "@/lib/stores/usePickupDialogStore";
 import { useEffect, forwardRef, useImperativeHandle } from "react";
 import { updateUserProfile } from "@/services/userProfile/updateUserProfile.service";
@@ -19,6 +22,23 @@ import StepTwo from "./StepTwo";
 import StepThree from "./StepThree";
 import { useClientStore } from "@/lib/api/stores";
 import { calculateRentalPrice } from "@/lib/utils/calculateRentalPrice";
+
+const mapLocationType = (
+  type?: string,
+): "BRANCH" | "MY_LOCATION" | "TRAIN_STATION" | "AIRPORT" => {
+  switch (type) {
+    case "currentLocation":
+      return "MY_LOCATION";
+    case "airport":
+      return "AIRPORT";
+    case "trainStation":
+      return "TRAIN_STATION";
+    case "branches":
+      return "BRANCH";
+    default:
+      return "BRANCH";
+  }
+};
 
 interface StepContentProps {
   activeStep: number;
@@ -66,28 +86,30 @@ const StepContent = forwardRef<StepContentRef, StepContentProps>(
         passportNumber: formData.passportNumber || "",
         borderNumber: formData.borderNumber || "",
         services: formData.services || [],
+        driver: formData.driver || null,
+        unlimitedKm: formData.unlimitedKm || false,
         pickupLat:
-          (filters.pickupType === "currentLocation" &&
-            (!filters.pickupLat || filters.pickupName === "الموقع الحالي"))
+          filters.pickupType === "currentLocation" &&
+          (!filters.pickupLat || filters.pickupName === "الموقع الحالي")
             ? latitude
             : filters.pickupLat || (carDetails?.latitude ?? undefined),
         pickupLong:
-          (filters.pickupType === "currentLocation" &&
-            (!filters.pickupLng || filters.pickupName === "الموقع الحالي"))
+          filters.pickupType === "currentLocation" &&
+          (!filters.pickupLng || filters.pickupName === "الموقع الحالي")
             ? longitude
             : filters.pickupLng || (carDetails?.longitude ?? undefined),
         returnLat:
-          (filters.carReturnLocationType === "currentLocation" &&
-            (!filters.carReturnLocationLat ||
-              filters.carReturnLocation === "الموقع الحالي"))
+          filters.carReturnLocationType === "currentLocation" &&
+          (!filters.carReturnLocationLat ||
+            filters.carReturnLocation === "الموقع الحالي")
             ? latitude
-            : filters.carReturnLocationLat ?? undefined,
+            : (filters.carReturnLocationLat ?? undefined),
         returnLong:
-          (filters.carReturnLocationType === "currentLocation" &&
-            (!filters.carReturnLocationLng ||
-              filters.carReturnLocation === "الموقع الحالي"))
+          filters.carReturnLocationType === "currentLocation" &&
+          (!filters.carReturnLocationLng ||
+            filters.carReturnLocation === "الموقع الحالي")
             ? longitude
-            : filters.carReturnLocationLng ?? undefined,
+            : (filters.carReturnLocationLng ?? undefined),
       },
     });
 
@@ -128,8 +150,8 @@ const StepContent = forwardRef<StepContentRef, StepContentProps>(
 
       // Sync Lat/Lng
       const targetPickupLat =
-        (filters.pickupType === "currentLocation" &&
-          (!filters.pickupLat || filters.pickupName === "الموقع الحالي"))
+        filters.pickupType === "currentLocation" &&
+        (!filters.pickupLat || filters.pickupName === "الموقع الحالي")
           ? latitude
           : filters.pickupLat || (carDetails?.latitude ?? undefined);
       if (
@@ -140,8 +162,8 @@ const StepContent = forwardRef<StepContentRef, StepContentProps>(
       }
 
       const targetPickupLong =
-        (filters.pickupType === "currentLocation" &&
-          (!filters.pickupLng || filters.pickupName === "الموقع الحالي"))
+        filters.pickupType === "currentLocation" &&
+        (!filters.pickupLng || filters.pickupName === "الموقع الحالي")
           ? longitude
           : filters.pickupLng || (carDetails?.longitude ?? undefined);
       if (
@@ -152,9 +174,9 @@ const StepContent = forwardRef<StepContentRef, StepContentProps>(
       }
 
       const targetReturnLat =
-        (filters.carReturnLocationType === "currentLocation" &&
-          (!filters.carReturnLocationLat ||
-            filters.carReturnLocation === "الموقع الحالي"))
+        filters.carReturnLocationType === "currentLocation" &&
+        (!filters.carReturnLocationLat ||
+          filters.carReturnLocation === "الموقع الحالي")
           ? latitude
           : (filters.carReturnLocationLat ?? undefined);
       if (
@@ -171,9 +193,9 @@ const StepContent = forwardRef<StepContentRef, StepContentProps>(
       }
 
       const targetReturnLong =
-        (filters.carReturnLocationType === "currentLocation" &&
-          (!filters.carReturnLocationLng ||
-            filters.carReturnLocation === "الموقع الحالي"))
+        filters.carReturnLocationType === "currentLocation" &&
+        (!filters.carReturnLocationLng ||
+          filters.carReturnLocation === "الموقع الحالي")
           ? longitude
           : (filters.carReturnLocationLng ?? undefined);
       if (
@@ -204,7 +226,9 @@ const StepContent = forwardRef<StepContentRef, StepContentProps>(
           if (isValid) {
             const values = getValues();
             if (values.fromDate && values.toDate && carDetails) {
-              const diffTime = Math.abs(values.toDate.getTime() - values.fromDate.getTime());
+              const diffTime = Math.abs(
+                values.toDate.getTime() - values.fromDate.getTime(),
+              );
               const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) || 1;
 
               const effectivePricing = calculateRentalPrice({
@@ -342,41 +366,74 @@ const StepContent = forwardRef<StepContentRef, StepContentProps>(
         personalId: initialValues.personalId,
         passportNumber: initialValues.passportNumber,
         borderNumber: initialValues.borderNumber,
-        services: initialValues.services as string[],
+        services: (initialValues.services || []) as number[],
+        driver: initialValues.driver || null,
+        unlimitedKm: initialValues.unlimitedKm || false,
         pickupLat: initialValues.pickupLat as number | null,
         pickupLong: initialValues.pickupLong as number | null,
         returnLat: initialValues.returnLat as number | null,
         returnLong: initialValues.returnLong as number | null,
+        pickupType: mapLocationType(filters.pickupType),
+        returnType: mapLocationType(
+          filters.carReturnLocationType || filters.pickupType,
+        ),
       });
 
       const subscription = watch((value) => {
-        setFormData({
-          pickupName: value.pickupName,
-          carReturnLocation: value.carReturnLocation,
-          fromDate: value.fromDate,
-          toDate: value.toDate,
-          idNumber: value.idNumber,
-          nationality: value.nationality,
-          licenseImage: value.licenseImage as string,
-          licenceExpiryDate: value.licenceExpiryDate,
-          personalId: value.personalId,
-          passportNumber: value.passportNumber,
-          borderNumber: value.borderNumber,
-          services: value.services as string[],
-          pickupLat: value.pickupLat as number | null,
-          pickupLong: value.pickupLong as number | null,
-          returnLat: value.returnLat as number | null,
-          returnLong: value.returnLong as number | null,
-        });
+        const update: Partial<ReservationFormData> = {};
 
-        setFilter(
-          "fromDate",
-          value.fromDate ? (value.fromDate as Date).toISOString() : "",
+        if (value.pickupName !== undefined)
+          update.pickupName = value.pickupName;
+        if (value.carReturnLocation !== undefined)
+          update.carReturnLocation = value.carReturnLocation;
+        if (value.fromDate !== undefined) update.fromDate = value.fromDate;
+        if (value.toDate !== undefined) update.toDate = value.toDate;
+        if (value.idNumber !== undefined) update.idNumber = value.idNumber;
+        if (value.nationality !== undefined)
+          update.nationality = value.nationality;
+        if (value.licenseImage !== undefined)
+          update.licenseImage = value.licenseImage as string;
+        if (value.licenceExpiryDate !== undefined)
+          update.licenceExpiryDate = value.licenceExpiryDate;
+        if (value.personalId !== undefined)
+          update.personalId = value.personalId;
+        if (value.passportNumber !== undefined)
+          update.passportNumber = value.passportNumber;
+        if (value.borderNumber !== undefined)
+          update.borderNumber = value.borderNumber;
+        if (value.services !== undefined)
+          update.services = value.services as number[];
+        if (value.driver !== undefined)
+          update.driver = value.driver as ReservationFormData["driver"];
+        if (value.unlimitedKm !== undefined)
+          update.unlimitedKm = value.unlimitedKm;
+
+        if (value.pickupLat !== undefined)
+          update.pickupLat = value.pickupLat as number | null;
+        if (value.pickupLong !== undefined)
+          update.pickupLong = value.pickupLong as number | null;
+        if (value.returnLat !== undefined)
+          update.returnLat = value.returnLat as number | null;
+        if (value.returnLong !== undefined)
+          update.returnLong = value.returnLong as number | null;
+
+        update.pickupType = mapLocationType(filters.pickupType);
+        update.returnType = mapLocationType(
+          filters.carReturnLocationType || filters.pickupType,
         );
-        setFilter(
-          "toDate",
-          value.toDate ? (value.toDate as Date).toISOString() : "",
-        );
+
+        setFormData(update);
+
+        if (value.fromDate)
+          setFilter(
+            "fromDate",
+            value.fromDate ? (value.fromDate as Date).toISOString() : "",
+          );
+        if (value.toDate)
+          setFilter(
+            "toDate",
+            value.toDate ? (value.toDate as Date).toISOString() : "",
+          );
         if (value.pickupName && value.pickupName !== "الموقع الحالي")
           setFilter("pickupName", value.pickupName);
         if (

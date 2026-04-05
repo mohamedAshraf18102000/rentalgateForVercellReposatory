@@ -16,6 +16,7 @@ const SelectableServiceCard = ({
   onToggle,
   badge,
 }: SelectableServiceCardProps) => {
+  const checkboxId = `service-card-${service.csId ?? Math.random()}`;
   const hasDiscount = service.percentage > 0;
   const originalPrice = hasDiscount
     ? (service.price / (1 - service.percentage / 100)).toFixed(2)
@@ -23,6 +24,7 @@ const SelectableServiceCard = ({
 
   return (
     <label
+      htmlFor={checkboxId}
       dir="rtl"
       className={`
         w-full text-right rounded-lg py-2 px-4 flex flex-col gap-2 transition-all duration-300 relative border-2 cursor-pointer
@@ -36,6 +38,7 @@ const SelectableServiceCard = ({
       <div className="flex justify-between">
         <div>
           <input
+            id={checkboxId}
             type="checkbox"
             checked={selected}
             onChange={onToggle}

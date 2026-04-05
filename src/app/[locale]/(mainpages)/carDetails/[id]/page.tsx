@@ -20,11 +20,11 @@ import {
 import DriverCard from "@/app/(components)/customCards/DriverCard";
 
 const pricingTypeLabels: Record<PricingType, string> = {
-  daily: "يومي",
-  weekly: "أسبوعي",
-  halfMonthly: "نصف شهري",
-  monthly: "شهري",
-  yearly: "سنوي",
+  DAILY: "يومي",
+  WEEKLY: "أسبوعي",
+  HALF_MONTHLY: "نصف شهري",
+  MONTHLY: "شهري",
+  YEARLY: "سنوي",
 };
 
 const page = () => {
@@ -43,9 +43,11 @@ const page = () => {
     if (data) {
       setCarDetails(data);
       setFormData({
+        company_id: data.company.companyId,
         carDetails: {
           unlimitedKm: data.unlimitedKm,
           unlimitedKmPrice: data.unlimitedKmPrice,
+          ccbId: data.ccbId,
         },
       });
     }
@@ -112,23 +114,23 @@ const page = () => {
     () =>
       calculateDiscount({
         originalPrice:
-          pricingType === "daily"
+          pricingType === "DAILY"
             ? (data?.dailyPrice ?? 0)
-            : pricingType === "weekly"
+            : pricingType === "WEEKLY"
               ? (data?.weeklyPrice ?? 0)
-              : pricingType === "halfMonthly"
+              : pricingType === "HALF_MONTHLY"
                 ? (data?.halfMonthPrice ?? 0)
-                : pricingType === "monthly"
+                : pricingType === "MONTHLY"
                   ? (data?.monthlyPrice ?? 0)
                   : (data?.yearlyPrice ?? 0),
         offerPrice:
-          pricingType === "daily"
+          pricingType === "DAILY"
             ? (data?.offerDailyPrice ?? 0)
-            : pricingType === "weekly"
+            : pricingType === "WEEKLY"
               ? (data?.offerWeeklyPrice ?? 0)
-              : pricingType === "halfMonthly"
+              : pricingType === "HALF_MONTHLY"
                 ? (data?.offerHalfMonthPrice ?? 0)
-                : pricingType === "monthly"
+                : pricingType === "MONTHLY"
                   ? (data?.offerMonthlyPrice ?? 0)
                   : (data?.offerYearlyPrice ?? 0),
       }),

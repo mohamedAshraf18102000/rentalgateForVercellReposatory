@@ -18,9 +18,7 @@ const ReservationFinalDetails = () => {
   }, [formData.fromDate, formData.toDate]);
 
   const selectedServices = useMemo(() => {
-    return allServices.filter((s) =>
-      formData.services.includes(String(s.csId)),
-    );
+    return allServices.filter((s) => formData.services.includes(s.csId));
   }, [allServices, formData.services]);
 
   return (

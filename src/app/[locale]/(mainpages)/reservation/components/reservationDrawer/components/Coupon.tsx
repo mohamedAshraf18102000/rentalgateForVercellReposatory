@@ -35,21 +35,31 @@ const Coupon = () => {
   const { setFormField, formData } = useBookedCarDetailsStore();
 
   useEffect(() => {
-    if (formData.promoData) {
-      setValue("code", formData.promoData.code);
+    const code = formData.promoData?.code || formData.referalcode || "";
+    if (code) {
+      setValue("code", code);
     }
-  }, [formData.promoData, setValue]);
+  }, [formData.promoData, formData.referalcode, setValue]);
 
   const { mutate, isPending, isError, error } = useMutation({
     mutationFn: validatePromoCode,
     onSuccess: (res) => {
       if (res.PromoCodeValid) {
-        setFormField("promoData", {
-          code: res.promo.code,
-          codeType: res.promo.codeType,
-          discountValue: res.promo.discountValue,
-        });
-        toast.success("تم تفعيل كود الخصم بنجاح", { position: "top-center" });
+        if (res.promo.code.trim().toLowerCase().startsWith("rf")) {
+          setFormField("referalcode", res.promo.code);
+          setFormField("promoData", null);
+          toast.success("تم تفعيل كود الإحالة بنجاح", {
+            position: "top-center",
+          });
+        } else {
+          setFormField("promoData", {
+            code: res.promo.code,
+            codeType: res.promo.codeType,
+            discountValue: res.promo.discountValue,
+          });
+          setFormField("referalcode", null);
+          toast.success("تم تفعيل كود الخصم بنجاح", { position: "top-center" });
+        }
       } else {
         toast.error("كود الخصم غير صحيح", { position: "top-center" });
       }
@@ -85,6 +95,7 @@ const Coupon = () => {
             onClick={() => {
               reset();
               setFormField("promoData", null);
+              setFormField("referalcode", null);
             }}
             type="button"
             className="absolute top-1/2 -translate-y-1/2 right-2 rtl:left-2 rtl:right-auto"
@@ -111,6 +122,11 @@ const Coupon = () => {
         <p className="text-StatusDarkGreen text-sm mt-1">
           تم تطبيق كود الخصم بقيمة {formData.promoData.discountValue}{" "}
           {formData.promoData.codeType === 1 ? "%" : "ريال"}
+        </p>
+      )}
+      {formData.referalcode && (
+        <p className="text-StatusDarkGreen text-sm mt-1">
+          تم تفعيل كود الإحالة بنجاح ({formData.referalcode})
         </p>
       )}
       {isError && <p className="text-red-600 mt-2">{error?.message}</p>}

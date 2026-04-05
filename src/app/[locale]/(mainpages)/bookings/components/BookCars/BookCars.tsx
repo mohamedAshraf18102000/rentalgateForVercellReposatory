@@ -12,6 +12,7 @@ import LoadMoreButton from "../LoadMoreButton";
 import { Skeleton } from "@/app/(components)/ui/skeleton";
 import { useLocationStore } from "@/lib/stores/useLocationStore";
 import { useBookedCarDetailsStore } from "@/lib/stores/useBookedCarDetailsStore";
+import { calculateRentalPrice } from "@/lib/utils/calculateRentalPrice";
 
 interface FormValues {
   location: string;
@@ -20,9 +21,6 @@ interface FormValues {
 }
 
 const BookCars = () => {
-  const store = useBookedCarDetailsStore();
-  console.log("store form data", store.formData);
-
   const [rentalDays, setRentalDays] = useState<number>(0);
   const { appliedFilters, filters, setFilter } = useUserPreferedFiltersStore();
   const longitude = useLocationStore((state) => state.longitude);
@@ -31,6 +29,7 @@ const BookCars = () => {
   const setBookedFormData = useBookedCarDetailsStore(
     (state) => state.setFormData,
   );
+  const setFormField = useBookedCarDetailsStore((state) => state.setFormField);
 
   // Auto-set pickup location name when address is resolved
   useEffect(() => {
@@ -81,6 +80,7 @@ const BookCars = () => {
     useCompanyCars(apiFilters);
 
   const allCars = data?.pages.flatMap((page) => page.content) ?? [];
+
   const totalElements = data?.pages[0]?.totalElements ?? 0;
 
   const { control, handleSubmit, watch, setValue } = useForm<FormValues>({
@@ -105,8 +105,25 @@ const BookCars = () => {
       const diffTime = Math.abs(toDate.getTime() - fromDate.getTime());
       const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
       setRentalDays(diffDays);
+
+      // حساب نوع الباقة وحفظها في الـ store
+      const { pricingType } = calculateRentalPrice({
+        days: diffDays,
+        dailyPrice: 1,
+        weeklyPrice: 1,
+        halfMonthlyPrice: 1,
+        monthlyPrice: 1,
+        yearlyPrice: 1,
+        offerDailyPrice: 0,
+        offerWeeklyPrice: 0,
+        offerHalfMonthlyPrice: 0,
+        offerMonthlyPrice: 0,
+        offerYearlyPrice: 0,
+      });
+      setFormField("plan", pricingType);
     } else {
       setRentalDays(0);
+      setFormField("plan", null);
     }
   }, [fromDate, toDate]);
 
