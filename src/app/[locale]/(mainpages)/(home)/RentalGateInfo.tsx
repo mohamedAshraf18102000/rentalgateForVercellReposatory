@@ -24,8 +24,8 @@ const rentalInfoCardDetails = [
 
 const RentalGateInfo = () => {
   return (
-    <WrapperContainer>
-      <div className="w-3/4 mx-auto grid grid-cols-3 gap-8 mb-8">
+    <WrapperContainer className="mb-10 md:mb-16">
+      <div className="w-full max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 px-4 md:px-0">
         {rentalInfoCardDetails.map((card) => (
           <RentalInfoCard
             key={card.key}

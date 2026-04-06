@@ -12,37 +12,42 @@ const CurrentLocationPickupCard = ({
   onClick: () => void;
 }) => {
   return (
-    <div className="">
-      <div className="bg-white w-3/4 mt-10 mx-auto rounded-[18px] grid grid-cols-2 overflow-hidden shadow-xl border-2 border-white">
-        <Image
-          src="/pickupCard/currentLocation.png"
-          alt="bgApp2"
-          width={500}
-          height={400}
-          className="w-full h-full"
-        />
-        <div className=" flex items-center justify-center">
-          <div className=" w-[80%]">
-            <h3 className="font-bold text-2xl">{title}</h3>
-            <p className="text-Grey700 text-base font-normal mt-4">
+    <div className="w-full px-4 md:px-0">
+      <div className="bg-white w-full max-w-5xl mt-6 md:mt-10 mx-auto rounded-[18px] grid grid-cols-1 md:grid-cols-2 overflow-hidden shadow-xl border-2 border-white min-h-[350px]">
+        <div className="relative h-48 md:h-full min-h-[250px]">
+          <Image
+            src="/pickupCard/currentLocation.png"
+            alt="bgApp2"
+            fill
+            className="object-cover"
+          />
+        </div>
+        <div className="flex items-center justify-center p-6 md:p-10">
+          <div className="w-full">
+            <h3 className="font-bold text-xl md:text-2xl text-center md:text-right">
+              {title}
+            </h3>
+            <p className="text-Grey700 text-sm md:text-base font-normal mt-3 md:mt-4 text-center md:text-right">
               {description}
             </p>
 
-            <div className="mt-8">
-              <label className="text-base font-normal text-primary">
+            <div className="mt-6 md:mt-8">
+              <label className="text-sm md:text-base font-normal text-primary block text-right mb-2">
                 حدد موقع أستلام السيارة:
               </label>
               <Input
-                className="text-base! rounded-xl mt-2"
+                className="text-sm! md:text-base! rounded-xl"
                 type="search"
                 placeholder="أدخل العنوان..."
-                startIcon={<MapPin className="w-6! h-6! text-primary" />}
+                startIcon={
+                  <MapPin className="w-5! h-5! md:w-6! md:h-6! text-primary" />
+                }
               />
 
-              <div className="flex justify-end">
+              <div className="flex justify-center md:justify-end">
                 <Button
                   onClick={onClick}
-                  className="text-base font-normal mt-6"
+                  className="text-sm md:text-base font-normal mt-5 md:mt-6 w-full md:w-auto"
                 >
                   إظهار النتائج
                 </Button>

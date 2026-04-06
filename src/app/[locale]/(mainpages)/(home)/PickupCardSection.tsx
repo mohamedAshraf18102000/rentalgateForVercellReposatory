@@ -8,7 +8,7 @@ import { usePickupDialogStore } from "@/lib/stores/usePickupDialogStore";
 const pickupCardDetails: PickUpCardDetails[] = [
   {
     key: "airport",
-    title: "من محطة المطار",
+    title: "من المطار",
     description: "كان لوريم إيبسوم ولايزال المعيار للنص الشكلي",
     image: "/pickupCard/Airport.png",
   },
@@ -47,11 +47,13 @@ export default function PickUpCardsSection() {
           }
         >
           {card.key === "currentLocation" ? (
-            <CurrentLocationPickupCard
-              title={card.title}
-              description={card.description}
-              onClick={() => openDialog(card.key)}
-            />
+            <>
+              <CurrentLocationPickupCard
+                title={card.title}
+                description={card.description}
+                onClick={() => openDialog(card.key)}
+              />
+            </>
           ) : (
             <div className="xl:min-h-[480px]">
               <PickUpCard

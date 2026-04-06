@@ -37,7 +37,7 @@ const HomeSlider = () => {
               <CarouselItem key={index} className="pl-0 h-full relative">
                 <div className="relative w-full h-full">
                   <Image
-                    src={image.image}
+                    src={`${process.env.NEXT_PUBLIC_IMAGES_PREFIX_URL}${image.image}`}
                     alt={image.bannerName}
                     fill
                     className="object-cover"

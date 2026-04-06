@@ -10,17 +10,19 @@ const RentPeriodComponent = () => {
   const { filters, setFilter } = useUserPreferedFiltersStore();
 
   return (
-    <div className="h-full rounded-2xl! overflow-hidden">
-      <div className="relative h-[50%] overflow-hidden">
+    <div className="h-[480px] md:h-full rounded-2xl! overflow-hidden shadow-lg border-2 border-white">
+      <div className="relative h-[200px] md:h-[50%] overflow-hidden">
         <Image
           src="/rentalSearch/img1.webp"
           alt="bgApp2"
           fill
-          className="object-cover w-full h-full"
+          className="object-cover"
         />
       </div>
-      <div className="bg-white h-[50%] p-2 text-center pt-4 ">
-        <h4 className="font-bold text-2xl mb-3">أبحث بمدة الإيجار</h4>
+      <div className="bg-white h-[280px] md:h-[50%] p-4 text-center">
+        <h4 className="font-bold text-xl md:text-2xl mb-2 md:mb-3 whitespace-nowrap">
+          أبحث بمدة الإيجار
+        </h4>
         <p className="text-sm text-Grey700 mb-3">
           اختر المدة اللي تناسب احتياجك، وإحنا نسهّل عليك البحث
         </p>

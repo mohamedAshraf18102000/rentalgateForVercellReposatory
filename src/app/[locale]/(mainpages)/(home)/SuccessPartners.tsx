@@ -11,29 +11,30 @@ const SuccessPartners = () => {
 
 
   return (
-    <WrapperContainer className="flex gap-10 h-64 my-10">
-      <div className="w-1/3 relative rounded-2xl overflow-hidden">
+    <WrapperContainer className="flex flex-col lg:flex-row gap-6 lg:gap-10 h-auto lg:h-72 my-10 px-4 md:px-0">
+      <div className="w-full lg:w-1/3 min-h-[220px] lg:h-full relative rounded-2xl overflow-hidden shadow-xl">
         <Image
           src="/successPartners/frame1.png"
           alt="frame1"
           fill
-          className="object-fill"
+          className="object-cover"
         />
 
-        <div className="absolute top-0 right-0 z-40 text-white p-4 w-full h-full">
-          <div className="flex items-center gap-2">
+        <div className="absolute inset-0 z-40 text-white p-6 md:p-8 flex flex-col justify-center items-start">
+          <div className="flex items-center gap-3">
             <PartnersIcon />
-            <h5 className="font-extrabold text-3xl">شركائنا في النجاح</h5>
+            <h5 className="font-extrabold text-2xl md:text-3xl lg:text-4xl">
+              شركائنا في النجاح
+            </h5>
           </div>
-          <p className="text-lg w-1/2 mt-2">
+          <p className="text-sm md:text-base lg:text-lg w-full md:w-3/4 mt-3 opacity-90 leading-relaxed">
             نجاحنا لا يكتمل إلا بشركائنا الذين نعتز بثقتهم وتعاونهم
           </p>
         </div>
       </div>
-      <div className="w-2/3 relative rounded-2xl overflow-hidden">
+      <div className="w-full lg:w-2/3 h-[220px] lg:h-full relative rounded-2xl overflow-hidden bg-gray-50/50">
         <SuccessPartnersMerquee partners={displayPartners} />
       </div>
-
     </WrapperContainer>
   );
 };

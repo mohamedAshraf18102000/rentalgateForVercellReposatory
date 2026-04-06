@@ -7,17 +7,17 @@ const FavCategoryComponent = () => {
   const { filters, setFilter } = useUserPreferedFiltersStore();
 
   return (
-    <div className="h-full rounded-2xl! overflow-hidden">
-      <div className="relative h-[50%] overflow-hidden">
+    <div className="h-[480px] md:h-full rounded-2xl! overflow-hidden shadow-lg border-2 border-white">
+      <div className="relative h-[200px] md:h-[50%] overflow-hidden">
         <Image
           src="/rentalSearch/img2.webp"
           alt="bgApp2"
           fill
-          className="object-cover w-full h-full scale-120"
+          className="object-cover scale-120"
         />
       </div>
-      <div className="bg-white h-[50%] p-2 text-center pt-4 ">
-        <h4 className="font-bold text-2xl mb-3">أبحث بالفئة المفضلة</h4>
+      <div className="bg-white h-[280px] md:h-[50%] p-4 text-center">
+        <h4 className="font-bold text-xl md:text-2xl mb-2 md:mb-3 whitespace-nowrap">أبحث بالفئة المفضلة</h4>
         <p className="text-sm text-Grey700 mb-3">
           اختر الفئة التي تناسب احتياجك، وإحنا نسهّل عليك البحث
         </p>

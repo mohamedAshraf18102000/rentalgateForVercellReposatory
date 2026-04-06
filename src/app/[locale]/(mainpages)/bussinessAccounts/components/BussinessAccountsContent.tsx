@@ -86,7 +86,9 @@ const BussinessAccountsContent = ({
   return (
     <>
       <div
-        className={`w-full grid grid-cols-3 gap-5 ${withOutStepper ? "hidden" : ""}`}
+        className={`w-full grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5 ${
+          withOutStepper ? "hidden" : ""
+        }`}
       >
         <Stepper
           stepNum="1"
@@ -123,25 +125,27 @@ const BussinessAccountsContent = ({
         />
       </div>
 
-      <div className="grid grid-cols-2 gap-4 mt-10 relative">
-        <div className="rounded-2xl border-2 border-white overflow-hidden h-[420px]">
-          <div className=" bg-[url(/bussinesAccounts/img1.png)] bg-cover bg-no-repeat p-6 h-full flex flex-col">
-            <h6 className="font-bold text-2xl">ماهو حساب الأعمال🤔؟!!</h6>
-            <p className="text-lg">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-4 mt-8 lg:mt-10 relative">
+        <div className="rounded-2xl border-2 border-white overflow-hidden min-h-[450px] lg:h-[420px]">
+          <div className=" bg-[url(/bussinesAccounts/img1.png)] bg-cover bg-no-repeat p-4 md:p-6 h-full flex flex-col">
+            <h6 className="font-bold text-xl md:text-2xl">
+              ماهو حساب الأعمال🤔؟!!
+            </h6>
+            <p className="text-base md:text-lg">
               هو حساب مصمم خصيصًا للشركات وأصحاب الأعمال
             </p>
             <FormProvider {...methods}>
               <form
-                className="w-1/2 flex flex-col flex-1 mt-4"
+                className="w-full md:w-3/4 lg:w-1/2 flex flex-col flex-1 mt-4"
                 onSubmit={handleNextStep}
               >
                 <div className="flex-1 overflow-y-auto pr-2">
                   <BussinessAccountsStepContent activeStep={activeStep} />
                 </div>
-                <div className="mt-4 flex justify-end">
+                <div className="mt-4 flex justify-center md:justify-end">
                   <Button
                     type="submit"
-                    className="border border-Grey600 text-primary bg-white! hover:bg-none text-base! hover:bg-Grey200! transition-all duration-300"
+                    className="border border-Grey600 text-primary bg-white! hover:bg-none text-sm! md:text-base! hover:bg-Grey200! transition-all duration-300 w-full md:w-auto"
                     icon={<ChevronLeft />}
                     loading={isPending}
                   >
@@ -153,7 +157,7 @@ const BussinessAccountsContent = ({
           </div>
         </div>
 
-        <div className="rounded-2xl bg-white p-6 shadow-xl">
+        <div className="rounded-2xl bg-white p-4 md:p-6 shadow-xl h-full">
           <BussinessAccountFeatures />
         </div>
       </div>

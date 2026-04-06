@@ -10,20 +10,25 @@ const RentalInfoCard = ({
   image: string;
 }) => {
   return (
-    <div className="bg-white flex rounded-2xl">
-      <div className="w-1/4">
-        <Image
-          src={image}
-          alt="bgApp2"
-          width={500}
-          height={400}
-          className="w-full h-full"
-        />
+    <div className="bg-white flex flex-row items-center rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+      <div className="w-1/4 sm:w-[22%] md:w-1/4 p-2 flex items-center justify-center">
+        <div className="relative aspect-square w-full">
+          <Image
+            src={image}
+            alt={title}
+            fill
+            className="object-contain"
+          />
+        </div>
       </div>
-      <div className="w-3/4 p-3">
+      <div className="w-3/4 sm:w-[78%] md:w-3/4 p-3 md:p-4">
         <div>
-          <h4 className="font-bold text-lg mb-2">{title}</h4>
-          <p className="text-Grey700 text-sm font-normal">{description}</p>
+          <h4 className="font-bold text-base md:text-lg mb-1 md:mb-2 text-right">
+            {title}
+          </h4>
+          <p className="text-Grey700 text-xs md:text-sm font-normal text-right">
+            {description}
+          </p>
         </div>
       </div>
     </div>
