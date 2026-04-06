@@ -98,6 +98,7 @@ const StepContent = forwardRef<StepContentRef, StepContentProps>(
           (!filters.pickupLng || filters.pickupName === "الموقع الحالي")
             ? longitude
             : filters.pickupLng || (carDetails?.longitude ?? undefined),
+        pickupId: filters.pickupId || null,
         returnLat:
           filters.carReturnLocationType === "currentLocation" &&
           (!filters.carReturnLocationLat ||
@@ -110,6 +111,7 @@ const StepContent = forwardRef<StepContentRef, StepContentProps>(
             filters.carReturnLocation === "الموقع الحالي")
             ? longitude
             : (filters.carReturnLocationLng ?? undefined),
+        carReturnLocationId: filters.carReturnLocationId || null,
       },
     });
 
@@ -203,14 +205,27 @@ const StepContent = forwardRef<StepContentRef, StepContentProps>(
         targetReturnLong !== getValues("returnLong")
       ) {
         setValue("returnLong", targetReturnLong);
-      } else if (
-        targetPickupLong !== undefined &&
-        targetPickupLong !== getValues("returnLong") &&
-        !filters.carReturnLocationLng
-      ) {
-        setValue("returnLong", targetPickupLong);
-      }
-    }, [filters, carDetails, latitude, longitude, setValue, getValues]);
+        } else if (
+          targetPickupLong !== undefined &&
+          targetPickupLong !== getValues("returnLong") &&
+          !filters.carReturnLocationLng
+        ) {
+          setValue("returnLong", targetPickupLong);
+        }
+
+        // Sync pickupId
+        if (filters.pickupId && filters.pickupId !== getValues("pickupId")) {
+          setValue("pickupId", filters.pickupId);
+        }
+
+        // Sync carReturnLocationId
+        if (
+          filters.carReturnLocationId &&
+          filters.carReturnLocationId !== getValues("carReturnLocationId")
+        ) {
+          setValue("carReturnLocationId", filters.carReturnLocationId);
+        }
+      }, [filters, carDetails, latitude, longitude, setValue, getValues]);
 
     useImperativeHandle(ref, () => ({
       validateStep: async () => {
@@ -373,6 +388,8 @@ const StepContent = forwardRef<StepContentRef, StepContentProps>(
         pickupLong: initialValues.pickupLong as number | null,
         returnLat: initialValues.returnLat as number | null,
         returnLong: initialValues.returnLong as number | null,
+        pickupId: initialValues.pickupId || null,
+        carReturnLocationId: initialValues.carReturnLocationId || null,
         pickupType: mapLocationType(filters.pickupType),
         returnType: mapLocationType(
           filters.carReturnLocationType || filters.pickupType,
@@ -416,6 +433,12 @@ const StepContent = forwardRef<StepContentRef, StepContentProps>(
           update.returnLat = value.returnLat as number | null;
         if (value.returnLong !== undefined)
           update.returnLong = value.returnLong as number | null;
+
+        if (value.pickupId !== undefined)
+          update.pickupId = value.pickupId as string | null;
+        if (value.carReturnLocationId !== undefined)
+          update.carReturnLocationId =
+            value.carReturnLocationId as string | null;
 
         update.pickupType = mapLocationType(filters.pickupType);
         update.returnType = mapLocationType(

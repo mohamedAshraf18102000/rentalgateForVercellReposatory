@@ -17,27 +17,51 @@ interface CarFilters {
 }
 
 export const getCompanyCars = async (
-  page: number = 0,
+  page: number = 1,
   filters?: CarFilters,
 ): Promise<CarApiResponse> => {
-  const params = new URLSearchParams();
-  params.set("page", filters?.page ?? page.toString());
-  params.set("size", filters?.size ?? "20");
+  const query: string[] = [];
+
+  // required params
+  query.push(`page=${filters?.page ?? page}`);  
+  query.push(`size=${filters?.size ?? 20}`);
+
+  // helper function
+  const addParam = (key: string, value?: string | number) => {
+    if (value !== undefined && value !== null && value !== "") {
+      query.push(`${key}=${value}`);
+    } else {
+      // 👈 هنا بنبعت key بس بدون value
+      query.push(key);
+    }
+  };
 
   if (filters) {
-    if (filters.minPrice) params.set("minPrice", filters.minPrice);
-    if (filters.maxPrice) params.set("maxPrice", filters.maxPrice);
-    if (filters.categoryId) params.set("categoryId", filters.categoryId);
-    if (filters.locationType) params.set("locationType", filters.locationType);
-    if (filters.airportId) params.set("airportId", filters.airportId);
-    if (filters.trainStationId) params.set("trainStationId", filters.trainStationId);
-    if (filters.brandId) params.set("brandId", filters.brandId);
-    if (filters.typeId) params.set("typeId", filters.typeId);
-    if (filters.latitude != null) params.set("latitude", filters.latitude.toString());
-    if (filters.longitude != null) params.set("longitude", filters.longitude.toString());
+    addParam("maxPrice", filters.maxPrice);
+    addParam("minPrice", filters.minPrice);
+    addParam("categoryId", filters.categoryId);
+    addParam("airportId", filters.airportId);
+    addParam("trainStationId", filters.trainStationId);
+    addParam("brandId", filters.brandId);
+    addParam("typeId", filters.typeId);
+
+    // params إضافية
+    addParam("searchType", "location"); // ثابتة حسب المثال
+    addParam("priceType", ""); // أو حط القيمة لو عندك
+    addParam("sortBy", ""); // نفس الكلام
+
+    if (filters.latitude != null) {
+      query.push(`latitude=${filters.latitude}`);
+    }
+
+    if (filters.longitude != null) {
+      query.push(`longitude=${filters.longitude}`);
+    }
   }
 
+  const queryString = query.join("&");
+
   return fetcher<CarApiResponse>(
-    `/company-cars/filter-and-sort?${params.toString()}`,
+    `/company-cars/filter-and-sort?${queryString}`,
   );
 };

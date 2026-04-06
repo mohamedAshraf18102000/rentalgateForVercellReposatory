@@ -6,16 +6,19 @@ export interface CompanyCarsFilters {
   minPrice?: string;
   maxPrice?: string;
   categoryId?: string;
-  locationType?: string;
+  searchType?: string;
   airportId?: string;
   trainStationId?: string;
   brandId?: string;
   typeId?: string;
+  priceType?: string;
+  sortBy?: string;
   latitude?: number;
   longitude?: number;
-  page?: string;
-  size?: string;
+  page?: string | number;
+  size?: string | number;
 }
+
 
 export const useCompanyCars = (filters: CompanyCarsFilters) => {
   return useInfiniteQuery<CarApiResponse>({

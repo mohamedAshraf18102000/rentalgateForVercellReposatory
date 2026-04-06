@@ -54,30 +54,39 @@ const page = () => {
       companyCarBranchId: formData.carDetails?.ccbId,
       startDate: formData.fromDate,
       endDate: formData.toDate,
-      promoCode: formData.promoData?.code,
-      referralCode: formData.referalcode,
+      ...(formData.promoData?.code && { promoCode: formData.promoData.code }),
+      ...(formData.referalcode && { referralCode: formData.referalcode }),
       deliver: {
         type: formData.pickupType,
-        latitude: formData.pickupLat,
-        longitude: formData.pickupLong,
+        ...(formData.pickupLat && { latitude: formData.pickupLat }),
+        ...(formData.pickupLong && { longitude: formData.pickupLong }),
+        ...(formData.pickupId && { addressId: formData.pickupId }),
       },
       receive: {
         type: formData.returnType,
-        latitude: formData.returnLat,
-        longitude: formData.returnLong,
+        ...(formData.returnLat && { latitude: formData.returnLat }),
+        ...(formData.returnLong && { longitude: formData.returnLong }),
+        ...(formData.carReturnLocationId && {
+          addressId: formData.carReturnLocationId,
+        }),
       },
-      servicesIds: formData.services,
-      driver: formData.driver && {
-        driverRequested: !!formData.driver,
-        outOfCity: formData.driver?.type === "out",
-        driverHours: formData.driver?.hours,
-        driverDays: formData.driver?.days,
-      },
+      ...(formData.services &&
+        formData.services.length > 0 && { servicesIds: formData.services }),
+      ...(formData.driver && {
+        driver: {
+          driverRequested: !!formData.driver,
+          outOfCity: formData.driver?.type === "out",
+          driverHours: formData.driver?.hours,
+          driverDays: formData.driver?.days,
+        },
+      }),
       countryId: 1,
-      points: {
-        type: formData.points?.type,
-        pointsPkId: formData.points?.pointsPkId,
-      },
+      ...(formData.points?.type && {
+        points: {
+          type: formData.points.type,
+          pointsPkId: formData.points.pointsPkId,
+        },
+      }),
     });
   };
 

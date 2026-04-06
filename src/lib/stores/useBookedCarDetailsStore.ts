@@ -10,7 +10,9 @@ export interface ReservationFormData {
   pickupName: string;
   pickupLat: number | null;
   pickupLong: number | null;
+  pickupId: string | null;
   carReturnLocation: string;
+  carReturnLocationId: string | null;
   returnLat: number | null;
   returnLong: number | null;
   fromDate: Date | null;
@@ -39,7 +41,12 @@ export interface ReservationFormData {
   // Step 3
   plan: PricingType | null;
   services: number[];
-  driver: { id: number; hours: number; days: number; type?: "in" | "out" } | null;
+  driver: {
+    id: number;
+    hours: number;
+    days: number;
+    type?: "in" | "out";
+  } | null;
   extraKmType: "UNLIMITED" | "QUOTA" | null;
   points: {
     type: "PACKAGE" | "COUPON" | null;
@@ -91,6 +98,8 @@ const initialFormData: ReservationFormData = {
   pickupType: null,
   returnType: null,
   referalcode: null,
+  pickupId: null,
+  carReturnLocationId: null,
 };
 
 export interface BookedCarDetailsState {

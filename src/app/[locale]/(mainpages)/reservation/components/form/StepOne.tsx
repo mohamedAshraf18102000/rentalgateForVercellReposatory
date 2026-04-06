@@ -61,6 +61,10 @@ const StepOne = ({ control, errors, watch, setValue }: StepOneProps) => {
           ? longitude
           : updatedFilters.carReturnLocationLng || null,
       );
+      setValue(
+        "carReturnLocationId",
+        updatedFilters.carReturnLocationId || null,
+      );
     });
   };
 
