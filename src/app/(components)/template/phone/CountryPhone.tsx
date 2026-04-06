@@ -20,6 +20,7 @@ interface CountryPhoneProps {
     inputClassName?: string;
     labelClassName?: string;
     withoutValidations?: boolean;
+    onBlur?: React.FocusEventHandler<HTMLDivElement>;
 }
 
 export default function CountryPhone({
@@ -34,7 +35,8 @@ export default function CountryPhone({
     label,
     inputClassName = "",
     labelClassName = "",
-    withoutValidations = false
+    withoutValidations = false,
+    onBlur
 }: CountryPhoneProps) {
     const [phone, setPhone] = useState<string>(value || "");
     const [touched, setTouched] = useState<boolean>(false);
@@ -129,7 +131,10 @@ export default function CountryPhone({
     const shouldShowError = !withoutValidations && showValidation && touched && !isValid && phone && phone.length > 4;
 
     const phoneInput = (
-        <div className={className} onBlur={handleBlur}>
+        <div className={className} onBlur={(e) => {
+            handleBlur();
+            if (onBlur) onBlur(e);
+        }}>
             <PhoneInput
                 defaultCountry={defaultCountry}
                 value={phone}

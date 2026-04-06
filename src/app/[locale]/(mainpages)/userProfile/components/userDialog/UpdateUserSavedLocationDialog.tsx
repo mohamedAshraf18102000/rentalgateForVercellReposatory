@@ -20,6 +20,7 @@ import {
 import { useEffect, useState } from "react";
 import GoogleMapsLocation from "@/app/(components)/mapsLocation/GoogleMapsLocation";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import CountryPhone from "@/app/(components)/template/phone/CountryPhone";
 import { getUserAddress } from "@/services/userProfile/getUserAddress.service";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -33,16 +34,25 @@ import { toast } from "sonner";
 import useUserAddreses from "@/hooks/api/useUserAddreses";
 import { useLocationStore } from "@/lib/stores/useLocationStore";
 
-interface UpdatePasswordDialogProps {
+interface UpdateUserSavedLocationDialogProps {
   open: boolean;
   setOpen: (open: boolean) => void;
+  initialShowAddForm?: boolean;
+  initialLat?: number;
+  initialLng?: number;
+  initialAddress?: string;
 }
 
 const UpdateUserSavedLocationDialog = ({
   open,
   setOpen,
-}: UpdatePasswordDialogProps) => {
-  const [showAddForm, setShowAddForm] = useState(false);
+  initialShowAddForm = false,
+  initialLat: propLat,
+  initialLng: propLng,
+  initialAddress,
+}: UpdateUserSavedLocationDialogProps) => {
+  const [showAddForm, setShowAddForm] = useState(initialShowAddForm);
+  const [isPhoneValid, setIsPhoneValid] = useState(false);
   const queryClient = useQueryClient();
 
   const { setLocation, latitude, longitude } = useLocationStore();
@@ -67,11 +77,11 @@ const UpdateUserSavedLocationDialog = ({
       buildingNo: "",
       floor: 0,
       flatNo: "",
-      address: "",
-      latitude: 0,
-      longitude: 0,
+      address: initialAddress || "",
+      latitude: propLat || 0,
+      longitude: propLng || 0,
       additionalInfo: "",
-      mobile: "",
+      mobile: initialAddress ? "" : "+966",
       notes: "",
     },
   });
@@ -113,11 +123,30 @@ const UpdateUserSavedLocationDialog = ({
   };
 
   useEffect(() => {
-    if (!open) {
+    if (open) {
+      if (initialShowAddForm) {
+        setShowAddForm(true);
+        if (propLat && propLng) {
+          setValue("latitude", propLat);
+          setValue("longitude", propLng);
+        }
+        if (initialAddress) {
+          setValue("address", initialAddress);
+        }
+      }
+    } else {
       setShowAddForm(false);
       reset();
     }
-  }, [open, reset]);
+  }, [
+    open,
+    initialShowAddForm,
+    reset,
+    propLat,
+    propLng,
+    initialAddress,
+    setValue,
+  ]);
 
   return (
     <DialogWrapper
@@ -217,6 +246,8 @@ const UpdateUserSavedLocationDialog = ({
             >
               <div className="w-full my-5 h-[300px] rounded-xl overflow-hidden">
                 <GoogleMapsLocation
+                  initialLat={propLat || undefined}
+                  initialLng={propLng || undefined}
                   onLocationChange={(lat, lng, address, isManual) => {
                     setValue("latitude", lat);
                     setValue("longitude", lng);
@@ -232,7 +263,7 @@ const UpdateUserSavedLocationDialog = ({
                   labelClassName="text-base!"
                   className="text-sm! bg-Grey100!"
                   placeholder="مثال: المنزل، العمل"
-                  label="العنوان:"
+                  label="اسم المكان:"
                   errorMessage={errors.addressName?.message}
                 />
                 <div className="flex flex-col gap-2">
@@ -269,6 +300,7 @@ const UpdateUserSavedLocationDialog = ({
                 startIcon={<MapPin />}
                 labelClassName="text-base!"
                 className="text-sm! bg-Grey100!"
+                disabled
                 placeholder="أدخل العنوان التفصيلي"
                 label="العنوان بالتفصيل:"
                 errorMessage={errors.address?.message}
@@ -315,13 +347,30 @@ const UpdateUserSavedLocationDialog = ({
                 />
               </div>
 
-              <Input
-                {...register("mobile")}
-                labelClassName="text-base!"
-                className="text-sm! bg-Grey100!"
-                placeholder="رقم الجوال (اختياري)"
-                label="رقم الجوال:"
-                errorMessage={errors.mobile?.message}
+              <Controller
+                name="mobile"
+                control={control}
+                render={({ field }) => (
+                  <div className="w-full">
+                    <CountryPhone
+                      value={field.value}
+                      onChange={field.onChange}
+                      onBlur={field.onBlur}
+                      defaultCountry="sa"
+                      labelClassName="text-base!"
+                      inputClassName="text-sm! bg-Grey100!"
+                      label="رقم الجوال:"
+                      placeholder="أدخل رقم الجوال"
+                      showValidation={true}
+                      onValidationChange={setIsPhoneValid}
+                    />
+                    {errors.mobile && !isPhoneValid && (
+                      <p className="text-xs text-red-500 mt-1">
+                        {errors.mobile.message}
+                      </p>
+                    )}
+                  </div>
+                )}
               />
 
               <Input

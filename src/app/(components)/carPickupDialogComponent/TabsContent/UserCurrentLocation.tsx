@@ -10,7 +10,7 @@ const UserCurrentLocation = () => {
     useUserAddreses();
 
   const { filters, setFilter } = useUserPreferedFiltersStore();
-  const { target } = usePickupDialogStore();
+  const { target, setIsUnsavedMapLocation } = usePickupDialogStore();
 
   const initialLat =
     target === "return" ? filters.carReturnLocationLat : filters.pickupLat;
@@ -18,6 +18,7 @@ const UserCurrentLocation = () => {
     target === "return" ? filters.carReturnLocationLng : filters.pickupLng;
 
   const handleSelectAddress = (address: UserAddress) => {
+    setIsUnsavedMapLocation(false);
     if (target === "return") {
       setFilter("carReturnLocation", address.addressName);
       setFilter("carReturnLocationLat", address.latitude);
@@ -36,6 +37,7 @@ const UserCurrentLocation = () => {
     lng: number,
     address: string,
   ) => {
+    setIsUnsavedMapLocation(true);
     if (target === "return") {
       setFilter("carReturnLocation", address);
       setFilter("carReturnLocationLat", lat);
@@ -64,9 +66,9 @@ const UserCurrentLocation = () => {
       <div className="absolute px-4 py-3 bottom-2 left-1/2 -translate-x-1/2 bg-white/95 backdrop-blur-md text-primary shadow-2xl border border-Grey100 w-[94%] rounded-2xl z-20">
         <div className="flex justify-between items-center mb-3">
           <h5 className="font-bold text-base">العناوين المسجلة</h5>
-          <button className="font-bold text-sm border-2 px-3 py-1.5 rounded-lg flex items-center gap-1 hover:bg-Grey200 transition-colors">
+          {/* <button className="font-bold text-sm border-2 px-3 py-1.5 rounded-lg flex items-center gap-1 hover:bg-Grey200 transition-colors">
             عرض الكل <ChevronLeft className="w-4 h-4" />
-          </button>
+          </button> */}
         </div>
 
         {userAddresses?.length === 0 && (

@@ -12,6 +12,8 @@ type PickupDialogState = {
   closeDialog: () => void;
   confirmDialog: () => void;
   setOpen: (open: boolean) => void;
+  isUnsavedMapLocation: boolean;
+  setIsUnsavedMapLocation: (value: boolean) => void;
 };
 
 export const usePickupDialogStore = create<PickupDialogState>((set, get) => ({
@@ -19,9 +21,10 @@ export const usePickupDialogStore = create<PickupDialogState>((set, get) => ({
   activeTab: "currentLocation",
   target: "pickup",
   onConfirm: undefined,
+  isUnsavedMapLocation: true,
 
   openDialog: (tab = "currentLocation", target = "pickup", onConfirm) =>
-    set({ open: true, activeTab: tab, target, onConfirm }),
+    set({ open: true, activeTab: tab, target, onConfirm, isUnsavedMapLocation: true }),
 
   closeDialog: () => set({ open: false, onConfirm: undefined }),
 
@@ -31,4 +34,6 @@ export const usePickupDialogStore = create<PickupDialogState>((set, get) => ({
   },
 
   setOpen: (open) => set({ open }),
+  
+  setIsUnsavedMapLocation: (value) => set({ isUnsavedMapLocation: value }),
 }));
