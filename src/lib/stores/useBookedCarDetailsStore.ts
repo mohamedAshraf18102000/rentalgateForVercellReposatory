@@ -40,7 +40,7 @@ export interface ReservationFormData {
   plan: PricingType | null;
   services: number[];
   driver: { id: number; hours: number; days: number; type?: "in" | "out" } | null;
-  unlimitedKm: boolean;
+  extraKmType: "UNLIMITED" | "QUOTA" | null;
   points: {
     type: "PACKAGE" | "COUPON" | null;
     pointsPkId: number | null;
@@ -85,7 +85,7 @@ const initialFormData: ReservationFormData = {
   plan: null,
   services: [],
   driver: null,
-  unlimitedKm: false,
+  extraKmType: "QUOTA",
   points: null,
   carDetails: null,
   pickupType: null,

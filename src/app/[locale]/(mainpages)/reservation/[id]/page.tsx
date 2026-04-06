@@ -245,7 +245,7 @@ const page = () => {
                   freeKm={carDetails?.allowedKm}
                   carName={carDetails?.car.carName}
                   companyName={carDetails?.company.arabicName}
-                  companyLogo={`${process.env.NEXT_PUBLIC_IMAGES_PREFIX_URL}${carDetails?.company.logo}`}
+                  companyLogo={carDetails?.company.logo}
                   carBrand={carDetails?.car.brandNameArabic}
                   carImage={`${process.env.NEXT_PUBLIC_IMAGES_PREFIX_URL}${carDetails?.car.image}`}
                   pricingType={pricingDetails.pricingType}

@@ -33,13 +33,24 @@ const ReservationFinalDetails = () => {
         ]}
       />
 
-      {selectedServices.length > 0 && (
+      {(selectedServices.length > 0 ||
+        formData.extraKmType === "UNLIMITED") && (
         <ReservationFinalDetailsItem
           itemHeader="تكلفة الخدمات الإضافية:"
-          items={selectedServices.map((s) => ({
-            label: s.serviceArabicName,
-            value: formatPrice(s.price),
-          }))}
+          items={[
+            ...selectedServices.map((s) => ({
+              label: s.serviceArabicName,
+              value: formatPrice(s.price),
+            })),
+            ...(formData.extraKmType === "UNLIMITED"
+              ? [
+                  {
+                    label: "كيلومترات لا نهائي",
+                    value: formatPrice(formData.carDetails?.unlimitedKmPrice),
+                  },
+                ]
+              : []),
+          ]}
         />
       )}
 

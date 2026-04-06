@@ -38,11 +38,11 @@ const StepThree = ({ control, errors }: StepThreeProps) => {
   });
 
   const {
-    field: { value: unlimitedKm, onChange: onChangeUnlimited },
+    field: { value: extraKmType, onChange: onChangeExtraKmType },
   } = useController({
-    name: "unlimitedKm",
+    name: "extraKmType",
     control,
-    defaultValue: false,
+    defaultValue: "QUOTA",
   });
 
   const setFormData = useBookedCarDetailsStore((s) => s.setFormData);
@@ -81,9 +81,10 @@ const StepThree = ({ control, errors }: StepThreeProps) => {
         setFormData({ driver: nextDriver });
       }
     } else if (type === "unlimited") {
-      const next = !unlimitedKm;
-      onChangeUnlimited(next);
-      setFormData({ unlimitedKm: next });
+      const next: "UNLIMITED" | "QUOTA" =
+        extraKmType === "UNLIMITED" ? "QUOTA" : "UNLIMITED";
+      onChangeExtraKmType(next);
+      setFormData({ extraKmType: next });
     }
   };
 
@@ -106,7 +107,7 @@ const StepThree = ({ control, errors }: StepThreeProps) => {
       console.log("لم يتم اختيار خدمة سائق");
     }
 
-    console.log("كيلومترات غير محدودة:", unlimitedKm);
+    console.log("Extra KM Type", extraKmType);
     console.groupEnd();
   };
 
@@ -141,7 +142,7 @@ const StepThree = ({ control, errors }: StepThreeProps) => {
                   percentage: 0,
                 } as any
               }
-              selected={unlimitedKm ?? false}
+              selected={extraKmType === "UNLIMITED"}
               badge={
                 <p className="text-sm p-2 bg-StatusBrownBG rounded-[8px] text-StatusBrown200 font-bold flex items-center gap-1">
                   <Flame />

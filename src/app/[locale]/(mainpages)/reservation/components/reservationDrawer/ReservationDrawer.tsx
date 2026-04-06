@@ -29,10 +29,17 @@ const ReservationDrawer = ({ open, onOpenChange }: ReservationDrawerProps) => {
   const { formData, services: allServices } = useBookedCarDetailsStore();
 
   const servicesCost = useMemo(() => {
-    return allServices
+    const regularServicesCost = allServices
       .filter((s) => formData.services.includes(s.csId))
       .reduce((acc, curr) => acc + (curr.price || 0), 0);
-  }, [allServices, formData.services]);
+
+    const unlimitedKmCost =
+      formData.extraKmType === "UNLIMITED"
+        ? (formData.carDetails?.unlimitedKmPrice || 0)
+        : 0;
+
+    return regularServicesCost + unlimitedKmCost;
+  }, [allServices, formData.services, formData.extraKmType, formData.carDetails]);
 
   const totalToPay = (formData.price || 0) + servicesCost;
 

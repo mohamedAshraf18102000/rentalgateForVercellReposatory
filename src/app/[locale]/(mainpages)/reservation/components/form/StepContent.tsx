@@ -87,7 +87,7 @@ const StepContent = forwardRef<StepContentRef, StepContentProps>(
         borderNumber: formData.borderNumber || "",
         services: formData.services || [],
         driver: formData.driver || null,
-        unlimitedKm: formData.unlimitedKm || false,
+        extraKmType: formData.extraKmType || "QUOTA",
         pickupLat:
           filters.pickupType === "currentLocation" &&
           (!filters.pickupLat || filters.pickupName === "الموقع الحالي")
@@ -368,7 +368,7 @@ const StepContent = forwardRef<StepContentRef, StepContentProps>(
         borderNumber: initialValues.borderNumber,
         services: (initialValues.services || []) as number[],
         driver: initialValues.driver || null,
-        unlimitedKm: initialValues.unlimitedKm || false,
+        extraKmType: initialValues.extraKmType || "QUOTA",
         pickupLat: initialValues.pickupLat as number | null,
         pickupLong: initialValues.pickupLong as number | null,
         returnLat: initialValues.returnLat as number | null,
@@ -405,8 +405,8 @@ const StepContent = forwardRef<StepContentRef, StepContentProps>(
           update.services = value.services as number[];
         if (value.driver !== undefined)
           update.driver = value.driver as ReservationFormData["driver"];
-        if (value.unlimitedKm !== undefined)
-          update.unlimitedKm = value.unlimitedKm;
+        if (value.extraKmType !== undefined)
+          update.extraKmType = value.extraKmType as "UNLIMITED" | "QUOTA";
 
         if (value.pickupLat !== undefined)
           update.pickupLat = value.pickupLat as number | null;

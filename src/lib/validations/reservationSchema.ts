@@ -54,7 +54,7 @@ export const reservationSchema = z.object({
     })
     .nullable()
     .optional(),
-  unlimitedKm: z.boolean().optional(),
+  extraKmType: z.enum(["UNLIMITED", "QUOTA"]).optional(),
 }).superRefine((data, ctx) => {
   // 0: Citizen, 1: Resident, 2: Visitor, 3: Gulf Citizen
 
