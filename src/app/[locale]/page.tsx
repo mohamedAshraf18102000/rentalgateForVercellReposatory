@@ -31,6 +31,8 @@ export default async function HomePage({ params }: Props) {
     console.error("Error fetching home data:", error);
   }
 
+  console.log("homeData", homeData);
+
   return (
     <main>
       {homeData && <HomeStoreHydrator data={homeData} />}

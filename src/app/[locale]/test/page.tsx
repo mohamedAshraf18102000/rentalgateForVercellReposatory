@@ -56,14 +56,13 @@ const page = () => {
       endDate: formData.toDate,
       promoCode: formData.promoData?.code,
       referralCode: formData.referalcode,
-      plan: formData.plan,
       deliver: {
-        pickupType: formData.pickupType,
+        type: formData.pickupType,
         latitude: formData.pickupLat,
         longitude: formData.pickupLong,
       },
       receive: {
-        pickupType: formData.returnType,
+        type: formData.returnType,
         latitude: formData.returnLat,
         longitude: formData.returnLong,
       },

@@ -1,14 +1,15 @@
-import createMiddleware from 'next-intl/middleware';
-import { routing } from './i18n/routing';
-import { NextRequest, NextResponse } from 'next/server';
+import createMiddleware from "next-intl/middleware";
+import { routing } from "./i18n/routing";
+import { NextRequest, NextResponse } from "next/server";
 
 // Define protected routes that require authentication
 const PROTECTED_ROUTES = [
-  '/profile',
-  '/userProfile',
-  '/booking',
-  '/myBookings',
-  '/wallet',
+  "/profile",
+  "/userProfile",
+  "/booking",
+  "/myBookings",
+  "/wallet",
+  "/reservation",
   // Add more protected routes here as needed
 ];
 
@@ -16,26 +17,28 @@ const PROTECTED_ROUTES = [
 function isProtectedRoute(pathname: string): boolean {
   // Remove locale prefix (e.g., /ar/profile -> /profile, /en/profile -> /profile)
   // Handle both /locale/route and /route patterns
-  const pathWithoutLocale = pathname.replace(/^\/(ar|en)(\/|$)/, '/') || '/';
+  const pathWithoutLocale = pathname.replace(/^\/(ar|en)(\/|$)/, "/") || "/";
 
-  return PROTECTED_ROUTES.some(route => {
+  return PROTECTED_ROUTES.some((route) => {
     // Exact match or starts with the protected route
-    const normalizedPath = pathWithoutLocale === '/' ? '/' : pathWithoutLocale;
-    return normalizedPath === route || normalizedPath.startsWith(route + '/');
+    const normalizedPath = pathWithoutLocale === "/" ? "/" : pathWithoutLocale;
+    return normalizedPath === route || normalizedPath.startsWith(route + "/");
   });
 }
 
 // Helper function to check if user is authenticated
 function isAuthenticated(request: NextRequest): boolean {
-  const authToken = request.cookies.get('authToken');
+  const authToken = request.cookies.get("authToken");
   return !!authToken?.value;
 }
 
 // Helper function to get locale from pathname
 function getLocaleFromPath(pathname: string): string {
-  const segments = pathname.split('/').filter(Boolean);
+  const segments = pathname.split("/").filter(Boolean);
   const firstSegment = segments[0];
-  return routing.locales.includes(firstSegment as any) ? firstSegment : routing.defaultLocale;
+  return routing.locales.includes(firstSegment as any)
+    ? firstSegment
+    : routing.defaultLocale;
 }
 
 const intlMiddleware = createMiddleware(routing);
@@ -45,11 +48,11 @@ export default function middleware(request: NextRequest) {
 
   // Skip middleware for API routes, static files, and Next.js internals
   if (
-    pathname.startsWith('/api') ||
-    pathname.startsWith('/_next') ||
-    pathname.startsWith('/_vercel') ||
-    pathname.includes('.') ||
-    pathname.startsWith('/favicon')
+    pathname.startsWith("/api") ||
+    pathname.startsWith("/_next") ||
+    pathname.startsWith("/_vercel") ||
+    pathname.includes(".") ||
+    pathname.startsWith("/favicon")
   ) {
     return NextResponse.next();
   }
@@ -60,24 +63,24 @@ export default function middleware(request: NextRequest) {
     if (!isAuthenticated(request)) {
       // Check if requireAuth query parameter already exists (to avoid infinite redirect)
       const url = request.nextUrl.clone();
-      const hasRequireAuth = url.searchParams.has('requireAuth');
+      const hasRequireAuth = url.searchParams.has("requireAuth");
 
       if (!hasRequireAuth) {
         // Redirect to home page with requireAuth query parameter
         // This prevents the protected page from loading at all
         const locale = getLocaleFromPath(pathname);
         const url = new URL(`/${locale}`, request.url);
-        url.searchParams.set('requireAuth', 'true');
-        url.searchParams.set('redirect', pathname);
+        url.searchParams.set("requireAuth", "true");
+        url.searchParams.set("redirect", pathname);
         return NextResponse.redirect(url);
       }
     } else {
       // User is authenticated, remove requireAuth parameter if it exists
       const url = request.nextUrl.clone();
-      if (url.searchParams.has('requireAuth')) {
-        url.searchParams.delete('requireAuth');
-        const redirectPath = url.searchParams.get('redirect');
-        url.searchParams.delete('redirect');
+      if (url.searchParams.has("requireAuth")) {
+        url.searchParams.delete("requireAuth");
+        const redirectPath = url.searchParams.get("redirect");
+        url.searchParams.delete("redirect");
 
         // If there's a redirect parameter, use it; otherwise use current pathname
         const finalPath = redirectPath || pathname;
@@ -99,7 +102,6 @@ export const config = {
     // Match all pathnames except for
     // - … if they start with `/api`, `/_next` or `/_vercel`
     // - … the ones containing a dot (e.g. `favicon.ico`)
-    '/((?!api|_next|_vercel|.*\\..*).*)',
+    "/((?!api|_next|_vercel|.*\\..*).*)",
   ],
 };
-
