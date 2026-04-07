@@ -19,6 +19,7 @@ import PaymentGateway from "./components/PaymentGateway";
 import { useBookedCarDetailsStore } from "@/lib/stores/useBookedCarDetailsStore";
 import { formatPrice } from "@/lib/utils/formatPrice";
 import { applyPromoCodeValueChecker } from "@/lib/utils/promoCodeValueChecker";
+import { calculateServicePrice } from "@/lib/utils/calculateServicePrice";
 
 type ReservationDrawerProps = {
   open?: boolean;
@@ -28,10 +29,23 @@ type ReservationDrawerProps = {
 const ReservationDrawer = ({ open, onOpenChange }: ReservationDrawerProps) => {
   const { formData, services: allServices } = useBookedCarDetailsStore();
 
+  const rentalDays = useMemo(() => {
+    if (formData.fromDate && formData.toDate) {
+      const diffTime = Math.abs(
+        new Date(formData.toDate).getTime() - new Date(formData.fromDate).getTime(),
+      );
+      return Math.ceil(diffTime / (1000 * 60 * 60 * 24)) || 1;
+    }
+    return 1;
+  }, [formData.fromDate, formData.toDate]);
+
   const servicesCost = useMemo(() => {
     const regularServicesCost = allServices
       .filter((s) => formData.services.includes(s.csId))
-      .reduce((acc, curr) => acc + (curr.price || 0), 0);
+      .reduce(
+        (acc, curr) => acc + (calculateServicePrice(curr, rentalDays) || 0),
+        0,
+      );
 
     const unlimitedKmCost =
       formData.extraKmType === "UNLIMITED"
@@ -39,7 +53,13 @@ const ReservationDrawer = ({ open, onOpenChange }: ReservationDrawerProps) => {
         : 0;
 
     return regularServicesCost + unlimitedKmCost;
-  }, [allServices, formData.services, formData.extraKmType, formData.carDetails]);
+  }, [
+    allServices,
+    formData.services,
+    formData.extraKmType,
+    formData.carDetails,
+    rentalDays,
+  ]);
 
   const totalToPay = (formData.price || 0) + servicesCost;
 

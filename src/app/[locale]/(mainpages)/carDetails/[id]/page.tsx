@@ -164,10 +164,13 @@ const page = () => {
       <CarsDetailsBreadCrump />
       <div className="mt-10">
         <CarDetailsCard
+          dailyPrice={data?.dailyPrice}
+          freeKm={data.allowedKm}
           car={data?.car}
           company={data?.company}
           extraKmPrice={data?.extraKmPrice}
           unlimitedKm={data?.unlimitedKm}
+          unlimitedKmPrice={data?.unlimitedKmPrice}
           ccbId={data.ccbId}
           carPrice={pricing.pricePerDay}
           priceBeforeOffer={originalPricing.pricePerDay}
@@ -178,6 +181,8 @@ const page = () => {
           totalPrice={pricing.totalPrice}
           originalTotalPrice={originalPricing.totalPrice}
           rentalDays={rentalDays}
+          showRating={data.showRating}
+          rate={data.rate}
         />
       </div>
 
@@ -191,7 +196,7 @@ const page = () => {
           ))}
         </div>
       )}
-      <div className="grid grid-cols-4 gap-4">
+      <div className="grid grid-cols-4 gap-4 mt-4">
         <DriverCard
           image={"/driver/driverImage.png"}
           serviceName={"خدمة سائق"}

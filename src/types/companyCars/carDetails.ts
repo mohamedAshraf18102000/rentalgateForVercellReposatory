@@ -22,6 +22,7 @@ export interface CarDetailsResponse {
   yearlyPrice: number;
   offerYearlyPrice: number;
   showRating: boolean;
+  rate: number;
   notes: string | null;
   ccId: number | null;
   companyCarCode: string | null;

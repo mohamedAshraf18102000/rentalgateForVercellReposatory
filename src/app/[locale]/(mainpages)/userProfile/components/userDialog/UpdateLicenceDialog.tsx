@@ -2,6 +2,10 @@ import { Button, DialogWrapper } from "@/app/(components)";
 import { DatePicker } from "@/app/(components)/ui/datePicker";
 import { InputFileUpload } from "@/app/(components)/ui/inputFileUpload";
 import { useAuth } from "@/app/(components)/navbar/hooks/useAuth";
+import { useState, useEffect } from "react";
+import { useUploadImageMutation } from "@/services/uploadImages/uploadImage.service";
+import useUpdateUserProfile from "@/hooks/api/useUpdateUserProfile";
+import { toast } from "sonner";
 
 interface UpdatePasswordDialogProps {
   open: boolean;
@@ -10,6 +14,47 @@ interface UpdatePasswordDialogProps {
 
 const UpdateLicenceDialog = ({ open, setOpen }: UpdatePasswordDialogProps) => {
   const { userData } = useAuth();
+  const [licenseFile, setLicenseFile] = useState<File | null>(null);
+  const [licenseDate, setLicenseDate] = useState<Date | undefined>(
+    userData?.licenseExpirationDate
+      ? new Date(userData.licenseExpirationDate)
+      : undefined,
+  );
+
+  const { mutateAsync: uploadImage, isPending: isUploading } =
+    useUploadImageMutation();
+  const { mutateAsync: updateProfile, isPending: isUpdating } =
+    useUpdateUserProfile();
+
+  useEffect(() => {
+    if (userData?.licenseExpirationDate) {
+      setLicenseDate(new Date(userData.licenseExpirationDate));
+    }
+  }, [userData]);
+
+  const handleSave = async () => {
+    try {
+      let licenseImageName = userData?.licenseImage;
+
+      if (licenseFile) {
+        licenseImageName = await uploadImage(licenseFile);
+      }
+
+      await updateProfile({
+        licenseImage: licenseImageName,
+        licenseExpirationDate: licenseDate?.toISOString(),
+        nationality: userData?.nationality,
+        residenceType: userData?.residenceType,
+        
+      });
+
+      toast.success("تم تحديث بيانات الرخصة بنجاح");
+      setOpen(false);
+    } catch (error) {
+      toast.error("حدث خطأ أثناء تحديث البيانات");
+      console.error(error);
+    }
+  };
 
   return (
     <DialogWrapper
@@ -23,18 +68,19 @@ const UpdateLicenceDialog = ({ open, setOpen }: UpdatePasswordDialogProps) => {
       header={{
         mainTitle: (
           <div className="flex items-center justify-between w-full">
-            <span className="text-black  flex-1 text-center">
+            <span className="text-black  flex-1 text-center font-bold text-xl">
               بيانات الرخصة
             </span>
           </div>
         ),
       }}
       content={
-        <div className="flex flex-col gap-3 mb-5">
+        <div className="flex flex-col gap-5 mb-5 px-1">
           <InputFileUpload
             className="text-base!"
             label="صورة الرخصة:"
-            labelClassName="text-base!"
+            labelClassName="text-base font-semibold"
+            onFileChange={(file) => setLicenseFile(file)}
             initialPreviewUrl={
               userData?.licenseImage
                 ? `https://viganium.co/uploads/${userData.licenseImage}`
@@ -43,28 +89,28 @@ const UpdateLicenceDialog = ({ open, setOpen }: UpdatePasswordDialogProps) => {
           />
           <DatePicker
             label="تاريخ إنتهاء الرخصة:"
-            value={
-              userData?.licenseExpirationDate
-                ? new Date(userData.licenseExpirationDate)
-                : undefined
-            }
+            value={licenseDate}
+            onChange={(date) => setLicenseDate(date)}
           />
         </div>
       }
       footer={
-        <div className="flex w-full justify-end gap-2">
+        <div className="flex w-full justify-end gap-3 pt-2">
           <Button
             size="lg"
-            className="w-fit text-black hover:bg-white underline py-3 border-none px-5 bg-white text-base"
+            variant="outline"
+            className="w-fit text-black hover:bg-gray-100 py-3 border-gray-200 px-8 text-base transition-all"
             onClick={() => setOpen(false)}
           >
             إغلاق
           </Button>
           <Button
             size="lg"
-            className="w-fit text-white  py-3 border-none px-10 text-base"
+            className="w-fit text-white py-3 px-12 text-base font-semibold transition-all disabled:opacity-70"
+            onClick={handleSave}
+            disabled={isUploading || isUpdating}
           >
-            حفظ
+            {isUploading || isUpdating ? "جاري الحفظ..." : "حفظ"}
           </Button>
         </div>
       }

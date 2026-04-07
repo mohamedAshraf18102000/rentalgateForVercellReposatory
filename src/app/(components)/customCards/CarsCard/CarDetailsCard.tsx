@@ -15,6 +15,8 @@ import CarCategoryBadge from "../../carCategoryBadge/CarCategoryBadge";
 import DOMPurify from "dompurify";
 import { PricingType } from "@/lib/utils/calculateRentalPrice";
 import { formatPrice } from "@/lib/utils/formatPrice";
+import { dialogRegistry } from "@/app/[locale]/(dialogs)/registry/dialogRegistry";
+import { useMemo } from "react";
 
 interface CarDetailsCardProps {
   car: Car;
@@ -31,6 +33,7 @@ interface CarDetailsCardProps {
   extraBadgeColor?: "green" | "red";
   extraContent?: React.ReactNode;
   priceBeforeOffer?: number;
+  unlimitedKmPrice?: number;
   carImage?: string;
   carName?: string;
   carBrand?: string;
@@ -44,6 +47,9 @@ interface CarDetailsCardProps {
   totalPrice?: number;
   originalTotalPrice?: number;
   rentalDays?: number;
+  showRating?: boolean;
+  rate?: number;
+  dailyPrice?: number;
 }
 
 const pricingTypeLabels: Record<PricingType, string> = {
@@ -72,6 +78,10 @@ const CarDetailsCard = ({
   totalPrice,
   originalTotalPrice,
   rentalDays,
+  unlimitedKmPrice,
+  showRating,
+  rate,
+  dailyPrice,
 }: CarDetailsCardProps) => {
   const router = useRouter();
   const otherSpecsPurified = DOMPurify.sanitize(car.otherSpecs, {
@@ -129,12 +139,14 @@ const CarDetailsCard = ({
               <span className="text-base mx-1">{company?.arabicName}</span>
             </div>
 
-            <div className="flex items-center gap-1">
-              <data value="4.2" className="text-base">
-                4.2
-              </data>
-              <StarIcon />
-            </div>
+            {showRating && (
+              <div className="flex items-center gap-1">
+                <data value="4.2" className="text-base">
+                  {rate}
+                </data>
+                <StarIcon />
+              </div>
+            )}
           </div>
 
           <RoundedRec className="absolute bottom-0 left-1/2 -translate-x-1/2 z-50" />
@@ -153,6 +165,11 @@ const CarDetailsCard = ({
           <div className="flex flex-col gap-1">
             <div className="flex items-center">
               <span>السعر شامل الضريبة:</span>
+
+              <p className="line-through text-sm mx-1 text-Grey500">
+                {formatPrice(dailyPrice! * rentalDays!)}
+              </p>
+
               {(rentalDays && rentalDays > 1
                 ? originalTotalPrice
                 : priceBeforeOffer) &&
@@ -247,16 +264,19 @@ const CarDetailsCard = ({
             </div>
           )}
         </div>
-        {unlimitedKm && (
+        {unlimitedKm !== 0 && (
           <div className="mt-5">
             <div className="flex items-center gap-1">
               <UnlimitedKmIcon />
-              <p className="text-sm">
-                عدد كيلومترات لا نهائي:
-                <strong>{unlimitedKm.toString()}</strong>
-                <strong> كم / اليوم</strong>
+              <p className="text-sm flex items-center">
+                <span className="mx-1">عدد كيلومترات لا نهائي:</span>
+                <strong>{unlimitedKmPrice?.toString()}</strong>
+                <span>
+                  <SaudiRiyal />
+                </span>
+                <strong> / اليوم</strong>
               </p>
-              <p className="text-sm p-2 bg-StatusBrownBG rounded-[8px] text-StatusBrown200 font-bold flex items-center gap-1">
+              <p className="text-sm p-2 bg-StatusBrownBG rounded-[8px] text-StatusBrown200 font-bold flex items-center gap-1 mx-1">
                 <Flame />
                 <span>قيادة بلا نهاية</span>
               </p>

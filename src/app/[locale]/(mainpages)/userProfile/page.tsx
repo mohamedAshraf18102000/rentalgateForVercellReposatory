@@ -19,6 +19,9 @@ const page = () => {
     isClient,
     isLoading,
   } = useAuth();
+
+  console.log(storeUserData);
+
   const router = useRouter();
 
   useEffect(() => {

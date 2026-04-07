@@ -51,42 +51,49 @@ const page = () => {
       },
     });
     mutate({
-      companyCarBranchId: formData.carDetails?.ccbId,
-      startDate: formData.fromDate,
-      endDate: formData.toDate,
-      ...(formData.promoData?.code && { promoCode: formData.promoData.code }),
-      ...(formData.referalcode && { referralCode: formData.referalcode }),
+      companyCarBranchId: formData.carDetails?.ccbId ?? null,
+      startDate: formData.fromDate ?? null,
+      endDate: formData.toDate ?? null,
+      promoCode: formData.promoData?.code ?? null,
+      referralCode: formData.referalcode ?? null,
       deliver: {
-        type: formData.pickupType,
-        ...(formData.pickupLat && { latitude: formData.pickupLat }),
-        ...(formData.pickupLong && { longitude: formData.pickupLong }),
-        ...(formData.pickupId && { addressId: formData.pickupId }),
+        type: formData.pickupType ?? null,
+        latitude: formData.pickupLat ?? null,
+        longitude: formData.pickupLong ?? null,
+        addressId: formData.carReturnLocationId
+          ? Number(formData.carReturnLocationId)
+          : null,
       },
       receive: {
-        type: formData.returnType,
-        ...(formData.returnLat && { latitude: formData.returnLat }),
-        ...(formData.returnLong && { longitude: formData.returnLong }),
-        ...(formData.carReturnLocationId && {
-          addressId: formData.carReturnLocationId,
-        }),
+        type: formData.returnType ?? null,
+        latitude: formData.returnLat ?? null,
+        longitude: formData.returnLong ?? null,
+        addressId: formData.carReturnLocationId
+          ? Number(formData.carReturnLocationId)
+          : null,
       },
-      ...(formData.services &&
-        formData.services.length > 0 && { servicesIds: formData.services }),
-      ...(formData.driver && {
-        driver: {
-          driverRequested: !!formData.driver,
-          outOfCity: formData.driver?.type === "out",
-          driverHours: formData.driver?.hours,
-          driverDays: formData.driver?.days,
-        },
-      }),
-      countryId: 1,
-      ...(formData.points?.type && {
-        points: {
-          type: formData.points.type,
-          pointsPkId: formData.points.pointsPkId,
-        },
-      }),
+      servicesIds:
+        formData.services && formData.services.length > 0
+          ? formData.services
+          : null,
+      driver: {
+        driverRequested: !!formData.driver,
+        outOfCity: formData.driver?.type === "out" ? true : false,
+        driverHours: formData.driver?.hours ?? null,
+        driverDays: formData.driver?.days ?? null,
+      },
+      points: formData.points?.type
+        ? {
+            type: formData.points.type,
+            pointsPkId: formData.points.pointsPkId ?? null,
+          }
+        : null,
+
+      extraKm: {
+        extraKmApplied: false,
+        extraKmType: "UNLIMITED",
+        extraKmQuotaId: null,
+      },
     });
   };
 

@@ -205,27 +205,27 @@ const StepContent = forwardRef<StepContentRef, StepContentProps>(
         targetReturnLong !== getValues("returnLong")
       ) {
         setValue("returnLong", targetReturnLong);
-        } else if (
-          targetPickupLong !== undefined &&
-          targetPickupLong !== getValues("returnLong") &&
-          !filters.carReturnLocationLng
-        ) {
-          setValue("returnLong", targetPickupLong);
-        }
+      } else if (
+        targetPickupLong !== undefined &&
+        targetPickupLong !== getValues("returnLong") &&
+        !filters.carReturnLocationLng
+      ) {
+        setValue("returnLong", targetPickupLong);
+      }
 
-        // Sync pickupId
-        if (filters.pickupId && filters.pickupId !== getValues("pickupId")) {
-          setValue("pickupId", filters.pickupId);
-        }
+      // Sync pickupId
+      if (filters.pickupId && filters.pickupId !== getValues("pickupId")) {
+        setValue("pickupId", filters.pickupId);
+      }
 
-        // Sync carReturnLocationId
-        if (
-          filters.carReturnLocationId &&
-          filters.carReturnLocationId !== getValues("carReturnLocationId")
-        ) {
-          setValue("carReturnLocationId", filters.carReturnLocationId);
-        }
-      }, [filters, carDetails, latitude, longitude, setValue, getValues]);
+      // Sync carReturnLocationId
+      if (
+        filters.carReturnLocationId &&
+        filters.carReturnLocationId !== getValues("carReturnLocationId")
+      ) {
+        setValue("carReturnLocationId", filters.carReturnLocationId);
+      }
+    }, [filters, carDetails, latitude, longitude, setValue, getValues]);
 
     useImperativeHandle(ref, () => ({
       validateStep: async () => {
@@ -305,7 +305,6 @@ const StepContent = forwardRef<StepContentRef, StepContentProps>(
               licenseImage: values.licenseImage,
               nationality: values.nationality,
               residenceType: Number(residenceType),
-              // Visitor (2) must have null personalId and borderNumber
               personalId:
                 residenceType === "2" ? null : values.personalId || null,
               passportNumber:
@@ -437,8 +436,9 @@ const StepContent = forwardRef<StepContentRef, StepContentProps>(
         if (value.pickupId !== undefined)
           update.pickupId = value.pickupId as string | null;
         if (value.carReturnLocationId !== undefined)
-          update.carReturnLocationId =
-            value.carReturnLocationId as string | null;
+          update.carReturnLocationId = value.carReturnLocationId as
+            | string
+            | null;
 
         update.pickupType = mapLocationType(filters.pickupType);
         update.returnType = mapLocationType(

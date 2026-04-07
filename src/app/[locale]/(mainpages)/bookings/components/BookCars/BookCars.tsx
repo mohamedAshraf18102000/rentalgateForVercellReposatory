@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 import { useForm } from "react-hook-form";
 import { useUserPreferedFiltersStore } from "@/lib/stores/useUserPreferedFiltersStore";
@@ -21,7 +21,8 @@ interface FormValues {
 }
 
 const BookCars = () => {
-  const [rentalDays, setRentalDays] = useState<number>(0);
+  const rentalDays =
+    useBookedCarDetailsStore((state) => state.formData.rentalDays) ?? 0;
   const { appliedFilters, filters, setFilter } = useUserPreferedFiltersStore();
   const longitude = useLocationStore((state) => state.longitude);
   const latitude = useLocationStore((state) => state.latitude);
@@ -104,7 +105,7 @@ const BookCars = () => {
     if (fromDate && toDate) {
       const diffTime = Math.abs(toDate.getTime() - fromDate.getTime());
       const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-      setRentalDays(diffDays);
+      setFormField("rentalDays", diffDays);
 
       // حساب نوع الباقة وحفظها في الـ store
       const { pricingType } = calculateRentalPrice({
@@ -122,7 +123,7 @@ const BookCars = () => {
       });
       setFormField("plan", pricingType);
     } else {
-      setRentalDays(0);
+      setFormField("rentalDays", 0);
       setFormField("plan", null);
     }
   }, [fromDate, toDate]);
@@ -136,7 +137,7 @@ const BookCars = () => {
         data.toDate.getTime() - data.fromDate.getTime(),
       );
       const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-      setRentalDays(diffDays);
+      setFormField("rentalDays", diffDays);
       console.log("Number of Days:", diffDays);
     }
   };

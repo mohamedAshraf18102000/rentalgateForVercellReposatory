@@ -14,9 +14,11 @@ import { format } from "date-fns";
 export function DatePicker({
   label,
   value,
+  onChange,
 }: {
   label: string;
   value?: Date;
+  onChange?: (date: Date | undefined) => void;
 }) {
   const [open, setOpen] = React.useState(false);
   const [date, setDate] = React.useState<Date | undefined>(value);
@@ -50,6 +52,7 @@ export function DatePicker({
               defaultMonth={date}
               onSelect={(date) => {
                 setDate(date);
+                onChange?.(date);
                 setOpen(false);
               }}
             />

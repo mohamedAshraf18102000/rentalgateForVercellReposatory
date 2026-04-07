@@ -4,6 +4,8 @@ import { useMemo } from "react";
 import ReservationFinalDetailsItem from "./ReservationFinalDetailsItem";
 import { Percent } from "lucide-react";
 
+import { calculateServicePrice } from "@/lib/utils/calculateServicePrice";
+
 const ReservationFinalDetails = () => {
   const { formData, services: allServices } = useBookedCarDetailsStore();
 
@@ -40,7 +42,7 @@ const ReservationFinalDetails = () => {
           items={[
             ...selectedServices.map((s) => ({
               label: s.serviceArabicName,
-              value: formatPrice(s.price),
+              value: formatPrice(calculateServicePrice(s, rentalDays)),
             })),
             ...(formData.extraKmType === "UNLIMITED"
               ? [

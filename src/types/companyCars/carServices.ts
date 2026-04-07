@@ -14,8 +14,8 @@ export interface CompanyService {
   percentage: number;
   price: number;
 
-  csType: string;
-  priceType: string;
+  csType: string | "everyday" | "once";
+  priceType: string | "same" | "multi";
 
   dailyPrice: number;
   weeklyPrice: number;
