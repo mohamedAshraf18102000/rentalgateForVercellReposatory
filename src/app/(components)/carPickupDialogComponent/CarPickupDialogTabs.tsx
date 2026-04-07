@@ -14,7 +14,7 @@ const CarPickupDialogTabs = ({
   customDefaultValue: string;
 }) => {
   const { setFilter } = useUserPreferedFiltersStore();
-  const { target } = usePickupDialogStore();
+  const { target, setActiveTab } = usePickupDialogStore();
 
   return (
     <Tabs
@@ -22,6 +22,7 @@ const CarPickupDialogTabs = ({
       className="w-full bg-transparent"
       defaultValue={customDefaultValue}
       onValueChange={(value) => {
+        setActiveTab(value as any);
         if (target === "return") {
           setFilter("carReturnLocationType", value as any);
         } else {

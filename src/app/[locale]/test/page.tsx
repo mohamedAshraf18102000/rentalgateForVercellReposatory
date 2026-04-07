@@ -58,19 +58,33 @@ const page = () => {
       referralCode: formData.referalcode ?? null,
       deliver: {
         type: formData.pickupType ?? null,
-        latitude: formData.pickupLat ?? null,
-        longitude: formData.pickupLong ?? null,
-        addressId: formData.carReturnLocationId
-          ? Number(formData.carReturnLocationId)
-          : null,
+        ...(formData.pickupType === "TRAIN_STATION" && {
+          trainId: formData.pickupTrainId,
+        }),
+        ...(formData.pickupType === "AIRPORT" && {
+          airportId: formData.pickupAirportId,
+        }),
+        ...(formData.pickupType === "MY_LOCATION" && {
+          latitude: formData.pickupLat ?? null,
+          longitude: formData.pickupLong ?? null,
+          addressId: formData.pickupId ? Number(formData.pickupId) : null,
+        }),
       },
       receive: {
         type: formData.returnType ?? null,
-        latitude: formData.returnLat ?? null,
-        longitude: formData.returnLong ?? null,
-        addressId: formData.carReturnLocationId
-          ? Number(formData.carReturnLocationId)
-          : null,
+        ...(formData.returnType === "TRAIN_STATION" && {
+          trainId: formData.returnTrainId,
+        }),
+        ...(formData.returnType === "AIRPORT" && {
+          airportId: formData.returnAirportId,
+        }),
+        ...(formData.returnType === "MY_LOCATION" && {
+          latitude: formData.returnLat ?? null,
+          longitude: formData.returnLong ?? null,
+          addressId: formData.carReturnLocationId
+            ? Number(formData.carReturnLocationId)
+            : null,
+        }),
       },
       servicesIds:
         formData.services && formData.services.length > 0

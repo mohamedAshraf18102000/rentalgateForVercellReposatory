@@ -25,13 +25,16 @@ const AirportLocations = () => {
     if (airport) {
       if (target === "return") {
         setFilter("carReturnLocationId", airport.airportId.toString());
+        setFilter("carReturnAirportId", airport.airportId);
         setFilter("carReturnLocation", airport.arabicName);
         setFilter("carReturnLocationType", "airport");
         setFilter("carReturnLocationLat", airport.latitude);
         setFilter("carReturnLocationLng", airport.longitude);
       } else {
         setFilter("pickupId", airport.airportId.toString());
+        setFilter("pickupAirportId", airport.airportId);
         setFilter("pickupName", airport.arabicName);
+        setFilter("pickupType", "airport");
         setFilter("pickupLat", airport.latitude);
         setFilter("pickupLng", airport.longitude);
       }

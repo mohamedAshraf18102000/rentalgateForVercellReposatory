@@ -112,6 +112,10 @@ const StepContent = forwardRef<StepContentRef, StepContentProps>(
             ? longitude
             : (filters.carReturnLocationLng ?? undefined),
         carReturnLocationId: filters.carReturnLocationId || null,
+        pickupTrainId: filters.pickupTrainId || null,
+        pickupAirportId: filters.pickupAirportId || null,
+        returnTrainId: filters.carReturnTrainId || null,
+        returnAirportId: filters.carReturnAirportId || null,
       },
     });
 
@@ -225,6 +229,20 @@ const StepContent = forwardRef<StepContentRef, StepContentProps>(
       ) {
         setValue("carReturnLocationId", filters.carReturnLocationId);
       }
+
+      // Sync train/airport IDs
+      if ((filters.pickupTrainId || null) !== (getValues("pickupTrainId") || null)) {
+        setValue("pickupTrainId", filters.pickupTrainId || null);
+      }
+      if ((filters.pickupAirportId || null) !== (getValues("pickupAirportId") || null)) {
+        setValue("pickupAirportId", filters.pickupAirportId || null);
+      }
+      if ((filters.carReturnTrainId || null) !== (getValues("returnTrainId") || null)) {
+        setValue("returnTrainId", filters.carReturnTrainId || null);
+      }
+      if ((filters.carReturnAirportId || null) !== (getValues("returnAirportId") || null)) {
+        setValue("returnAirportId", filters.carReturnAirportId || null);
+      }
     }, [filters, carDetails, latitude, longitude, setValue, getValues]);
 
     useImperativeHandle(ref, () => ({
@@ -330,15 +348,17 @@ const StepContent = forwardRef<StepContentRef, StepContentProps>(
     // Sync address -> store & form if filter is still placeholder
     useEffect(() => {
       if (address && address !== "الموقع الحالي") {
-        if (!open || target !== "return") {
+        if (!open || target !== "pickup") {
           if (filters.pickupName === "الموقع الحالي" || !filters.pickupName) {
             setValue("pickupName", address);
             setValue("pickupLat", latitude);
             setValue("pickupLong", longitude);
-            setFilter("pickupName", address);
+            if (filters.pickupName !== address) {
+              setFilter("pickupName", address);
+            }
           }
         }
-        if (!open || target !== "pickup") {
+        if (!open || target !== "return") {
           if (
             filters.carReturnLocation === "الموقع الحالي" ||
             !filters.carReturnLocation ||
@@ -347,7 +367,9 @@ const StepContent = forwardRef<StepContentRef, StepContentProps>(
             setValue("carReturnLocation", address);
             setValue("returnLat", latitude);
             setValue("returnLong", longitude);
-            setFilter("carReturnLocation", address);
+            if (filters.carReturnLocation !== address) {
+              setFilter("carReturnLocation", address);
+            }
           }
         }
       }
@@ -440,30 +462,47 @@ const StepContent = forwardRef<StepContentRef, StepContentProps>(
             | string
             | null;
 
+        if (value.pickupTrainId !== undefined)
+          update.pickupTrainId = value.pickupTrainId as number | null;
+        if (value.pickupAirportId !== undefined)
+          update.pickupAirportId = value.pickupAirportId as number | null;
+        if (value.returnTrainId !== undefined)
+          update.returnTrainId = value.returnTrainId as number | null;
+        if (value.returnAirportId !== undefined)
+          update.returnAirportId = value.returnAirportId as number | null;
+
         update.pickupType = mapLocationType(filters.pickupType);
         update.returnType = mapLocationType(
           filters.carReturnLocationType || filters.pickupType,
         );
 
         setFormData(update);
-
-        if (value.fromDate)
-          setFilter(
-            "fromDate",
-            value.fromDate ? (value.fromDate as Date).toISOString() : "",
-          );
-        if (value.toDate)
-          setFilter(
-            "toDate",
-            value.toDate ? (value.toDate as Date).toISOString() : "",
-          );
-        if (value.pickupName && value.pickupName !== "الموقع الحالي")
-          setFilter("pickupName", value.pickupName);
+        
+        if (value.fromDate) {
+          const iso = (value.fromDate as Date).toISOString();
+          if (filters.fromDate !== iso) {
+            setFilter("fromDate", iso);
+          }
+        }
+        if (value.toDate) {
+          const iso = (value.toDate as Date).toISOString();
+          if (filters.toDate !== iso) {
+            setFilter("toDate", iso);
+          }
+        }
+        if (value.pickupName && value.pickupName !== "الموقع الحالي") {
+          if (filters.pickupName !== value.pickupName) {
+            setFilter("pickupName", value.pickupName);
+          }
+        }
         if (
           value.carReturnLocation &&
           value.carReturnLocation !== "الموقع الحالي"
-        )
-          setFilter("carReturnLocation", value.carReturnLocation);
+        ) {
+          if (filters.carReturnLocation !== value.carReturnLocation) {
+            setFilter("carReturnLocation", value.carReturnLocation);
+          }
+        }
       });
       return () => subscription.unsubscribe();
     }, [watch, setFilter, setFormData, latitude, longitude, _hasHydrated]);

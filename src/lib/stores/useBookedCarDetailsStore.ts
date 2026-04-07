@@ -62,6 +62,10 @@ export interface ReservationFormData {
 
   pickupType: "BRANCH" | "MY_LOCATION" | "TRAIN_STATION" | "AIRPORT" | null;
   returnType: "BRANCH" | "MY_LOCATION" | "TRAIN_STATION" | "AIRPORT" | null;
+  pickupTrainId: number | null;
+  pickupAirportId: number | null;
+  returnTrainId: number | null;
+  returnAirportId: number | null;
   referalcode: string | null;
   rentalDays: number | null;
 }
@@ -101,6 +105,10 @@ const initialFormData: ReservationFormData = {
   referalcode: null,
   pickupId: null,
   carReturnLocationId: null,
+  pickupTrainId: null,
+  pickupAirportId: null,
+  returnTrainId: null,
+  returnAirportId: null,
   rentalDays: 0,
 };
 

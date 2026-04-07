@@ -21,6 +21,10 @@ export const reservationSchema = z
     returnLat: z.number().optional().nullable(),
     returnLong: z.number().optional().nullable(),
     carReturnLocationId: z.string().optional().nullable(),
+    pickupTrainId: z.number().optional().nullable(),
+    pickupAirportId: z.number().optional().nullable(),
+    returnTrainId: z.number().optional().nullable(),
+    returnAirportId: z.number().optional().nullable(),
     fromDate: z
       .any()
       .refine((val) => val instanceof Date && !isNaN(val.getTime()), {

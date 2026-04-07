@@ -25,12 +25,14 @@ const TrainLocations = () => {
     if (station) {
       if (target === "return") {
         setFilter("carReturnLocationId", station.stationId.toString());
+        setFilter("carReturnTrainId", station.stationId);
         setFilter("carReturnLocation", station.arabicName);
         setFilter("carReturnLocationType", "trainStation");
         setFilter("carReturnLocationLat", station.latitude);
         setFilter("carReturnLocationLng", station.longitude);
       } else {
         setFilter("pickupId", station.stationId.toString());
+        setFilter("pickupTrainId", station.stationId);
         setFilter("pickupName", station.arabicName);
         setFilter("pickupType", "trainStation");
         setFilter("pickupLat", station.latitude);

@@ -27,6 +27,10 @@ export interface BookingFilters {
   carReturnLocationLng?: number;
   carReturnLocationId?: string;
   carReturnLocationType?: "airport" | "trainStation" | "currentLocation" | "branches" | "";
+  pickupTrainId?: number;
+  pickupAirportId?: number;
+  carReturnTrainId?: number;
+  carReturnAirportId?: number;
 }
 
 interface UserPreferedFiltersState {
