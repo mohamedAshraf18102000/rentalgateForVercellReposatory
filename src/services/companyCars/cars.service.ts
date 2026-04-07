@@ -1,7 +1,7 @@
 import { fetcher } from "../api";
 import { CarApiResponse } from "@/types/companyCars/cars";
 
-interface CarFilters {
+export interface CarFilters {
   minPrice?: string;
   maxPrice?: string;
   categoryId?: string;
@@ -12,8 +12,11 @@ interface CarFilters {
   typeId?: string;
   latitude?: number;
   longitude?: number;
-  page?: string;
-  size?: string;
+  page?: string | number;
+  size?: string | number;
+  searchType?: string;
+  priceType?: string;
+  sortBy?: string;
 }
 
 export const getCompanyCars = async (
@@ -44,11 +47,12 @@ export const getCompanyCars = async (
     addParam("trainStationId", filters.trainStationId);
     addParam("brandId", filters.brandId);
     addParam("typeId", filters.typeId);
+    addParam("locationType", filters.locationType);
 
     // params إضافية
-    addParam("searchType", "location"); // ثابتة حسب المثال
-    addParam("priceType", ""); // أو حط القيمة لو عندك
-    addParam("sortBy", ""); // نفس الكلام
+    addParam("searchType", filters.searchType ?? "location");
+    addParam("priceType", filters.priceType ?? "");
+    addParam("sortBy", filters.sortBy ?? "");
 
     if (filters.latitude != null) {
       query.push(`latitude=${filters.latitude}`);

@@ -70,19 +70,52 @@ const StepOne = ({ control, errors, watch, setValue }: StepOneProps) => {
     });
   };
 
-  return (
-    <div className="relative">
-      <button
-        type="button"
-        onClick={handleOpenReturnLocationDialog}
-        className="absolute top-2 left-2 flex items-center gap-2"
-      >
-        <MapPinPlus />
-        التسليم في مكان اخر
-      </button>
+  const handleOpenPickupLocationDialog = () => {
+    openDialog("currentLocation", "pickup", () => {
+      const { filters: updatedFilters } =
+        useUserPreferedFiltersStore.getState();
+      const { latitude, longitude, address } = useLocationStore.getState();
 
+      const locationName =
+        updatedFilters.pickupType === "currentLocation" &&
+        (!updatedFilters.pickupName ||
+          updatedFilters.pickupName === "الموقع الحالي") &&
+        address
+          ? address
+          : updatedFilters.pickupName || "الموقع الحالي";
+
+      setValue("pickupName", locationName, { shouldValidate: true });
+      setValue(
+        "pickupLat",
+        updatedFilters.pickupType === "currentLocation" &&
+          (!updatedFilters.pickupLat ||
+            updatedFilters.pickupName === "الموقع الحالي")
+          ? latitude
+          : updatedFilters.pickupLat || null,
+      );
+      setValue(
+        "pickupLong",
+        updatedFilters.pickupType === "currentLocation" &&
+          (!updatedFilters.pickupLng ||
+            updatedFilters.pickupName === "الموقع الحالي")
+          ? longitude
+          : updatedFilters.pickupLng || null,
+      );
+      setValue(
+        "pickupId",
+        updatedFilters.pickupId === "current-location"
+          ? null
+          : updatedFilters.pickupId || null,
+      );
+      setValue("pickupTrainId", updatedFilters.pickupTrainId || null);
+      setValue("pickupAirportId", updatedFilters.pickupAirportId || null);
+    });
+  };
+
+  return (
+    <div className="">
       <div className="w-full flex items-center gap-3">
-        <div className="w-full">
+        <div className="w-full relative">
           <Controller
             name="pickupName"
             control={control}
@@ -90,6 +123,8 @@ const StepOne = ({ control, errors, watch, setValue }: StepOneProps) => {
               <Input
                 {...field}
                 label="مكان الأستلام:"
+                placeholder="حدد مكان الاستلام"
+                className="text-base!"
                 labelIcon={<CarRentIcon />}
                 labelClassName="text-base!"
                 readOnly
@@ -97,9 +132,25 @@ const StepOne = ({ control, errors, watch, setValue }: StepOneProps) => {
               />
             )}
           />
+          <button
+            type="button"
+            onClick={handleOpenPickupLocationDialog}
+            className="absolute top-0 left-2 flex items-center gap-2"
+          >
+            <MapPinPlus />
+            الاستلام في مكان اخر
+          </button>
         </div>
         <ArrowLeft className="w-15 h-15 mt-8" />
-        <div className="w-full">
+        <div className="w-full relative">
+          <button
+            type="button"
+            onClick={handleOpenReturnLocationDialog}
+            className="absolute top-0 left-2 flex items-center gap-2"
+          >
+            <MapPinPlus />
+            التسليم في مكان اخر
+          </button>
           <Controller
             name="carReturnLocation"
             control={control}
@@ -107,6 +158,8 @@ const StepOne = ({ control, errors, watch, setValue }: StepOneProps) => {
               <Input
                 {...field}
                 label="مكان التسليم:"
+                placeholder="حدد مكان التسليم"
+                className="text-base!"
                 labelIcon={<CarRentIcon />}
                 labelClassName="text-base!"
                 readOnly

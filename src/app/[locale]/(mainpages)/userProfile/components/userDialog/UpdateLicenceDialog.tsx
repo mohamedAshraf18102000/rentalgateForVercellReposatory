@@ -1,11 +1,12 @@
+import { format } from "date-fns";
 import { Button, DialogWrapper } from "@/app/(components)";
 import { DatePicker } from "@/app/(components)/ui/datePicker";
 import { InputFileUpload } from "@/app/(components)/ui/inputFileUpload";
 import { useAuth } from "@/app/(components)/navbar/hooks/useAuth";
 import { useState, useEffect } from "react";
 import { useUploadImageMutation } from "@/services/uploadImages/uploadImage.service";
-import useUpdateUserProfile from "@/hooks/api/useUpdateUserProfile";
 import { toast } from "sonner";
+import useUpdateUserProfile from "@/hooks/api/useUpdateUserProfile";
 
 interface UpdatePasswordDialogProps {
   open: boolean;
@@ -41,11 +42,13 @@ const UpdateLicenceDialog = ({ open, setOpen }: UpdatePasswordDialogProps) => {
       }
 
       await updateProfile({
+        email: userData?.email,
+        mobile: userData?.mobile,
+        fullName: userData?.clientName,
+        licenseExpirationDate: licenseDate
+          ? format(licenseDate, "yyyy-MM-dd")
+          : undefined,
         licenseImage: licenseImageName,
-        licenseExpirationDate: licenseDate?.toISOString(),
-        nationality: userData?.nationality,
-        residenceType: userData?.residenceType,
-        
       });
 
       toast.success("تم تحديث بيانات الرخصة بنجاح");
@@ -91,6 +94,8 @@ const UpdateLicenceDialog = ({ open, setOpen }: UpdatePasswordDialogProps) => {
             label="تاريخ إنتهاء الرخصة:"
             value={licenseDate}
             onChange={(date) => setLicenseDate(date)}
+            fromYear={new Date().getFullYear()}
+            toYear={new Date().getFullYear() + 20}
           />
         </div>
       }

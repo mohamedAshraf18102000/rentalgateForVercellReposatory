@@ -1,13 +1,12 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { updateUserProfile } from "@/services/userProfile/updateUserProfile.service";
 import { UpdateUserProfilePayload } from "@/types/userProfile/updateUserProfile";
+import { updateUserProfile } from "@/services/userProfile/updateUserProfile.service";
 
 const useUpdateUserProfile = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (payload: Partial<UpdateUserProfilePayload>) => 
-      updateUserProfile(payload as UpdateUserProfilePayload),
+    mutationFn: (payload: UpdateUserProfilePayload) => updateUserProfile(payload),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["userProfile"] });
     },

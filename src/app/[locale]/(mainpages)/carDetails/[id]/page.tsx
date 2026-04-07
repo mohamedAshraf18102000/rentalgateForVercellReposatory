@@ -32,6 +32,8 @@ const page = () => {
   const setCarDetails = useBookedCarDetailsStore((s) => s.setCarDetails);
   const setFormData = useBookedCarDetailsStore((s) => s.setFormData);
   const setServices = useBookedCarDetailsStore((s) => s.setServices);
+  const setAirports = useBookedCarDetailsStore((s) => s.setAirports);
+  const setTrainStations = useBookedCarDetailsStore((s) => s.setTrainStations);
   const { filters } = useUserPreferedFiltersStore();
 
   const { data, isLoading } = useQuery({
@@ -42,6 +44,8 @@ const page = () => {
   useEffect(() => {
     if (data) {
       setCarDetails(data);
+      setAirports(data.airports ?? []);
+      setTrainStations(data.trainStations ?? []);
       setFormData({
         company_id: data.company.companyId,
         carDetails: {
@@ -51,7 +55,7 @@ const page = () => {
         },
       });
     }
-  }, [data, setCarDetails, setFormData]);
+  }, [data, setCarDetails, setFormData, setAirports, setTrainStations]);
 
   const { data: services, isLoading: servicesLoading } = useQuery({
     queryKey: ["company-cars-services", id],

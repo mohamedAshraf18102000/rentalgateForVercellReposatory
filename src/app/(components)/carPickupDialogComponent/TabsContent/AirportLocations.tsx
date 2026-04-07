@@ -1,27 +1,27 @@
 "use client";
-import { getAirports } from "@/services/pickupLocations/airports.service";
-import { useQuery } from "@tanstack/react-query";
+// import { getAirports } from "@/services/pickupLocations/airports.service";
 import { PlaneTakeoff } from "lucide-react";
 import { Label } from "../../ui/label";
 import { RadioGroup, RadioGroupItem } from "../../ui/radio-group";
 import { Separator } from "../../ui/separator";
 import { useUserPreferedFiltersStore } from "@/lib/stores/useUserPreferedFiltersStore";
 import { usePickupDialogStore } from "@/lib/stores/usePickupDialogStore";
+import { useBookedCarDetailsStore } from "@/lib/stores/useBookedCarDetailsStore";
 
 const AirportLocations = () => {
-  const { data: airports, isLoading } = useQuery({
-    queryKey: ["airports"],
-    queryFn: () => getAirports(),
-  });
+  // const { data: airports, isLoading } = useQuery({
+  //   queryKey: ["airports"],
+  //   queryFn: () => getAirports(),
+  // });
+
+  const airports = useBookedCarDetailsStore((state) => state.airports);
 
   const { setFilter, filters } = useUserPreferedFiltersStore();
   const { target } = usePickupDialogStore();
 
   const handleValueChange = (value: string) => {
     const airportId = value.split("-")[1];
-    const airport = airports?.content.find(
-      (a) => a.airportId.toString() === airportId
-    );
+    const airport = airports?.find((a) => a.airportId.toString() === airportId);
     if (airport) {
       if (target === "return") {
         setFilter("carReturnLocationId", airport.airportId.toString());
@@ -53,25 +53,13 @@ const AirportLocations = () => {
               ? `airport-${filters.carReturnLocationId}`
               : ""
             : filters.pickupType === "airport"
-            ? `airport-${filters.pickupId}`
-            : ""
+              ? `airport-${filters.pickupId}`
+              : ""
         }
       >
         <p className="text-base font-bold">المطارات الأكثر شهرة:</p>
 
-        {isLoading && (
-          <p className="text-sm text-muted-foreground text-center py-4">
-            جاري التحميل...
-          </p>
-        )}
-
-        {!isLoading && airports?.content.length === 0 && (
-          <p className="text-sm text-muted-foreground text-center py-4">
-            لا توجد مطارات متاحة
-          </p>
-        )}
-
-        {airports?.content.map((airport) => (
+        {airports?.map((airport) => (
           <div key={airport.airportId}>
             <div className="flex items-center gap-4 p-2 rounded-lg mx-auto hover:bg-Grey100">
               <Label
@@ -84,9 +72,9 @@ const AirportLocations = () => {
                 />
                 <div className="flex flex-col gap-0.5">
                   <p className="text-sm truncate">{airport.arabicName}</p>
-                  {airport.cityArabicName && (
+                  {airport.arabicName && (
                     <p className="text-xs text-muted-foreground">
-                      {airport.cityArabicName}
+                      {airport.arabicName}
                     </p>
                   )}
                 </div>

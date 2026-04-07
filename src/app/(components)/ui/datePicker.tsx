@@ -15,13 +15,20 @@ export function DatePicker({
   label,
   value,
   onChange,
+  fromYear,
+  toYear,
 }: {
   label: string;
   value?: Date;
   onChange?: (date: Date | undefined) => void;
+  fromYear?: number;
+  toYear?: number;
 }) {
   const [open, setOpen] = React.useState(false);
   const [date, setDate] = React.useState<Date | undefined>(value);
+
+  const startMonth = fromYear ? new Date(fromYear, 0) : undefined;
+  const endMonth = toYear ? new Date(toYear, 11) : undefined;
 
   // Sync state if prop changes
   React.useEffect(() => {
@@ -50,6 +57,8 @@ export function DatePicker({
               selected={date}
               captionLayout="dropdown"
               defaultMonth={date}
+              startMonth={startMonth}
+              endMonth={endMonth}
               onSelect={(date) => {
                 setDate(date);
                 onChange?.(date);

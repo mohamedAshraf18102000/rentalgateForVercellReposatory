@@ -7,7 +7,6 @@ import {
 } from "@/lib/stores/useBookedCarDetailsStore";
 import { usePickupDialogStore } from "@/lib/stores/usePickupDialogStore";
 import { useEffect, forwardRef, useImperativeHandle } from "react";
-import { updateUserProfile } from "@/services/userProfile/updateUserProfile.service";
 
 import { useLocationStore } from "@/lib/stores/useLocationStore";
 import { useForm } from "react-hook-form";
@@ -22,6 +21,7 @@ import StepTwo from "./StepTwo";
 import StepThree from "./StepThree";
 import { useClientStore } from "@/lib/api/stores";
 import { calculateRentalPrice } from "@/lib/utils/calculateRentalPrice";
+import { completeUserProfile } from "@/services/userProfile/completeUserProfile.service";
 
 const mapLocationType = (
   type?: string,
@@ -72,9 +72,8 @@ const StepContent = forwardRef<StepContentRef, StepContentProps>(
       mode: "onChange",
       reValidateMode: "onChange",
       defaultValues: {
-        pickupName: filters.pickupName || "",
-        carReturnLocation:
-          filters.carReturnLocation || filters.pickupName || "",
+        pickupName: "",
+        carReturnLocation: "",
         fromDate: filters.fromDate ? new Date(filters.fromDate) : undefined,
         toDate: filters.toDate ? new Date(filters.toDate) : undefined,
         // Step 2 – hydrate from reservation form store
@@ -88,29 +87,11 @@ const StepContent = forwardRef<StepContentRef, StepContentProps>(
         services: formData.services || [],
         driver: formData.driver || null,
         extraKmType: formData.extraKmType || "QUOTA",
-        pickupLat:
-          filters.pickupType === "currentLocation" &&
-          (!filters.pickupLat || filters.pickupName === "الموقع الحالي")
-            ? latitude
-            : filters.pickupLat || (carDetails?.latitude ?? undefined),
-        pickupLong:
-          filters.pickupType === "currentLocation" &&
-          (!filters.pickupLng || filters.pickupName === "الموقع الحالي")
-            ? longitude
-            : filters.pickupLng || (carDetails?.longitude ?? undefined),
+        pickupLat: null,
+        pickupLong: null,
         pickupId: filters.pickupId || null,
-        returnLat:
-          filters.carReturnLocationType === "currentLocation" &&
-          (!filters.carReturnLocationLat ||
-            filters.carReturnLocation === "الموقع الحالي")
-            ? latitude
-            : (filters.carReturnLocationLat ?? undefined),
-        returnLong:
-          filters.carReturnLocationType === "currentLocation" &&
-          (!filters.carReturnLocationLng ||
-            filters.carReturnLocation === "الموقع الحالي")
-            ? longitude
-            : (filters.carReturnLocationLng ?? undefined),
+        returnLat: null,
+        returnLong: null,
         carReturnLocationId: filters.carReturnLocationId || null,
         pickupTrainId: filters.pickupTrainId || null,
         pickupAirportId: filters.pickupAirportId || null,
@@ -121,23 +102,7 @@ const StepContent = forwardRef<StepContentRef, StepContentProps>(
 
     // Sync store -> form on hydration or store changes
     useEffect(() => {
-      if (
-        filters.pickupName &&
-        filters.pickupName !== getValues("pickupName")
-      ) {
-        setValue("pickupName", filters.pickupName);
-      }
-      if (filters.carReturnLocation) {
-        if (filters.carReturnLocation !== getValues("carReturnLocation")) {
-          setValue("carReturnLocation", filters.carReturnLocation);
-        }
-      } else if (
-        filters.pickupName &&
-        filters.pickupName !== getValues("carReturnLocation")
-      ) {
-        // Fallback to pickup name if return location is empty
-        setValue("carReturnLocation", filters.pickupName);
-      }
+      // (Removed automatic sync of pickup/return names to keep them empty at start)
 
       if (filters.fromDate) {
         const storeDate = new Date(filters.fromDate);
@@ -155,67 +120,7 @@ const StepContent = forwardRef<StepContentRef, StepContentProps>(
       }
 
       // Sync Lat/Lng
-      const targetPickupLat =
-        filters.pickupType === "currentLocation" &&
-        (!filters.pickupLat || filters.pickupName === "الموقع الحالي")
-          ? latitude
-          : filters.pickupLat || (carDetails?.latitude ?? undefined);
-      if (
-        targetPickupLat !== undefined &&
-        targetPickupLat !== getValues("pickupLat")
-      ) {
-        setValue("pickupLat", targetPickupLat);
-      }
-
-      const targetPickupLong =
-        filters.pickupType === "currentLocation" &&
-        (!filters.pickupLng || filters.pickupName === "الموقع الحالي")
-          ? longitude
-          : filters.pickupLng || (carDetails?.longitude ?? undefined);
-      if (
-        targetPickupLong !== undefined &&
-        targetPickupLong !== getValues("pickupLong")
-      ) {
-        setValue("pickupLong", targetPickupLong);
-      }
-
-      const targetReturnLat =
-        filters.carReturnLocationType === "currentLocation" &&
-        (!filters.carReturnLocationLat ||
-          filters.carReturnLocation === "الموقع الحالي")
-          ? latitude
-          : (filters.carReturnLocationLat ?? undefined);
-      if (
-        targetReturnLat !== undefined &&
-        targetReturnLat !== getValues("returnLat")
-      ) {
-        setValue("returnLat", targetReturnLat);
-      } else if (
-        targetPickupLat !== undefined &&
-        targetPickupLat !== getValues("returnLat") &&
-        !filters.carReturnLocationLat
-      ) {
-        setValue("returnLat", targetPickupLat);
-      }
-
-      const targetReturnLong =
-        filters.carReturnLocationType === "currentLocation" &&
-        (!filters.carReturnLocationLng ||
-          filters.carReturnLocation === "الموقع الحالي")
-          ? longitude
-          : (filters.carReturnLocationLng ?? undefined);
-      if (
-        targetReturnLong !== undefined &&
-        targetReturnLong !== getValues("returnLong")
-      ) {
-        setValue("returnLong", targetReturnLong);
-      } else if (
-        targetPickupLong !== undefined &&
-        targetPickupLong !== getValues("returnLong") &&
-        !filters.carReturnLocationLng
-      ) {
-        setValue("returnLong", targetPickupLong);
-      }
+      // (Automatic coordinate sync removed to keep locations empty at start)
 
       // Sync pickupId
       if (filters.pickupId && filters.pickupId !== getValues("pickupId")) {
@@ -231,16 +136,27 @@ const StepContent = forwardRef<StepContentRef, StepContentProps>(
       }
 
       // Sync train/airport IDs
-      if ((filters.pickupTrainId || null) !== (getValues("pickupTrainId") || null)) {
+      if (
+        (filters.pickupTrainId || null) !== (getValues("pickupTrainId") || null)
+      ) {
         setValue("pickupTrainId", filters.pickupTrainId || null);
       }
-      if ((filters.pickupAirportId || null) !== (getValues("pickupAirportId") || null)) {
+      if (
+        (filters.pickupAirportId || null) !==
+        (getValues("pickupAirportId") || null)
+      ) {
         setValue("pickupAirportId", filters.pickupAirportId || null);
       }
-      if ((filters.carReturnTrainId || null) !== (getValues("returnTrainId") || null)) {
+      if (
+        (filters.carReturnTrainId || null) !==
+        (getValues("returnTrainId") || null)
+      ) {
         setValue("returnTrainId", filters.carReturnTrainId || null);
       }
-      if ((filters.carReturnAirportId || null) !== (getValues("returnAirportId") || null)) {
+      if (
+        (filters.carReturnAirportId || null) !==
+        (getValues("returnAirportId") || null)
+      ) {
         setValue("returnAirportId", filters.carReturnAirportId || null);
       }
     }, [filters, carDetails, latitude, longitude, setValue, getValues]);
@@ -316,7 +232,7 @@ const StepContent = forwardRef<StepContentRef, StepContentProps>(
           const residenceType = values.idNumber;
 
           try {
-            const updatedData = await updateUserProfile({
+            const updatedData = await completeUserProfile({
               licenseExpirationDate: values.licenceExpiryDate
                 ? (values.licenceExpiryDate as Date).toISOString().split("T")[0]
                 : "",
@@ -347,32 +263,7 @@ const StepContent = forwardRef<StepContentRef, StepContentProps>(
 
     // Sync address -> store & form if filter is still placeholder
     useEffect(() => {
-      if (address && address !== "الموقع الحالي") {
-        if (!open || target !== "pickup") {
-          if (filters.pickupName === "الموقع الحالي" || !filters.pickupName) {
-            setValue("pickupName", address);
-            setValue("pickupLat", latitude);
-            setValue("pickupLong", longitude);
-            if (filters.pickupName !== address) {
-              setFilter("pickupName", address);
-            }
-          }
-        }
-        if (!open || target !== "return") {
-          if (
-            filters.carReturnLocation === "الموقع الحالي" ||
-            !filters.carReturnLocation ||
-            filters.carReturnLocation === ""
-          ) {
-            setValue("carReturnLocation", address);
-            setValue("returnLat", latitude);
-            setValue("returnLong", longitude);
-            if (filters.carReturnLocation !== address) {
-              setFilter("carReturnLocation", address);
-            }
-          }
-        }
-      }
+      // (Automatic address sync removed to keep locations empty until user selects them)
     }, [
       address,
       latitude,
@@ -477,7 +368,7 @@ const StepContent = forwardRef<StepContentRef, StepContentProps>(
         );
 
         setFormData(update);
-        
+
         if (value.fromDate) {
           const iso = (value.fromDate as Date).toISOString();
           if (filters.fromDate !== iso) {

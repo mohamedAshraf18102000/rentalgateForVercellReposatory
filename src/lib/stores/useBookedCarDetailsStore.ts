@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
-import { CarDetailsResponse } from "@/types/companyCars/carDetails";
+import { Airport, CarDetailsResponse, TrainStation } from "@/types/companyCars/carDetails";
 import { CompanyService } from "@/types/companyCars/carServices";
 import { PricingType } from "@/lib/utils/calculateRentalPrice";
 
@@ -115,6 +115,8 @@ const initialFormData: ReservationFormData = {
 export interface BookedCarDetailsState {
   carDetails: CarDetailsResponse | null;
   services: CompanyService[];
+  airports: Airport[];
+  trainStations: TrainStation[];
   formData: ReservationFormData;
 
   // hydration
@@ -125,6 +127,8 @@ export interface BookedCarDetailsState {
   clearCarDetails: () => void;
   setServices: (services: CompanyService[]) => void;
   clearServices: () => void;
+  setAirports: (airports: Airport[]) => void;
+  setTrainStations: (trainStations: TrainStation[]) => void;
 
   setFormField: <K extends keyof ReservationFormData>(
     key: K,
@@ -140,6 +144,8 @@ export const useBookedCarDetailsStore = create<BookedCarDetailsState>()(
     (set, get) => ({
       carDetails: null,
       services: [],
+      airports: [],
+      trainStations: [],
       formData: initialFormData,
 
       _hasHydrated: false,
@@ -150,6 +156,8 @@ export const useBookedCarDetailsStore = create<BookedCarDetailsState>()(
 
       setServices: (services) => set({ services }),
       clearServices: () => set({ services: [] }),
+      setAirports: (airports) => set({ airports }),
+      setTrainStations: (trainStations) => set({ trainStations }),
 
       setFormField: (key, value) =>
         set((state) => ({
@@ -195,6 +203,8 @@ export const useBookedCarDetailsStore = create<BookedCarDetailsState>()(
       partialize: (state) => ({
         carDetails: state.carDetails,
         services: state.services,
+        airports: state.airports,
+        trainStations: state.trainStations,
         formData: state.formData,
       }),
     },

@@ -1,26 +1,30 @@
 "use client";
-import { getTrainstations } from "@/services/pickupLocations/trainStations.service";
-import { useQuery } from "@tanstack/react-query";
+// import { getTrainstations } from "@/services/pickupLocations/trainStations.service";
 import { TrainFront } from "lucide-react";
 import { Label } from "../../ui/label";
 import { RadioGroup, RadioGroupItem } from "../../ui/radio-group";
 import { Separator } from "../../ui/separator";
 import { useUserPreferedFiltersStore } from "@/lib/stores/useUserPreferedFiltersStore";
 import { usePickupDialogStore } from "@/lib/stores/usePickupDialogStore";
+import { useBookedCarDetailsStore } from "@/lib/stores/useBookedCarDetailsStore";
 
 const TrainLocations = () => {
-  const { data: trainStations, isLoading } = useQuery({
-    queryKey: ["train-stations"],
-    queryFn: () => getTrainstations(),
-  });
+  // const { data: trainStations, isLoading } = useQuery({
+  //   queryKey: ["train-stations"],
+  //   queryFn: () => getTrainstations(),
+  // });
 
   const { setFilter, filters } = useUserPreferedFiltersStore();
   const { target } = usePickupDialogStore();
 
+  const trainStations = useBookedCarDetailsStore(
+    (state) => state.trainStations,
+  );
+
   const handleValueChange = (value: string) => {
     const stationId = value.split("-")[1];
-    const station = trainStations?.content.find(
-      (s) => s.stationId.toString() === stationId
+    const station = trainStations?.find(
+      (s) => s.stationId.toString() === stationId,
     );
     if (station) {
       if (target === "return") {
@@ -53,25 +57,13 @@ const TrainLocations = () => {
               ? `station-${filters.carReturnLocationId}`
               : ""
             : filters.pickupType === "trainStation"
-            ? `station-${filters.pickupId}`
-            : ""
+              ? `station-${filters.pickupId}`
+              : ""
         }
       >
         <p className="text-base font-bold">محطات القطار الأكثر شهرة:</p>
 
-        {isLoading && (
-          <p className="text-sm text-muted-foreground text-center py-4">
-            جاري التحميل...
-          </p>
-        )}
-
-        {!isLoading && trainStations?.content.length === 0 && (
-          <p className="text-sm text-muted-foreground text-center py-4">
-            لا توجد محطات قطار متاحة
-          </p>
-        )}
-
-        {trainStations?.content.map((station) => (
+        {trainStations?.map((station) => (
           <div key={station.stationId}>
             <div className="flex items-center gap-4 p-2 rounded-lg mx-auto hover:bg-Grey100">
               <Label
@@ -84,9 +76,9 @@ const TrainLocations = () => {
                 />
                 <div className="flex flex-col gap-0.5">
                   <p className="text-sm truncate">{station.arabicName}</p>
-                  {station.cityArabicName && (
+                  {station.arabicName && (
                     <p className="text-xs text-muted-foreground">
-                      {station.cityArabicName}
+                      {station.arabicName}
                     </p>
                   )}
                 </div>

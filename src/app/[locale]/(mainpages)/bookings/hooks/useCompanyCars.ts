@@ -1,26 +1,11 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { getCompanyCars } from "@/services/companyCars/cars.service";
+import {
+  getCompanyCars,
+  CarFilters,
+} from "@/services/companyCars/cars.service";
 import { CarApiResponse } from "@/types/companyCars/cars";
 
-export interface CompanyCarsFilters {
-  minPrice?: string;
-  maxPrice?: string;
-  categoryId?: string;
-  searchType?: string;
-  airportId?: string;
-  trainStationId?: string;
-  brandId?: string;
-  typeId?: string;
-  priceType?: string;
-  sortBy?: string;
-  latitude?: number;
-  longitude?: number;
-  page?: string | number;
-  size?: string | number;
-}
-
-
-export const useCompanyCars = (filters: CompanyCarsFilters) => {
+export const useCompanyCars = (filters: CarFilters) => {
   return useInfiniteQuery<CarApiResponse>({
     queryKey: ["company-cars", filters],
     queryFn: ({ pageParam = 0 }) =>
