@@ -4,7 +4,6 @@ import { PlaneTakeoff } from "lucide-react";
 import { Label } from "../../ui/label";
 import { RadioGroup, RadioGroupItem } from "../../ui/radio-group";
 import { Separator } from "../../ui/separator";
-import { useUserPreferedFiltersStore } from "@/lib/stores/useUserPreferedFiltersStore";
 import { usePickupDialogStore } from "@/lib/stores/usePickupDialogStore";
 import { useBookedCarDetailsStore } from "@/lib/stores/useBookedCarDetailsStore";
 
@@ -14,30 +13,35 @@ const AirportLocations = () => {
   //   queryFn: () => getAirports(),
   // });
 
-  const airports = useBookedCarDetailsStore((state) => state.airports);
-
-  const { setFilter, filters } = useUserPreferedFiltersStore();
-  const { target } = usePickupDialogStore();
+  const { airports, setFormData, formData } = useBookedCarDetailsStore();
+  const { target, confirmDialog } = usePickupDialogStore();
 
   const handleValueChange = (value: string) => {
     const airportId = value.split("-")[1];
     const airport = airports?.find((a) => a.airportId.toString() === airportId);
     if (airport) {
       if (target === "return") {
-        setFilter("carReturnLocationId", airport.airportId.toString());
-        setFilter("carReturnAirportId", airport.airportId);
-        setFilter("carReturnLocation", airport.arabicName);
-        setFilter("carReturnLocationType", "airport");
-        setFilter("carReturnLocationLat", airport.latitude);
-        setFilter("carReturnLocationLng", airport.longitude);
+        setFormData({
+          returnAirportId: airport.airportId as number,
+          carReturnLocation: airport.arabicName,
+          returnType: "AIRPORT",
+          returnTrainId: null,
+          carReturnLocationId: null,
+          returnLat: null,
+          returnLong: null,
+        });
       } else {
-        setFilter("pickupId", airport.airportId.toString());
-        setFilter("pickupAirportId", airport.airportId);
-        setFilter("pickupName", airport.arabicName);
-        setFilter("pickupType", "airport");
-        setFilter("pickupLat", airport.latitude);
-        setFilter("pickupLng", airport.longitude);
+        setFormData({
+          pickupAirportId: airport.airportId as number,
+          pickupName: airport.arabicName,
+          pickupType: "AIRPORT",
+          pickupTrainId: null,
+          pickupId: null,
+          pickupLat: null,
+          pickupLong: null,
+        });
       }
+      confirmDialog();
     }
   };
 
@@ -49,11 +53,11 @@ const AirportLocations = () => {
         onValueChange={handleValueChange}
         value={
           target === "return"
-            ? filters.carReturnLocationType === "airport"
-              ? `airport-${filters.carReturnLocationId}`
+            ? formData.returnType === "AIRPORT"
+              ? `airport-${formData.returnAirportId}`
               : ""
-            : filters.pickupType === "airport"
-              ? `airport-${filters.pickupId}`
+            : formData.pickupType === "AIRPORT"
+              ? `airport-${formData.pickupAirportId}`
               : ""
         }
       >

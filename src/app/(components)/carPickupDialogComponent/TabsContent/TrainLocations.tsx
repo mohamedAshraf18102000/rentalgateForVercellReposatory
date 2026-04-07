@@ -4,22 +4,12 @@ import { TrainFront } from "lucide-react";
 import { Label } from "../../ui/label";
 import { RadioGroup, RadioGroupItem } from "../../ui/radio-group";
 import { Separator } from "../../ui/separator";
-import { useUserPreferedFiltersStore } from "@/lib/stores/useUserPreferedFiltersStore";
 import { usePickupDialogStore } from "@/lib/stores/usePickupDialogStore";
 import { useBookedCarDetailsStore } from "@/lib/stores/useBookedCarDetailsStore";
 
 const TrainLocations = () => {
-  // const { data: trainStations, isLoading } = useQuery({
-  //   queryKey: ["train-stations"],
-  //   queryFn: () => getTrainstations(),
-  // });
-
-  const { setFilter, filters } = useUserPreferedFiltersStore();
-  const { target } = usePickupDialogStore();
-
-  const trainStations = useBookedCarDetailsStore(
-    (state) => state.trainStations,
-  );
+  const { trainStations, setFormData, formData } = useBookedCarDetailsStore();
+  const { target, confirmDialog } = usePickupDialogStore();
 
   const handleValueChange = (value: string) => {
     const stationId = value.split("-")[1];
@@ -28,20 +18,27 @@ const TrainLocations = () => {
     );
     if (station) {
       if (target === "return") {
-        setFilter("carReturnLocationId", station.stationId.toString());
-        setFilter("carReturnTrainId", station.stationId);
-        setFilter("carReturnLocation", station.arabicName);
-        setFilter("carReturnLocationType", "trainStation");
-        setFilter("carReturnLocationLat", station.latitude);
-        setFilter("carReturnLocationLng", station.longitude);
+        setFormData({
+          returnTrainId: station.stationId as number,
+          carReturnLocation: station.arabicName,
+          returnType: "TRAIN_STATION",
+          returnAirportId: null,
+          carReturnLocationId: null,
+          returnLat: null,
+          returnLong: null,
+        });
       } else {
-        setFilter("pickupId", station.stationId.toString());
-        setFilter("pickupTrainId", station.stationId);
-        setFilter("pickupName", station.arabicName);
-        setFilter("pickupType", "trainStation");
-        setFilter("pickupLat", station.latitude);
-        setFilter("pickupLng", station.longitude);
+        setFormData({
+          pickupTrainId: station.stationId as number,
+          pickupName: station.arabicName,
+          pickupType: "TRAIN_STATION",
+          pickupAirportId: null,
+          pickupId: null,
+          pickupLat: null,
+          pickupLong: null,
+        });
       }
+      confirmDialog();
     }
   };
 
@@ -53,11 +50,11 @@ const TrainLocations = () => {
         onValueChange={handleValueChange}
         value={
           target === "return"
-            ? filters.carReturnLocationType === "trainStation"
-              ? `station-${filters.carReturnLocationId}`
+            ? formData.returnType === "TRAIN_STATION"
+              ? `station-${formData.returnTrainId}`
               : ""
-            : filters.pickupType === "trainStation"
-              ? `station-${filters.pickupId}`
+            : formData.pickupType === "TRAIN_STATION"
+              ? `station-${formData.pickupTrainId}`
               : ""
         }
       >

@@ -381,6 +381,27 @@ const StepContent = forwardRef<StepContentRef, StepContentProps>(
             setFilter("toDate", iso);
           }
         }
+        if (value.pickupTrainId !== undefined) {
+          if (filters.pickupTrainId !== value.pickupTrainId) {
+            setFilter("pickupTrainId", value.pickupTrainId as number);
+          }
+        }
+        if (value.pickupAirportId !== undefined) {
+          if (filters.pickupAirportId !== value.pickupAirportId) {
+            setFilter("pickupAirportId", value.pickupAirportId as number);
+          }
+        }
+        if (value.returnTrainId !== undefined) {
+          if (filters.carReturnTrainId !== value.returnTrainId) {
+            setFilter("carReturnTrainId", value.returnTrainId as number);
+          }
+        }
+        if (value.returnAirportId !== undefined) {
+          if (filters.carReturnAirportId !== value.returnAirportId) {
+            setFilter("carReturnAirportId", value.returnAirportId as number);
+          }
+        }
+
         if (value.pickupName && value.pickupName !== "الموقع الحالي") {
           if (filters.pickupName !== value.pickupName) {
             setFilter("pickupName", value.pickupName);
@@ -396,7 +417,7 @@ const StepContent = forwardRef<StepContentRef, StepContentProps>(
         }
       });
       return () => subscription.unsubscribe();
-    }, [watch, setFilter, setFormData, latitude, longitude, _hasHydrated]);
+    }, [watch, filters, setFilter, setFormData, latitude, longitude, _hasHydrated]);
 
     const stepData = [
       {

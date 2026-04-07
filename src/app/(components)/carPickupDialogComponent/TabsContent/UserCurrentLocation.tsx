@@ -4,19 +4,33 @@ import useUserAddreses from "@/hooks/api/useUserAddreses";
 import { UserAddress } from "@/types/userProfile/userAddress";
 import { useUserPreferedFiltersStore } from "@/lib/stores/useUserPreferedFiltersStore";
 import { usePickupDialogStore } from "@/lib/stores/usePickupDialogStore";
+import { useLocationStore } from "@/lib/stores/useLocationStore";
+import { useBookedCarDetailsStore } from "@/lib/stores/useBookedCarDetailsStore";
 
 const UserCurrentLocation = () => {
   const { data: userAddresses, isLoading: isLoadingAddresses } =
     useUserAddreses();
 
   const { filters, setFilter } = useUserPreferedFiltersStore();
+  const { setFormField, formData } = useBookedCarDetailsStore();
   const { target, setIsUnsavedMapLocation, confirmDialog } =
     usePickupDialogStore();
 
-  const initialLat =
-    target === "return" ? filters.carReturnLocationLat : filters.pickupLat;
-  const initialLng =
-    target === "return" ? filters.carReturnLocationLng : filters.pickupLng;
+  const isAirport =
+    target === "return"
+      ? !!formData.returnAirportId
+      : !!formData.pickupAirportId;
+  const isTrain =
+    target === "return" ? !!formData.returnTrainId : !!formData.pickupTrainId;
+
+  // If the stored location is an airport or train station, we ignore it and use undefined
+  // to let GoogleMapsLocation default to the user's real location.
+  const initialLat = (isAirport || isTrain)
+    ? undefined
+    : (target === "return" ? filters.carReturnLocationLat : filters.pickupLat);
+  const initialLng = (isAirport || isTrain)
+    ? undefined
+    : (target === "return" ? filters.carReturnLocationLng : filters.pickupLng);
 
   const handleSelectAddress = (address: UserAddress) => {
     setIsUnsavedMapLocation(false);
@@ -26,12 +40,38 @@ const UserCurrentLocation = () => {
       setFilter("carReturnLocationLng", address.longitude);
       setFilter("carReturnLocationType", "currentLocation");
       setFilter("carReturnLocationId", String(address.addressId));
+
+      // Update BookedCarDetailsStore
+      setFormField("carReturnLocation", address.addressName);
+      setFormField("returnLat", address.latitude);
+      setFormField("returnLong", address.longitude);
+      setFormField("returnType", "MY_LOCATION");
+      setFormField("carReturnLocationId", String(address.addressId));
+      setFormField("returnAirportId", null);
+      setFormField("returnTrainId", null);
+
+      // Clear other location IDs in preference store
+      setFilter("carReturnAirportId", undefined);
+      setFilter("carReturnTrainId", undefined);
     } else {
       setFilter("pickupName", address.addressName);
       setFilter("pickupLat", address.latitude);
       setFilter("pickupLng", address.longitude);
       setFilter("pickupType", "currentLocation");
       setFilter("pickupId", String(address.addressId));
+
+      // Update BookedCarDetailsStore
+      setFormField("pickupName", address.addressName);
+      setFormField("pickupLat", address.latitude);
+      setFormField("pickupLong", address.longitude);
+      setFormField("pickupType", "MY_LOCATION");
+      setFormField("pickupId", String(address.addressId));
+      setFormField("pickupAirportId", null);
+      setFormField("pickupTrainId", null);
+
+      // Clear other location IDs in preference store
+      setFilter("pickupAirportId", undefined);
+      setFilter("pickupTrainId", undefined);
     }
     confirmDialog();
   };
@@ -40,18 +80,48 @@ const UserCurrentLocation = () => {
     lat: number,
     lng: number,
     address: string,
+    isManual?: boolean,
   ) => {
+    if (isManual === false) return;
     setIsUnsavedMapLocation(true);
     if (target === "return") {
       setFilter("carReturnLocation", address);
       setFilter("carReturnLocationLat", lat);
       setFilter("carReturnLocationLng", lng);
       setFilter("carReturnLocationType", "currentLocation");
+
+      // Update BookedCarDetailsStore
+      setFormField("carReturnLocation", address);
+      setFormField("returnLat", lat);
+      setFormField("returnLong", lng);
+      setFormField("returnType", "MY_LOCATION");
+      setFormField("carReturnLocationId", null);
+      setFormField("returnAirportId", null);
+      setFormField("returnTrainId", null);
+
+      // Clear other location IDs in preference store
+      setFilter("carReturnAirportId", undefined);
+      setFilter("carReturnTrainId", undefined);
+      setFilter("carReturnLocationId", undefined);
     } else {
       setFilter("pickupName", address);
       setFilter("pickupLat", lat);
       setFilter("pickupLng", lng);
       setFilter("pickupType", "currentLocation");
+
+      // Update BookedCarDetailsStore
+      setFormField("pickupName", address);
+      setFormField("pickupLat", lat);
+      setFormField("pickupLong", lng);
+      setFormField("pickupType", "MY_LOCATION");
+      setFormField("pickupId", "current-location");
+      setFormField("pickupAirportId", null);
+      setFormField("pickupTrainId", null);
+
+      // Clear other location IDs in preference store
+      setFilter("pickupAirportId", undefined);
+      setFilter("pickupTrainId", undefined);
+      setFilter("pickupId", "current-location");
     }
   };
 
@@ -62,8 +132,8 @@ const UserCurrentLocation = () => {
         <GoogleMapsLocation
           storeless
           onLocationChange={handleMapLocationChange}
-          initialLat={initialLat || undefined}
-          initialLng={initialLng || undefined}
+          initialLat={initialLat}
+          initialLng={initialLng}
         />
       </div>
 

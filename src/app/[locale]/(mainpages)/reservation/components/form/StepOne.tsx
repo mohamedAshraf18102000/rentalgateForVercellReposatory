@@ -15,10 +15,10 @@ import CarRentIcon from "@/constants/icons/CarRentIcon";
 import ExeclusiveOfferIcon from "@/constants/icons/ExeclusiveOfferIcon";
 import OffersCard from "@/app/(components)/customCards/OffersCard";
 import { Separator } from "@/app/(components)/ui/separator";
-import { useUserPreferedFiltersStore } from "@/lib/stores/useUserPreferedFiltersStore";
 import { usePickupDialogStore } from "@/lib/stores/usePickupDialogStore";
 import { useLocationStore } from "@/lib/stores/useLocationStore";
 import { ReservationFormValues } from "@/lib/validations/reservationSchema";
+import { useBookedCarDetailsStore } from "@/lib/stores/useBookedCarDetailsStore";
 
 interface StepOneProps {
   control: Control<ReservationFormValues>;
@@ -28,87 +28,94 @@ interface StepOneProps {
 }
 
 const StepOne = ({ control, errors, watch, setValue }: StepOneProps) => {
+  const formData = useBookedCarDetailsStore((state) => state.formData);
+  console.log("-------formData", formData);
+
   const { openDialog } = usePickupDialogStore();
 
   const handleOpenReturnLocationDialog = () => {
     openDialog("currentLocation", "return", () => {
-      const { filters: updatedFilters } =
-        useUserPreferedFiltersStore.getState();
+      const { formData: updatedFormData } = useBookedCarDetailsStore.getState();
       const { latitude, longitude, address } = useLocationStore.getState();
 
       const locationName =
-        updatedFilters.carReturnLocationType === "currentLocation" &&
-        (!updatedFilters.carReturnLocation ||
-          updatedFilters.carReturnLocation === "الموقع الحالي") &&
+        updatedFormData.returnType === "MY_LOCATION" &&
+        (!updatedFormData.carReturnLocation ||
+          updatedFormData.carReturnLocation === "الموقع الحالي") &&
         address
           ? address
-          : updatedFilters.carReturnLocation || "الموقع الحالي";
+          : updatedFormData.carReturnLocation || "الموقع الحالي";
 
       setValue("carReturnLocation", locationName, { shouldValidate: true });
       setValue(
         "returnLat",
-        updatedFilters.carReturnLocationType === "currentLocation" &&
-          (!updatedFilters.carReturnLocationLat ||
-            updatedFilters.carReturnLocation === "الموقع الحالي")
+        updatedFormData.returnType === "MY_LOCATION" &&
+          (!updatedFormData.returnLat ||
+            updatedFormData.carReturnLocation === "الموقع الحالي")
           ? latitude
-          : updatedFilters.carReturnLocationLat || null,
+          : updatedFormData.returnLat || null,
       );
       setValue(
         "returnLong",
-        updatedFilters.carReturnLocationType === "currentLocation" &&
-          (!updatedFilters.carReturnLocationLng ||
-            updatedFilters.carReturnLocation === "الموقع الحالي")
+        updatedFormData.returnType === "MY_LOCATION" &&
+          (!updatedFormData.returnLong ||
+            updatedFormData.carReturnLocation === "الموقع الحالي")
           ? longitude
-          : updatedFilters.carReturnLocationLng || null,
+          : updatedFormData.returnLong || null,
       );
       setValue(
         "carReturnLocationId",
-        updatedFilters.carReturnLocationId || null,
+        updatedFormData.returnType === "MY_LOCATION"
+          ? updatedFormData.carReturnLocationId === "current-location"
+            ? null
+            : updatedFormData.carReturnLocationId || null
+          : updatedFormData.carReturnLocationId || null,
       );
-      setValue("returnTrainId", updatedFilters.carReturnTrainId || null);
-      setValue("returnAirportId", updatedFilters.carReturnAirportId || null);
+      setValue("returnTrainId", updatedFormData.returnTrainId || null);
+      setValue("returnAirportId", updatedFormData.returnAirportId || null);
     });
   };
 
   const handleOpenPickupLocationDialog = () => {
     openDialog("currentLocation", "pickup", () => {
-      const { filters: updatedFilters } =
-        useUserPreferedFiltersStore.getState();
+      const { formData: updatedFormData } = useBookedCarDetailsStore.getState();
       const { latitude, longitude, address } = useLocationStore.getState();
 
       const locationName =
-        updatedFilters.pickupType === "currentLocation" &&
-        (!updatedFilters.pickupName ||
-          updatedFilters.pickupName === "الموقع الحالي") &&
+        updatedFormData.pickupType === "MY_LOCATION" &&
+        (!updatedFormData.pickupName ||
+          updatedFormData.pickupName === "الموقع الحالي") &&
         address
           ? address
-          : updatedFilters.pickupName || "الموقع الحالي";
+          : updatedFormData.pickupName || "الموقع الحالي";
 
       setValue("pickupName", locationName, { shouldValidate: true });
       setValue(
         "pickupLat",
-        updatedFilters.pickupType === "currentLocation" &&
-          (!updatedFilters.pickupLat ||
-            updatedFilters.pickupName === "الموقع الحالي")
+        updatedFormData.pickupType === "MY_LOCATION" &&
+          (!updatedFormData.pickupLat ||
+            updatedFormData.pickupName === "الموقع الحالي")
           ? latitude
-          : updatedFilters.pickupLat || null,
+          : updatedFormData.pickupLat || null,
       );
       setValue(
         "pickupLong",
-        updatedFilters.pickupType === "currentLocation" &&
-          (!updatedFilters.pickupLng ||
-            updatedFilters.pickupName === "الموقع الحالي")
+        updatedFormData.pickupType === "MY_LOCATION" &&
+          (!updatedFormData.pickupLong ||
+            updatedFormData.pickupName === "الموقع الحالي")
           ? longitude
-          : updatedFilters.pickupLng || null,
+          : updatedFormData.pickupLong || null,
       );
       setValue(
         "pickupId",
-        updatedFilters.pickupId === "current-location"
-          ? null
-          : updatedFilters.pickupId || null,
+        updatedFormData.pickupType === "MY_LOCATION"
+          ? updatedFormData.pickupId === "current-location"
+            ? null
+            : updatedFormData.pickupId || null
+          : updatedFormData.pickupId || null,
       );
-      setValue("pickupTrainId", updatedFilters.pickupTrainId || null);
-      setValue("pickupAirportId", updatedFilters.pickupAirportId || null);
+      setValue("pickupTrainId", updatedFormData.pickupTrainId || null);
+      setValue("pickupAirportId", updatedFormData.pickupAirportId || null);
     });
   };
 
