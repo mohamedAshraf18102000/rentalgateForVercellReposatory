@@ -8,9 +8,9 @@ import { useState } from "react";
 import { useUserPreferedFiltersStore } from "@/lib/stores/useUserPreferedFiltersStore";
 
 export function PickupDialog({ title }: { title?: string }) {
-  const { open, activeTab, setOpen, closeDialog, confirmDialog, isUnsavedMapLocation, target } =
+  const { open, activeTab, setOpen, closeDialog, confirmDialog, isUnsavedMapLocation, target, setIsUnsavedMapLocation } =
     usePickupDialogStore();
-  const { filters } = useUserPreferedFiltersStore();
+  const { filters, setFilter } = useUserPreferedFiltersStore();
   const [showSaveDialog, setShowSaveDialog] = useState(false);
 
   const handleConfirm = () => {
@@ -58,6 +58,24 @@ export function PickupDialog({ title }: { title?: string }) {
         initialLat={initialLat}
         initialLng={initialLng}
         initialAddress={initialAddress}
+        onSuccess={(address) => {
+          if (target === "return") {
+            setFilter("carReturnLocation", address.addressName);
+            setFilter("carReturnLocationLat", address.latitude);
+            setFilter("carReturnLocationLng", address.longitude);
+            setFilter("carReturnLocationType", "currentLocation");
+            setFilter("carReturnLocationId", String(address.addressId));
+          } else {
+            setFilter("pickupName", address.addressName);
+            setFilter("pickupLat", address.latitude);
+            setFilter("pickupLng", address.longitude);
+            setFilter("pickupType", "currentLocation");
+            setFilter("pickupId", String(address.addressId));
+          }
+          setIsUnsavedMapLocation(false);
+          setShowSaveDialog(false);
+          confirmDialog();
+        }}
       />
     </>
   );

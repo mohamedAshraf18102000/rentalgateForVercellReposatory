@@ -10,7 +10,7 @@ const UserCurrentLocation = () => {
     useUserAddreses();
 
   const { filters, setFilter } = useUserPreferedFiltersStore();
-  const { target, setIsUnsavedMapLocation } = usePickupDialogStore();
+  const { target, setIsUnsavedMapLocation, confirmDialog } = usePickupDialogStore();
 
   const initialLat =
     target === "return" ? filters.carReturnLocationLat : filters.pickupLat;
@@ -32,6 +32,7 @@ const UserCurrentLocation = () => {
       setFilter("pickupType", "currentLocation");
       setFilter("pickupId", String(address.addressId));
     }
+    confirmDialog();
   };
 
   const handleMapLocationChange = (

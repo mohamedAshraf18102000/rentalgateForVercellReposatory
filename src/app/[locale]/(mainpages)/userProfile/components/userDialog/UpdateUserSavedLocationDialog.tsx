@@ -33,6 +33,7 @@ import { deleteAddress } from "@/services/userProfile/useDeleteAddress.service";
 import { toast } from "sonner";
 import useUserAddreses from "@/hooks/api/useUserAddreses";
 import { useLocationStore } from "@/lib/stores/useLocationStore";
+import { UserAddress } from "@/types/userProfile/userAddress";
 
 interface UpdateUserSavedLocationDialogProps {
   open: boolean;
@@ -41,6 +42,7 @@ interface UpdateUserSavedLocationDialogProps {
   initialLat?: number;
   initialLng?: number;
   initialAddress?: string;
+  onSuccess?: (address: UserAddress) => void;
 }
 
 const UpdateUserSavedLocationDialog = ({
@@ -50,6 +52,7 @@ const UpdateUserSavedLocationDialog = ({
   initialLat: propLat,
   initialLng: propLng,
   initialAddress,
+  onSuccess,
 }: UpdateUserSavedLocationDialogProps) => {
   const [showAddForm, setShowAddForm] = useState(initialShowAddForm);
   const [isPhoneValid, setIsPhoneValid] = useState(false);
@@ -88,9 +91,10 @@ const UpdateUserSavedLocationDialog = ({
 
   const { mutate: handleAddAddress, isPending } = useMutation({
     mutationFn: (values: UserSavedLocationFormValues) => addAddress(values),
-    onSuccess: () => {
+    onSuccess: (data: UserAddress) => {
       toast.success("تم إضافة العنوان بنجاح");
       queryClient.invalidateQueries({ queryKey: ["userAddresses"] });
+      onSuccess?.(data);
       setShowAddForm(false);
       reset();
     },
