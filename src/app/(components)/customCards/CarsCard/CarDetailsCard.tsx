@@ -166,10 +166,6 @@ const CarDetailsCard = ({
             <div className="flex items-center">
               <span>السعر شامل الضريبة:</span>
 
-              <p className="line-through text-sm mx-1 text-Grey500">
-                {formatPrice(dailyPrice! * rentalDays!)}
-              </p>
-
               {(rentalDays && rentalDays > 1
                 ? originalTotalPrice
                 : priceBeforeOffer) &&

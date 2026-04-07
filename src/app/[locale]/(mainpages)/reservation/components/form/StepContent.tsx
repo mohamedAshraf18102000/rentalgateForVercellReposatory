@@ -302,10 +302,6 @@ const StepContent = forwardRef<StepContentRef, StepContentProps>(
         returnLong: initialValues.returnLong as number | null,
         pickupId: initialValues.pickupId || null,
         carReturnLocationId: initialValues.carReturnLocationId || null,
-        pickupType: mapLocationType(filters.pickupType),
-        returnType: mapLocationType(
-          filters.carReturnLocationType || filters.pickupType,
-        ),
       });
 
       const subscription = watch((value) => {
@@ -362,11 +358,6 @@ const StepContent = forwardRef<StepContentRef, StepContentProps>(
         if (value.returnAirportId !== undefined)
           update.returnAirportId = value.returnAirportId as number | null;
 
-        update.pickupType = mapLocationType(filters.pickupType);
-        update.returnType = mapLocationType(
-          filters.carReturnLocationType || filters.pickupType,
-        );
-
         setFormData(update);
 
         if (value.fromDate) {
@@ -417,7 +408,15 @@ const StepContent = forwardRef<StepContentRef, StepContentProps>(
         }
       });
       return () => subscription.unsubscribe();
-    }, [watch, filters, setFilter, setFormData, latitude, longitude, _hasHydrated]);
+    }, [
+      watch,
+      filters,
+      setFilter,
+      setFormData,
+      latitude,
+      longitude,
+      _hasHydrated,
+    ]);
 
     const stepData = [
       {

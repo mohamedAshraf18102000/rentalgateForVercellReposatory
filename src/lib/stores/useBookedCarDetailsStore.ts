@@ -1,6 +1,10 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
-import { Airport, CarDetailsResponse, TrainStation } from "@/types/companyCars/carDetails";
+import {
+  Airport,
+  CarDetailsResponse,
+  TrainStation,
+} from "@/types/companyCars/carDetails";
 import { CompanyService } from "@/types/companyCars/carServices";
 import { PricingType } from "@/lib/utils/calculateRentalPrice";
 
@@ -180,7 +184,6 @@ export const useBookedCarDetailsStore = create<BookedCarDetailsState>()(
       name: "booked-car-details-storage",
       storage: createJSONStorage(() => localStorage),
 
-      // 🔥 مهم: رجّع الـ Dates
       onRehydrateStorage: () => (state) => {
         if (state?.formData) {
           state.formData.fromDate = state.formData.fromDate

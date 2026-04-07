@@ -1,4 +1,3 @@
-import { useUserPreferedFiltersStore } from "@/lib/stores/useUserPreferedFiltersStore";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import WrapperContainer from "../wrapperContainer/WrapperContainer";
 import SearchPickUpDialog from "./SearchPickUpDialog";
@@ -13,7 +12,6 @@ const CarPickupDialogTabs = ({
 }: {
   customDefaultValue: string;
 }) => {
-  const { setFilter } = useUserPreferedFiltersStore();
   const { target, setActiveTab } = usePickupDialogStore();
 
   return (
@@ -23,11 +21,6 @@ const CarPickupDialogTabs = ({
       defaultValue={customDefaultValue}
       onValueChange={(value) => {
         setActiveTab(value as any);
-        if (target === "return") {
-          setFilter("carReturnLocationType", value as any);
-        } else {
-          setFilter("pickupType", value as any);
-        }
       }}
     >
       <WrapperContainer className="w-full">
