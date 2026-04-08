@@ -87,9 +87,9 @@ const ReservationFinalDetails = ({
             //   !!formData.price &&
             //   formData.originalPrice > formData.price,
             value: (
-              <p dir="ltr">
+              <span dir="ltr">
                 -{formatPrice(reservationData?.businessDiscount || 0)}
-              </p>
+              </span>
             ),
           },
           {
