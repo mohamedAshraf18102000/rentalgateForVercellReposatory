@@ -5,9 +5,17 @@ import ReservationFinalDetailsItem from "./ReservationFinalDetailsItem";
 import { Percent } from "lucide-react";
 
 import { calculateServicePrice } from "@/lib/utils/calculateServicePrice";
+import { CalculateQuotePriceResponse } from "@/services/calculateQuotePrice/calculateQuotePrice.service";
 
-const ReservationFinalDetails = () => {
+type ReservationFinalDetailsProps = {
+  data?: CalculateQuotePriceResponse;
+};
+
+const ReservationFinalDetails = ({
+  data: reservationData,
+}: ReservationFinalDetailsProps) => {
   const { formData, services: allServices } = useBookedCarDetailsStore();
+  console.log("reservationData>>>>", reservationData);
 
   const rentalDays = useMemo(() => {
     if (formData.fromDate && formData.toDate) {
@@ -29,8 +37,8 @@ const ReservationFinalDetails = () => {
         itemHeader="تكلفة مدة الإيجار:"
         items={[
           {
-            label: `إجمالي مدة الإيجار (${rentalDays} يوم)`,
-            value: formatPrice(formData.price),
+            label: "المجموع الفرعي (غير شامل الضريبة)",
+            value: reservationData?.basePrice,
           },
         ]}
       />
@@ -40,18 +48,30 @@ const ReservationFinalDetails = () => {
         <ReservationFinalDetailsItem
           itemHeader="تكلفة الخدمات الإضافية:"
           items={[
-            ...selectedServices.map((s) => ({
-              label: s.serviceArabicName,
-              value: formatPrice(calculateServicePrice(s, rentalDays)),
-            })),
-            ...(formData.extraKmType === "UNLIMITED"
-              ? [
-                  {
-                    label: "كيلومترات لا نهائي",
-                    value: formatPrice(formData.carDetails?.unlimitedKmPrice),
-                  },
-                ]
-              : []),
+            {
+              label: "خدمات اضافية",
+              value: formatPrice(reservationData?.servicesPrice || 0),
+            },
+            {
+              label: "خدمة سائق",
+              value: formatPrice(reservationData?.driverPrice || 0),
+            },
+            {
+              label: "رسوم استلام",
+              value: formatPrice(reservationData?.pickupFee || 0),
+            },
+            {
+              label: "رسوم التسليم",
+              value: formatPrice(reservationData?.deliveryFee || 0),
+            },
+            {
+              label: "إجمالي المبلغ (غير شامل الضريبة)",
+              value: formatPrice(reservationData?.totalBeforeTax || 0),
+            },
+            {
+              label: "قيمة الضريبة",
+              value: formatPrice(reservationData?.taxValue || 0),
+            },
           ]}
         />
       )}
@@ -62,18 +82,14 @@ const ReservationFinalDetails = () => {
         items={[
           {
             label: `خصم عرض ال ( ${rentalDays} يوم )`,
-            isAvailable:
-              !!formData.originalPrice &&
-              !!formData.price &&
-              formData.originalPrice > formData.price,
+            // isAvailable:
+            //   !!formData.originalPrice &&
+            //   !!formData.price &&
+            //   formData.originalPrice > formData.price,
             value: (
-              <>
-                <span dir="ltr" className="p-1 rounded-lg">
-                  {formatPrice(
-                    (formData.originalPrice ?? 0) - (formData.price ?? 0),
-                  )}
-                </span>
-              </>
+              <p dir="ltr">
+                -{formatPrice(reservationData?.businessDiscount || 0)}
+              </p>
             ),
           },
           {

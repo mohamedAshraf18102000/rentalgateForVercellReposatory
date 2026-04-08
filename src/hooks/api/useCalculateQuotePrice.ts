@@ -2,7 +2,7 @@ import { calculateQuotePrice } from "@/services/calculateQuotePrice/calculateQuo
 import { useMutation } from "@tanstack/react-query";
 
 export const useCalculateQuotePrice = () => {
-    return useMutation({
-        mutationFn: (payload: any) => calculateQuotePrice(payload),
-    });
+  return useMutation({
+    mutationFn: (payload: any) => calculateQuotePrice(payload),
+  });
 };

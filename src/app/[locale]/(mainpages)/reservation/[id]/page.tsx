@@ -24,6 +24,8 @@ import {
 import { calculateDiscount } from "@/lib/utils/calculateDiscount";
 import ReservationDrawer from "../components/reservationDrawer/ReservationDrawer";
 import { formatPrice } from "@/lib/utils/formatPrice";
+import { useCalculateQuotePrice } from "@/hooks/api/useCalculateQuotePrice";
+import { buildReservationPayload } from "../utils/buildReservationPayload";
 
 const pricingTypeLabels: Record<PricingType, string> = {
   DAILY: "يومي",
@@ -43,10 +45,15 @@ const page = () => {
   const formData = useBookedCarDetailsStore((s) => s.formData);
   const { filters } = useUserPreferedFiltersStore();
   // const resetReservationForm = useBookedCarDetailsStore((s) => s.resetForm);
-  const bookedCarDetails = useBookedCarDetailsStore();
   const setFormField = useBookedCarDetailsStore((s) => s.setFormField);
 
-  console.log(formData);
+  const calculateUserQoutePayload = buildReservationPayload(formData);
+
+  const {
+    mutate: calculateQuotePrice,
+    isPending: isCalculating,
+    data: calculatedQuotePricingData,
+  } = useCalculateQuotePrice();
 
   // sync plan into store whenever pricingType changes
 
@@ -151,24 +158,28 @@ const page = () => {
     }
   };
 
-  const handleSubmit = async () => {
-    const isValid = await stepContentRef.current?.validateStep();
-    if (!isValid) return;
-
-    setIsDrawerOpen(true);
-  };
-
   const handleNext = async () => {
     if (activeStep < 3) {
       handleStepNavigation(activeStep + 1);
     } else {
-      await handleSubmit();
+      const isValid = await stepContentRef.current?.validateStep();
+      if (!isValid) return;
+
+      calculateQuotePrice(calculateUserQoutePayload, {
+        onSuccess: () => {
+          setIsDrawerOpen(true);
+        },
+      });
     }
   };
 
   return (
     <>
-      <ReservationDrawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen} />
+      <ReservationDrawer
+        open={isDrawerOpen}
+        onOpenChange={setIsDrawerOpen}
+        reservationData={calculatedQuotePricingData}
+      />
       <WrapperContainer exceedNav>
         <PickupDialog title="تأكيد" />
         <div className="w-full">
@@ -228,7 +239,7 @@ const page = () => {
                   }
                   onClick={handleNext}
                   className="text-base!"
-                  loading={isLoading}
+                  loading={isLoading || isCalculating}
                   icon={<ChevronLeft className="w-5! h-5!" />}
                 >
                   <span className="mx-2">

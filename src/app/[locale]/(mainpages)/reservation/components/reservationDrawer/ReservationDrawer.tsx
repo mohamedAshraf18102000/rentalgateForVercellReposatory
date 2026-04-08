@@ -8,7 +8,7 @@ import {
   SheetFooter,
   SheetHeader,
   SheetTitle,
-  SheetTrigger,
+  // SheetTrigger,
 } from "@/app/(components)/ui/sheet";
 import { Funnel, SaudiRiyal } from "lucide-react";
 import ReservationFinalDetails from "./components/ReservationFinalDetails";
@@ -20,19 +20,26 @@ import { useBookedCarDetailsStore } from "@/lib/stores/useBookedCarDetailsStore"
 import { formatPrice } from "@/lib/utils/formatPrice";
 import { applyPromoCodeValueChecker } from "@/lib/utils/promoCodeValueChecker";
 import { calculateServicePrice } from "@/lib/utils/calculateServicePrice";
+import { CalculateQuotePriceResponse } from "@/services/calculateQuotePrice/calculateQuotePrice.service";
 
 type ReservationDrawerProps = {
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
+  reservationData?: CalculateQuotePriceResponse;
 };
 
-const ReservationDrawer = ({ open, onOpenChange }: ReservationDrawerProps) => {
+const ReservationDrawer = ({
+  open,
+  onOpenChange,
+  reservationData,
+}: ReservationDrawerProps) => {
   const { formData, services: allServices } = useBookedCarDetailsStore();
 
   const rentalDays = useMemo(() => {
     if (formData.fromDate && formData.toDate) {
       const diffTime = Math.abs(
-        new Date(formData.toDate).getTime() - new Date(formData.fromDate).getTime(),
+        new Date(formData.toDate).getTime() -
+          new Date(formData.fromDate).getTime(),
       );
       return Math.ceil(diffTime / (1000 * 60 * 60 * 24)) || 1;
     }
@@ -49,7 +56,7 @@ const ReservationDrawer = ({ open, onOpenChange }: ReservationDrawerProps) => {
 
     const unlimitedKmCost =
       formData.extraKmType === "UNLIMITED"
-        ? (formData.carDetails?.unlimitedKmPrice || 0)
+        ? formData.carDetails?.unlimitedKmPrice || 0
         : 0;
 
     return regularServicesCost + unlimitedKmCost;
@@ -65,7 +72,7 @@ const ReservationDrawer = ({ open, onOpenChange }: ReservationDrawerProps) => {
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetTrigger dir="rtl" asChild>
+      {/* <SheetTrigger dir="rtl" asChild>
         <button
           type="button"
           className="border-2 border-Grey400 rounded-xl p-1.5 text-base font-bold flex items-center gap-2"
@@ -75,7 +82,7 @@ const ReservationDrawer = ({ open, onOpenChange }: ReservationDrawerProps) => {
             <span>تصفية </span>
           </div>
         </button>
-      </SheetTrigger>
+      </SheetTrigger> */}
       <SheetContent
         dir="rtl"
         className="flex flex-col p-0 "
@@ -89,7 +96,7 @@ const ReservationDrawer = ({ open, onOpenChange }: ReservationDrawerProps) => {
           <div className="w-full p-2">
             <h1 className="text-base font-bold">تفاصيل الحجز</h1>
             <div className="bg-Grey100 p-3 mt-3 rounded-xl">
-              <ReservationFinalDetails />
+              <ReservationFinalDetails data={reservationData} />
             </div>
             <div className="mt-6">
               <Coupon />
@@ -136,7 +143,9 @@ const ReservationDrawer = ({ open, onOpenChange }: ReservationDrawerProps) => {
               type="submit"
             >
               <span> دفع: </span>
-              <span className="mx-1">{formatPrice(totalToPay)}</span>
+              <span className="mx-1">
+                {formatPrice(reservationData?.total || 0)}
+              </span>
               <SaudiRiyal className="h-6! w-6!" />
             </Button>
           </SheetClose>
