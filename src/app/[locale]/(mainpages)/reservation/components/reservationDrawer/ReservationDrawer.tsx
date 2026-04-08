@@ -7,7 +7,6 @@ import {
   SheetFooter,
   SheetHeader,
   SheetTitle,
-  // SheetTrigger,
 } from "@/app/(components)/ui/sheet";
 import { SaudiRiyal } from "lucide-react";
 import ReservationFinalDetails from "./components/ReservationFinalDetails";
@@ -36,17 +35,6 @@ const ReservationDrawer = ({
 }: ReservationDrawerProps) => {
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      {/* <SheetTrigger dir="rtl" asChild>
-        <button
-          type="button"
-          className="border-2 border-Grey400 rounded-xl p-1.5 text-base font-bold flex items-center gap-2"
-        >
-          <div className="flex items-center gap-2 relative px-2">
-            <Funnel />
-            <span>تصفية </span>
-          </div>
-        </button>
-      </SheetTrigger> */}
       <SheetContent
         dir="rtl"
         className="flex flex-col p-0 "

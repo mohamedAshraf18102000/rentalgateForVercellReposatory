@@ -76,7 +76,7 @@ const CarsCard = ({
           <img
             src={carImage}
             alt="سيارة للإيجار"
-            className="relative z-20 w-full object-cover scale-90 min-h-[250px] max-h-[250px]"
+            className="relative z-20 w-full object-contain min-h-[250px] max-h-[250px]"
           />
           {typeof firstBadgeTitle === "string" &&
             firstBadgeTitle.length > 0 && (
