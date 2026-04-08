@@ -19,5 +19,6 @@ export const buildReservationRawData = (
       ? bookedCarDetails.formData.services
       : [],
     extraKmType: bookedCarDetails.formData.extraKmType,
+    extraKmApplied: bookedCarDetails.formData.extraKmApplied,
   };
 };

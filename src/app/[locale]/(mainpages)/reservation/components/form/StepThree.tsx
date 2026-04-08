@@ -8,6 +8,7 @@ import SelectableServiceCard from "@/app/(components)/customCards/SelectableServ
 import SelectableServiceDriverCard from "@/app/(components)/customCards/SelectableServiceDriverCard";
 import { Flame } from "lucide-react";
 import { useCompanyDriversPricing } from "@/hooks/api/useCompanyDriversPricing";
+import { calculateServicePrice } from "@/lib/utils/calculateServicePrice";
 
 interface StepThreeProps {
   control: Control<ReservationFormValues>;
@@ -43,6 +44,14 @@ const StepThree = ({ control, errors }: StepThreeProps) => {
     name: "extraKmType",
     control,
     defaultValue: "QUOTA",
+  });
+
+  const {
+    field: { onChange: onChangeExtraKmApplied },
+  } = useController({
+    name: "extraKmApplied",
+    control,
+    defaultValue: false,
   });
 
   const setFormData = useBookedCarDetailsStore((s) => s.setFormData);
@@ -83,8 +92,10 @@ const StepThree = ({ control, errors }: StepThreeProps) => {
     } else if (type === "unlimited") {
       const next: "UNLIMITED" | "QUOTA" =
         extraKmType === "UNLIMITED" ? "QUOTA" : "UNLIMITED";
+      const isApplied = next === "UNLIMITED";
       onChangeExtraKmType(next);
-      setFormData({ extraKmType: next });
+      onChangeExtraKmApplied(isApplied);
+      setFormData({ extraKmType: next, extraKmApplied: isApplied });
     }
   };
 
@@ -137,7 +148,14 @@ const StepThree = ({ control, errors }: StepThreeProps) => {
                   serviceArabicName: "عدد كيلومترات لا نهائي",
                   notes:
                     "مع الكيلومترات غير المحدودة، استكشف أكثر وسافر أبعد بدون قلق من العداد.",
-                  price: formdata.carDetails?.unlimitedKmPrice,
+                  price: calculateServicePrice(
+                    {
+                      price: formdata.carDetails?.unlimitedKmPrice || 0,
+                      csType: "everyday",
+                      priceType: "same",
+                    } as any,
+                    formdata.rentalDays || 1,
+                  ),
                   originalPrice: 0,
                   percentage: 0,
                 } as any
@@ -153,11 +171,15 @@ const StepThree = ({ control, errors }: StepThreeProps) => {
             />
           )}
           {services.map((service) => {
-            const id = service.csId;
+            const id = service.serviceId;
+            const calculatedPrice = calculateServicePrice(
+              service,
+              formdata.rentalDays || 1,
+            );
             return (
               <SelectableServiceCard
-                key={service.csId}
-                service={service}
+                key={service.serviceId}
+                service={{ ...service, price: calculatedPrice }}
                 selected={!!selectedServiceIds?.includes(id)}
                 onToggle={() => toggleService(id, "service")}
               />

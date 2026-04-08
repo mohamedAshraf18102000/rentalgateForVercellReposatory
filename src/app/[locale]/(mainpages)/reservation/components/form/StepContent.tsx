@@ -111,6 +111,7 @@ const StepContent = forwardRef<StepContentRef, StepContentProps>(
         services: formData.services || [],
         driver: formData.driver || null,
         extraKmType: formData.extraKmType || "QUOTA",
+        extraKmApplied: formData.extraKmApplied || false,
       },
     });
 
@@ -165,6 +166,7 @@ const StepContent = forwardRef<StepContentRef, StepContentProps>(
           services: formData.services || [],
           driver: formData.driver || null,
           extraKmType: formData.extraKmType || "QUOTA",
+          extraKmApplied: formData.extraKmApplied || false,
         },
         { keepErrors: false },
       );
@@ -367,6 +369,7 @@ const StepContent = forwardRef<StepContentRef, StepContentProps>(
         services: (initialValues.services || []) as number[],
         driver: initialValues.driver || null,
         extraKmType: initialValues.extraKmType || "QUOTA",
+        extraKmApplied: initialValues.extraKmApplied || false,
         pickupLat: initialValues.pickupLat as number | null,
         pickupLong: initialValues.pickupLong as number | null,
         returnLat: initialValues.returnLat as number | null,
@@ -403,6 +406,16 @@ const StepContent = forwardRef<StepContentRef, StepContentProps>(
           update.driver = value.driver as ReservationFormData["driver"];
         if (value.extraKmType !== undefined)
           update.extraKmType = value.extraKmType as "UNLIMITED" | "QUOTA";
+        if (value.extraKmApplied !== undefined)
+          update.extraKmApplied = value.extraKmApplied as boolean;
+
+        if (value.fromDate && value.toDate) {
+          const from = new Date(value.fromDate);
+          const to = new Date(value.toDate);
+          const diffTime = Math.abs(to.getTime() - from.getTime());
+          const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) || 1;
+          update.rentalDays = diffDays;
+        }
 
         if (value.pickupLat !== undefined)
           update.pickupLat = value.pickupLat as number | null;

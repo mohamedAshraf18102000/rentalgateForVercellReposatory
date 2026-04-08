@@ -41,6 +41,8 @@ const page = () => {
     queryFn: () => getCompanyCarsByID(Number(id)),
   });
 
+  console.log("------------data", data);
+
   useEffect(() => {
     if (data) {
       setCarDetails(data);
@@ -61,6 +63,8 @@ const page = () => {
     queryKey: ["company-cars-services", id],
     queryFn: () => getCarServices(Number(id)),
   });
+
+  console.log(services);
 
   useEffect(() => {
     if (services) {
