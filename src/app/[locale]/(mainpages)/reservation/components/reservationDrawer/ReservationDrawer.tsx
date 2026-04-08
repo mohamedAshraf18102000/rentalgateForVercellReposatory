@@ -17,6 +17,7 @@ import WalletBalance from "./components/WalletBalance";
 import PaymentGateway from "./components/PaymentGateway";
 import { formatPrice } from "@/lib/utils/formatPrice";
 import { CalculateQuotePriceResponse } from "@/services/calculateQuotePrice/calculateQuotePrice.service";
+import { Skeleton } from "@/app/(components)/ui/skeleton";
 
 type ReservationDrawerProps = {
   open?: boolean;
@@ -97,10 +98,16 @@ const ReservationDrawer = ({
               type="submit"
             >
               <span> دفع: </span>
-              <span className="mx-1">
-                {formatPrice(reservationData?.total || 0)}
-              </span>
-              <SaudiRiyal className="h-6! w-6!" />
+              {isCalculating ? (
+                <Skeleton className="w-15 h-5" />
+              ) : (
+                <>
+                  <span className="mx-1">
+                    {formatPrice(reservationData?.total || 0)}
+                  </span>
+                  <SaudiRiyal className="h-6! w-6!" />
+                </>
+              )}
             </Button>
           </SheetClose>
         </SheetFooter>

@@ -99,29 +99,6 @@ const StepThree = ({ control, errors }: StepThreeProps) => {
     }
   };
 
-  const handleLogServices = () => {
-    console.group("الخدمات المختارة");
-    console.log("الخدمات العادية (Form State):", selectedServiceIds);
-    console.log("الخدمات العادية (Store State):", formdata.services);
-
-    if (selectedDriver) {
-      const drvId = selectedDriver.id;
-      const driver = companyDriversPricing?.find((d) => d.cdsId === drvId);
-      console.log("خدمة السائق:", {
-        driverRequested: true,
-        id: drvId,
-        type: driver?.cdsType === "in" ? "داخل المدينة" : "خارج المدينة",
-        hoursPerDay: selectedDriver.hours,
-        numberOfDays: selectedDriver.days,
-      });
-    } else {
-      console.log("لم يتم اختيار خدمة سائق");
-    }
-
-    console.log("Extra KM Type", extraKmType);
-    console.groupEnd();
-  };
-
   return (
     <div className="space-y-6">
       <div className="relative">
@@ -229,14 +206,6 @@ const StepThree = ({ control, errors }: StepThreeProps) => {
           })}
         </div>
       )}
-
-      <button
-        type="button"
-        onClick={handleLogServices}
-        className="bg-blue-200 w-full p-2 rounded-xl"
-      >
-        Click here to log the services
-      </button>
 
       {errors.services && (
         <p className="text-sm text-red-500">

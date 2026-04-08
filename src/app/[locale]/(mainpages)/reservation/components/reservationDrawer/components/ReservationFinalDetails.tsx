@@ -53,6 +53,11 @@ const ReservationFinalDetails = ({
             value: formatPrice(reservationData?.driverPrice || 0),
           },
           {
+            isAvailable: reservationData?.extraKmPrice !== 0,
+            label: "رسوم الكيلومترات الاضافية",
+            value: formatPrice(reservationData?.extraKmPrice || 0),
+          },
+          {
             isAvailable: reservationData?.pickupFee !== 0,
             label: "رسوم استلام",
             value: formatPrice(reservationData?.pickupFee || 0),
