@@ -65,11 +65,7 @@ const StepOne = ({ control, errors, watch, setValue }: StepOneProps) => {
       );
       setValue(
         "carReturnLocationId",
-        updatedFormData.returnType === "MY_LOCATION"
-          ? updatedFormData.carReturnLocationId === "current-location"
-            ? null
-            : updatedFormData.carReturnLocationId || null
-          : updatedFormData.carReturnLocationId || null,
+        updatedFormData.carReturnLocationId || null,
       );
       setValue("returnTrainId", updatedFormData.returnTrainId || null);
       setValue("returnAirportId", updatedFormData.returnAirportId || null);
@@ -87,7 +83,7 @@ const StepOne = ({ control, errors, watch, setValue }: StepOneProps) => {
           updatedFormData.pickupName === "الموقع الحالي") &&
         address
           ? address
-          : updatedFormData.pickupName || "الموقع الحالي";
+          : updatedFormData.pickupName || "";
 
       setValue("pickupName", locationName, { shouldValidate: true });
       setValue(
@@ -106,14 +102,7 @@ const StepOne = ({ control, errors, watch, setValue }: StepOneProps) => {
           ? longitude
           : updatedFormData.pickupLong || null,
       );
-      setValue(
-        "pickupId",
-        updatedFormData.pickupType === "MY_LOCATION"
-          ? updatedFormData.pickupId === "current-location"
-            ? null
-            : updatedFormData.pickupId || null
-          : updatedFormData.pickupId || null,
-      );
+      setValue("pickupId", updatedFormData.pickupId || null);
       setValue("pickupTrainId", updatedFormData.pickupTrainId || null);
       setValue("pickupAirportId", updatedFormData.pickupAirportId || null);
     });
@@ -142,10 +131,10 @@ const StepOne = ({ control, errors, watch, setValue }: StepOneProps) => {
           <button
             type="button"
             onClick={handleOpenPickupLocationDialog}
-            className="absolute top-0 left-2 flex items-center gap-2"
+            className="absolute top-0 left-2 flex items-center gap-2 underline"
           >
             <MapPinPlus />
-            الاستلام في مكان اخر
+            حدد مكان الاستلام
           </button>
         </div>
         <ArrowLeft className="w-15 h-15 mt-8" />
@@ -153,7 +142,7 @@ const StepOne = ({ control, errors, watch, setValue }: StepOneProps) => {
           <button
             type="button"
             onClick={handleOpenReturnLocationDialog}
-            className="absolute top-0 left-2 flex items-center gap-2"
+            className="absolute top-0 left-2 flex items-center gap-2 underline"
           >
             <MapPinPlus />
             التسليم في مكان اخر

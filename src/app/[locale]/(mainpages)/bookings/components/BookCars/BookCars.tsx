@@ -32,34 +32,6 @@ const BookCars = () => {
   );
   const setFormField = useBookedCarDetailsStore((state) => state.setFormField);
 
-  // Auto-set pickup location name when address is resolved
-  useEffect(() => {
-    console.log("in the use effect");
-
-    if (address && filters.pickupType === "currentLocation") {
-      console.log("in the use effect inside condition");
-
-      setFilter("pickupName", address);
-
-      // Sync with BookedCarDetailsStore
-      setBookedFormData({
-        pickupName: address,
-        pickupLat: latitude,
-        pickupLong: longitude,
-        carReturnLocation: address,
-        returnLat: latitude,
-        returnLong: longitude,
-      });
-    }
-  }, [
-    address,
-    longitude,
-    latitude,
-    filters.pickupType,
-    setFilter,
-    setBookedFormData,
-  ]);
-
   const apiFilters = {
     longitude: longitude ?? undefined,
     latitude: latitude ?? undefined,

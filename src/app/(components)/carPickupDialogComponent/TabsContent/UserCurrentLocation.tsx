@@ -82,7 +82,7 @@ const UserCurrentLocation = () => {
       setFormField("pickupLat", lat);
       setFormField("pickupLong", lng);
       setFormField("pickupType", "MY_LOCATION");
-      setFormField("pickupId", "current-location");
+      setFormField("pickupId", null);
       setFormField("pickupAirportId", null);
       setFormField("pickupTrainId", null);
     }

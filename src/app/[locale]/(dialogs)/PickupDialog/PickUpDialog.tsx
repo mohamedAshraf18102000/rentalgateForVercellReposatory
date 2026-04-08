@@ -31,7 +31,7 @@ export function PickupDialog({ title }: { title?: string }) {
         open={open}
         onOpenChange={setOpen}
         size="lg"
-        header={{ mainTitle: "مكان الأستلام" }}
+        header={{ mainTitle: target === "return" ? "مكان التسليم" : "مكان الأستلام" }}
         content={<CarPickupDialogTabs customDefaultValue={activeTab} />}
         footer={
           <div className="w-full flex items-center justify-end gap-2 mt-2">

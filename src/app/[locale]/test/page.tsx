@@ -3,11 +3,19 @@ import WrapperContainer from "@/app/(components)/wrapperContainer/WrapperContain
 import { useCalculateQuotePrice } from "@/hooks/api/useCalculateQuotePrice";
 import { useBookedCarDetailsStore } from "@/lib/stores/useBookedCarDetailsStore";
 import { Button } from "@base-ui/react";
+import { format } from "date-fns";
 
 const page = () => {
   const formData = useBookedCarDetailsStore((s) => s.formData);
-  const { mutate } = useCalculateQuotePrice();
+  const { mutate, data: mutateRes } = useCalculateQuotePrice();
   console.log(formData);
+
+  console.log("mutateRes", mutateRes?.startDate);
+
+  const checkedDate = mutateRes?.startDate;
+  const formattedDate = checkedDate
+    ? format(new Date(checkedDate), "dd/MM/yyyy HH:mm")
+    : "";
 
   const handleCalculateQuotePrice = () => {
     // mutate({
@@ -52,8 +60,12 @@ const page = () => {
     });
     mutate({
       companyCarBranchId: formData.carDetails?.ccbId ?? null,
-      startDate: formData.fromDate ?? null,
-      endDate: formData.toDate ?? null,
+      startDate: formData.fromDate
+        ? new Date(formData.fromDate).toISOString().split('.')[0]
+        : null,
+      endDate: formData.toDate
+        ? new Date(formData.toDate).toISOString().split('.')[0]
+        : null,
       promoCode: formData.promoData?.code ?? null,
       referralCode: formData.referalcode ?? null,
       deliver: {
@@ -124,6 +136,8 @@ const page = () => {
       <br />
       <br />
       <br />
+
+      <p className="bg-red-200 p-3 w-full">{formattedDate}</p>
       <Button onClick={handlelogformdata}>log form data</Button>
     </WrapperContainer>
   );

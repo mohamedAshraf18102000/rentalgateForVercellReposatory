@@ -26,7 +26,12 @@ export interface BookingFilters {
   carReturnLocationLat?: number;
   carReturnLocationLng?: number;
   carReturnLocationId?: string;
-  carReturnLocationType?: "airport" | "trainStation" | "currentLocation" | "branches" | "";
+  carReturnLocationType?:
+    | "airport"
+    | "trainStation"
+    | "currentLocation"
+    | "branches"
+    | "";
   pickupTrainId?: number;
   pickupAirportId?: number;
   carReturnTrainId?: number;
@@ -50,10 +55,10 @@ const initialFilters: BookingFilters = {
   priceMin: "",
   priceTo: "",
   categoryId: "",
-  pickupId: "current-location",
-  pickupType: "currentLocation",
+  pickupId: "",
+  pickupType: "",
   categoryName: "",
-  pickupName: "الموقع الحالي",
+  pickupName: "",
   brandId: "",
   brandName: "",
   modelId: "",

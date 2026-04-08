@@ -65,6 +65,7 @@ const StepContent = forwardRef<StepContentRef, StepContentProps>(
       watch,
       setValue,
       getValues,
+      reset,
       formState: { errors },
       trigger,
     } = useForm<ReservationFormValues>({
@@ -72,10 +73,33 @@ const StepContent = forwardRef<StepContentRef, StepContentProps>(
       mode: "onChange",
       reValidateMode: "onChange",
       defaultValues: {
+        // Step 1 – location names always start empty (user must select each time)
         pickupName: "",
         carReturnLocation: "",
-        fromDate: filters.fromDate ? new Date(filters.fromDate) : undefined,
-        toDate: filters.toDate ? new Date(filters.toDate) : undefined,
+        fromDate: formData.fromDate
+          ? new Date(formData.fromDate)
+          : filters.fromDate
+            ? new Date(filters.fromDate)
+            : undefined,
+        toDate: formData.toDate
+          ? new Date(formData.toDate)
+          : filters.toDate
+            ? new Date(filters.toDate)
+            : undefined,
+        pickupLat: formData.pickupLat ?? null,
+        pickupLong: formData.pickupLong ?? null,
+        pickupId: formData.pickupId || filters.pickupId || null,
+        returnLat: formData.returnLat ?? null,
+        returnLong: formData.returnLong ?? null,
+        carReturnLocationId:
+          formData.carReturnLocationId || filters.carReturnLocationId || null,
+        pickupTrainId: formData.pickupTrainId || filters.pickupTrainId || null,
+        pickupAirportId:
+          formData.pickupAirportId || filters.pickupAirportId || null,
+        returnTrainId:
+          formData.returnTrainId || filters.carReturnTrainId || null,
+        returnAirportId:
+          formData.returnAirportId || filters.carReturnAirportId || null,
         // Step 2 – hydrate from reservation form store
         idNumber: formData.idNumber || "0",
         nationality: formData.nationality || "",
@@ -87,18 +111,65 @@ const StepContent = forwardRef<StepContentRef, StepContentProps>(
         services: formData.services || [],
         driver: formData.driver || null,
         extraKmType: formData.extraKmType || "QUOTA",
-        pickupLat: null,
-        pickupLong: null,
-        pickupId: filters.pickupId || null,
-        returnLat: null,
-        returnLong: null,
-        carReturnLocationId: filters.carReturnLocationId || null,
-        pickupTrainId: filters.pickupTrainId || null,
-        pickupAirportId: filters.pickupAirportId || null,
-        returnTrainId: filters.carReturnTrainId || null,
-        returnAirportId: filters.carReturnAirportId || null,
       },
     });
+
+    // ✅ One-time reset after zustand finishes rehydrating from localStorage
+    useEffect(() => {
+      if (!_hasHydrated) return;
+      reset(
+        {
+          // Step 1 – Restore from store, but keep empty if it's just the placeholder
+          pickupName:
+            formData.pickupName && formData.pickupName !== "الموقع الحالي"
+              ? formData.pickupName
+              : "",
+          carReturnLocation:
+            formData.carReturnLocation &&
+            formData.carReturnLocation !== "الموقع الحالي"
+              ? formData.carReturnLocation
+              : "",
+          fromDate: formData.fromDate
+            ? new Date(formData.fromDate)
+            : filters.fromDate
+              ? new Date(filters.fromDate)
+              : undefined,
+          toDate: formData.toDate
+            ? new Date(formData.toDate)
+            : filters.toDate
+              ? new Date(filters.toDate)
+              : undefined,
+          pickupLat: formData.pickupLat ?? null,
+          pickupLong: formData.pickupLong ?? null,
+          pickupId: formData.pickupId || filters.pickupId || null,
+          returnLat: formData.returnLat ?? null,
+          returnLong: formData.returnLong ?? null,
+          carReturnLocationId:
+            formData.carReturnLocationId || filters.carReturnLocationId || null,
+          pickupTrainId:
+            formData.pickupTrainId || filters.pickupTrainId || null,
+          pickupAirportId:
+            formData.pickupAirportId || filters.pickupAirportId || null,
+          returnTrainId:
+            formData.returnTrainId || filters.carReturnTrainId || null,
+          returnAirportId:
+            formData.returnAirportId || filters.carReturnAirportId || null,
+          // Step 2
+          idNumber: formData.idNumber || "0",
+          nationality: formData.nationality || "",
+          licenseImage: formData.licenseImage || "",
+          licenceExpiryDate: formData.licenceExpiryDate ?? undefined,
+          personalId: formData.personalId || "",
+          passportNumber: formData.passportNumber || "",
+          borderNumber: formData.borderNumber || "",
+          services: formData.services || [],
+          driver: formData.driver || null,
+          extraKmType: formData.extraKmType || "QUOTA",
+        },
+        { keepErrors: false },
+      );
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [_hasHydrated]);
 
     // Sync store -> form on hydration or store changes
     useEffect(() => {
