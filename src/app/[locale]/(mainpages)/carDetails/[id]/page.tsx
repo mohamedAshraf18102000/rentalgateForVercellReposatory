@@ -41,7 +41,7 @@ const page = () => {
     queryFn: () => getCompanyCarsByID(Number(id)),
   });
 
-  console.log("------------data", data);
+  console.log("------------Car Details Data", data);
 
   useEffect(() => {
     if (data) {

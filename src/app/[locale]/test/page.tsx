@@ -238,6 +238,10 @@ const page = () => {
           longitude: formData.pickupLong ?? null,
           addressId: formData.pickupId ? Number(formData.pickupId) : null,
         }),
+        ...(formData.pickupType === "BRANCH" && {
+          latitude: formData.pickupLat ?? null,
+          longitude: formData.pickupLong ?? null,
+        }),
       },
       receive: {
         type: formData.returnType ?? null,
@@ -253,6 +257,10 @@ const page = () => {
           addressId: formData.carReturnLocationId
             ? Number(formData.carReturnLocationId)
             : null,
+        }),
+        ...(formData.returnType === "BRANCH" && {
+          latitude: formData.returnLat ?? null,
+          longitude: formData.returnLong ?? null,
         }),
       },
       servicesIds:
