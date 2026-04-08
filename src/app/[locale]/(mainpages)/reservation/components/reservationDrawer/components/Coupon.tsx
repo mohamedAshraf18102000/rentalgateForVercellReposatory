@@ -18,7 +18,12 @@ const couponSchema = z.object({
 
 type CouponFormValues = z.infer<typeof couponSchema>;
 
-const Coupon = () => {
+interface CouponProps {
+  onApplied?: () => void;
+  isCalculating?: boolean;
+}
+
+const Coupon = ({ onApplied, isCalculating }: CouponProps) => {
   const {
     register,
     handleSubmit,
@@ -60,6 +65,7 @@ const Coupon = () => {
           setFormField("referalcode", null);
           toast.success("تم تفعيل كود الخصم بنجاح", { position: "top-center" });
         }
+        onApplied?.();
       } else {
         toast.error("كود الخصم غير صحيح", { position: "top-center" });
       }
@@ -96,6 +102,7 @@ const Coupon = () => {
               reset();
               setFormField("promoData", null);
               setFormField("referalcode", null);
+              onApplied?.();
             }}
             type="button"
             className="absolute top-1/2 -translate-y-1/2 right-2 rtl:left-2 rtl:right-auto"
@@ -106,9 +113,9 @@ const Coupon = () => {
         <Button
           type="submit"
           className="underline underline-offset-2 flex items-center disabled:opacity-50 shrink-0 mt-3"
-          disabled={isPending}
+          disabled={isPending || isCalculating}
         >
-          {isPending ? (
+          {isPending || isCalculating ? (
             <Loader2 className="h-5 w-5 animate-spin" />
           ) : (
             <>

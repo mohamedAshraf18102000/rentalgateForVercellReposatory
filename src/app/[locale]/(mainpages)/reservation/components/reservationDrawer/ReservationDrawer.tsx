@@ -1,4 +1,3 @@
-import { useMemo } from "react";
 import { Button } from "@/app/(components)/ui/button";
 import { Separator } from "@/app/(components)/ui/separator";
 import {
@@ -10,66 +9,30 @@ import {
   SheetTitle,
   // SheetTrigger,
 } from "@/app/(components)/ui/sheet";
-import { Funnel, SaudiRiyal } from "lucide-react";
+import { SaudiRiyal } from "lucide-react";
 import ReservationFinalDetails from "./components/ReservationFinalDetails";
 import Coupon from "./components/Coupon";
 import Discounts from "./components/Discounts";
 import WalletBalance from "./components/WalletBalance";
 import PaymentGateway from "./components/PaymentGateway";
-import { useBookedCarDetailsStore } from "@/lib/stores/useBookedCarDetailsStore";
 import { formatPrice } from "@/lib/utils/formatPrice";
-import { applyPromoCodeValueChecker } from "@/lib/utils/promoCodeValueChecker";
-import { calculateServicePrice } from "@/lib/utils/calculateServicePrice";
 import { CalculateQuotePriceResponse } from "@/services/calculateQuotePrice/calculateQuotePrice.service";
 
 type ReservationDrawerProps = {
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
   reservationData?: CalculateQuotePriceResponse;
+  onCalculateQuote?: () => void;
+  isCalculating?: boolean;
 };
 
 const ReservationDrawer = ({
   open,
   onOpenChange,
   reservationData,
+  onCalculateQuote,
+  isCalculating,
 }: ReservationDrawerProps) => {
-  const { formData, services: allServices } = useBookedCarDetailsStore();
-
-  const rentalDays = useMemo(() => {
-    if (formData.fromDate && formData.toDate) {
-      const diffTime = Math.abs(
-        new Date(formData.toDate).getTime() -
-          new Date(formData.fromDate).getTime(),
-      );
-      return Math.ceil(diffTime / (1000 * 60 * 60 * 24)) || 1;
-    }
-    return 1;
-  }, [formData.fromDate, formData.toDate]);
-
-  const servicesCost = useMemo(() => {
-    const regularServicesCost = allServices
-      .filter((s) => formData.services.includes(s.csId))
-      .reduce(
-        (acc, curr) => acc + (calculateServicePrice(curr, rentalDays) || 0),
-        0,
-      );
-
-    const unlimitedKmCost =
-      formData.extraKmType === "UNLIMITED"
-        ? formData.carDetails?.unlimitedKmPrice || 0
-        : 0;
-
-    return regularServicesCost + unlimitedKmCost;
-  }, [
-    allServices,
-    formData.services,
-    formData.extraKmType,
-    formData.carDetails,
-    rentalDays,
-  ]);
-
-  const totalToPay = (formData.price || 0) + servicesCost;
-
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       {/* <SheetTrigger dir="rtl" asChild>
@@ -99,28 +62,19 @@ const ReservationDrawer = ({
               <ReservationFinalDetails data={reservationData} />
             </div>
             <div className="mt-6">
-              <Coupon />
-            </div>
-            <div className="mt-6">
-              <Separator className="my-2" />
-            </div>
-            <div className="flex justify-between items-center bg-red-100 py-2 px-2 rounded-lg">
-              <p className="text-base font-bold">
-                المجموع: هنا معمول apply علي قيمة وهمية{" "}
-              </p>
-              <p className="text-base font-bold">
-                {applyPromoCodeValueChecker(
-                  formData.price || 0,
-                  formData.promoData?.codeType || 1,
-                  formData.promoData?.discountValue || 0,
-                )}
-              </p>
+              <Coupon
+                onApplied={onCalculateQuote}
+                isCalculating={isCalculating}
+              />
             </div>
             <div className="mt-6">
               <Separator className="my-2" />
             </div>
             <div className="mt-6">
-              <Discounts />
+              <Discounts
+                onApplied={onCalculateQuote}
+                isCalculating={isCalculating}
+              />
             </div>
             <div className="mt-6">
               <Separator className="my-2" />

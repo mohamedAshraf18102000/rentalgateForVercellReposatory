@@ -9,6 +9,7 @@ interface RadioOfferCardProps {
   image?: string;
   id?: string;
   isBlurred?: boolean;
+  titleClassname?: string;
 }
 
 const RadioOfferCard = ({
@@ -18,6 +19,7 @@ const RadioOfferCard = ({
   image = "/offers/offerImage.png",
   id,
   isBlurred = false,
+  titleClassname,
 }: RadioOfferCardProps) => {
   return (
     <label
@@ -39,7 +41,9 @@ const RadioOfferCard = ({
         </div>
         <div className="flex items-center h-full">
           <div className="">
-            <p className="text-base font-bold text-Grey900 truncate mb-1">
+            <p
+              className={`text-base font-bold text-Grey900 truncate mb-1 ${titleClassname}`}
+            >
               {title}
             </p>
             <div className="flex items-center gap-1 w-full">

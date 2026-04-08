@@ -27,10 +27,6 @@ const ReservationFinalDetails = ({
     return 1;
   }, [formData.fromDate, formData.toDate]);
 
-  const selectedServices = useMemo(() => {
-    return allServices.filter((s) => formData.services.includes(s.csId));
-  }, [allServices, formData.services]);
-
   return (
     <div className="flex flex-col gap-6">
       <ReservationFinalDetailsItem
@@ -43,38 +39,31 @@ const ReservationFinalDetails = ({
         ]}
       />
 
-      {(selectedServices.length > 0 ||
-        formData.extraKmType === "UNLIMITED") && (
-        <ReservationFinalDetailsItem
-          itemHeader="تكلفة الخدمات الإضافية:"
-          items={[
-            {
-              label: "خدمات اضافية",
-              value: formatPrice(reservationData?.servicesPrice || 0),
-            },
-            {
-              label: "خدمة سائق",
-              value: formatPrice(reservationData?.driverPrice || 0),
-            },
-            {
-              label: "رسوم استلام",
-              value: formatPrice(reservationData?.pickupFee || 0),
-            },
-            {
-              label: "رسوم التسليم",
-              value: formatPrice(reservationData?.deliveryFee || 0),
-            },
-            {
-              label: "إجمالي المبلغ (غير شامل الضريبة)",
-              value: formatPrice(reservationData?.totalBeforeTax || 0),
-            },
-            {
-              label: "قيمة الضريبة",
-              value: formatPrice(reservationData?.taxValue || 0),
-            },
-          ]}
-        />
-      )}
+      <ReservationFinalDetailsItem
+        itemHeader="تكلفة الخدمات الإضافية:"
+        items={[
+          {
+            isAvailable: reservationData?.servicesPrice !== 0,
+            label: "خدمات اضافية",
+            value: formatPrice(reservationData?.servicesPrice || 0),
+          },
+          {
+            isAvailable: reservationData?.driverPrice !== 0,
+            label: "خدمة سائق",
+            value: formatPrice(reservationData?.driverPrice || 0),
+          },
+          {
+            isAvailable: reservationData?.pickupFee !== 0,
+            label: "رسوم استلام",
+            value: formatPrice(reservationData?.pickupFee || 0),
+          },
+          {
+            isAvailable: reservationData?.deliveryFee !== 0,
+            label: "رسوم التسليم",
+            value: formatPrice(reservationData?.deliveryFee || 0),
+          },
+        ]}
+      />
 
       <ReservationFinalDetailsItem
         offer
@@ -82,10 +71,7 @@ const ReservationFinalDetails = ({
         items={[
           {
             label: `خصم عرض ال ( ${rentalDays} يوم )`,
-            // isAvailable:
-            //   !!formData.originalPrice &&
-            //   !!formData.price &&
-            //   formData.originalPrice > formData.price,
+            isAvailable: reservationData?.businessDiscount !== null,
             value: (
               <span dir="ltr">
                 -{formatPrice(reservationData?.businessDiscount || 0)}
@@ -94,11 +80,11 @@ const ReservationFinalDetails = ({
           },
           {
             label: "كود الخصم",
-            isAvailable: formData.promoData !== null,
+            isAvailable: reservationData?.promoDiscount !== 0,
             value: (
               <span dir="ltr" className="p-1 rounded-lg">
                 <span>-</span>
-                {formData.promoData?.discountValue}
+                {formatPrice(reservationData?.promoDiscount || 0)}
               </span>
             ),
             icon:
@@ -110,12 +96,27 @@ const ReservationFinalDetails = ({
           },
           {
             label: "خصم النقاط",
-            isAvailable: formData.points !== null,
+            isAvailable: reservationData?.pointsDiscount !== 0,
             value: (
               <span dir="ltr" className="p-1 rounded-lg">
-                -{formData.points?.value}
+                -{formatPrice(reservationData?.pointsDiscount || 0)}
               </span>
             ),
+          },
+        ]}
+      />
+
+      <ReservationFinalDetailsItem
+        showSeparator
+        itemHeader={""}
+        items={[
+          {
+            label: "إجمالي المبلغ (غير شامل الضريبة)",
+            value: formatPrice(reservationData?.totalBeforeTax || 0),
+          },
+          {
+            label: "قيمة الضريبة",
+            value: formatPrice(reservationData?.taxValue || 0),
           },
         ]}
       />

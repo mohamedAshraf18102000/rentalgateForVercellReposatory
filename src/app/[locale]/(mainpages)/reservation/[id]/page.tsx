@@ -173,12 +173,19 @@ const page = () => {
     }
   };
 
+  const handleCalculateQuote = () => {
+    const latestFormData = useBookedCarDetailsStore.getState().formData;
+    calculateQuotePrice(buildReservationPayload(latestFormData));
+  };
+
   return (
     <>
       <ReservationDrawer
         open={isDrawerOpen}
         onOpenChange={setIsDrawerOpen}
         reservationData={calculatedQuotePricingData}
+        onCalculateQuote={handleCalculateQuote}
+        isCalculating={isCalculating}
       />
       <WrapperContainer exceedNav>
         <PickupDialog title="تأكيد" />

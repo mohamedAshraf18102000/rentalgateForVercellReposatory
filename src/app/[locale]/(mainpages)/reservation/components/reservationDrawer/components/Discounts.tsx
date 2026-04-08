@@ -17,7 +17,12 @@ import { usePointPackages } from "@/hooks/api/usePointPackages";
 import { useBookedCarDetailsStore } from "@/lib/stores/useBookedCarDetailsStore";
 import { X } from "lucide-react";
 
-const Discounts = () => {
+interface DiscountsProps {
+  onApplied?: () => void;
+  isCalculating?: boolean;
+}
+
+const Discounts = ({ onApplied, isCalculating }: DiscountsProps) => {
   const { data: pointPackages } = usePointPackages();
   const { data: userPointsData } = useUserPoints();
   const locale = useLocale();
@@ -50,8 +55,12 @@ const Discounts = () => {
         <p className="text-base font-bold"> القسائم و الخصومات:</p>
         {formData.points?.pointsPkId && (
           <button
-            onClick={() => setFormField("points", null)}
-            className="flex items-center gap-1 text-xs text-red-500 hover:text-red-700 transition-colors font-medium"
+            onClick={() => {
+              setFormField("points", null);
+              onApplied?.();
+            }}
+            disabled={isCalculating}
+            className="flex items-center gap-1 text-xs text-red-500 hover:text-red-700 transition-colors font-medium disabled:opacity-50"
           >
             <X size={14} />
             {isRtl ? "إلغاء التحديد" : "Clear selection"}
@@ -78,7 +87,9 @@ const Discounts = () => {
             pointsPkId: parseInt(val),
             value: selectedPkg?.pointsValue || 0,
           });
+          onApplied?.();
         }}
+        disabled={isCalculating}
       >
         {filteredPointPackages && filteredPointPackages.length > 0 ? (
           <Carousel
@@ -103,6 +114,7 @@ const Discounts = () => {
                     value={pkg.packageId.toString()}
                     discount={pkg.pointsValue.toString()}
                     isBlurred={current !== index}
+                    titleClassname="text-[10px]!"
                   />
                 </CarouselItem>
               ))}

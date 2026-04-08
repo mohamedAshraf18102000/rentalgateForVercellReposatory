@@ -1,3 +1,4 @@
+import { Separator } from "@base-ui/react";
 import { SaudiRiyal } from "lucide-react";
 import { ReactNode } from "react";
 
@@ -5,8 +6,10 @@ const ReservationFinalDetailsItem = ({
   itemHeader,
   items,
   offer,
+  showSeparator,
 }: {
   itemHeader?: string;
+  showSeparator?: boolean;
   items: {
     label: string;
     value: ReactNode;
@@ -21,6 +24,7 @@ const ReservationFinalDetailsItem = ({
 
   return (
     <div className="flex flex-col gap-2">
+      {showSeparator && <Separator className="my-0! bg-Grey400!" />}
       {itemHeader && <p className="text-base font-bold">{itemHeader}</p>}
       <div className="flex flex-col gap-3">
         {filteredItems.map((item, index) => (
@@ -28,11 +32,11 @@ const ReservationFinalDetailsItem = ({
             key={index}
             className="flex justify-between items-center text-base"
           >
-            <p className="text-sm font-medium text-Grey700">{item.label}</p>
+            <p className="font-medium text-Grey700 text-sm">{item.label}</p>
             <div
-              className={`flex items-center gap-1 ${offer ? "bg-StatusGreen" : ""} p-1 rounded-lg`}
+              className={`flex items-center gap-1 text-sm ${offer ? "bg-StatusGreen text-StatusDarkGreen" : ""} p-1 rounded-lg`}
             >
-              <p className="text-sm font-bold">{item.value}</p>
+              <p>{item.value}</p>
               {item.icon ?? <SaudiRiyal className="h-6 w-6" />}
             </div>
           </div>
