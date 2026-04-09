@@ -1,10 +1,11 @@
 "use client";
 
 import { Tabs, TabsList, TabsTrigger } from "@/ui";
+import { UserReservationsPaylod } from "@/types/myBookings/myBookings";
 
 interface PeriodSearchProps {
-  value: "all" | "current" | "past";
-  onValueChange?: (value: "all" | "current" | "past") => void;
+  value: UserReservationsPaylod["localStatus"];
+  onValueChange?: (value: UserReservationsPaylod["localStatus"]) => void;
 }
 
 export const BookingsStatus: React.FC<PeriodSearchProps> = ({
@@ -15,7 +16,7 @@ export const BookingsStatus: React.FC<PeriodSearchProps> = ({
     <Tabs
       value={value}
       onValueChange={(newValue) =>
-        onValueChange?.(newValue as "all" | "current" | "past")
+        onValueChange?.(newValue as UserReservationsPaylod["localStatus"])
       }
       className=""
     >
@@ -26,7 +27,7 @@ export const BookingsStatus: React.FC<PeriodSearchProps> = ({
         <TabsTrigger value="current" className="login-tab-trigger">
           <span className="login-tab-text text-base">الحالية</span>
         </TabsTrigger>
-        <TabsTrigger value="past" className="login-tab-trigger">
+        <TabsTrigger value="finished" className="login-tab-trigger">
           <span className="login-tab-text text-base">السابقة</span>
         </TabsTrigger>
       </TabsList>

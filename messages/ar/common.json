@@ -92,5 +92,19 @@
   "visitYouTube": "زيارة قناة يوتيوب",
   "businessAccount": "حساب الأعمال",
   "footerPersonal": "الشخصية",
-  "footerCopyright": "Viganium @ 2025. All rights reserved."
+  "footerCopyright": "Viganium @ 2025. All rights reserved.",
+  "receiveTypes": {
+    "AIRPORT": "مطار",
+    "HOME": "المنزل",
+    "BRANCH": "الفرع",
+    "TRAIN_STATION": "محطة القطار"
+  },
+  "pickupTime": "توقيت الاستلام",
+  "dropoffTime": "توقيت التسليم",
+  "pickupLocation": "مكان الاستلام",
+  "bookingNumber": "رقم الحجز",
+  "viewDetails": "عرض التفاصيل",
+  "arrivesIn": "تصل خلال {minutes} دقيقة",
+  "paid": "مدفوع",
+  "notPaid": "غير مدفوع"
 }

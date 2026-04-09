@@ -92,6 +92,19 @@
   "visitYouTube": "Visit our YouTube channel",
   "businessAccount": "Business Account",
   "footerPersonal": "Personal",
-  "footerCopyright": "Viganium @ 2025. All rights reserved."
+  "footerCopyright": "Viganium @ 2025. All rights reserved.",
+  "receiveTypes": {
+    "AIRPORT": "Airport",
+    "HOME": "Home",
+    "BRANCH": "Branch",
+    "TRAIN_STATION": "Train Station"
+  },
+  "pickupTime": "Pickup Time",
+  "dropoffTime": "Drop-off Time",
+  "pickupLocation": "Pickup Location",
+  "bookingNumber": "Booking Number",
+  "viewDetails": "View Details",
+  "arrivesIn": "Arrives in {minutes} minutes",
+  "paid": "Paid",
+  "notPaid": "Not Paid"
 }
-

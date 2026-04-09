@@ -1,10 +1,22 @@
+"use client";
 import { Separator } from "@/app/(components)/ui/separator";
 import Image from "next/image";
 import { BookingsStatus } from "./BookingsStatus";
 import PaginationDateView from "@/app/(components)/PaginationDateView";
 import BookedCarsDetails from "@/app/(components)/customCards/BookedCarDetails/BookedCarsDetails";
+import { useGetUserReservations } from "@/hooks/api/useGetUserReservations";
+
+import { useState } from "react";
+import { UserReservationsPaylod } from "@/types/myBookings/myBookings";
+import BookingCardSkeleton from "./BookingCardSkeleton";
 
 const UserBookingsDetails = () => {
+  const [status, setStatus] =
+    useState<UserReservationsPaylod["localStatus"]>("current");
+  const { data: reservationsData, isLoading } = useGetUserReservations({
+    localStatus: status,
+  });
+
   return (
     <>
       <div className="my-5 flex gap-4">
@@ -25,7 +37,7 @@ const UserBookingsDetails = () => {
             <p className="font-bold text-lg">حجوزاتي</p>
             <p className="text-sm text-Grey700">عرض جميع الحجوزات </p>
             <div className="mt-4">
-              <BookingsStatus value="all" />
+              <BookingsStatus value={status} onValueChange={setStatus} />
             </div>
           </div>
         </div>
@@ -43,8 +55,13 @@ const UserBookingsDetails = () => {
         </div>
       </div>
       <div className=" w-full grid grid-cols-2 gap-4">
-        <BookedCarsDetails />
-        <BookedCarsDetails />
+        {isLoading
+          ? Array.from({ length: 4 }).map((_, index) => (
+              <BookingCardSkeleton key={index} />
+            ))
+          : reservationsData?.map((item) => (
+              <BookedCarsDetails key={item.reservationId} data={item} />
+            ))}
       </div>
     </>
   );
