@@ -363,21 +363,24 @@ const page = () => {
                   firstBadgeTitle={discountBadge}
                   firstBadgeColor="green"
                   extraContent={
-                    <div
-                      className="mt-2 w-full rounded-2xl overflow-visible relative"
-                      style={{ height: "220px" }}
-                    >
-                      <GoogleMapsPolyLineLocation
-                        containerHeight="220px"
-                        destinationLat={carDetails?.latitude}
-                        destinationLng={carDetails?.longitude}
-                        disableMapClickToChangeLocation
-                        destinationName={carDetails?.branchName}
-                        destinationLogoUrl={`${process.env.NEXT_PUBLIC_IMAGES_PREFIX_URL}${carDetails?.company.logo}`}
-                        autoFitBounds={true}
-                        hideSearch={true}
-                      />
-                    </div>
+                    (formData.returnType === "BRANCH" ||
+                      formData.pickupType === "BRANCH") && (
+                      <div
+                        className="mt-2 w-full rounded-2xl overflow-visible relative"
+                        style={{ height: "220px" }}
+                      >
+                        <GoogleMapsPolyLineLocation
+                          containerHeight="220px"
+                          destinationLat={carDetails?.latitude}
+                          destinationLng={carDetails?.longitude}
+                          disableMapClickToChangeLocation
+                          destinationName={carDetails?.branchName}
+                          destinationLogoUrl={`${process.env.NEXT_PUBLIC_IMAGES_PREFIX_URL}${carDetails?.company.logo}`}
+                          autoFitBounds={true}
+                          hideSearch={true}
+                        />
+                      </div>
+                    )
                   }
                 />
               </div>
