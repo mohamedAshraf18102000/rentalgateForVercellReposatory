@@ -65,7 +65,7 @@ export interface CalculateQuotePriceResponse {
   basePrice: number;
   isExtraDayAdded: boolean;
   offerApplied: boolean;
-  appliedPlan: string;
+  appliedPlan: "DAILY" | "WEEKLY" | "HALF_MONTHLY" | "MONTHLY" | "YEARLY";
   pickupFee: number;
   deliveryFee: number;
   servicesPrice: number;

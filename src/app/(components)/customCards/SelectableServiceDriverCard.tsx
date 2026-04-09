@@ -4,6 +4,7 @@ import { CircleAlert, Minus, Plus, SaudiRiyal } from "lucide-react";
 import { useState } from "react";
 import { Badge } from "../ui/badge";
 import { CompanyService } from "@/types/companyDrivers";
+import WarningMessage from "../WarningMessage";
 
 interface SelectableServiceDriverCardProps {
   driver?: CompanyService;
@@ -147,20 +148,13 @@ const SelectableServiceDriverCard = ({
               </div>
             </div>
 
-            <div className="w-fit flex items-center rounded-lg gap-1 mt-2">
-              <CircleAlert className="h-4 w-4 text-StatusRed" />
-              <p className="text-xs text-StatusRed font-medium line-clamp-2 leading-relaxed">
-                خدمة السائق محددة ب {driver?.minHours} ساعات و إن زادت تكون
-                بتكلفة إضافية أخرى.
-              </p>
-            </div>
+            <WarningMessage
+              message={`خدمة السائق محددة ب ${driver?.minHours ?? ""} ساعات و إن زادت تكون بتكلفة إضافية أخرى.`}
+            />
 
-            <div className=" w-fit flex items-center rounded-lg gap-1">
-              <CircleAlert className="h-4 w-4 text-StatusRed" />
-              <p className="text-xs text-StatusRed font-medium line-clamp-2 leading-relaxed">
-                حد اقصى لعدد ساعات اليوم {driver?.dayNumberHours} ساعة
-              </p>
-            </div>
+            <WarningMessage
+              message={`حد اقصى لعدد ساعات اليوم ${driver?.dayNumberHours ?? ""} ساعة`}
+            />
 
             <div className="bg-white p-2 w-fit flex items-center rounded-lg mt-3">
               <p className="font-bold">عدد الأيام:</p>
@@ -185,12 +179,9 @@ const SelectableServiceDriverCard = ({
                 </button>
               </div>
             </div>
-            <div className=" w-fit flex items-center rounded-lg gap-1 mt-2">
-              <CircleAlert className="h-4 w-4 text-StatusRed" />
-              <p className="text-xs text-StatusRed font-medium line-clamp-2 leading-relaxed">
-                مدة الحجز الخاصة بك هي ({numberOfDays} أيام)
-              </p>
-            </div>
+            <WarningMessage
+              message={`مدة الحجز الخاصة بك هي (${numberOfDays} أيام)`}
+            />
 
             <div className=" w-fit flex items-center rounded-lg gap-1 mt-2">
               <p className="font-bold text-lg">{driver?.dailyPrice}</p>

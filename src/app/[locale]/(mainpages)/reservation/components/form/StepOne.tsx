@@ -19,6 +19,7 @@ import { usePickupDialogStore } from "@/lib/stores/usePickupDialogStore";
 import { useLocationStore } from "@/lib/stores/useLocationStore";
 import { ReservationFormValues } from "@/lib/validations/reservationSchema";
 import { useBookedCarDetailsStore } from "@/lib/stores/useBookedCarDetailsStore";
+import WarningMessage from "@/app/(components)/WarningMessage";
 
 interface StepOneProps {
   control: Control<ReservationFormValues>;
@@ -164,6 +165,27 @@ const StepOne = ({ control, errors, watch, setValue }: StepOneProps) => {
             )}
           />
         </div>
+      </div>
+
+      <div className="w-full grid grid-cols-2 gap-15 items-center text-sm">
+        {formData.pickupType === "AIRPORT" ||
+        formData.pickupType === "TRAIN_STATION" ? (
+          <WarningMessage
+            className="mt-0!"
+            message={`عند اختيار مطار / محطة قطار يتم اضافه رسوم استلام`}
+          />
+        ) : (
+          <span></span>
+        )}
+        {formData.returnType === "AIRPORT" ||
+        formData.returnType === "TRAIN_STATION" ? (
+          <WarningMessage
+            className="mt-0!"
+            message={`عند اختيار مطار / محطة قطار يتم اضافه رسوم تسليم`}
+          />
+        ) : (
+          <span></span>
+        )}
       </div>
 
       <Separator className="mt-3 my-4" />

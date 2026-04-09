@@ -3,19 +3,21 @@ import { formatPrice } from "@/lib/utils/formatPrice";
 import { useMemo } from "react";
 import ReservationFinalDetailsItem from "./ReservationFinalDetailsItem";
 import { Percent } from "lucide-react";
+import { Skeleton } from "@/app/(components)/ui/skeleton";
 
 import { calculateServicePrice } from "@/lib/utils/calculateServicePrice";
 import { CalculateQuotePriceResponse } from "@/services/calculateQuotePrice/calculateQuotePrice.service";
 
 type ReservationFinalDetailsProps = {
   data?: CalculateQuotePriceResponse;
+  isCalculating?: boolean;
 };
 
 const ReservationFinalDetails = ({
   data: reservationData,
+  isCalculating,
 }: ReservationFinalDetailsProps) => {
   const { formData, services: allServices } = useBookedCarDetailsStore();
-  console.log("reservationData>>>>", reservationData);
 
   const rentalDays = useMemo(() => {
     if (formData.fromDate && formData.toDate) {
@@ -34,7 +36,8 @@ const ReservationFinalDetails = ({
         items={[
           {
             label: "المجموع الفرعي (غير شامل الضريبة)",
-            value: reservationData?.basePrice,
+            isCalculating: isCalculating,
+            value: formatPrice(reservationData?.basePrice || 0),
           },
         ]}
       />
@@ -43,27 +46,27 @@ const ReservationFinalDetails = ({
         itemHeader="تكلفة الخدمات الإضافية:"
         items={[
           {
-            isAvailable: reservationData?.servicesPrice !== 0,
+            isAvailable: (reservationData?.servicesPrice ?? 0) !== 0,
             label: "خدمات اضافية",
             value: formatPrice(reservationData?.servicesPrice || 0),
           },
           {
-            isAvailable: reservationData?.driverPrice !== 0,
+            isAvailable: (reservationData?.driverPrice ?? 0) !== 0,
             label: "خدمة سائق",
             value: formatPrice(reservationData?.driverPrice || 0),
           },
           {
-            isAvailable: reservationData?.extraKmPrice !== 0,
+            isAvailable: (reservationData?.extraKmPrice ?? 0) !== 0,
             label: "رسوم الكيلومترات الاضافية",
             value: formatPrice(reservationData?.extraKmPrice || 0),
           },
           {
-            isAvailable: reservationData?.pickupFee !== 0,
+            isAvailable: (reservationData?.pickupFee ?? 0) !== 0,
             label: "رسوم استلام",
             value: formatPrice(reservationData?.pickupFee || 0),
           },
           {
-            isAvailable: reservationData?.deliveryFee !== 0,
+            isAvailable: (reservationData?.deliveryFee ?? 0) !== 0,
             label: "رسوم التسليم",
             value: formatPrice(reservationData?.deliveryFee || 0),
           },
@@ -76,7 +79,8 @@ const ReservationFinalDetails = ({
         items={[
           {
             label: `خصم عرض ال ( ${rentalDays} يوم )`,
-            isAvailable: reservationData?.businessDiscount !== null,
+            isAvailable:
+              !!reservationData && reservationData.businessDiscount !== null,
             value: (
               <span dir="ltr">
                 -{formatPrice(reservationData?.businessDiscount || 0)}
@@ -85,7 +89,7 @@ const ReservationFinalDetails = ({
           },
           {
             label: "كود الخصم",
-            isAvailable: reservationData?.promoDiscount !== 0,
+            isAvailable: (reservationData?.promoDiscount ?? 0) !== 0,
             value: (
               <span dir="ltr" className="p-1 rounded-lg">
                 <span>-</span>
@@ -101,7 +105,7 @@ const ReservationFinalDetails = ({
           },
           {
             label: "خصم النقاط",
-            isAvailable: reservationData?.pointsDiscount !== 0,
+            isAvailable: (reservationData?.pointsDiscount ?? 0) !== 0,
             value: (
               <span dir="ltr" className="p-1 rounded-lg">
                 -{formatPrice(reservationData?.pointsDiscount || 0)}

@@ -254,7 +254,9 @@ const GoogleMapsLocation = ({
             handleSetLocation(newPos.lat, newPos.lng, address, true);
           }}
         >
-          <Marker position={currentLocation} />
+          <div className="bg-red-600! p-10!">
+            <Marker position={currentLocation} />
+          </div>
           {/* <Marker
             position={currentLocation}
             icon={{

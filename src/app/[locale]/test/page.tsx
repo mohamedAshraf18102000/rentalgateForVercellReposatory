@@ -177,6 +177,8 @@ import { formatLocalDateTime } from "@/lib/utils/formatLocalDateTime";
 import { Button } from "@base-ui/react";
 import { format } from "date-fns";
 import { buildReservationPayload } from "../(mainpages)/reservation/utils/buildReservationPayload";
+import { Separator } from "@/app/(components)/ui/separator";
+import ReservationDetailsSkeleton from "../(mainpages)/reservation/components/reservationDrawer/components/ReservationDetailsSkeleton";
 
 const page = () => {
   const formData = useBookedCarDetailsStore((s) => s.formData);
@@ -197,14 +199,23 @@ const page = () => {
   };
 
   return (
-    <WrapperContainer exceedNav className="bg-red-950 text-white h-[500px]">
-      <div className="">page</div>
-      <Button onClick={handleCalculateQuotePrice}>Calculate Quote Price</Button>
-      <br />
+    <>
+      <WrapperContainer exceedNav className="bg-red-950 text-white h-[500px]">
+        <div className="">page</div>
+        <Button onClick={handleCalculateQuotePrice}>
+          Calculate Quote Price
+        </Button>
+        <br />
 
-      <p className="bg-red-200 p-3 w-full">{formattedDate}</p>
-      <Button onClick={handlelogformdata}>log form data</Button>
-    </WrapperContainer>
+        <p className="bg-red-200 p-3 w-full">{formattedDate}</p>
+        <Button onClick={handlelogformdata}>log form data</Button>
+
+        <div className="mt-5">
+          <ReservationDetailsSkeleton />
+        </div>
+      </WrapperContainer>
+      <Separator />
+    </>
   );
 };
 

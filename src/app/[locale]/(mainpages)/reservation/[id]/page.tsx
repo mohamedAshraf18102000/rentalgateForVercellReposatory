@@ -9,12 +9,10 @@ import { Button } from "@/app/(components)";
 import { ChevronLeft, HandCoins, SaudiRiyal } from "lucide-react";
 import { Separator } from "@/app/(components)/ui/separator";
 import ReservationBreadCrump from "../components/ReservationBreadCrump";
-import GoogleMapsLocation from "@/app/(components)/mapsLocation/GoogleMapsLocation";
 import { useBookedCarDetailsStore } from "@/lib/stores/useBookedCarDetailsStore";
 
 import { useMemo, useRef } from "react";
 import { PickupDialog } from "@/app/[locale]/(dialogs)/PickupDialog/PickUpDialog";
-import { buildReservationRawData } from "../utils/buildReservationRawData";
 import { getUserProfileCompletnessState } from "@/services/userProfile/getUserProfileCompletnessState.service";
 import { useUserPreferedFiltersStore } from "@/lib/stores/useUserPreferedFiltersStore";
 import {
@@ -26,6 +24,9 @@ import ReservationDrawer from "../components/reservationDrawer/ReservationDrawer
 import { formatPrice } from "@/lib/utils/formatPrice";
 import { useCalculateQuotePrice } from "@/hooks/api/useCalculateQuotePrice";
 import { buildReservationPayload } from "../utils/buildReservationPayload";
+import { toast } from "sonner";
+import { Skeleton } from "@/app/(components)/ui/skeleton";
+import GoogleMapsPolyLineLocation from "@/app/(components)/mapsLocation/GoogleMapsPolyLinedLocation";
 
 const pricingTypeLabels: Record<PricingType, string> = {
   DAILY: "يومي",
@@ -49,10 +50,17 @@ const page = () => {
 
   const calculateUserQoutePayload = buildReservationPayload(formData);
 
+  const company_logo = `${process.env.NEXT_PUBLIC_IMAGES_PREFIX_URL}${carDetails?.company.logo}`;
+
+  console.log(company_logo);
+
   const {
     mutate: calculateQuotePrice,
     isPending: isCalculating,
     data: calculatedQuotePricingData,
+    isError: isQuoteError,
+    error,
+    isSuccess: isQuoteSuccess,
   } = useCalculateQuotePrice();
 
   // sync plan into store whenever pricingType changes
@@ -100,14 +108,72 @@ const page = () => {
       offerYearlyPrice: 0,
     });
 
+    if (calculatedQuotePricingData) {
+      const apiDays =
+        calculatedQuotePricingData.dataForReservation?.days || effectiveDays;
+      const totalDiscounts =
+        (calculatedQuotePricingData.promoDiscount || 0) +
+        (calculatedQuotePricingData.businessDiscount || 0) +
+        (calculatedQuotePricingData.carDaysDiscount || 0) +
+        (calculatedQuotePricingData.pointsDiscount || 0);
+
+      const apiTotal = calculatedQuotePricingData.total;
+
+      return {
+        totalPrice: apiTotal,
+        originalTotalPrice: apiTotal + totalDiscounts,
+        pricePerDay: apiTotal / apiDays,
+        originalPricePerDay: (apiTotal + totalDiscounts) / apiDays,
+        pricingType: calculatedQuotePricingData.appliedPlan,
+        days: apiDays,
+      };
+    }
+
     return {
       totalPrice: effectivePricing.totalPrice,
       originalTotalPrice: originalPricing.totalPrice,
       pricePerDay: effectivePricing.pricePerDay,
       originalPricePerDay: originalPricing.pricePerDay,
       pricingType: effectivePricing.pricingType,
+      days: effectiveDays,
     };
-  }, [carDetails, rentalDays]);
+  }, [carDetails, rentalDays, calculatedQuotePricingData]);
+
+  // Trigger quote calculation whenever relevant form data changes
+  useEffect(() => {
+    const payload = buildReservationPayload(formData);
+    // Only calculate if we have the basics
+    if (
+      payload.companyCarBranchId &&
+      payload.startDate &&
+      payload.endDate &&
+      payload.startDate !== "null" &&
+      payload.endDate !== "null"
+    ) {
+      const handler = setTimeout(() => {
+        calculateQuotePrice(payload);
+      }, 500); // 500ms debounce
+      return () => clearTimeout(handler);
+    }
+  }, [
+    formData.fromDate,
+    formData.toDate,
+    formData.services,
+    formData.driver,
+    formData.extraKmApplied,
+    formData.extraKmType,
+    formData.promoData?.code,
+    formData.referalcode,
+    formData.points,
+    formData.pickupType,
+    formData.returnType,
+    formData.pickupLat,
+    formData.pickupLong,
+    formData.returnLat,
+    formData.returnLong,
+    carDetails?.ccbId,
+    calculateQuotePrice,
+  ]);
 
   useEffect(() => {
     setFormField("plan", pricingDetails.pricingType);
@@ -135,6 +201,13 @@ const page = () => {
 
     if (step === activeStep) return;
 
+    if (isQuoteError) {
+      toast.error(error?.message, {
+        position: "top-center",
+      });
+      return;
+    }
+
     const isValid = await stepContentRef.current?.validateStep();
     if (isValid) {
       if (activeStep === 1 && step >= 2) {
@@ -159,6 +232,13 @@ const page = () => {
   };
 
   const handleNext = async () => {
+    if (isQuoteError) {
+      toast.error(error?.message, {
+        position: "top-center",
+      });
+      return;
+    }
+
     if (activeStep < 3) {
       handleStepNavigation(activeStep + 1);
     } else {
@@ -224,22 +304,31 @@ const page = () => {
               <div className="flex justify-between">
                 <div className="flex items-center">
                   <span className="mx-2 text-base">أجمالي التكلفة:</span>
-                  {pricingDetails.totalPrice <
-                    pricingDetails.originalTotalPrice && (
-                    <span className="text-Grey500 mx-2 line-through text-sm">
-                      {formatPrice(pricingDetails.originalTotalPrice)}
-                    </span>
+                  {isCalculating ? (
+                    <Skeleton className="h-6 w-36 bg-Grey200 rounded-sm" />
+                  ) : (
+                    <div className="flex items-center">
+                      {pricingDetails.totalPrice <
+                        pricingDetails.originalTotalPrice && (
+                        <span className="text-Grey500 mx-2 line-through text-sm">
+                          {formatPrice(pricingDetails.originalTotalPrice)}
+                        </span>
+                      )}
+                      <span className="text-lg font-bold">
+                        {formatPrice(pricingDetails.totalPrice)}
+                      </span>
+                      <SaudiRiyal />
+                      <span className="mx-1 text-Grey500 text-sm">
+                        ({pricingDetails.days}
+                        {pricingDetails.days > 1 && pricingDetails.days < 11
+                          ? " أيام"
+                          : " يوم"}
+                        / حجز {pricingTypeLabels[pricingDetails.pricingType]})
+                      </span>
+                    </div>
                   )}
-                  <span className="text-lg font-bold">
-                    {formatPrice(pricingDetails.totalPrice)}{" "}
-                  </span>
-                  <SaudiRiyal />
-                  <span className="mx-1 text-Grey500 text-sm">
-                    ({rentalDays}{" "}
-                    {rentalDays > 1 && rentalDays < 11 ? "أيام" : "يوم"} / حجز{" "}
-                    {pricingTypeLabels[pricingDetails.pricingType]})
-                  </span>
                 </div>
+
                 <Button
                   startIcon={
                     activeStep === 3 ? <HandCoins className="h-5! w-5!" /> : ""
@@ -274,13 +363,19 @@ const page = () => {
                   firstBadgeTitle={discountBadge}
                   firstBadgeColor="green"
                   extraContent={
-                    <div className="mt-2 w-full h-[200px] rounded-2xl overflow-hidden flex items-center justify-center">
-                      <GoogleMapsLocation
-                        hideSearch
-                        hideUserLocation
-                        containerHeight="100%"
-                        initialLat={formData.pickupLat || undefined}
-                        initialLng={formData.pickupLong || undefined}
+                    <div
+                      className="mt-2 w-full rounded-2xl overflow-visible relative"
+                      style={{ height: "220px" }}
+                    >
+                      <GoogleMapsPolyLineLocation
+                        containerHeight="220px"
+                        destinationLat={carDetails?.latitude}
+                        destinationLng={carDetails?.longitude}
+                        disableMapClickToChangeLocation
+                        destinationName={carDetails?.branchName}
+                        destinationLogoUrl={`${process.env.NEXT_PUBLIC_IMAGES_PREFIX_URL}${carDetails?.company.logo}`}
+                        autoFitBounds={true}
+                        hideSearch={true}
                       />
                     </div>
                   }

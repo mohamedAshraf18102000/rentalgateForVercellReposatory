@@ -1,3 +1,4 @@
+import { Skeleton } from "@/app/(components)/ui/skeleton";
 import { Separator } from "@base-ui/react";
 import { SaudiRiyal } from "lucide-react";
 import { ReactNode } from "react";
@@ -15,6 +16,7 @@ const ReservationFinalDetailsItem = ({
     value: ReactNode;
     isAvailable?: boolean;
     icon?: ReactNode;
+    isCalculating?: boolean;
   }[];
   offer?: boolean;
 }) => {
@@ -36,8 +38,14 @@ const ReservationFinalDetailsItem = ({
             <div
               className={`flex items-center gap-1 text-sm ${offer ? "bg-StatusGreen text-StatusDarkGreen" : ""} p-1 rounded-lg`}
             >
-              <p>{item.value}</p>
-              {item.icon ?? <SaudiRiyal className="h-6 w-6" />}
+              {item.isCalculating ? (
+                <Skeleton className="bg-Grey400 h-4 w-8" />
+              ) : (
+                <div className="flex items-center">
+                  <div>{item.value}</div>
+                  {item.icon ?? <SaudiRiyal className="h-6 w-6" />}
+                </div>
+              )}
             </div>
           </div>
         ))}

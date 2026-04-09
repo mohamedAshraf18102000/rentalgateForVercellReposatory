@@ -17,6 +17,7 @@ import PaymentGateway from "./components/PaymentGateway";
 import { formatPrice } from "@/lib/utils/formatPrice";
 import { CalculateQuotePriceResponse } from "@/services/calculateQuotePrice/calculateQuotePrice.service";
 import { Skeleton } from "@/app/(components)/ui/skeleton";
+import ReservationDetailsSkeleton from "./components/ReservationDetailsSkeleton";
 
 type ReservationDrawerProps = {
   open?: boolean;
@@ -47,23 +48,24 @@ const ReservationDrawer = ({
         <div className="flex-1 overflow-y-auto px-4">
           <div className="w-full p-2">
             <h1 className="text-base font-bold">تفاصيل الحجز</h1>
-            <div className="bg-Grey100 p-3 mt-3 rounded-xl">
-              <ReservationFinalDetails data={reservationData} />
+            <div className="bg-Grey100 p-3 mt-3 rounded-xl min-h-[500px]">
+              {isCalculating ? (
+                <ReservationDetailsSkeleton />
+              ) : (
+                <ReservationFinalDetails
+                  data={reservationData}
+                  isCalculating={isCalculating}
+                />
+              )}
             </div>
             <div className="mt-6">
-              <Coupon
-                onApplied={onCalculateQuote}
-                isCalculating={isCalculating}
-              />
+              <Coupon isCalculating={isCalculating} />
             </div>
             <div className="mt-6">
               <Separator className="my-2" />
             </div>
             <div className="mt-6">
-              <Discounts
-                onApplied={onCalculateQuote}
-                isCalculating={isCalculating}
-              />
+              <Discounts isCalculating={isCalculating} />
             </div>
             <div className="mt-6">
               <Separator className="my-2" />
