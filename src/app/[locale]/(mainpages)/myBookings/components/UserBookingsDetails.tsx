@@ -9,11 +9,18 @@ import { useGetUserReservations } from "@/hooks/api/useGetUserReservations";
 import { useState } from "react";
 import { UserReservationsPaylod } from "@/types/myBookings/myBookings";
 import BookingCardSkeleton from "./BookingCardSkeleton";
+import { useAuth } from "@/app/(components)/navbar/hooks/useAuth";
 
 const UserBookingsDetails = () => {
+  const {
+    userData: storeUserData,
+    authenticated,
+    isClient,
+    isLoading,
+  } = useAuth();
   const [status, setStatus] =
     useState<UserReservationsPaylod["localStatus"]>("current");
-  const { data: reservationsData, isLoading } = useGetUserReservations({
+  const { data: reservationsData, isPending } = useGetUserReservations({
     localStatus: status,
   });
 
@@ -26,7 +33,9 @@ const UserBookingsDetails = () => {
               <Image src="/banner_ar.png" alt="" fill />
             </div>
             <div>
-              <p className="font-bold text-lg">أهلاً عبد الرحمن</p>
+              <p className="font-bold text-lg">
+                أهلاً {isClient ? storeUserData?.clientName : "..."}
+              </p>
               <p className="text-sm">
                 قُم بتحديث بياناتك الشخضية و ضبط الأعدادات
               </p>
@@ -50,12 +59,17 @@ const UserBookingsDetails = () => {
           <Separator className="my-4" />
           <div className="text-center">
             <p className="font-bold">عدد الحجوزات المعروضة</p>
-            <PaginationDateView shown="12" total="1249" className="mt-3" />
+            <PaginationDateView
+              shown={isClient ? String(reservationsData?.length) : "0"}
+              total={isClient ? String(reservationsData?.length) : "0"}
+              className="mt-3"
+              loading={isPending}
+            />
           </div>
         </div>
       </div>
       <div className=" w-full grid grid-cols-2 gap-4">
-        {isLoading
+        {!isClient || isPending
           ? Array.from({ length: 4 }).map((_, index) => (
               <BookingCardSkeleton key={index} />
             ))
