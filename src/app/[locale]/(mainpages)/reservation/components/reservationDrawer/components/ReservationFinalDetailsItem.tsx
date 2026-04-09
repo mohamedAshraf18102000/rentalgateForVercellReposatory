@@ -7,10 +7,12 @@ const ReservationFinalDetailsItem = ({
   itemHeader,
   items,
   offer,
+  largeText,
   showSeparator,
 }: {
   itemHeader?: string;
   showSeparator?: boolean;
+  largeText?: boolean;
   items: {
     label: string;
     value: ReactNode;
@@ -34,16 +36,20 @@ const ReservationFinalDetailsItem = ({
             key={index}
             className="flex justify-between items-center text-base"
           >
-            <p className="font-medium text-Grey700 text-sm">{item.label}</p>
+            <p
+              className={`font-medium text-Grey700  ${largeText ? "text-base" : "text-sm"}`}
+            >
+              {item.label}
+            </p>
             <div
-              className={`flex items-center gap-1 text-sm ${offer ? "bg-StatusGreen text-StatusDarkGreen" : ""} p-1 rounded-lg`}
+              className={`flex items-center gap-1 ${largeText ? "text-base" : "text-sm"} ${offer ? "bg-StatusGreen text-StatusDarkGreen" : ""} p-1 rounded-lg`}
             >
               {item.isCalculating ? (
                 <Skeleton className="bg-Grey400 h-4 w-8" />
               ) : (
-                <div className="flex items-center">
+                <div className={`flex items-center`}>
                   <div>{item.value}</div>
-                  {item.icon ?? <SaudiRiyal className="h-6 w-6" />}
+                  <span>{item.icon ?? <SaudiRiyal className="h-6 w-6" />}</span>
                 </div>
               )}
             </div>

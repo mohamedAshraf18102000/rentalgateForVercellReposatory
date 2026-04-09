@@ -6,6 +6,7 @@ export const useCalculateQuotePrice = () => {
   return useMutation({
     mutationFn: (payload: any) => calculateQuotePrice(payload),
     onError: (error) => {
+      if (error.message === "FE-STOP-TOAST") return;
       toast.error(error.message, { position: "top-center" });
     },
   });

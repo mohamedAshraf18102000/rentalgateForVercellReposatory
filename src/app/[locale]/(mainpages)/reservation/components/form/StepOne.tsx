@@ -169,19 +169,21 @@ const StepOne = ({ control, errors, watch, setValue }: StepOneProps) => {
 
       <div className="w-full grid grid-cols-2 gap-15 items-center text-sm">
         {formData.pickupType === "AIRPORT" ||
-        formData.pickupType === "TRAIN_STATION" ? (
+        formData.pickupType === "TRAIN_STATION" ||
+        formData.pickupType === "MY_LOCATION" ? (
           <WarningMessage
             className="mt-0!"
-            message={`عند اختيار مطار / محطة قطار يتم اضافه رسوم استلام`}
+            message={`عند اختيار مطار / محطة قطار / استلام من موقعي يتم اضافه رسوم استلام`}
           />
         ) : (
           <span></span>
         )}
         {formData.returnType === "AIRPORT" ||
-        formData.returnType === "TRAIN_STATION" ? (
+        formData.returnType === "TRAIN_STATION" ||
+        formData.returnType === "MY_LOCATION" ? (
           <WarningMessage
             className="mt-0!"
-            message={`عند اختيار مطار / محطة قطار يتم اضافه رسوم تسليم`}
+            message={`عند اختيار مطار / محطة قطار / استلام من موقعي يتم اضافه رسوم تسليم`}
           />
         ) : (
           <span></span>

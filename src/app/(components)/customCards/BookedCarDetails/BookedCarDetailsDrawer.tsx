@@ -23,30 +23,30 @@ import {
   SquarePen,
 } from "lucide-react";
 import BookingPaymentDetailsCollapse from "./DrawerSections/BookingPaymentDetailsCollapse";
+import { ReservationDetailsResponse } from "@/types/myBookings/BookingDetails";
+import { useLocale, useTranslations } from "next-intl";
+
+import { format } from "date-fns";
+import { ar, enUS } from "date-fns/locale";
 
 interface BookedCarDetailsDrawerProps {
   trigger?: React.ReactNode;
-  data?: {
-    id: string;
-    name: string;
-    image: string;
-    category: string;
-    pickupLocation: string;
-    bookingDate: string;
-    bookingNumber: string;
-  };
+  data?: ReservationDetailsResponse;
 }
 
 const BookedCarDetailsDrawer = ({
   trigger,
   data,
 }: BookedCarDetailsDrawerProps) => {
+  const t = useTranslations("common");
+  const locale = useLocale();
+  const dateLocale = locale === "ar" ? ar : enUS;
   return (
     <Sheet>
       {trigger && <SheetTrigger asChild>{trigger}</SheetTrigger>}
       <SheetContent
         dir="rtl"
-        className="flex flex-col p-0 sm:max-w-[45%] w-full"
+        className="flex flex-col p-0 sm:max-w-[40%] w-full"
       >
         <SheetHeader className="text-start! mt-10 px-6 ">
           <SheetTitle>تفاصيل الحجز</SheetTitle>
@@ -56,24 +56,23 @@ const BookedCarDetailsDrawer = ({
             <div className=" flex gap-2 items-center">
               <div className="relative h-34 w-[40%] rounded-2xl overflow-hidden">
                 <Image src="/Card_Cars.png" fill alt="img" />
-                <Badge className="text-sm font-bold absolute top-0 -right-2 bg-StatusBrownBG text-StatusBrown200  p-4 rounded-none rounded-bl-2xl">
-                  تصل خلال 20 دقيقة
+                <Badge
+                  className={`text-sm font-bold absolute top-0 -right-2 ${data?.reservationStatus === "PAID" ? "bg-StatusGreen text-StatusDarkGreen" : "bg-StatusBrownBG text-StatusBrown200"}  p-4 rounded-none rounded-bl-2xl`}
+                >
+                  {data?.reservationStatus === "PAID"
+                    ? t("paid")
+                    : t("notPaid")}
                 </Badge>
               </div>
               <div className="flex flex-col gap-y-2">
                 <div>
                   <span className="mx-2">رقم الحجز:</span>
-                  <span className="font-bold text-lg">860</span>
+                  <span className="font-bold text-lg">
+                    {data?.reservationId}
+                  </span>
                 </div>
 
-                <div>
-                  <p className="w-fit h-full bg-Grey100 text-center px-3 py-1 rounded-lg">
-                    SUVs
-                  </p>
-                </div>
-                <p className="font-bold">
-                  أسم السيارة وسنة الصنع و ممكن يبقى أكتر من كده
-                </p>
+                <p className="font-bold">{data?.carName}</p>
               </div>
             </div>
           </div>
@@ -87,11 +86,21 @@ const BookedCarDetailsDrawer = ({
               </div>
 
               <div className="text-base flex items-center gap-2 mt-3">
-                <span className="text-black">من 15-10-2025 | 6:00 صباحاً</span>
+                <span className="text-black">
+                  {data?.startDate &&
+                    format(new Date(data?.startDate), "yyyy/MM/dd | hh:mm a", {
+                      locale: dateLocale,
+                    })}
+                </span>
 
                 <ArrowLeft />
 
-                <span className="text-black">من 30-10-2025 | 6:00 مساءاً</span>
+                <span className="text-black">
+                  {data?.endDate &&
+                    format(new Date(data?.endDate), "yyyy/MM/dd | hh:mm a", {
+                      locale: dateLocale,
+                    })}
+                </span>
               </div>
             </div>
 
@@ -108,9 +117,7 @@ const BookedCarDetailsDrawer = ({
                 <Dot className=" w-8 h-8 mx-2" />
                 <span>من:</span>
 
-                <span className="mx-2">
-                  السعودية، أنه أطول من كده عيتكتب بالمنظرده
-                </span>
+                <span className="mx-2">{data?.receiveLocationName}</span>
               </div>
               <div className="flex items-center">
                 <Minus className="rotate-90 w-8 h-8 mx-2" />
@@ -118,9 +125,7 @@ const BookedCarDetailsDrawer = ({
               <div className="flex items-center">
                 <MapPin className=" w-8 h-8 mx-2" />
                 <span>إلـى:</span>
-                <span className="mx-2">
-                  السعودية، أنه أطول من كده عيتكتب بالمنظرده
-                </span>
+                <span className="mx-2">{data?.deliverLocationName}</span>
               </div>
             </div>
 
@@ -149,14 +154,14 @@ const BookedCarDetailsDrawer = ({
               <p className="font-bold text-lg">أجمالي التكلفة:</p>
             </div>
             <div className="flex items-center">
-              <span className="line-through mx-3 text-sm text-Grey500">
+              {/* <span className="line-through mx-3 text-sm text-Grey500">
                 15.00
-              </span>
-              <span className="text-2xl font-bold">104.17</span>
+              </span> */}
+              <span className="text-2xl font-bold">{data?.total}</span>
               <SaudiRiyal className="w-8! h-8!" />
             </div>
           </div>
-          <BookingPaymentDetailsCollapse />
+          {data && <BookingPaymentDetailsCollapse data={data} />}
         </div>
         <SheetFooter className="p-6 border-t mt-auto ">
           <Button

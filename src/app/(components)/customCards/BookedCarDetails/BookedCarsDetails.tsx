@@ -12,11 +12,18 @@ import { Reservation } from "@/types/myBookings/myBookings";
 import { format } from "date-fns";
 import { ar, enUS } from "date-fns/locale";
 import { useLocale, useTranslations } from "next-intl";
+import { useGetUserReservationById } from "@/hooks/api/useGetUserReservationById";
 
 const BookedCarsDetails = ({ data }: { data: Reservation }) => {
   const t = useTranslations("common");
   const locale = useLocale();
   const dateLocale = locale === "ar" ? ar : enUS;
+
+  const {
+    data: reservationDetails,
+    refetch,
+    isFetching,
+  } = useGetUserReservationById(data.reservationId, false);
   return (
     <div className=" flex min-h-[240px] rounded-2xl overflow-hidden border-2">
       <div className="w-[40%] relative">
@@ -83,20 +90,13 @@ const BookedCarsDetails = ({ data }: { data: Reservation }) => {
             <span className="font-bold text-lg mx-2">{data.reservationId}</span>
           </div>
           <BookedCarDetailsDrawer
-            data={{
-              id: "860",
-              name: "أسم السيارة وسنة الصنع و ممكن يبقى أكتر من كده",
-              image: "/banner_ar.png",
-              category: "SUVs",
-              pickupLocation: "السعودية، مكة، تفاصيل الم",
-              bookingDate: "السعودية، مكة، تفاصيل الم",
-              bookingNumber: "860",
-            }}
+            data={reservationDetails}
             trigger={
               <Button
                 variant="outline"
                 className="text-base!"
                 icon={<ChevronLeft className="w-8 h-8" />}
+                onClick={() => refetch()}
               >
                 {t("viewDetails")}
               </Button>

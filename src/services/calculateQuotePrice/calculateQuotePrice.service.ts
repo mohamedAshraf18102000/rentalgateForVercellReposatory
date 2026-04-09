@@ -85,6 +85,15 @@ export interface CalculateQuotePriceResponse {
 }
 
 export const calculateQuotePrice = (payload: any) => {
+  if (
+    !payload.startDate ||
+    !payload.endDate ||
+    !payload.receive?.type ||
+    !payload.deliver?.type
+  ) {
+    return Promise.reject(new Error("FE-STOP-TOAST"));
+  }
+
   return fetcher<CalculateQuotePriceResponse>("/reservations/quote", {
     method: "POST",
     body: JSON.stringify(payload),

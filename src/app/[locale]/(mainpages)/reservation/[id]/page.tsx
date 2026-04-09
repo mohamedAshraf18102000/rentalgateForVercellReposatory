@@ -148,7 +148,9 @@ const page = () => {
       payload.startDate &&
       payload.endDate &&
       payload.startDate !== "null" &&
-      payload.endDate !== "null"
+      payload.endDate !== "null" &&
+      payload.receive?.type &&
+      payload.deliver?.type
     ) {
       const handler = setTimeout(() => {
         calculateQuotePrice(payload);
@@ -201,7 +203,7 @@ const page = () => {
 
     if (step === activeStep) return;
 
-    if (isQuoteError) {
+    if (isQuoteError && error?.message !== "FE-STOP-TOAST") {
       toast.error(error?.message, {
         position: "top-center",
       });
@@ -232,7 +234,10 @@ const page = () => {
   };
 
   const handleNext = async () => {
-    if (isQuoteError) {
+    if (
+      isQuoteError &&
+      error?.message !== "الرجاء ملئ جميع البيانات المطلوبة"
+    ) {
       toast.error(error?.message, {
         position: "top-center",
       });
