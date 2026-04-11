@@ -7,6 +7,7 @@ import {
 } from "@/lib/utils/calculateRentalPrice";
 import { calculateDiscount } from "@/lib/utils/calculateDiscount";
 import Link from "next/link";
+import { useBookedCarDetailsStore } from "@/lib/stores/useBookedCarDetailsStore";
 
 interface CarsGridProps {
   cars: CarContent[];
@@ -35,7 +36,7 @@ const getOriginalAndOfferPrice = (
     case "WEEKLY":
       return {
         originalPrice: car.weeklyPrice ?? 0,
-        offerPrice: car.offerWeeklyPrice ?? 0,  
+        offerPrice: car.offerWeeklyPrice ?? 0,
       };
     case "HALF_MONTHLY":
       return {
@@ -113,6 +114,10 @@ const CarsGrid = ({ cars, isLoading, rentalDays }: CarsGridProps) => {
     );
   }
 
+  const isShowTax = useBookedCarDetailsStore(
+    (state) => state.showPricesWithTax,
+  );
+
   return (
     <div className="grid grid-cols-4 gap-8 mt-10">
       {cars.map((car) => {
@@ -132,6 +137,7 @@ const CarsGrid = ({ cars, isLoading, rentalDays }: CarsGridProps) => {
         return (
           <Link key={car.ccbId} href={`/carDetails/${car.ccbId}`}>
             <CarsCard
+              showTax={isShowTax}
               firstBadgeTitle={discountBadge}
               firstBadgeColor="green"
               carImage={`${process.env.NEXT_PUBLIC_IMAGES_PREFIX_URL}${car.carImage}`}

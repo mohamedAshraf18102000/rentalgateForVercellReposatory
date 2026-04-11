@@ -1,5 +1,4 @@
 import { Controller } from "react-hook-form";
-import { Input } from "@/app/(components)/ui/input";
 import { DateTimePicker } from "@/app/(components)/ui/dateTime-picker";
 import { Button, Checkbox } from "@/app/(components)";
 import { ArrowLeft, Search, UserRound } from "lucide-react";
@@ -10,6 +9,7 @@ import { Separator } from "@/app/(components)/ui/separator";
 import FilterDrawer from "./BookCars/FilterDrawer";
 import { useUserPreferedFiltersStore } from "@/lib/stores/useUserPreferedFiltersStore";
 import { useLocationStore } from "@/lib/stores/useLocationStore";
+import { useBookedCarDetailsStore } from "@/lib/stores/useBookedCarDetailsStore";
 
 const CarSearchForm = ({
   control,
@@ -24,11 +24,22 @@ const CarSearchForm = ({
   const toDate = watch("toDate");
   const { filters } = useUserPreferedFiltersStore();
   const { address } = useLocationStore();
+  const showPricesWithTax = useBookedCarDetailsStore(
+    (state) => state.showPricesWithTax,
+  );
+  const setShowPricesWithTax = useBookedCarDetailsStore(
+    (state) => state.setShowPricesWithTax,
+  );
 
   return (
     <>
       <div className="flex items-center gap-2">
-        <Checkbox width={25} height={25} checked />
+        <Checkbox
+          width={25}
+          height={25}
+          checked={showPricesWithTax}
+          onCheckedChange={(checked) => setShowPricesWithTax(checked === true)}
+        />
         <label className="text-base font-bold">عرض الأسعار بالضريبة</label>
       </div>
 
@@ -79,7 +90,7 @@ const CarSearchForm = ({
                       setValue("toDate", null);
                     }
                   }}
-                />  
+                />
               )}
             />
             <div className="flex items-center justify-center">

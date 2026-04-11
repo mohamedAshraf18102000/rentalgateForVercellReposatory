@@ -15,6 +15,7 @@ import CarCategoryBadge from "../../carCategoryBadge/CarCategoryBadge";
 import DOMPurify from "dompurify";
 import { PricingType } from "@/lib/utils/calculateRentalPrice";
 import { formatPrice } from "@/lib/utils/formatPrice";
+import { getPriceWithoutTax } from "@/lib/utils/getPriceWithoutTax";
 import { dialogRegistry } from "@/app/[locale]/(dialogs)/registry/dialogRegistry";
 import { useMemo } from "react";
 
@@ -50,6 +51,7 @@ interface CarDetailsCardProps {
   showRating?: boolean;
   rate?: number;
   dailyPrice?: number;
+  showTax?: boolean;
 }
 
 const pricingTypeLabels: Record<PricingType, string> = {
@@ -81,7 +83,7 @@ const CarDetailsCard = ({
   unlimitedKmPrice,
   showRating,
   rate,
-  dailyPrice,
+  showTax,
 }: CarDetailsCardProps) => {
   const router = useRouter();
   const otherSpecsPurified = DOMPurify.sanitize(car.otherSpecs, {
@@ -164,30 +166,69 @@ const CarDetailsCard = ({
         <div className="flex items-center justify-between w-full text-base">
           <div className="flex flex-col gap-1">
             <div className="flex items-center">
-              <span>السعر شامل الضريبة:</span>
+              <span>
+                {showTax ? "السعر شامل الضريبة:" : "السعر غير شامل الضريبة:"}
+              </span>
 
-              {(rentalDays && rentalDays > 1
-                ? originalTotalPrice
-                : priceBeforeOffer) &&
-                (rentalDays && rentalDays > 1
-                  ? originalTotalPrice
-                  : priceBeforeOffer)! >
-                  (rentalDays && rentalDays > 1
-                    ? totalPrice!
-                    : carPrice || 0) && (
-                  <span className="text-Grey500 line-through mx-1 text-sm">
+              {showTax ? (
+                <>
+                  {(rentalDays && rentalDays > 1
+                    ? originalTotalPrice
+                    : priceBeforeOffer) &&
+                    (rentalDays && rentalDays > 1
+                      ? originalTotalPrice
+                      : priceBeforeOffer)! >
+                      (rentalDays && rentalDays > 1
+                        ? totalPrice!
+                        : carPrice || 0) && (
+                      <span className="text-Grey500 line-through mx-1 text-sm">
+                        {formatPrice(
+                          rentalDays && rentalDays > 1
+                            ? originalTotalPrice!
+                            : priceBeforeOffer!,
+                        )}
+                      </span>
+                    )}
+                  <span className="font-bold mx-1">
                     {formatPrice(
                       rentalDays && rentalDays > 1
-                        ? originalTotalPrice!
-                        : priceBeforeOffer!,
+                        ? totalPrice!
+                        : carPrice || 0,
                     )}
                   </span>
-                )}
-              <span className="font-bold mx-1">
-                {formatPrice(
-                  rentalDays && rentalDays > 1 ? totalPrice! : carPrice || 0,
-                )}
-              </span>
+                </>
+              ) : (
+                <>
+                  {(rentalDays && rentalDays > 1
+                    ? originalTotalPrice
+                    : priceBeforeOffer) &&
+                    (rentalDays && rentalDays > 1
+                      ? originalTotalPrice
+                      : priceBeforeOffer)! >
+                      (rentalDays && rentalDays > 1
+                        ? totalPrice!
+                        : carPrice || 0) && (
+                      <span className="text-Grey500 line-through mx-1 text-sm">
+                        {formatPrice(
+                          getPriceWithoutTax(
+                            rentalDays && rentalDays > 1
+                              ? originalTotalPrice!
+                              : priceBeforeOffer!,
+                          ),
+                        )}
+                      </span>
+                    )}
+                  <span className="font-bold mx-1">
+                    {formatPrice(
+                      getPriceWithoutTax(
+                        rentalDays && rentalDays > 1
+                          ? totalPrice!
+                          : carPrice || 0,
+                      ),
+                    )}
+                  </span>
+                </>
+              )}
               <SaudiRiyal className="w-5 h-5" />
               <span className="mx-1 text-sm text-Grey500">
                 {rentalDays && rentalDays > 1

@@ -34,14 +34,13 @@ const page = () => {
   const setServices = useBookedCarDetailsStore((s) => s.setServices);
   const setAirports = useBookedCarDetailsStore((s) => s.setAirports);
   const setTrainStations = useBookedCarDetailsStore((s) => s.setTrainStations);
+  const showPricesWithTax = useBookedCarDetailsStore((s) => s.showPricesWithTax);
   const { filters } = useUserPreferedFiltersStore();
 
   const { data, isLoading } = useQuery({
     queryKey: ["company-cars-id", id],
     queryFn: () => getCompanyCarsByID(Number(id)),
   });
-
-  console.log("------------Car Details Data", data);
 
   useEffect(() => {
     if (data) {
@@ -191,6 +190,7 @@ const page = () => {
           rentalDays={rentalDays}
           showRating={data.showRating}
           rate={data.rate}
+          showTax={showPricesWithTax}
         />
       </div>
 

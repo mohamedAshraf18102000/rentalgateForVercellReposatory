@@ -124,6 +124,7 @@ export interface BookedCarDetailsState {
   airports: Airport[];
   trainStations: TrainStation[];
   formData: ReservationFormData;
+  showPricesWithTax: boolean;
 
   // hydration
   _hasHydrated: boolean;
@@ -135,6 +136,7 @@ export interface BookedCarDetailsState {
   clearServices: () => void;
   setAirports: (airports: Airport[]) => void;
   setTrainStations: (trainStations: TrainStation[]) => void;
+  setShowPricesWithTax: (value: boolean) => void;
 
   setFormField: <K extends keyof ReservationFormData>(
     key: K,
@@ -153,6 +155,7 @@ export const useBookedCarDetailsStore = create<BookedCarDetailsState>()(
       airports: [],
       trainStations: [],
       formData: initialFormData,
+      showPricesWithTax: true,
 
       _hasHydrated: false,
       setHasHydrated: (state) => set({ _hasHydrated: state }),
@@ -169,6 +172,8 @@ export const useBookedCarDetailsStore = create<BookedCarDetailsState>()(
         set((state) => ({
           formData: { ...state.formData, [key]: value },
         })),
+
+      setShowPricesWithTax: (value) => set({ showPricesWithTax: value }),
 
       setFormData: (data) =>
         set((state) => ({
@@ -204,13 +209,13 @@ export const useBookedCarDetailsStore = create<BookedCarDetailsState>()(
         state?.setHasHydrated(true);
       },
 
-      // ✅ خزّن كل حاجة (مفيش File أصلاً)
       partialize: (state) => ({
         carDetails: state.carDetails,
         services: state.services,
         airports: state.airports,
         trainStations: state.trainStations,
         formData: state.formData,
+        showPricesWithTax: state.showPricesWithTax,
       }),
     },
   ),

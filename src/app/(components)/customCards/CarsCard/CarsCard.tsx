@@ -14,6 +14,7 @@ import StarIcon from "../../../../constants/icons/StarIcon";
 
 import { PricingType } from "@/lib/utils/calculateRentalPrice";
 import { formatPrice } from "@/lib/utils/formatPrice";
+import { getPriceWithoutTax } from "@/lib/utils/getPriceWithoutTax";
 
 interface carsCard {
   advancedCard?: boolean;
@@ -35,6 +36,7 @@ interface carsCard {
   pricingType?: PricingType;
   totalPrice?: number;
   rentalDays?: number;
+  showTax?: boolean;
 }
 
 const pricingTypeLabels: Record<PricingType, string> = {
@@ -60,9 +62,7 @@ const CarsCard = ({
   firstBadgeTitle,
   firstBadgeColor,
   priceBeforeOffer,
-  pricingType = "DAILY",
-  totalPrice,
-  rentalDays,
+  showTax,
 }: carsCard) => {
   return (
     <article>
@@ -149,15 +149,29 @@ const CarsCard = ({
             {/* Price */}
             <div className="flex flex-col mt-3">
               <div className="flex items-center">
-                {priceBeforeOffer && priceBeforeOffer > (carPrice || 0) && (
-                  <span className="line-through text-sm text-Grey500">
-                    {formatPrice(priceBeforeOffer)}
-                  </span>
+                {showTax ? (
+                  <>
+                    {priceBeforeOffer && priceBeforeOffer > (carPrice || 0) && (
+                      <span className="line-through text-sm text-Grey500">
+                        {formatPrice(priceBeforeOffer)}
+                      </span>
+                    )}
+                    <data value="10.56" className="text-base mx-2 font-bold">
+                      {formatPrice(carPrice!)}
+                    </data>
+                  </>
+                ) : (
+                  <>
+                    {priceBeforeOffer && priceBeforeOffer > (carPrice || 0) && (
+                      <span className="line-through text-sm text-Grey500">
+                        {formatPrice(getPriceWithoutTax(priceBeforeOffer))}
+                      </span>
+                    )}
+                    <data value="10.56" className="text-base mx-2 font-bold">
+                      {formatPrice(getPriceWithoutTax(carPrice!))}
+                    </data>
+                  </>
                 )}
-
-                <data value="10.56" className="text-base mx-2 font-bold">
-                  {formatPrice(carPrice)}
-                </data>
 
                 <p className="flex items-center text-base">
                   <SaudiRiyal className="w-5 h-5" />

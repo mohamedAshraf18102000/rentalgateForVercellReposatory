@@ -26,10 +26,6 @@ const BookCars = () => {
   const { appliedFilters, filters, setFilter } = useUserPreferedFiltersStore();
   const longitude = useLocationStore((state) => state.longitude);
   const latitude = useLocationStore((state) => state.latitude);
-  const address = useLocationStore((state) => state.address);
-  const setBookedFormData = useBookedCarDetailsStore(
-    (state) => state.setFormData,
-  );
   const setFormField = useBookedCarDetailsStore((state) => state.setFormField);
 
   const apiFilters = {

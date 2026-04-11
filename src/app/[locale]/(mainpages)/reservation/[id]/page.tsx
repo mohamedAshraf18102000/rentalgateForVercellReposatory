@@ -375,6 +375,7 @@ const page = () => {
                         style={{ height: "220px" }}
                       >
                         <GoogleMapsPolyLineLocation
+                          hideUserLocation
                           containerHeight="220px"
                           destinationLat={carDetails?.latitude}
                           destinationLng={carDetails?.longitude}
