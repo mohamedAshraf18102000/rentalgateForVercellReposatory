@@ -214,6 +214,7 @@ const page = () => {
           <ReservationDetailsSkeleton />
         </div>
       </WrapperContainer>
+
       <Separator />
     </>
   );
