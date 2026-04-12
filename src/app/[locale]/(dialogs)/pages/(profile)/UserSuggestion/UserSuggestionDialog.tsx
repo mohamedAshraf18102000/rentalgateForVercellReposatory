@@ -1,11 +1,32 @@
 "use client";
 
+import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { Button, DialogWrapper } from "@/ui";
 import { Textarea } from "@/app/(components)/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/app/(components)/ui/select";
 import TextAreaIcon from "@/constants/icons/profile/TextAreaIcon";
 import type { UserSuggestionProps } from "./UserSuggestion.types";
 
+const CANCELLATION_REASON_KEYS = [
+  "tripCancelled",
+  "betterOffer",
+  "noLongerNeeded",
+  "wrongDetails",
+  "serviceIssue",
+  "other",
+] as const;
+
 export function UserSuggestionDialog({ onClose }: UserSuggestionProps) {
+  const t = useTranslations("profile");
+  const [cancellationReason, setCancellationReason] = useState<string>("");
+
   return (
     <DialogWrapper
       open={true}
@@ -25,6 +46,26 @@ export function UserSuggestionDialog({ onClose }: UserSuggestionProps) {
       }}
       content={
         <div className="flex flex-col gap-3 mb-5">
+          <div className="flex flex-col gap-2">
+            <label className="text-base font-medium text-foreground">
+              {t("cancellationReason")}
+            </label>
+            <Select
+              value={cancellationReason || undefined}
+              onValueChange={setCancellationReason}
+            >
+              <SelectTrigger size="md" className="text-sm">
+                <SelectValue placeholder={t("selectReason")} />
+              </SelectTrigger>
+              <SelectContent>
+                {CANCELLATION_REASON_KEYS.map((key) => (
+                  <SelectItem key={key} value={key}>
+                    {t(`cancellationReasonOptions.${key}`)}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
           <Textarea
             label="الرسالة:"
             labelClassName="text-base!"

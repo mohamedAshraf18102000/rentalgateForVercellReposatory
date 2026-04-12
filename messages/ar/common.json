@@ -66,6 +66,7 @@
   "points": "نقطة",
   "pointsEquals": "نقطة =",
   "cancel": "إلغاء",
+  "cancelBooking": "إلغاء حجز سيارة",
   "saveChanges": "حفظ التغييرات",
   "saving": "جاري الحفظ...",
   "updateSuccess": "تم التحديث بنجاح",
@@ -107,5 +108,15 @@
   "viewDetails": "عرض التفاصيل",
   "arrivesIn": "تصل خلال {minutes} دقيقة",
   "paid": "مدفوع",
-  "notPaid": "غير مدفوع"
+  "notPaid": "غير مدفوع",
+  "cancelBookingReasonLabel": "سبب الإلغاء",
+  "selectCancelBookingReason": "اختر السبب",
+  "cancelBookingReasonOptions": {
+    "noLongerNeedsRide": "لم أعد بحاجة للرحلة",
+    "wrongDateTimeOrService": "خطأ في التاريخ أو الوقت أو الخدمة",
+    "cheaperOrFasterOption": "سعر أرخص، خيار أسرع، وما شابه",
+    "delayCommunicationOrMismatch": "تأخير، ضعف تواصل، أو عدم تطابق المركبة",
+    "unexpectedSituation": "ظرف غير متوقع يمنع إتمام الرحلة"
+  },
+  "confirmCancelBookingWithId": "تأكيد إلغاء الحجز"
 }

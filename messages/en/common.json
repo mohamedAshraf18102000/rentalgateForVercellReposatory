@@ -20,7 +20,7 @@
   "contactInfo": "Contact Info",
   "location": "Riyadh, Saudi Arabia",
   "allRightsReserved": "All rights reserved.",
-  "mainBranchAddress": "Saudi Arabia - Qasr Al-Zahra 7427, Al-Zahra 2136, Makkah Al-Mukarramah 24221",  
+  "mainBranchAddress": "Saudi Arabia - Qasr Al-Zahra 7427, Al-Zahra 2136, Makkah Al-Mukarramah 24221",
   "phone": "(+966) 123 456 789",
   "carRental": "For Car Rental",
   "companyName": "Rental Gate",
@@ -66,6 +66,7 @@
   "points": "points",
   "pointsEquals": "points =",
   "cancel": "Cancel",
+  "cancelBooking": "Cancel Car Booking",
   "saveChanges": "Save Changes",
   "saving": "Saving...",
   "updateSuccess": "Updated successfully",
@@ -107,5 +108,15 @@
   "viewDetails": "View Details",
   "arrivesIn": "Arrives in {minutes} minutes",
   "paid": "Paid",
-  "notPaid": "Not Paid"
+  "notPaid": "Not Paid",
+  "cancelBookingReasonLabel": "Reason for cancellation",
+  "selectCancelBookingReason": "Select a reason",
+  "cancelBookingReasonOptions": {
+    "noLongerNeedsRide": "No longer needs the ride",
+    "wrongDateTimeOrService": "Wrong date, time, or service selected",
+    "cheaperOrFasterOption": "Cheaper price, faster option, etc.",
+    "delayCommunicationOrMismatch": "Delay, poor communication, or vehicle mismatch",
+    "unexpectedSituation": "Unexpected situation preventing the trip"
+  },
+  "confirmCancelBookingWithId": "Confirm cancellation — booking {reservationId}"
 }

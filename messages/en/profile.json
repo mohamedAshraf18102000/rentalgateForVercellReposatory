@@ -17,6 +17,14 @@
   "cancelReservationTitle": "Cancel Reservation",
   "cancelReservationDescription": "Please select a cancellation reason and add any additional notes",
   "cancellationReason": "Cancellation Reason",
+  "cancellationReasonOptions": {
+    "tripCancelled": "Trip or travel plans were cancelled",
+    "betterOffer": "Found a better price or offer elsewhere",
+    "noLongerNeeded": "No longer need a rental vehicle",
+    "wrongDetails": "Booking mistake (wrong dates, car, or location)",
+    "serviceIssue": "Issue with confirmation, payment, or support",
+    "other": "Personal or other reason"
+  },
   "selectReason": "Select Reason",
   "additionalNotes": "Additional Notes",
   "notesPlaceholder": "Add any additional notes...",

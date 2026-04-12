@@ -17,6 +17,14 @@
   "cancelReservationTitle": "إلغاء الحجز",
   "cancelReservationDescription": "يرجى اختيار سبب الإلغاء وإضافة أي ملاحظات إضافية",
   "cancellationReason": "سبب الإلغاء",
+  "cancellationReasonOptions": {
+    "tripCancelled": "تم إلغاء الرحلة أو خطط السفر",
+    "betterOffer": "وجدت سعرًا أو عرضًا أفضل في مكان آخر",
+    "noLongerNeeded": "لم أعد بحاجة لسيارة إيجار",
+    "wrongDetails": "خطأ في الحجز (تواريخ أو سيارة أو موقع خاطئ)",
+    "serviceIssue": "مشكلة في التأكيد أو الدفع أو الدعم",
+    "other": "سبب شخصي أو آخر"
+  },
   "selectReason": "اختر السبب",
   "additionalNotes": "ملاحظات إضافية",
   "notesPlaceholder": "أضف أي ملاحظات إضافية...",
