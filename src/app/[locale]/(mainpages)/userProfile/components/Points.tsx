@@ -8,7 +8,7 @@ const Points = () => {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-between p-3 rounded-2xl bg-[linear-gradient(180deg,#BE2326_0%,#581012_100%)] text-white min-w-[300px] h-[74px] animate-pulse">
+      <div className="flex w-full min-w-0 max-w-full items-center justify-between rounded-2xl bg-[linear-gradient(180deg,#BE2326_0%,#581012_100%)] p-3 text-white animate-pulse sm:min-w-[260px]">
         <div className="flex items-center gap-2">
           <div className="w-[50px] h-[50px] bg-white/20 rounded-2xl" />
           <div className="w-20 h-5 bg-white/20 rounded-md" />
@@ -19,9 +19,9 @@ const Points = () => {
   }
 
   return (
-    <div className="flex items-center justify-between p-3 rounded-2xl bg-[linear-gradient(180deg,#BE2326_0%,#581012_100%)] text-white min-w-[300px]">
+    <div className="flex w-full min-w-0 max-w-full items-center justify-between rounded-2xl bg-[linear-gradient(180deg,#BE2326_0%,#581012_100%)] p-3 text-white sm:min-w-[260px]">
       <div className="flex items-center gap-2">
-        <div className="w-[50px] h-[50px] relative rounded-2xl overflow-hidden">
+        <div className="w-[40px] h-[40px] sm:w-[50px] sm:h-[50px] relative rounded-2xl overflow-hidden">
           <Image
             className="object-contain"
             src="/profile/coin.png"
@@ -37,9 +37,11 @@ const Points = () => {
         </div>
       </div>
 
-      <div className="flex items-center text-lg gap-1">
-        <p>{pointsData?.availablePointsValue?.toFixed(2) ?? null}</p>
-        <SaudiRiyal className="w-5 h-5" />
+      <div className="flex shrink-0 items-center gap-1 text-base sm:text-lg">
+        <p className="tabular-nums">
+          {pointsData?.availablePointsValue?.toFixed(2) ?? null}
+        </p>
+        <SaudiRiyal className="w-5 h-5 sm:w-6 sm:h-6" />
       </div>
     </div>
   );

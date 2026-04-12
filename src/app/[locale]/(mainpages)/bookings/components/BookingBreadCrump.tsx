@@ -3,7 +3,7 @@ import { BreadcrumbNav } from "@/app/(components)/template/BreadcrumbNav";
 const BookingBreadCrump = () => {
   return (
     <BreadcrumbNav
-      className="mt-5"
+      className="mt-3 sm:mt-5"
       textColor="text-[var(--color-primary)]"
       items={[
         {

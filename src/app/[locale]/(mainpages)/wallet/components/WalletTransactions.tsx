@@ -11,7 +11,7 @@ const WalletTransactions = () => {
 
   if (isLoading) {
     return (
-      <div className="mt-10 grid grid-cols-2 gap-5">
+      <div className="mt-8 grid grid-cols-1 gap-5 sm:mt-10 md:grid-cols-2">
         {Array.from({ length: 4 }).map((_, index) => (
           <div key={index} className="flex flex-col gap-2">
             <Skeleton className="h-5 w-[30%]" />

@@ -106,9 +106,12 @@ const getCarPricing = (car: CarContent, rentalDays: number) => {
 const CarsGrid = ({ cars, isLoading, rentalDays }: CarsGridProps) => {
   if (isLoading) {
     return (
-      <div className="grid grid-cols-4 gap-8 mt-10">
+      <div className="mt-6 grid grid-cols-1 gap-4 sm:mt-8 sm:gap-6 md:grid-cols-2 md:mt-10 lg:grid-cols-3 xl:grid-cols-4">
         {Array.from({ length: 8 }).map((_, i) => (
-          <Skeleton key={i} className="h-[450px] rounded-2xl" />
+          <Skeleton
+            key={i}
+            className="h-[min(28rem,70vh)] rounded-2xl sm:h-104 md:h-112"
+          />
         ))}
       </div>
     );
@@ -119,7 +122,7 @@ const CarsGrid = ({ cars, isLoading, rentalDays }: CarsGridProps) => {
   );
 
   return (
-    <div className="grid grid-cols-4 gap-8 mt-10">
+    <div className="mt-6 grid grid-cols-1 gap-4 sm:mt-8 sm:gap-6 md:grid-cols-2 md:mt-10 lg:grid-cols-3 xl:grid-cols-4">
       {cars.map((car) => {
         const {
           pricePerDay,

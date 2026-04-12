@@ -29,31 +29,34 @@ const FilterDrawer = () => {
       <SheetTrigger dir="rtl" asChild>
         <button
           type="button"
-          className="border-2 border-Grey400 rounded-xl p-1.5 text-base font-bold flex items-center gap-2"
+          className="flex min-h-10 shrink-0 touch-manipulation items-center gap-1.5 rounded-xl border-2 border-Grey400 p-2 text-sm font-bold sm:min-h-11 sm:gap-2 sm:p-2 sm:text-base"
         >
-          <div className="flex items-center gap-2 relative px-2">
-            <Funnel />
+          <div className="relative flex items-center justify-center gap-1.5 px-1.5 sm:gap-2 sm:px-2 w-full">
+            <Funnel className="size-4 shrink-0 sm:size-4.5" aria-hidden />
             <span>تصفية </span>
             {activeFiltersCount > 0 && (
-              <div className="absolute -top-1 -right-1 text-[12px] w-5 h-5 flex items-center justify-center text-white font-bold rounded-full bg-StatusRedBG/90">
+              <div className="absolute -top-1 -end-1 flex size-5 items-center justify-center rounded-full bg-StatusRedBG/90 text-[11px] font-bold text-white sm:text-[12px]">
                 {activeFiltersCount}
               </div>
             )}
           </div>
         </button>
       </SheetTrigger>
-      <SheetContent dir="rtl" className="flex flex-col p-0">
-        <SheetHeader className="text-start! mt-10 px-6 ">
-          <SheetTitle>تصفية حسب</SheetTitle>
+      <SheetContent
+        dir="rtl"
+        className="flex h-dvh max-h-dvh w-full max-w-full flex-col gap-0 p-0 sm:max-w-md md:max-w-lg"
+      >
+        <SheetHeader className="mt-8 px-4 text-start! sm:mt-10 sm:px-6">
+          <SheetTitle className="text-base sm:text-lg">تصفية حسب</SheetTitle>
         </SheetHeader>
-        <div className="flex-1 overflow-y-auto px-4">
-          <div className="w-full p-2">
+        <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-3 pb-2 sm:px-4 sm:pb-3">
+          <div className="w-full p-1 sm:p-2">
             <DrawerAccordion />
           </div>
         </div>
-        <SheetFooter className="justify-start! mt-auto grid grid-cols-2 gap-3 border-t-2 p-5 shadow-[0px_-13px_15px_0px_#01250514]">
+        <SheetFooter className="mt-auto grid w-full max-w-none grid-cols-1 gap-2 border-t-2 p-3 shadow-[0px_-13px_15px_0px_#01250514] sm:grid-cols-2 sm:gap-3 sm:p-5">
           <Button
-            className="w-full text-base!"
+            className="w-full min-h-11 text-sm! sm:text-base!"
             variant="outline"
             onClick={resetFilters}
           >
@@ -62,7 +65,7 @@ const FilterDrawer = () => {
 
           <SheetClose asChild>
             <Button
-              className="w-full text-base!"
+              className="w-full min-h-11 text-sm! sm:text-base!"
               type="submit"
               onClick={applyFilters}
             >

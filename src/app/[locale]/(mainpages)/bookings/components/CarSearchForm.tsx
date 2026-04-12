@@ -1,7 +1,7 @@
 import { Controller } from "react-hook-form";
 import { DateTimePicker } from "@/app/(components)/ui/dateTime-picker";
 import { Button, Checkbox } from "@/app/(components)";
-import { ArrowLeft, Search, UserRound } from "lucide-react";
+import { ArrowLeft, Search } from "lucide-react";
 import PositioningIcon from "@/constants/icons/PositioningIcon";
 import CarRentIcon from "@/constants/icons/CarRentIcon";
 import PaginationDateView from "@/app/(components)/PaginationDateView";
@@ -33,23 +33,25 @@ const CarSearchForm = ({
 
   return (
     <>
-      <div className="flex items-center gap-2">
+      <div className="flex flex-wrap items-center gap-2">
         <Checkbox
           width={25}
           height={25}
           checked={showPricesWithTax}
           onCheckedChange={(checked) => setShowPricesWithTax(checked === true)}
         />
-        <label className="text-base font-bold">عرض الأسعار بالضريبة</label>
+        <label className="text-sm font-bold sm:text-base">
+          عرض الأسعار بالضريبة
+        </label>
       </div>
 
       <form
         onSubmit={handleSubmit(handleSearch)}
-        className="flex items-center justify-between mt-3"
+        className="mt-3 flex flex-col gap-4 lg:flex-row lg:items-stretch lg:justify-between lg:gap-4"
       >
-        <div className="p-5 bg-white w-[70%] border rounded-2xl">
-          <div className="flex items-end gap-4">
-            <div className="w-full">
+        <div className="w-full rounded-2xl border bg-white p-3 sm:p-4 md:p-5 lg:w-[70%]">
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:gap-3 xl:gap-4">
+            <div className="w-full min-w-0 lg:min-w-32 lg:flex-1">
               <div className="flex items-center gap-2">
                 <PositioningIcon />
                 <p className="text-sm mb-2">مكان الاستلام:</p>
@@ -72,56 +74,61 @@ const CarSearchForm = ({
               })()}
             </div>
 
-            <Controller
-              name="fromDate"
-              control={control}
-              render={({ field }) => (
-                <DateTimePicker
-                  allowClear
-                  withTime
-                  inputClassName="text-sm!"
-                  className="w-full"
-                  label="مدة الإيجار:"
-                  labelIcon={<CarRentIcon />}
-                  value={field.value}
-                  onChange={(date) => {
-                    field.onChange(date);
-                    if (toDate && date && toDate < date) {
-                      setValue("toDate", null);
-                    }
-                  }}
-                />
-              )}
-            />
-            <div className="flex items-center justify-center">
-              <ArrowLeft className="w-6 h-6 mb-2" />
+            <div className="w-full min-w-0 lg:flex-1">
+              <Controller
+                name="fromDate"
+                control={control}
+                render={({ field }) => (
+                  <DateTimePicker
+                    allowClear
+                    withTime
+                    inputClassName="text-sm!"
+                    className="w-full"
+                    label="مدة الإيجار:"
+                    labelIcon={<CarRentIcon />}
+                    value={field.value}
+                    onChange={(date) => {
+                      field.onChange(date);
+                      if (toDate && date && toDate < date) {
+                        setValue("toDate", null);
+                      }
+                    }}
+                  />
+                )}
+              />
+            </div>
+            <div className="hidden items-center justify-center lg:flex lg:shrink-0">
+              <ArrowLeft className="mb-2 h-6 w-6" />
             </div>
 
-            <Controller
-              name="toDate"
-              control={control}
-              render={({ field }) => (
-                <DateTimePicker
-                  allowClear
-                  withTime
-                  className="w-full"
-                  inputClassName="text-sm!"
-                  value={field.value}
-                  onChange={field.onChange}
-                  minDate={fromDate}
-                />
-              )}
-            />
+            <div className="w-full min-w-0 lg:flex-1">
+              <Controller
+                name="toDate"
+                control={control}
+                render={({ field }) => (
+                  <DateTimePicker
+                    allowClear
+                    withTime
+                    className="w-full"
+                    inputClassName="text-sm!"
+                    value={field.value}
+                    onChange={field.onChange}
+                    minDate={fromDate}
+                  />
+                )}
+              />
+            </div>
 
-            <FilterDrawer />
-
-            <Button type="submit">
-              <Search />
-            </Button>
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-end lg:contents">
+              <FilterDrawer />
+              <Button type="submit" className="w-full shrink-0 sm:w-auto">
+                <Search />
+              </Button>
+            </div>
           </div>
         </div>
 
-        <div className="p-2.5 bg-white w-[15%] border rounded-2xl">
+        <div className="w-full rounded-2xl border bg-white p-3 sm:p-4 lg:w-[15%] lg:min-w-42">
           <p className="font-bold">السيارات الظاهرة:</p>
           <Separator className="my-4" />
           <PaginationDateView

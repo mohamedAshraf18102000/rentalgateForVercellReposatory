@@ -1,4 +1,3 @@
-import { ContactUsDialog } from "@/app/(components)/ContactUsDialog";
 import { getTranslations, getLocale } from "next-intl/server";
 import { HomeLink } from "./components/HomeLink";
 import { Logo } from "./components/Logo";

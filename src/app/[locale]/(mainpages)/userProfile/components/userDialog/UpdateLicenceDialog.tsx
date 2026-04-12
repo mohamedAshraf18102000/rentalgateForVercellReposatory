@@ -65,9 +65,10 @@ const UpdateLicenceDialog = ({ open, setOpen }: UpdatePasswordDialogProps) => {
       open={open}
       onOpenChange={setOpen}
       size="md"
-      forceDialog={true}
       contentClassName=""
-      closeOnOutsideClick={true}
+      closeOnOutsideClick={false}
+      scrollableContent={true}
+      maxScrollHeight="350px"
       header={{
         mainTitle: (
           <div className="flex items-center justify-between w-full">

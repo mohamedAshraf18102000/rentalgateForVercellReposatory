@@ -3,14 +3,16 @@ import BookingsPanner from "./components/BookingsPanner";
 import BookingBreadCrump from "./components/BookingBreadCrump";
 import BookCars from "./components/BookCars/BookCars";
 
-const page = () => {
+const BookingsPage = () => {
   return (
     <WrapperContainer exceedNav>
-      <BookingsPanner />
-      <BookingBreadCrump />
-      <BookCars />
+      <div className="flex flex-col gap-4 sm:gap-6">
+        <BookingsPanner />
+        <BookingBreadCrump />
+        <BookCars />
+      </div>
     </WrapperContainer>
   );
 };
 
-export default page;
+export default BookingsPage;

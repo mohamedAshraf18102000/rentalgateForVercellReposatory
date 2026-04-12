@@ -86,7 +86,7 @@ const BussinessAccountsContent = ({
   return (
     <>
       <div
-        className={`w-full grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5 ${
+        className={`w-full min-w-0 max-w-full grid grid-cols-1 gap-3 sm:gap-4 md:grid-cols-3 md:gap-5 ${
           withOutStepper ? "hidden" : ""
         }`}
       >
@@ -125,27 +125,27 @@ const BussinessAccountsContent = ({
         />
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-4 mt-8 lg:mt-10 relative">
-        <div className="rounded-2xl border-2 border-white overflow-hidden min-h-[450px] lg:h-[420px]">
-          <div className=" bg-[url(/bussinesAccounts/img1.png)] bg-cover bg-no-repeat p-4 md:p-6 h-full flex flex-col">
-            <h6 className="font-bold text-xl md:text-2xl">
+      <div className="relative mt-6 grid w-full min-w-0 max-w-full grid-cols-1 gap-6 sm:mt-8 lg:mt-10 lg:grid-cols-2 lg:gap-5 xl:gap-6">
+        <div className="flex flex-col overflow-hidden rounded-2xl border-2 border-white min-h-88 sm:min-h-96 lg:min-h-104 lg:max-h-[min(90vh,36rem)]">
+          <div className="flex min-h-0 flex-1 flex-col bg-[url(/bussinesAccounts/img1.png)] bg-cover bg-center bg-no-repeat p-4 sm:p-5 md:p-6">
+            <h6 className="text-balance font-bold text-lg sm:text-xl md:text-2xl">
               ماهو حساب الأعمال🤔؟!!
             </h6>
-            <p className="text-base md:text-lg">
+            <p className="mt-1 text-pretty text-sm leading-relaxed sm:text-base md:text-lg">
               هو حساب مصمم خصيصًا للشركات وأصحاب الأعمال
             </p>
             <FormProvider {...methods}>
               <form
-                className="w-full md:w-3/4 lg:w-1/2 flex flex-col flex-1 mt-4"
+                className="mt-3 flex min-h-0 w-full max-w-full flex-1 flex-col sm:mt-4 md:max-w-[90%] lg:max-w-[min(100%,28rem)]"
                 onSubmit={handleNextStep}
               >
-                <div className="flex-1 overflow-y-auto pr-2">
+                <div className="min-h-0 flex-1 overflow-y-auto overscroll-y-contain px-0.5 pe-2 [-webkit-overflow-scrolling:touch]">
                   <BussinessAccountsStepContent activeStep={activeStep} />
                 </div>
-                <div className="mt-4 flex justify-center md:justify-end">
+                <div className="mt-3 flex shrink-0 justify-center sm:mt-4 sm:justify-end">
                   <Button
                     type="submit"
-                    className="border border-Grey600 text-primary bg-white! hover:bg-none text-sm! md:text-base! hover:bg-Grey200! transition-all duration-300 w-full md:w-auto"
+                    className="border border-Grey600 text-primary bg-white! hover:bg-none text-sm! sm:text-base! hover:bg-Grey200! transition-all duration-300 w-full min-h-11 sm:min-h-0 sm:w-auto sm:min-w-40"
                     icon={<ChevronLeft />}
                     loading={isPending}
                   >
@@ -157,7 +157,7 @@ const BussinessAccountsContent = ({
           </div>
         </div>
 
-        <div className="rounded-2xl bg-white p-4 md:p-6 shadow-xl h-full">
+        <div className="h-full min-h-0 rounded-2xl bg-white p-4 shadow-xl sm:p-5 md:p-6">
           <BussinessAccountFeatures />
         </div>
       </div>

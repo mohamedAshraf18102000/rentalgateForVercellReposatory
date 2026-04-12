@@ -20,12 +20,12 @@ export const BookingsStatus: React.FC<PeriodSearchProps> = ({
       }
       className=""
     >
-      <TabsList className="bg-Grey100 p-2">
-        <TabsTrigger value="current" className="login-tab-trigger">
-          <span className="login-tab-text text-base">الحالية</span>
+      <TabsList className="w-full bg-Grey100 p-1.5 sm:p-2">
+        <TabsTrigger value="current" className="login-tab-trigger flex-1 py-2 sm:py-3">
+          <span className="login-tab-text text-sm sm:text-base">الحالية</span>
         </TabsTrigger>
-        <TabsTrigger value="finished" className="login-tab-trigger">
-          <span className="login-tab-text text-base">السابقة</span>
+        <TabsTrigger value="finished" className="login-tab-trigger flex-1 py-2 sm:py-3">
+          <span className="login-tab-text text-sm sm:text-base">السابقة</span>
         </TabsTrigger>
       </TabsList>
     </Tabs>

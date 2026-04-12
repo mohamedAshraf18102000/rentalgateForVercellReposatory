@@ -41,6 +41,7 @@ import {
   Drawer,
   DrawerClose,
   DrawerContent,
+  DrawerTitle,
   DrawerTrigger,
 } from "@/app/(components)/ui/drawer";
 
@@ -195,6 +196,9 @@ export const MobileBottomNav: React.FC = () => {
             </button>
           </DrawerTrigger>
           <DrawerContent>
+            <DrawerTitle className="sr-only">
+              {t("menu") || "Menu"}
+            </DrawerTitle>
             {/* Menu Content with white container */}
             <div className="flex-1 overflow-y-auto bg-white mx-3 mb-3">
               <div className="py-4 pt-6 px-4">
@@ -286,9 +290,9 @@ export const MobileBottomNav: React.FC = () => {
         <DrawerContent>
           <div className="px-4 pb-4">
             <div className="py-4">
-              <h2 className={`text-lg font-semibold mb-4  text-center`}>
+              <DrawerTitle className="text-lg font-semibold mb-4 text-center">
                 {locale === "ar" ? "اختر اللغة" : "Select Language"}
-              </h2>
+              </DrawerTitle>
               <div className="space-y-2">
                 {/* Arabic Option */}
                 <button

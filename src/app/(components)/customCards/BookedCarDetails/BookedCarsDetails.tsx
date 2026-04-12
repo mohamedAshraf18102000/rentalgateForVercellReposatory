@@ -25,77 +25,81 @@ const BookedCarsDetails = ({ data }: { data: Reservation }) => {
     isFetching,
   } = useGetUserReservationById(data.reservationId, false);
   return (
-    <div className=" flex min-h-[240px] rounded-2xl overflow-hidden border-2">
-      <div className="w-[40%] relative">
+    <div className="flex min-h-0 flex-col overflow-hidden rounded-2xl border-2 sm:min-h-[240px] sm:flex-row">
+      <div className="relative h-[200px] w-full shrink-0 sm:h-auto sm:w-[40%]">
         <Image
           src={`${process.env.NEXT_PUBLIC_IMAGES_PREFIX_URL}${data.carImage}`}
           alt="img"
-          className="object-contain scale-120 pointer-events-none"
+          className="pointer-events-none scale-120 object-contain"
           fill
         />
         <Badge
-          className={`text-sm font-bold absolute top-0 -right-2 ${data.reservationStatus === "PAID" ? "bg-StatusGreen text-StatusDarkGreen" : "bg-StatusBrownBG text-StatusBrown200"}  p-4 rounded-none rounded-bl-2xl`}
+          className={`absolute top-0 -right-2 rounded-none rounded-bl-2xl p-3 text-xs font-bold sm:p-4 sm:text-sm ${data.reservationStatus === "PAID" ? "bg-StatusGreen text-StatusDarkGreen" : "bg-StatusBrownBG text-StatusBrown200"}`}
         >
           {data.reservationStatus === "PAID" ? t("paid") : t("notPaid")}
         </Badge>
       </div>
-      <div className="w-[60%] bg-white p-4">
-        <div className="flex gap-5 items-center">
-          <p className="w-3/4 font-bold text-sm">
+      <div className="min-w-0 flex-1 bg-white p-3 sm:w-[60%] sm:p-4">
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-5">
+          <p className="min-w-0 flex-1 text-sm font-bold sm:w-3/4">
             {data.carBrandEnglishName} {data.carName}
           </p>
-          <p className="w-1/4 h-full bg-Grey100 text-center p-2 rounded-lg font-bold">
+          <p className="shrink-0 rounded-lg bg-Grey100 p-2 text-center text-xs font-bold sm:h-full sm:w-1/4 sm:text-sm">
             {data.carCategoryEnglishName}
           </p>
         </div>
-        <Separator className="my-4" />
-        <div className="">
-          <div className="flex gap-2 justify-between">
-            <div className="flex gap-2">
+        <Separator className="my-3 sm:my-4" />
+        <div>
+          <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between sm:gap-2">
+            <div className="flex shrink-0 gap-2">
               <RecieveCarIcon />
-              <span>{t("pickupTime")}:</span>
+              <span className="text-sm">{t("pickupTime")}:</span>
             </div>
-            <span>
+            <span className="min-w-0 wrap-break-word text-end text-xs sm:text-sm">
               {format(new Date(data.startDate), "yyyy/MM/dd | hh:mm a", {
                 locale: dateLocale,
               })}
             </span>
           </div>
 
-          <div className="flex gap-2 justify-between mt-3">
-            <div className="flex gap-2">
+          <div className="mt-3 flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between sm:gap-2">
+            <div className="flex shrink-0 gap-2">
               <BookingDateIcon />
-              <span>{t("dropoffTime")}:</span>
+              <span className="text-sm">{t("dropoffTime")}:</span>
             </div>
-            <span>
+            <span className="min-w-0 wrap-break-word text-end text-xs sm:text-sm">
               {format(new Date(data.endDate), "yyyy/MM/dd | hh:mm a", {
                 locale: dateLocale,
               })}
             </span>
           </div>
 
-          <div className="flex gap-2 justify-between mt-3">
-            <div className="flex gap-2">
+          <div className="mt-3 flex flex-col gap-1 sm:flex-row sm:items-start sm:justify-between sm:gap-2">
+            <div className="flex shrink-0 gap-2">
               <BookingDateIcon />
-              <span>{t("pickupLocation")}</span>
+              <span className="text-sm">{t("pickupLocation")}</span>
             </div>
-            <span>{t(`receiveTypes.${data.receiveType}`)}</span>
+            <span className="min-w-0 wrap-break-word text-end text-xs sm:text-sm">
+              {t(`receiveTypes.${data.receiveType}`)}
+            </span>
           </div>
         </div>
-        <Separator className="my-4" />
+        <Separator className="my-3 sm:my-4" />
 
-        <div className="p-2 flex justify-between">
-          <div>
+        <div className="flex flex-col gap-3 p-2 sm:flex-row sm:items-center sm:justify-between">
+          <div className="min-w-0">
             <span className="text-Grey700">{t("bookingNumber")}:</span>
-            <span className="font-bold text-lg mx-2">{data.reservationId}</span>
+            <span className="mx-2 text-base font-bold sm:text-lg">
+              {data.reservationId}
+            </span>
           </div>
           <BookedCarDetailsDrawer
             data={reservationDetails}
             trigger={
               <Button
                 variant="outline"
-                className="text-base!"
-                icon={<ChevronLeft className="w-8 h-8" />}
+                className="w-full text-base! sm:w-auto"
+                icon={<ChevronLeft className="h-6 w-6 sm:h-8 sm:w-8" />}
                 onClick={() => refetch()}
               >
                 {t("viewDetails")}

@@ -26,14 +26,14 @@ const UserBookingsDetails = () => {
 
   return (
     <>
-      <div className="my-5 flex gap-4">
-        <div className="bg-white w-1/2 p-4 rounded-2xl">
-          <div className="flex items-center gap-3">
-            <div className="relative w-[56px] h-[56px] rounded-lg overflow-hidden">
+      <div className="my-5 flex min-w-0 flex-col gap-4 lg:flex-row lg:items-stretch">
+        <div className="min-w-0 flex-1 rounded-2xl bg-white p-4 sm:p-5">
+          <div className="flex items-start gap-3 sm:items-center">
+            <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-lg sm:h-[56px] sm:w-[56px]">
               <Image src="/banner_ar.png" alt="" fill />
             </div>
-            <div>
-              <p className="font-bold text-lg">
+            <div className="min-w-0 flex-1">
+              <p className="text-base font-bold sm:text-lg">
                 أهلاً {isClient ? storeUserData?.clientName : "..."}
               </p>
               <p className="text-sm">
@@ -50,11 +50,11 @@ const UserBookingsDetails = () => {
             </div>
           </div>
         </div>
-        <div className="p-4 bg-white rounded-2xl flex flex-col items-center">
+        <div className="flex w-full shrink-0 flex-col items-center rounded-2xl bg-white p-4 sm:p-5 lg:w-auto lg:max-w-sm lg:flex-[0_1_280px]">
           <img
             src="/profile/actionIcons/bookings.webp"
             alt="img"
-            className="w-[80px] h-[80px]"
+            className="h-16 w-16 sm:h-[80px] sm:w-[80px]"
           />
           <Separator className="my-4" />
           <div className="text-center">
@@ -68,7 +68,7 @@ const UserBookingsDetails = () => {
           </div>
         </div>
       </div>
-      <div className=" w-full grid grid-cols-2 gap-4">
+      <div className="grid w-full min-w-0 grid-cols-1 gap-4 md:grid-cols-2">
         {!isClient || isPending
           ? Array.from({ length: 4 }).map((_, index) => (
               <BookingCardSkeleton key={index} />

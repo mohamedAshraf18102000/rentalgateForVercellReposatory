@@ -6,9 +6,17 @@ interface WrapperContainerProps {
   exceedNav?: boolean;
 }
 
-const WrapperContainer = ({ children, className, exceedNav }: WrapperContainerProps) => {
+const WrapperContainer = ({
+  children,
+  className,
+  exceedNav,
+}: WrapperContainerProps) => {
   return (
-    <section className={cn("w-[90%] mx-auto", exceedNav && "mt-25", className)}>{children}</section>
+    <section
+      className={cn("w-[90%] mx-auto", exceedNav && "mt-5 md:mt-25", className)}
+    >
+      {children}
+    </section>
   );
 };
 

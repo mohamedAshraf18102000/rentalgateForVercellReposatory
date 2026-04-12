@@ -7,12 +7,14 @@ import WalletTransactions from "./components/WalletTransactions";
 const page = () => {
   return (
     <WrapperContainer exceedNav>
-      <section className="w-full grid grid-cols-2 gap-4">
-        <div className="bg-white p-4 rounded-2xl flex flex-col">
+      <section className="mt-4 grid w-full min-w-0 grid-cols-1 gap-4 sm:mt-6 lg:grid-cols-2 lg:items-start">
+        <div className="flex min-w-0 flex-col rounded-2xl bg-white p-3 sm:p-4">
           <WalletInfo />
           <OwnedOffersStatus value="all" />
         </div>
-        <UserReferal />
+        <div className="min-w-0">
+          <UserReferal />
+        </div>
       </section>
 
       <WalletTransactions />

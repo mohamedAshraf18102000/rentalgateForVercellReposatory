@@ -20,8 +20,6 @@ const page = () => {
     isLoading,
   } = useAuth();
 
-  console.log(storeUserData);
-
   const router = useRouter();
 
   useEffect(() => {
@@ -54,8 +52,8 @@ const page = () => {
     return (
       <WrapperContainer exceedNav>
         <ProfileBreadCrump />
-        <div className="w-full p-3 mt-6 h-[500px]">
-          <div className=" bg-white rounded-2xl shadow-lg p-6 flex justify-center items-center min-h-[300px]">
+        <div className="w-full p-2 sm:p-3 mt-4 sm:mt-6 min-h-[280px] sm:min-h-[320px]">
+          <div className="bg-white rounded-2xl shadow-lg p-4 sm:p-6 flex justify-center items-center min-h-[240px] sm:min-h-[300px]">
             <div className="animate-pulse flex flex-col items-center">
               <div className="rounded-full bg-slate-200 h-20 w-20"></div>
               <div className="h-4 bg-slate-200 rounded w-48 mt-4"></div>
@@ -70,11 +68,11 @@ const page = () => {
     <WrapperContainer exceedNav>
       <ProfileBreadCrump />
 
-      <div className="w-full p-3 mt-6 flex justify-between ">
-        <div className="w-[60%] bg-white rounded-2xl shadow-lg p-3">
-          <div className="grid grid-cols-2 items-center">
-            <div className="flex items-center gap-3">
-              <div className="w-[100px] h-[100px] relative rounded-2xl overflow-hidden bg-[#BE2326]">
+      <div className="mt-4 sm:mt-6 flex w-full min-w-0 flex-col gap-4 p-2 sm:p-3 lg:flex-row lg:justify-between lg:items-start">
+        <div className="w-full min-w-0 rounded-2xl bg-white p-3 shadow-lg sm:p-4 lg:w-[60%]">
+          <div className="grid grid-cols-1 items-stretch gap-4 lg:grid-cols-2 lg:items-center">
+            <div className="flex min-w-0 flex-row h-full items-center gap-3 sm:flex-row md:items-center sm:justify-items-start">
+              <div className="relative h-[72px] w-[72px] shrink-0 overflow-hidden rounded-2xl bg-[#BE2326] sm:h-[100px] sm:w-[100px]">
                 <Image
                   className="object-fill scale-120"
                   src="https://www.shutterstock.com/image-photo/portrait-phot-saudi-guy-profissional-600w-2603387181.jpg"
@@ -82,16 +80,18 @@ const page = () => {
                   fill
                 />
               </div>
-              <h2 className="text-lg font-bold">
+              <h2 className="min-w-0 wrap-break-word text-base font-bold sm:text-lg">
                 أهلاً {storeUserData?.clientName || ""}
               </h2>
             </div>
-            <Points />
+            <div className="min-w-0 w-full lg:justify-self-end">
+              <Points />
+            </div>
           </div>
           <Separator className="my-2" />
           <div>
             <p className="text-base mb-2">البيانات الشخصية:</p>
-            <div className="grid grid-cols-2">
+            <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
               {userData.map((item, index) => (
                 <UserDetailsCard
                   key={index}
@@ -107,13 +107,13 @@ const page = () => {
 
           <div className="">
             <p className="text-base mb-2">البيانات الأخرى:</p>
-            <div className="grid grid-cols-2 items-center gap-4">
+            <div className="grid grid-cols-1 items-center gap-3 sm:grid-cols-2 sm:gap-4">
               <OtherDetailsAction />
             </div>
           </div>
         </div>
 
-        <div className="w-[40%] rounded-2xl p-3">
+        <div className="w-full min-w-0 rounded-2xl p-2 sm:p-3 lg:w-[40%]">
           <UserReferal />
           <div className="flex flex-col gap-4 mt-4">
             <UserProfileActions />
