@@ -151,13 +151,13 @@ const BookedCarDetailsDrawer = ({
           <Separator className="my-3" />
           <div className=" flex items-center justify-between">
             <div>
-              <p className="font-bold text-lg">أجمالي التكلفة:</p>
+              <p className="font-bold text-base">أجمالي التكلفة:</p>
             </div>
             <div className="flex items-center">
               {/* <span className="line-through mx-3 text-sm text-Grey500">
                 15.00
               </span> */}
-              <span className="text-2xl font-bold">{data?.total}</span>
+              <span className="text-xl font-bold">{data?.total}</span>
               <SaudiRiyal className="w-8! h-8!" />
             </div>
           </div>

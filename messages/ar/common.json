@@ -97,7 +97,8 @@
     "AIRPORT": "مطار",
     "HOME": "المنزل",
     "BRANCH": "الفرع",
-    "TRAIN_STATION": "محطة القطار"
+    "TRAIN_STATION": "محطة القطار",
+    "MY_LOCATION": "موقعي"
   },
   "pickupTime": "توقيت الاستلام",
   "dropoffTime": "توقيت التسليم",

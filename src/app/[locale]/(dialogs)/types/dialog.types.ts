@@ -20,6 +20,7 @@ import type { ChangePasswordProps } from "../pages/(profile)/ChangePassword/Chan
 import type { EditLicenseImageProps } from "../pages/(profile)/EditLicenseImage/EditLicenseImage.types";
 import type { AccountRecoveryProps } from "../pages/auth/recovery/Recovery.types";
 import type { AccountDeactivatedProps } from "../pages/auth/AccountDeactivated/AccountDeactivated.types";
+import type { UserSuggestionProps } from "../pages/(profile)/UserSuggestion/UserSuggestion.types";
 
 /**
  * Union type of all dialog names
@@ -38,7 +39,8 @@ export type DialogName =
   | "ChangePassword"
   | "EditLicenseImage"
   | "AccountRecovery"
-  | "AccountDeactivated";
+  | "AccountDeactivated"
+  | "UserSuggestion";
 
 /**
  * Base props that all dialogs receive automatically
@@ -72,6 +74,7 @@ export interface DialogPropsMap {
   EditLicenseImage: Omit<EditLicenseImageProps, "onClose">;
   AccountRecovery: Omit<AccountRecoveryProps, "onClose">;
   AccountDeactivated: Omit<AccountDeactivatedProps, "onClose">;
+  UserSuggestion: Omit<UserSuggestionProps, "onClose">;
 }
 
 /**
@@ -93,5 +96,6 @@ export type DialogState =
   | { name: "EditLicenseImage"; props: EditLicenseImageProps }
   | { name: "AccountRecovery"; props: AccountRecoveryProps }
   | { name: "AccountDeactivated"; props: AccountDeactivatedProps }
+  | { name: "UserSuggestion"; props: UserSuggestionProps }
   | null;
 

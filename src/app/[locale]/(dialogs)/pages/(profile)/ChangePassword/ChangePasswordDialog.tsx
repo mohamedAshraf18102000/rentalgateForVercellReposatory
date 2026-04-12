@@ -1,13 +1,13 @@
 "use client";
 
-import { Button, DialogWrapper, Input } from "@/app/(components)";
+import { Button, DialogWrapper, Input } from "@/ui";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import * as React from "react";
 import { toast } from "sonner";
 import { updateClientPassword } from "@/services/auth/updatePassword/updatePassword.service";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import type { ChangePasswordProps } from "./ChangePassword.types";
 
 /**
@@ -17,26 +17,34 @@ import type { ChangePasswordProps } from "./ChangePassword.types";
  * Uses the /clients/auth/change-password endpoint.
  */
 
-const passwordSchema = z
-  .object({
-    oldPassword: z.string().min(1, "كلمة المرور الحالية مطلوبة"),
-    newPassword: z
-      .string()
-      .min(8, "كلمة المرور الجديدة يجب أن تكون 8 أحرف على الأقل"),
-    rePassword: z.string().min(1, "تأكيد كلمة المرور مطلوبة"),
-  })
-  .refine((data) => data.newPassword === data.rePassword, {
-    message: "كلمات المرور غير متطابقة",
-    path: ["rePassword"],
-  });
-
-type PasswordFormValues = z.infer<typeof passwordSchema>;
+type PasswordFormValues = {
+  oldPassword: string;
+  newPassword: string;
+  rePassword: string;
+};
 
 export function ChangePasswordDialog({ onClose }: ChangePasswordProps) {
   const [apiError, setApiError] = React.useState<string | null>(null);
   const [isLoading, setIsLoading] = React.useState(false);
-  const t = useTranslations("profile");
+  const locale = useLocale();
+  const t = useTranslations("profile.changePasswordDialog");
+  const tVal = useTranslations("profile.changePasswordDialog.validation");
   const tCommon = useTranslations("common");
+
+  const passwordSchema = React.useMemo(
+    () =>
+      z
+        .object({
+          oldPassword: z.string().min(1, tVal("oldPasswordRequired")),
+          newPassword: z.string().min(8, tVal("newPasswordMin")),
+          rePassword: z.string().min(1, tVal("confirmRequired")),
+        })
+        .refine((data) => data.newPassword === data.rePassword, {
+          message: tVal("passwordsMismatch"),
+          path: ["rePassword"],
+        }),
+    [tVal, locale],
+  );
 
   const {
     register,
@@ -61,13 +69,13 @@ export function ChangePasswordDialog({ onClose }: ChangePasswordProps) {
         newPassword: values.newPassword,
       });
 
-      toast.success("تم تغيير كلمة المرور بنجاح");
+      toast.success(t("toastSuccess"));
       onClose();
       reset();
     } catch (error: any) {
-      let errorMessage = error.message || "حدث خطأ أثناء تغيير كلمة المرور";
+      let errorMessage: string = error.message || t("errorGeneric");
       if (errorMessage === "Invalid old password") {
-        errorMessage = "كلمه السر الحالية غير صحيحه";
+        errorMessage = t("errorInvalidOldPassword");
       }
       setApiError(errorMessage);
     } finally {
@@ -80,9 +88,11 @@ export function ChangePasswordDialog({ onClose }: ChangePasswordProps) {
       open={true}
       onOpenChange={(open) => !open && onClose()}
       size="md"
-      closeOnOutsideClick={!isLoading}
+      closeOnOutsideClick={false}
+      scrollableContent={true}
+      maxScrollHeight="350px"
       header={{
-        mainTitle: t("changePassword"),
+        mainTitle: t("title"),
       }}
       content={
         <form
@@ -93,8 +103,8 @@ export function ChangePasswordDialog({ onClose }: ChangePasswordProps) {
           <Input
             {...register("oldPassword")}
             className="text-base"
-            placeholder="أدخل كلمة المرور الحالية"
-            label="كلمة المرور الحالية:"
+            placeholder={t("oldPasswordPlaceholder")}
+            label={t("oldPasswordLabel")}
             type="password"
             labelClassName="text-base"
             errorMessage={errors.oldPassword?.message}
@@ -104,8 +114,8 @@ export function ChangePasswordDialog({ onClose }: ChangePasswordProps) {
           <Input
             {...register("newPassword")}
             className="text-base"
-            placeholder="أدخل كلمة المرور الجديدة"
-            label="كلمة المرور الجديدة:"
+            placeholder={t("newPasswordPlaceholder")}
+            label={t("newPasswordLabel")}
             type="password"
             labelClassName="text-base"
             errorMessage={errors.newPassword?.message}
@@ -115,8 +125,8 @@ export function ChangePasswordDialog({ onClose }: ChangePasswordProps) {
           <Input
             {...register("rePassword")}
             className="text-base"
-            placeholder="أدخل كلمة المرور الجديدة"
-            label="تأكيد كلمة المرور الجديدة:"
+            placeholder={t("confirmPasswordPlaceholder")}
+            label={t("confirmPasswordLabel")}
             type="password"
             labelClassName="text-base"
             errorMessage={errors.rePassword?.message}

@@ -16,6 +16,7 @@ import { ChangePasswordDialog } from "../pages/(profile)/ChangePassword/ChangePa
 import { EditLicenseImageDialog } from "../pages/(profile)/EditLicenseImage/EditLicenseImageDialog";
 import { AccountRecoveryDialog } from "../pages/auth/recovery/RecoveryDialog";
 import { AccountDeactivatedDialog } from "../pages/auth/AccountDeactivated/AccountDeactivatedDialog";
+import { UserSuggestionDialog } from "../pages/(profile)/UserSuggestion/UserSuggestionDialog";
 
 /**
  * Dialog Registry
@@ -54,4 +55,5 @@ export const dialogRegistry: DialogRegistry = {
   EditLicenseImage: EditLicenseImageDialog,
   AccountRecovery: AccountRecoveryDialog,
   AccountDeactivated: AccountDeactivatedDialog,
+  UserSuggestion: UserSuggestionDialog,
 } as const;

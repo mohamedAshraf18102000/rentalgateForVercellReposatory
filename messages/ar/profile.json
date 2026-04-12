@@ -51,6 +51,32 @@
   "extendReservation": "تمديد الحجز",
   "required": "مطلوب",
   "pleaseSelectReason": "يرجى اختيار السبب",
-  "pleaseFillAllFields": "يرجى ملء جميع الحقول المطلوبة"
+  "pleaseFillAllFields": "يرجى ملء جميع الحقول المطلوبة",
+  "profileActions": {
+    "passwordTitle": "كلمة المرور",
+    "passwordDescription": "تغيير كلمة المرور الخاصة بك",
+    "languageTitle": "تغيير اللغة",
+    "languageDescription": "تغيير اللغة الخاصة بك",
+    "supportTitle": "الدعم و المقترحات",
+    "supportDescription": "لا تتردد بالتواصل معنا إذا كان لديك مقترح أو إذا واجهتك مشكلة"
+  },
+  "changePasswordDialog": {
+    "title": "تغيير كلمة المرور",
+    "oldPasswordLabel": "كلمة المرور الحالية:",
+    "oldPasswordPlaceholder": "أدخل كلمة المرور الحالية",
+    "newPasswordLabel": "كلمة المرور الجديدة:",
+    "newPasswordPlaceholder": "أدخل كلمة المرور الجديدة",
+    "confirmPasswordLabel": "تأكيد كلمة المرور الجديدة:",
+    "confirmPasswordPlaceholder": "أدخل كلمة المرور الجديدة مرة أخرى",
+    "toastSuccess": "تم تغيير كلمة المرور بنجاح",
+    "errorGeneric": "حدث خطأ أثناء تغيير كلمة المرور",
+    "errorInvalidOldPassword": "كلمة السر الحالية غير صحيحة",
+    "validation": {
+      "oldPasswordRequired": "كلمة المرور الحالية مطلوبة",
+      "newPasswordMin": "كلمة المرور الجديدة يجب أن تكون 8 أحرف على الأقل",
+      "confirmRequired": "تأكيد كلمة المرور مطلوبة",
+      "passwordsMismatch": "كلمات المرور غير متطابقة"
+    }
+  }
 }
 

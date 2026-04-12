@@ -51,6 +51,32 @@
   "extendReservation": "Extend Reservation",
   "required": "Required",
   "pleaseSelectReason": "Please select a reason",
-  "pleaseFillAllFields": "Please fill all required fields"
+  "pleaseFillAllFields": "Please fill all required fields",
+  "profileActions": {
+    "passwordTitle": "Password",
+    "passwordDescription": "Change your account password",
+    "languageTitle": "Change language",
+    "languageDescription": "Switch your preferred language",
+    "supportTitle": "Support & suggestions",
+    "supportDescription": "Reach out if you have feedback or ran into an issue"
+  },
+  "changePasswordDialog": {
+    "title": "Change password",
+    "oldPasswordLabel": "Current password:",
+    "oldPasswordPlaceholder": "Enter your current password",
+    "newPasswordLabel": "New password:",
+    "newPasswordPlaceholder": "Enter your new password",
+    "confirmPasswordLabel": "Confirm new password:",
+    "confirmPasswordPlaceholder": "Re-enter your new password",
+    "toastSuccess": "Your password was changed successfully",
+    "errorGeneric": "Something went wrong while changing your password",
+    "errorInvalidOldPassword": "Current password is incorrect",
+    "validation": {
+      "oldPasswordRequired": "Current password is required",
+      "newPasswordMin": "New password must be at least 8 characters",
+      "confirmRequired": "Password confirmation is required",
+      "passwordsMismatch": "Passwords do not match"
+    }
+  }
 }
 

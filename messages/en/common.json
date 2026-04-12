@@ -97,7 +97,8 @@
     "AIRPORT": "Airport",
     "HOME": "Home",
     "BRANCH": "Branch",
-    "TRAIN_STATION": "Train Station"
+    "TRAIN_STATION": "Train Station",
+    "MY_LOCATION": "My location"
   },
   "pickupTime": "Pickup Time",
   "dropoffTime": "Drop-off Time",

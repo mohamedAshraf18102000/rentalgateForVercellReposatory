@@ -1,6 +1,11 @@
 export type ReservationStatus = "STARTED" | "PAID";
 
-export type ReceiveType = "AIRPORT" | "HOME" | "BRANCH" | "TRAIN_STATION"; // زود غيرهم لو موجودين
+export type ReceiveType =
+  | "AIRPORT"
+  | "HOME"
+  | "BRANCH"
+  | "TRAIN_STATION"
+  | "MY_LOCATION";
 
 export interface Reservation {
   reservationId: number;
