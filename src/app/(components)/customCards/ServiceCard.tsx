@@ -5,12 +5,14 @@ import Image from "next/image";
 import { useMemo } from "react";
 import { formatPrice } from "@/lib/utils/formatPrice";
 import { calculateServicePrice } from "@/lib/utils/calculateServicePrice";
+import { getPriceWithoutTax } from "@/lib/utils/getPriceWithoutTax";
 
 interface ServiceCardProps {
   service: CompanyService;
+  showTax: boolean;
 }
 
-const ServiceCard = ({ service }: ServiceCardProps) => {
+const ServiceCard = ({ service, showTax }: ServiceCardProps) => {
   const rentalDays =
     useBookedCarDetailsStore((state) => state.formData.rentalDays) || 1;
 
@@ -31,7 +33,9 @@ const ServiceCard = ({ service }: ServiceCardProps) => {
           </p>
           <div className="flex mt-3 items-center">
             <span className="font-bold text-lg">
-              {formatPrice(calculatedPrice)}
+              {showTax
+                ? formatPrice(calculatedPrice)
+                : formatPrice(getPriceWithoutTax(calculatedPrice))}
             </span>
             <span className="mx-1">
               <SaudiRiyal />

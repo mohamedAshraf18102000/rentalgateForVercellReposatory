@@ -34,7 +34,9 @@ const page = () => {
   const setServices = useBookedCarDetailsStore((s) => s.setServices);
   const setAirports = useBookedCarDetailsStore((s) => s.setAirports);
   const setTrainStations = useBookedCarDetailsStore((s) => s.setTrainStations);
-  const showPricesWithTax = useBookedCarDetailsStore((s) => s.showPricesWithTax);
+  const showPricesWithTax = useBookedCarDetailsStore(
+    (s) => s.showPricesWithTax,
+  );
   const { filters } = useUserPreferedFiltersStore();
 
   const { data, isLoading } = useQuery({
@@ -200,7 +202,11 @@ const page = () => {
             الخدمات المقدمة
           </h3>
           {services?.map((service) => (
-            <ServiceCard key={service.csId} service={service} />
+            <ServiceCard
+              showTax={showPricesWithTax}
+              key={service.csId}
+              service={service}
+            />
           ))}
         </div>
       )}
