@@ -13,8 +13,11 @@ import { format } from "date-fns";
 import { ar, enUS } from "date-fns/locale";
 import { useLocale, useTranslations } from "next-intl";
 import { useGetUserReservationById } from "@/hooks/api/useGetUserReservationById";
+import { useStatusLabel } from "@/hooks/useBookingStatusLabel";
 
 const BookedCarsDetails = ({ data }: { data: Reservation }) => {
+  const getStatusLabel = useStatusLabel();
+
   const t = useTranslations("common");
   const locale = useLocale();
   const dateLocale = locale === "ar" ? ar : enUS;
@@ -36,7 +39,7 @@ const BookedCarsDetails = ({ data }: { data: Reservation }) => {
         <Badge
           className={`absolute top-0 -right-2 rounded-none rounded-bl-2xl p-3 text-xs font-bold sm:p-4 sm:text-sm ${data.reservationStatus === "PAID" ? "bg-StatusGreen text-StatusDarkGreen" : "bg-StatusBrownBG text-StatusBrown200"}`}
         >
-          {data.reservationStatus === "PAID" ? t("paid") : t("notPaid")}
+          {getStatusLabel(data.reservationStatus)}
         </Badge>
       </div>
       <div className="min-w-0 flex-1 bg-white p-3 sm:w-[60%] sm:p-4">

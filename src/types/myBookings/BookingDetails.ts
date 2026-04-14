@@ -6,7 +6,7 @@ export type ReservationDetailsResponse = {
   endDate: string; // ISO date
   days: number;
 
-  reservationStatus: "PAID" | "NOT_PAID";
+  reservationStatus: "PAID" | "CREATED" | "STARTED" | "IN_PROGRESS" | "HOLD" | "EXTENDED" | "FINISHED" | "CANCELLED" | "DECLINED" | "ADMIN_APPROVED" | "AUTOMATICALLY_EXTENDED" | "WALLET_PAID" | "LOCATION_CHANGED";
 
   receiveType: "AIRPORT" | "HOME" | "BRANCH" | string;
   deliverType: "AIRPORT" | "HOME" | "BRANCH" | string;
