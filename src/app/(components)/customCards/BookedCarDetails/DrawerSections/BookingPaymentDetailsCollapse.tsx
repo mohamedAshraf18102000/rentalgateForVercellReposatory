@@ -16,6 +16,7 @@ import { ReservationDetailsResponse } from "@/types/myBookings/BookingDetails";
 import { useTranslations } from "next-intl";
 import ReservationFinalDetailsItem from "@/app/[locale]/(mainpages)/reservation/components/reservationDrawer/components/ReservationFinalDetailsItem";
 import { formatPrice } from "@/lib/utils";
+import { useState } from "react";
 
 const BookingPaymentDetailsCollapse = ({
   data,
@@ -23,10 +24,11 @@ const BookingPaymentDetailsCollapse = ({
   data: ReservationDetailsResponse;
 }) => {
   const t = useTranslations("common");
+  const [open, setOpen] = useState(true);
   return (
     <Card className="w-full border-0! p-0! mb-3 mt-5">
       <CardContent className="px-0!">
-        <Collapsible className="data-[state=open]:bg-muted border-none! p-2!">
+        <Collapsible open={open} onOpenChange={setOpen} className="data-[state=open]:bg-muted border-none! p-2!">
           <CollapsibleTrigger asChild>
             <Button
               variant="ghost"

@@ -1,3 +1,19 @@
+export interface LocationChanges {
+  createdAt: string;
+  updatedAt: string;
+  status: string;
+
+  deliverBranchBranchId: number;
+  deliverLatitude: number;
+  deliverLongitude: number;
+  deliverPrice: number;
+
+  receiveBranchBranchId: number;
+  receiveLatitude: number;
+  receiveLongitude: number;
+  receivePrice: number;
+}
+
 export type ReservationDetailsResponse = {
   reservationId: number;
   clientId: number;
@@ -54,7 +70,7 @@ export type ReservationDetailsResponse = {
   driverMobile: string;
   driverStatus: string | null;
 
-  locationChanges: unknown | null;
+  locationChanges: LocationChanges | null;
 
   reservationServices: {
     serviceId: number;

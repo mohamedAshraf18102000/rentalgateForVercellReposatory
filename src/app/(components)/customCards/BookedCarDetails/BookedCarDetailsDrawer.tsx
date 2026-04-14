@@ -1,8 +1,10 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
+import dynamic from "next/dynamic";
 import { Button } from "@/app/(components)/ui/button";
+import { Skeleton } from "@/app/(components)/ui/skeleton";
 import { Separator } from "@/app/(components)/ui/separator";
 import {
   Sheet,
@@ -16,43 +18,228 @@ import { Badge } from "../../ui/badge";
 import CarRentIcon from "@/constants/icons/CarRentIcon";
 import {
   ArrowLeft,
-  ArrowRight,
-  Dot,
-  MapPin,
-  Minus,
+  PhoneCall,
   SaudiRiyal,
   SaudiRiyalIcon,
   SquarePen,
+  User,
 } from "lucide-react";
-import BookingPaymentDetailsCollapse from "./DrawerSections/BookingPaymentDetailsCollapse";
 import { ReservationDetailsResponse } from "@/types/myBookings/BookingDetails";
-import { useLocale, useTranslations } from "next-intl";
+import { useLocale } from "next-intl";
 
 import { format } from "date-fns";
 import { ar, enUS } from "date-fns/locale";
-import CancelConfirmation from "./DrawerSections/CancelConfirmation";
+import { useStatusLabel } from "@/hooks/useBookingStatusLabel";
+import { ReservationStatus } from "@/types/myBookings/myBookings";
+import { reverseGeocode } from "@/lib/utils/reverseGeocode";
+import LocationFrom_To from "./DrawerSections/locationFrom_To/LocationFrom_To";
+
+const CancelConfirmation = dynamic(
+  () => import("./DrawerSections/DrawerLocation/CancelConfirmation"),
+  { ssr: false },
+);
+
+const DrawerLocationChange = dynamic(
+  () => import("./DrawerSections/DrawerLocation/DrawerLocationChange"),
+  { ssr: false },
+);
+
+const BookingPaymentDetailsCollapseLazy = dynamic(
+  () => import("./DrawerSections/BookingPaymentDetailsCollapse"),
+  { ssr: false },
+);
 
 interface BookedCarDetailsDrawerProps {
   trigger?: React.ReactNode;
   data?: ReservationDetailsResponse;
+  onOpen?: () => void;
 }
+
+const LocationFromToSkeleton = () => {
+  return (
+    <div className="flex flex-col gap-3 min-w-[260px]">
+      <Skeleton className="h-4 w-56 bg-Grey200" />
+      <Skeleton className="h-4 w-14 mr-8 bg-Grey200" />
+      <Skeleton className="h-4 w-56 bg-Grey200" />
+    </div>
+  );
+};
 
 const BookedCarDetailsDrawer = ({
   trigger,
   data,
+  onOpen,
 }: BookedCarDetailsDrawerProps) => {
-  const t = useTranslations("common");
+  const getStatusLabel = useStatusLabel();
+
   const locale = useLocale();
   const dateLocale = locale === "ar" ? ar : enUS;
-  const [showCancelBooking, setShowCancelBooking] = useState(false);
+  const [activeView, setActiveView] = useState<
+    "booking-details" | "cancel-booking" | "location-details"
+  >("booking-details");
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [normalReceiveAddress, setNormalReceiveAddress] = useState<
+    string | null
+  >(null);
+  const [normalDeliverAddress, setNormalDeliverAddress] = useState<
+    string | null
+  >(null);
+  const [changedReceiveAddress, setChangedReceiveAddress] = useState<
+    string | null
+  >(null);
+  const [changedDeliverAddress, setChangedDeliverAddress] = useState<
+    string | null
+  >(null);
+  const [isNormalReceiveAddressLoading, setIsNormalReceiveAddressLoading] =
+    useState(false);
+  const [isNormalDeliverAddressLoading, setIsNormalDeliverAddressLoading] =
+    useState(false);
+  const [isChangedReceiveAddressLoading, setIsChangedReceiveAddressLoading] =
+    useState(false);
+  const [isChangedDeliverAddressLoading, setIsChangedDeliverAddressLoading] =
+    useState(false);
 
-  console.log(data);
+  useEffect(() => {
+    if (!isDrawerOpen) return;
 
+    const lat = data?.receiveLocationLatitude;
+    const lng = data?.receiveLocationLongitude;
+
+    if (typeof lat !== "number" || typeof lng !== "number") {
+      setNormalReceiveAddress(null);
+      setIsNormalReceiveAddressLoading(false);
+      return;
+    }
+
+    setIsNormalReceiveAddressLoading(true);
+    let isMounted = true;
+    const timeoutId = window.setTimeout(async () => {
+      const address = await reverseGeocode(lat, lng);
+      if (isMounted) {
+        setNormalReceiveAddress(address);
+        setIsNormalReceiveAddressLoading(false);
+      }
+    }, 250);
+
+    return () => {
+      isMounted = false;
+      window.clearTimeout(timeoutId);
+    };
+  }, [
+    data?.receiveLocationLatitude,
+    data?.receiveLocationLongitude,
+    isDrawerOpen,
+  ]);
+
+  useEffect(() => {
+    if (!isDrawerOpen) return;
+
+    const lat = data?.deliverLocationLatitude;
+    const lng = data?.deliverLocationLongitude;
+
+    if (typeof lat !== "number" || typeof lng !== "number") {
+      setNormalDeliverAddress(null);
+      setIsNormalDeliverAddressLoading(false);
+      return;
+    }
+
+    setIsNormalDeliverAddressLoading(true);
+    let isMounted = true;
+    const timeoutId = window.setTimeout(async () => {
+      const address = await reverseGeocode(lat, lng);
+      if (isMounted) {
+        setNormalDeliverAddress(address);
+        setIsNormalDeliverAddressLoading(false);
+      }
+    }, 250);
+
+    return () => {
+      isMounted = false;
+      window.clearTimeout(timeoutId);
+    };
+  }, [
+    data?.deliverLocationLatitude,
+    data?.deliverLocationLongitude,
+    isDrawerOpen,
+  ]);
+
+  useEffect(() => {
+    if (!isDrawerOpen) return;
+
+    const lat = data?.locationChanges?.receiveLatitude;
+    const lng = data?.locationChanges?.receiveLongitude;
+
+    if (typeof lat !== "number" || typeof lng !== "number") {
+      setChangedReceiveAddress(null);
+      setIsChangedReceiveAddressLoading(false);
+      return;
+    }
+
+    setIsChangedReceiveAddressLoading(true);
+    let isMounted = true;
+    const timeoutId = window.setTimeout(async () => {
+      const address = await reverseGeocode(lat, lng);
+      if (isMounted) {
+        setChangedReceiveAddress(address);
+        setIsChangedReceiveAddressLoading(false);
+      }
+    }, 250);
+
+    return () => {
+      isMounted = false;
+      window.clearTimeout(timeoutId);
+    };
+  }, [
+    data?.locationChanges?.receiveLatitude,
+    data?.locationChanges?.receiveLongitude,
+    isDrawerOpen,
+  ]);
+
+  useEffect(() => {
+    if (!isDrawerOpen) return;
+
+    const lat = data?.locationChanges?.deliverLatitude;
+    const lng = data?.locationChanges?.deliverLongitude;
+
+    if (typeof lat !== "number" || typeof lng !== "number") {
+      setChangedDeliverAddress(null);
+      setIsChangedDeliverAddressLoading(false);
+      return;
+    }
+
+    setIsChangedDeliverAddressLoading(true);
+    let isMounted = true;
+    const timeoutId = window.setTimeout(async () => {
+      const address = await reverseGeocode(lat, lng);
+      if (isMounted) {
+        setChangedDeliverAddress(address);
+        setIsChangedDeliverAddressLoading(false);
+      }
+    }, 250);
+
+    return () => {
+      isMounted = false;
+      window.clearTimeout(timeoutId);
+    };
+  }, [
+    data?.locationChanges?.deliverLatitude,
+    data?.locationChanges?.deliverLongitude,
+    isDrawerOpen,
+  ]);
+  const isNormalLocationLoading =
+    !data || isNormalReceiveAddressLoading || isNormalDeliverAddressLoading;
+  const isChangedLocationLoading =
+    isChangedReceiveAddressLoading || isChangedDeliverAddressLoading;
 
   return (
     <Sheet
       onOpenChange={(open) => {
-        if (!open) setShowCancelBooking(false);
+        setIsDrawerOpen(open);
+        if (open) {
+          onOpen?.();
+          return;
+        }
+        setActiveView("booking-details");
       }}
     >
       {trigger && <SheetTrigger asChild>{trigger}</SheetTrigger>}
@@ -61,7 +248,7 @@ const BookedCarDetailsDrawer = ({
         className="flex flex-col p-0 sm:max-w-[35%] w-full"
       >
         <div className="relative flex min-h-0 flex-1 flex-col">
-          {!showCancelBooking ? (
+          {activeView === "booking-details" ? (
             <>
               <SheetHeader className="text-start! mt-10 px-6 ">
                 <SheetTitle>تفاصيل الحجز</SheetTitle>
@@ -72,11 +259,11 @@ const BookedCarDetailsDrawer = ({
                     <div className="relative h-34 w-[40%] rounded-2xl overflow-hidden">
                       <Image src="/Card_Cars.png" fill alt="img" />
                       <Badge
-                        className={`text-sm font-bold absolute top-0 -right-2 ${data?.reservationStatus === "PAID" ? "bg-StatusGreen text-StatusDarkGreen" : "bg-StatusBrownBG text-StatusBrown200"}  p-4 rounded-none rounded-bl-2xl`}
+                        className={`absolute top-0 -right-2 rounded-none rounded-bl-2xl p-3 text-xs font-bold sm:p-4 sm:text-sm ${data?.reservationStatus === "STARTED" ? "bg-StatusGreen text-StatusDarkGreen" : "bg-StatusBrownBG text-StatusBrown200"}`}
                       >
-                        {data?.reservationStatus === "PAID"
-                          ? t("paid")
-                          : t("notPaid")}
+                        {getStatusLabel(
+                          data?.reservationStatus as ReservationStatus,
+                        )}
                       </Badge>
                     </div>
                     <div className="flex flex-col gap-y-2">
@@ -135,72 +322,135 @@ const BookedCarDetailsDrawer = ({
                 </div>
                 <Separator className="my-3" />
                 <div className="p-3 bg-Grey100 rounded-2xl flex items-center justify-between">
-                  <div className="flex flex-col">
-                    <div className="flex items-center">
-                      <Dot className=" w-8 h-8 mx-2" />
-                      <span>من:</span>
+                  {isNormalLocationLoading ? (
+                    <LocationFromToSkeleton />
+                  ) : (
+                    <LocationFrom_To
+                      receiveLocationName={data?.receiveLocationName}
+                      deliverLocationName={data?.deliverLocationName}
+                      receiveAddress={normalReceiveAddress}
+                      deliverAddress={normalDeliverAddress}
+                    />
+                  )}
 
-                      <span className="mx-2">{data?.receiveLocationName}</span>
-                    </div>
-                    <div className="flex items-center">
-                      <Minus className="rotate-90 w-8 h-8 mx-2" />
-                    </div>
-                    <div className="flex items-center">
-                      <MapPin className=" w-8 h-8 mx-2" />
-                      <span>إلـى:</span>
-                      <span className="mx-2">{data?.deliverLocationName}</span>
+                  {data?.locationChanges === null &&
+                    data?.receiveType === "MY_LOCATION" &&
+                    data?.deliverType === "MY_LOCATION" &&
+                    (data.reservationStatus === "PAID" ||
+                      data.reservationStatus === "IN_PROGRESS") && (
+                      <div>
+                        <Button
+                          className="p-3"
+                          onClick={() => setActiveView("location-details")}
+                        >
+                          <SquarePen className="text-white w-5! h-5!" />
+                        </Button>
+                      </div>
+                    )}
+                </div>
+
+                {data?.locationChanges && (
+                  <div className="mt-3 bg-Grey100 p-3 rounded-2xl">
+                    <p className="text-StatusRedBG">
+                      <span>*</span>
+                      تم تغير موقع الاستلام و التسليم الي
+                    </p>
+                    {isChangedLocationLoading ? (
+                      <LocationFromToSkeleton />
+                    ) : (
+                      <LocationFrom_To
+                        receiveLocationName={""}
+                        deliverLocationName={""}
+                        receiveAddress={changedReceiveAddress}
+                        deliverAddress={changedDeliverAddress}
+                      />
+                    )}
+                  </div>
+                )}
+                {data &&
+                  data?.reservationServices &&
+                  data?.reservationServices.length > 0 && (
+                    <>
+                      <Separator className="my-3" />
+                      <div className="grid grid-cols-3 gap-3">
+                        {data?.reservationServices.map((service) => (
+                          <div
+                            key={service.serviceId}
+                            className="bg-StatusGreen p-2 border-2 border-StatusDarkGreen flex items-center rounded-xl font-bold"
+                          >
+                            <span className="text-StatusDarkGreen mx-1">
+                              {service.arabicName}
+                            </span>
+                            <span>{service.price}</span>
+                            <SaudiRiyalIcon />
+                          </div>
+                        ))}
+                      </div>
+                    </>
+                  )}
+                {data?.driverName && data?.driverMobile && (
+                  <div className="w-full flex flex-col mt-2 bg-Grey100 p-4 rounded-xl">
+                    <p>تفاصيل السائق</p>
+                    <div className="flex justify-between items-center mt-2">
+                      <div className="flex items-center gap-2">
+                        <User className="w-5! h-5!" />
+                        <p>{data?.driverName}</p>
+                      </div>
+
+                      <a
+                        className="bg-Grey200 w-10 h-10 flex items-center justify-center rounded-lg hover:scale-110 transition-all duration-300"
+                        href={`tel:${data?.driverMobile}`}
+                      >
+                        <PhoneCall className="w-5! h-5! text-StatusDarkGreen" />
+                      </a>
                     </div>
                   </div>
+                )}
 
-                  <div className="">
-                    <Button className="p-3">
-                      <SquarePen className="text-white w-5! h-5!" />
-                    </Button>
-                  </div>
-                </div>
-                <Separator className="my-3" />
-                <div className="grid grid-cols-3 gap-3">
-                  {data?.reservationServices.map((service) => (
-                    <div
-                      key={service.serviceId}
-                      className="bg-StatusGreen p-2 border-2 border-StatusDarkGreen flex items-center rounded-xl font-bold"
-                    >
-                      <span className="text-StatusDarkGreen mx-1">{service.arabicName}</span>
-                      <span>{service.price}</span>
-                      <SaudiRiyalIcon />
-                    </div>
-                  ))}
-                </div>
                 <Separator className="my-3" />
                 <div className=" flex items-center justify-between">
                   <div>
                     <p className="font-bold text-base">أجمالي التكلفة:</p>
                   </div>
                   <div className="flex items-center">
-                    {/* <span className="line-through mx-3 text-sm text-Grey500">
-                      15.00
-                    </span> */}
                     <span className="text-xl font-bold">{data?.total}</span>
-                    <SaudiRiyal className="w-8! h-8!" />
+                    <SaudiRiyal className="w-6! h-6!" />
                   </div>
                 </div>
-                {data && <BookingPaymentDetailsCollapse data={data} />}
+                {data && <BookingPaymentDetailsCollapseLazy data={data} />}
               </div>
               <SheetFooter className="p-6 border-t mt-auto ">
                 <Button
                   type="button"
                   variant="destructive"
                   className="text-base! w-1/4 border-2 border-StatusRed bg-transparent text-StatusRed"
-                  onClick={() => setShowCancelBooking(true)}
+                  onClick={() => setActiveView("cancel-booking")}
                 >
                   إلغاء الحجز
                 </Button>
                 <Button className="text-base! w-3/4">عرض حجوزاتي</Button>
               </SheetFooter>
             </>
+          ) : activeView === "location-details" ? (
+            <DrawerLocationChange
+              reservationId={data?.reservationId}
+              defaultLocationNames={[
+                data?.receiveLocationName ?? "",
+                data?.deliverLocationName ?? "",
+              ]}
+              setShowLocationDetails={(showLocationDetails) =>
+                setActiveView(
+                  showLocationDetails ? "location-details" : "booking-details",
+                )
+              }
+            />
           ) : (
             <CancelConfirmation
-              setShowCancelBooking={setShowCancelBooking}
+              setShowCancelBooking={(showCancelBooking) =>
+                setActiveView(
+                  showCancelBooking ? "cancel-booking" : "booking-details",
+                )
+              }
               reservationId={data?.reservationId}
             />
           )}

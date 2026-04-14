@@ -25,7 +25,6 @@ const BookedCarsDetails = ({ data }: { data: Reservation }) => {
   const {
     data: reservationDetails,
     refetch,
-    isFetching,
   } = useGetUserReservationById(data.reservationId, false);
   return (
     <div className="flex min-h-0 flex-col overflow-hidden rounded-2xl border-2 sm:min-h-[240px] sm:flex-row">
@@ -37,7 +36,7 @@ const BookedCarsDetails = ({ data }: { data: Reservation }) => {
           fill
         />
         <Badge
-          className={`absolute top-0 -right-2 rounded-none rounded-bl-2xl p-3 text-xs font-bold sm:p-4 sm:text-sm ${data.reservationStatus === "PAID" ? "bg-StatusGreen text-StatusDarkGreen" : "bg-StatusBrownBG text-StatusBrown200"}`}
+          className={`absolute top-0 -right-2 rounded-none rounded-bl-2xl p-3 text-xs font-bold sm:p-4 sm:text-sm ${data.reservationStatus === "STARTED" ? "bg-StatusGreen text-StatusDarkGreen" : "bg-StatusBrownBG text-StatusBrown200"}`}
         >
           {getStatusLabel(data.reservationStatus)}
         </Badge>
@@ -98,12 +97,14 @@ const BookedCarsDetails = ({ data }: { data: Reservation }) => {
           </div>
           <BookedCarDetailsDrawer
             data={reservationDetails}
+            onOpen={() => {
+              void refetch();
+            }}
             trigger={
               <Button
                 variant="outline"
                 className="w-full text-base! sm:w-auto"
                 icon={<ChevronLeft className="h-6 w-6 sm:h-8 sm:w-8" />}
-                onClick={() => refetch()}
               >
                 {t("viewDetails")}
               </Button>
