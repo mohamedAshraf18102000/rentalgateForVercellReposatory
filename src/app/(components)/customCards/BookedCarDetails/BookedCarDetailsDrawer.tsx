@@ -333,25 +333,26 @@ const BookedCarDetailsDrawer = ({
                         deliverAddress={normalDeliverAddress}
                       />
 
-                      <Separator className="w-[90%]! mx-auto!" />
-
                       {data?.locationChanges && (
-                        <div className="">
-                          <p className="text-StatusRedBG">
-                            <span>*</span>
-                            تم تغير موقع الاستلام و التسليم
-                          </p>
-                          {isChangedLocationLoading ? (
-                            <LocationFromToSkeleton />
-                          ) : (
-                            <LocationFrom_To
-                              receiveLocationName={""}
-                              deliverLocationName={""}
-                              receiveAddress={changedReceiveAddress}
-                              deliverAddress={changedDeliverAddress}
-                            />
-                          )}
-                        </div>
+                        <>
+                          <Separator className="w-[90%]! mx-auto!" />
+                          <div className="">
+                            <p className="text-StatusRedBG">
+                              <span>*</span>
+                              تم تغير موقع الاستلام و التسليم
+                            </p>
+                            {isChangedLocationLoading ? (
+                              <LocationFromToSkeleton />
+                            ) : (
+                              <LocationFrom_To
+                                receiveLocationName={""}
+                                deliverLocationName={""}
+                                receiveAddress={changedReceiveAddress}
+                                deliverAddress={changedDeliverAddress}
+                              />
+                            )}
+                          </div>
+                        </>
                       )}
                     </div>
                   )}
