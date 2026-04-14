@@ -265,7 +265,7 @@ const BookedCarDetailsDrawer = ({
       {trigger && <SheetTrigger asChild>{trigger}</SheetTrigger>}
       <SheetContent
         dir="rtl"
-        className="flex flex-col p-0 sm:max-w-[35%] w-full"
+        className="flex w-full flex-col p-0 sm:max-w-[35%]"
       >
         <div className="relative flex min-h-0 flex-1 flex-col">
           {activeView === "booking-details" ? (
@@ -273,10 +273,10 @@ const BookedCarDetailsDrawer = ({
               <SheetHeader className="text-start! mt-10 px-6 ">
                 <SheetTitle>تفاصيل الحجز</SheetTitle>
               </SheetHeader>
-              <div className="w-[95%] mx-auto min-h-0 flex-1 overflow-y-auto px-3">
+              <div className="mx-auto min-h-0 w-full flex-1 overflow-y-auto px-3 sm:w-[95%]">
                 <div className="">
-                  <div className=" flex gap-2 items-center">
-                    <div className="relative h-34 w-[40%] rounded-2xl overflow-hidden">
+                  <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center">
+                    <div className="relative h-34 w-full overflow-hidden rounded-2xl sm:w-[40%]">
                       <Image src="/Card_Cars.png" fill alt="img" />
                       <Badge
                         className={`absolute top-0 -right-2 rounded-none rounded-bl-2xl p-3 text-xs font-bold sm:p-4 sm:text-sm ${data?.reservationStatus === "STARTED" ? "bg-StatusGreen text-StatusDarkGreen" : "bg-StatusBrownBG text-StatusBrown200"}`}
@@ -286,7 +286,7 @@ const BookedCarDetailsDrawer = ({
                         )}
                       </Badge>
                     </div>
-                    <div className="flex flex-col gap-y-2">
+                    <div className="flex w-full flex-col gap-y-2">
                       <div>
                         <span className="mx-2">رقم الحجز:</span>
                         <span className="font-bold text-lg">
@@ -299,7 +299,7 @@ const BookedCarDetailsDrawer = ({
                   </div>
                 </div>
                 <Separator className="my-3" />
-                <div className="p-3 bg-Grey100 rounded-2xl flex items-center justify-between">
+                <div className="bg-Grey100 flex flex-col gap-3 rounded-2xl p-3 sm:flex-row sm:items-center sm:justify-between">
                   <div>
                     <div className="text-base flex items-center gap-2">
                       <CarRentIcon />
@@ -334,7 +334,7 @@ const BookedCarDetailsDrawer = ({
                     </div>
                   </div>
 
-                  <div>
+                  <div className="self-end sm:self-auto">
                     <Button
                       className="p-3"
                       onClick={() => setActiveView("booking-extending")}
@@ -344,7 +344,7 @@ const BookedCarDetailsDrawer = ({
                   </div>
                 </div>
                 <Separator className="my-3" />
-                <div className="p-3 bg-Grey100 rounded-2xl flex items-center justify-between">
+                <div className="bg-Grey100 flex flex-col gap-3 rounded-2xl p-3 sm:flex-row sm:items-center sm:justify-between">
                   {isNormalLocationLoading ? (
                     <LocationFromToSkeleton />
                   ) : (
@@ -385,7 +385,7 @@ const BookedCarDetailsDrawer = ({
                     data?.deliverType === "MY_LOCATION" &&
                     (data.reservationStatus === "PAID" ||
                       data.reservationStatus === "IN_PROGRESS") && (
-                      <div>
+                      <div className="self-end sm:self-auto">
                         <Button
                           className="p-3"
                           onClick={() => setActiveView("location-details")}
@@ -401,11 +401,11 @@ const BookedCarDetailsDrawer = ({
                   data?.reservationServices.length > 0 && (
                     <>
                       <Separator className="my-3" />
-                      <div className="grid grid-cols-3 gap-3">
+                      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
                         {data?.reservationServices.map((service) => (
                           <div
                             key={service.serviceId}
-                            className="bg-StatusGreen p-2 border-2 border-StatusDarkGreen flex items-center rounded-xl font-bold"
+                            className="bg-StatusGreen border-StatusDarkGreen flex items-center rounded-xl border-2 p-2 font-bold"
                           >
                             <span className="text-StatusDarkGreen mx-1">
                               {service.arabicName}
@@ -420,8 +420,8 @@ const BookedCarDetailsDrawer = ({
                 {data?.driverName && data?.driverMobile && (
                   <div className="w-full flex flex-col mt-2 bg-Grey100 p-4 rounded-xl">
                     <p>تفاصيل السائق</p>
-                    <div className="flex justify-between items-center mt-2">
-                      <div className="flex items-center gap-2">
+                    <div className="mt-2 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                      <div className="flex items-center gap-2 break-all">
                         <User className="w-5! h-5!" />
                         <p>{data?.driverName}</p>
                       </div>
@@ -437,7 +437,7 @@ const BookedCarDetailsDrawer = ({
                 )}
 
                 <Separator className="my-3" />
-                <div className=" flex items-center justify-between">
+                <div className="flex items-center justify-between gap-3">
                   <div>
                     <p className="font-bold text-base">أجمالي التكلفة:</p>
                   </div>
@@ -448,16 +448,18 @@ const BookedCarDetailsDrawer = ({
                 </div>
                 {data && <BookingPaymentDetailsCollapseLazy data={data} />}
               </div>
-              <SheetFooter className="p-6 border-t mt-auto ">
+              <SheetFooter className="mt-auto flex-col gap-3 border-t p-6 sm:flex-row">
                 <Button
                   type="button"
                   variant="destructive"
-                  className="text-base! w-1/4 border-2 border-StatusRed bg-transparent text-StatusRed"
+                  className="text-base! w-full border-2 border-StatusRed bg-transparent text-StatusRed sm:w-1/4"
                   onClick={() => setActiveView("cancel-booking")}
                 >
                   إلغاء الحجز
                 </Button>
-                <Button className="text-base! w-3/4">عرض حجوزاتي</Button>
+                <Button className="text-base! w-full sm:w-3/4">
+                  عرض حجوزاتي
+                </Button>
               </SheetFooter>
             </>
           ) : activeView === "location-details" ? (

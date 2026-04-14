@@ -24,10 +24,6 @@ const UserBookingsDetails = () => {
     localStatus: status,
   });
 
-
-  console.log("reservationsData=>", reservationsData);
-
-
   return (
     <>
       <div className="my-5 flex min-w-0 flex-col gap-4 lg:flex-row lg:items-stretch">
@@ -75,11 +71,11 @@ const UserBookingsDetails = () => {
       <div className="grid w-full min-w-0 grid-cols-1 gap-4 md:grid-cols-2">
         {!isClient || isPending
           ? Array.from({ length: 4 }).map((_, index) => (
-            <BookingCardSkeleton key={index} />
-          ))
+              <BookingCardSkeleton key={index} />
+            ))
           : reservationsData?.map((item) => (
-            <BookedCarsDetails key={item.reservationId} data={item} />
-          ))}
+              <BookedCarsDetails key={item.reservationId} data={item} />
+            ))}
       </div>
     </>
   );

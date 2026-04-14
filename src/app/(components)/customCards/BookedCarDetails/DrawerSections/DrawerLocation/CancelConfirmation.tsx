@@ -154,17 +154,17 @@ const CancelConfirmation = ({
           </div>
         </div>
 
-        <SheetFooter className="p-6 border-t mt-auto ">
+        <SheetFooter className="mt-auto gap-3 border-t p-6 flex-col sm:flex-row">
           <Button
             type="button"
-            className="text-base! w-1/2 bg-transparent text-black border-2 border-Grey400 hover:bg-transparent"
+            className="text-base! w-full sm:w-1/2 bg-transparent text-black border-2 border-Grey400 hover:bg-transparent"
           >
             عرض حجوزاتي
           </Button>
           <Button
             type="submit"
             variant="destructive"
-            className="text-base! w-1/2 border-2 bg-StatusRed text-white hover:bg-StatusRed/95"
+            className="text-base! w-full sm:w-1/2 border-2 bg-StatusRed text-white hover:bg-StatusRed/95"
             disabled={!reservationId || !cancelReason || isPending}
           >
             {t("confirmCancelBookingWithId")}

@@ -34,17 +34,17 @@ export function PickupDialog({ title }: { title?: string }) {
         header={{ mainTitle: target === "return" ? "مكان التسليم" : "مكان الأستلام" }}
         content={<CarPickupDialogTabs customDefaultValue={activeTab} />}
         footer={
-          <div className="w-full flex items-center justify-end gap-2 mt-2">
+          <div className="mt-2 flex w-full flex-col-reverse gap-2 sm:flex-row sm:items-center sm:justify-end">
             <button
               onClick={closeDialog}
-              className="py-3 text-primary font-normal w-fit px-2 underline underline-offset-3"
+              className="w-full px-2 py-3 text-center font-normal text-primary underline underline-offset-3 sm:w-fit"
             >
               إغلاق
             </button>
 
             <button
               onClick={handleConfirm}
-              className="rounded-[12px] py-3 bg-primary text-white font-bold w-fit px-5"
+              className="w-full rounded-[12px] bg-primary px-5 py-3 font-bold text-white sm:w-fit"
             >
               {title || "أظهار النتائج"}
             </button>
