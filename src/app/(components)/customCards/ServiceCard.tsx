@@ -22,17 +22,17 @@ const ServiceCard = ({ service, showTax }: ServiceCardProps) => {
   );
 
   return (
-    <div className="rounded-2xl w-fill flex overflow-hidden relative border-2 border-white">
-      <div className="relative w-[30%] h-[92PX]">
+    <div className="relative flex min-h-[92px] overflow-hidden rounded-2xl border-2 border-white">
+      <div className="relative w-[30%] min-w-[90px] sm:min-w-[110px]">
         <Image src={"/cars/car1.png"} fill alt="" className="object-contain " />
       </div>
-      <div className="bg-white w-[70%] p-2">
+      <div className="w-[70%] bg-white p-2 sm:p-3">
         <div className="">
-          <p className="font-extrabold text-base">
+          <p className="text-sm font-extrabold sm:text-base">
             {service.serviceArabicName}
           </p>
-          <div className="flex mt-3 items-center">
-            <span className="font-bold text-lg">
+          <div className="mt-2 flex flex-wrap items-center sm:mt-3">
+            <span className="text-base font-bold sm:text-lg">
               {showTax
                 ? formatPrice(calculatedPrice)
                 : formatPrice(getPriceWithoutTax(calculatedPrice))}
@@ -49,7 +49,7 @@ const ServiceCard = ({ service, showTax }: ServiceCardProps) => {
         </div>
       </div>
 
-      <p className="bg-gray-100 absolute left-0 -top-1 p-2 rounded-r-xl font-bold">
+      <p className="absolute -top-1 left-0 rounded-r-xl bg-gray-100 px-2 py-1 text-xs font-bold sm:p-2 sm:text-sm">
         خارج المدينة
       </p>
     </div>

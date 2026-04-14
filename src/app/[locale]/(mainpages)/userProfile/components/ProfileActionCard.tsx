@@ -1,5 +1,6 @@
 "use client";
 import { ChevronLeft } from "lucide-react";
+import { useLocale } from "next-intl";
 
 interface ProfileActionCardProps {
   customIcon?: React.ReactNode;
@@ -24,6 +25,9 @@ const ProfileActionCard = ({
   onClick,
   onIconClick,
 }: ProfileActionCardProps) => {
+  const locale = useLocale();
+  const isEnglish = locale === "en";
+
   return (
     <div
       className={`rounded-2xl p-3 flex items-center justify-between cursor-pointer border ${active ? "border-black" : "border-transparent"} ${bg_gray ? "bg-Grey100" : "bg-white shadow-lg"}`}
@@ -39,7 +43,11 @@ const ProfileActionCard = ({
         onClick={onIconClick}
         className={`h-7 w-7 shrink-0 transition-transform duration-200 ${trash ? "hover:bg-red-200 rounded-full flex items-center justify-center transition-all! duration-200!" : "text-black"}`}
       >
-        {customIcon ? customIcon : <ChevronLeft className="w-4 h-4" />}
+        {customIcon ? (
+          customIcon
+        ) : (
+          <ChevronLeft className={`w-4 h-4 ${isEnglish ? "rotate-180" : ""}`} />
+        )}
       </button>
     </div>
   );

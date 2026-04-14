@@ -4,8 +4,10 @@ import UpdateLicenceDialog from "../userDialog/UpdateLicenceDialog";
 import { useState } from "react";
 import UpdateUserSavedLocationDialog from "../userDialog/UpdateUserSavedLocationDialog";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 const OtherDetailsAction = () => {
+  const t = useTranslations("profile.profilePage.otherDetailsActions");
   const [openLicenceDialog, setOpenLicenceDialog] = useState(false);
   const [openUserSavedLocDialog, setOpenUserSavedLocDialog] = useState(false);
 
@@ -14,23 +16,23 @@ const OtherDetailsAction = () => {
       <ProfileActionCard
         onClick={() => setOpenLicenceDialog(true)}
         bg_gray
-        title="بيانات الرخصة"
-        description="تعديل بيانات الرخصة"
+        title={t("licenceTitle")}
+        description={t("licenceDescription")}
         icon="/profile/actionIcons/licence.webp"
       />
 
       <ProfileActionCard
         onClick={() => setOpenUserSavedLocDialog(true)}
         bg_gray
-        title="العناوين المسجلة"
-        description="الحالي: السعودية, جدة"
+        title={t("savedAddressTitle")}
+        description={t("savedAddressDescription")}
         icon="/profile/actionIcons/location.webp"
       />
       <Link href="/myBookings">
         <ProfileActionCard
           bg_gray
-          title="حجوزاتي"
-          description="عرض الحجوزات السابقة"
+          title={t("myBookingsTitle")}
+          description={t("myBookingsDescription")}
           icon="/profile/actionIcons/bookings.webp"
         />
       </Link>
@@ -38,8 +40,8 @@ const OtherDetailsAction = () => {
       <Link href="/wallet">
         <ProfileActionCard
           bg_gray
-          title="المحفظة"
-          description="أستبدل النقاط المكتسبة"
+          title={t("walletTitle")}
+          description={t("walletDescription")}
           icon="/profile/actionIcons/wallet.webp"
         />
       </Link>

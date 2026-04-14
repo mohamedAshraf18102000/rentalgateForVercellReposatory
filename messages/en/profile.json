@@ -68,6 +68,32 @@
     "supportTitle": "Support & suggestions",
     "supportDescription": "Reach out if you have feedback or ran into an issue"
   },
+  "profilePage": {
+    "nameLabel": "Name:",
+    "emailLabel": "Email:",
+    "phoneLabel": "Phone Number:",
+    "pointsLabel": "points",
+    "greeting": "Hello {name}",
+    "personalDataTitle": "Personal information:",
+    "otherDataTitle": "Other information:",
+    "otherDetailsActions": {
+      "licenceTitle": "License details",
+      "licenceDescription": "Edit license details",
+      "savedAddressTitle": "Saved addresses",
+      "savedAddressDescription": "Current: Saudi Arabia, Jeddah",
+      "myBookingsTitle": "My bookings",
+      "myBookingsDescription": "View previous bookings",
+      "walletTitle": "Wallet",
+      "walletDescription": "Redeem earned points"
+    },
+    "userReferral": {
+      "title": "Want to earn discounts?!!",
+      "description": "For each friend you refer, you get a 50% discount on rental duration",
+      "shareCodeTitle": "Share the code:",
+      "copySuccess": "Code copied successfully",
+      "copyError": "Failed to copy code"
+    }
+  },
   "changePasswordDialog": {
     "title": "Change password",
     "oldPasswordLabel": "Current password:",

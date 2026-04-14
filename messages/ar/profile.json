@@ -68,6 +68,32 @@
     "supportTitle": "الدعم و المقترحات",
     "supportDescription": "لا تتردد بالتواصل معنا إذا كان لديك مقترح أو إذا واجهتك مشكلة"
   },
+  "profilePage": {
+    "nameLabel": "الأسم:",
+    "emailLabel": "البريد الالكتروني:",
+    "phoneLabel": "رقم الهاتف:",
+    "pointsLabel": "نقطة",
+    "greeting": "أهلاً {name}",
+    "personalDataTitle": "البيانات الشخصية:",
+    "otherDataTitle": "البيانات الأخرى:",
+    "otherDetailsActions": {
+      "licenceTitle": "بيانات الرخصة",
+      "licenceDescription": "تعديل بيانات الرخصة",
+      "savedAddressTitle": "العناوين المسجلة",
+      "savedAddressDescription": "الحالي: السعودية, جدة",
+      "myBookingsTitle": "حجوزاتي",
+      "myBookingsDescription": "عرض الحجوزات السابقة",
+      "walletTitle": "المحفظة",
+      "walletDescription": "أستبدل النقاط المكتسبة"
+    },
+    "userReferral": {
+      "title": "تحب تكسب خصومات؟!!",
+      "description": "لكل حد هترشحه هتكسب 50% خصم على مدة الإيجار",
+      "shareCodeTitle": "شارك الكود:",
+      "copySuccess": "تم نسخ الكود بنجاح",
+      "copyError": "فشل نسخ الكود"
+    }
+  },
   "changePasswordDialog": {
     "title": "تغيير كلمة المرور",
     "oldPasswordLabel": "كلمة المرور الحالية:",

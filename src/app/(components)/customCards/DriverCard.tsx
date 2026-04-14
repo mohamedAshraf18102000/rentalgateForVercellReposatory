@@ -15,15 +15,15 @@ const DriverCard = ({
 }: ServiceCardProps) => {
   if (!status) return null;
   return (
-    <div className="rounded-2xl w-fill flex overflow-hidden relative border-2 border-white">
-      <div className="relative w-[25%] h-[92PX]">
+    <div className="relative flex min-h-[92px] overflow-hidden rounded-2xl border-2 border-white">
+      <div className="relative w-[30%] min-w-[90px] sm:min-w-[100px]">
         <Image src={`${image}`} fill alt="" className="object-contain " />
       </div>
-      <div className="bg-white w-[75%] p-2 h-full flex items-center ">
-        <p className="font-extrabold text-base">{serviceName}</p>
+      <div className="flex h-full w-[75%] items-center bg-white p-2 sm:p-3">
+        <p className="text-sm font-extrabold sm:text-base">{serviceName}</p>
       </div>
 
-      <p className="bg-gray-100 absolute left-0 -top-1 p-2 rounded-r-xl font-bold">
+      <p className="absolute -top-1 left-0 rounded-r-xl bg-gray-100 px-2 py-1 text-xs font-bold sm:p-2 sm:text-sm">
         {badgeTitle}
       </p>
     </div>

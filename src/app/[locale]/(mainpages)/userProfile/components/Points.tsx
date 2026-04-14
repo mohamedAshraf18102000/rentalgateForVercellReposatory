@@ -2,8 +2,10 @@
 import { SaudiRiyal } from "lucide-react";
 import Image from "next/image";
 import { useUserPoints } from "@/hooks/api/useUserPoints";
+import { useTranslations } from "next-intl";
 
 const Points = () => {
+  const t = useTranslations("profile.profilePage");
   const { data: pointsData, isLoading } = useUserPoints();
 
   if (isLoading) {
@@ -32,7 +34,7 @@ const Points = () => {
 
         <div className="">
           <p className="text-base">
-            {pointsData?.availablePoints ?? null} نقطة
+            {pointsData?.availablePoints ?? null} {t("pointsLabel")}
           </p>
         </div>
       </div>

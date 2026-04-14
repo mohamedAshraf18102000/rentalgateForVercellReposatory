@@ -11,8 +11,10 @@ import { useAuth } from "@/app/(components)/navbar/hooks/useAuth";
 import { useRouter } from "@/i18n/routing";
 import { useEffect } from "react";
 import Points from "./components/Points";
+import { useTranslations } from "next-intl";
 
 const page = () => {
+  const t = useTranslations("profile.profilePage");
   const {
     userData: storeUserData,
     authenticated,
@@ -33,17 +35,17 @@ const page = () => {
   const userData = [
     {
       icon: "/profile/NameIcon.png",
-      label: "الأسم:",
+      label: t("nameLabel"),
       userDetails: storeUserData?.clientName,
     },
     {
       icon: "/profile/MailIcon.png",
-      label: "البريد الالكتروني:",
+      label: t("emailLabel"),
       userDetails: storeUserData?.email,
     },
     {
       icon: "/profile/ContactIcon.png",
-      label: "رقم الهاتف:",
+      label: t("phoneLabel"),
       userDetails: storeUserData?.mobile,
     },
   ];
@@ -81,7 +83,9 @@ const page = () => {
                 />
               </div>
               <h2 className="min-w-0 wrap-break-word text-base font-bold sm:text-lg">
-                أهلاً {storeUserData?.clientName || ""}
+                {t("greeting", {
+                  name: storeUserData?.clientName || "",
+                })}
               </h2>
             </div>
             <div className="min-w-0 w-full lg:justify-self-end">
@@ -90,7 +94,7 @@ const page = () => {
           </div>
           <Separator className="my-2" />
           <div>
-            <p className="text-base mb-2">البيانات الشخصية:</p>
+            <p className="text-base mb-2">{t("personalDataTitle")}</p>
             <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
               {userData.map((item, index) => (
                 <UserDetailsCard
@@ -106,7 +110,7 @@ const page = () => {
           <Separator className="my-2" />
 
           <div className="">
-            <p className="text-base mb-2">البيانات الأخرى:</p>
+            <p className="text-base mb-2">{t("otherDataTitle")}</p>
             <div className="grid grid-cols-1 items-center gap-3 sm:grid-cols-2 sm:gap-4">
               <OtherDetailsAction />
             </div>

@@ -65,8 +65,6 @@ const page = () => {
     queryFn: () => getCarServices(Number(id)),
   });
 
-  console.log(services);
-
   useEffect(() => {
     if (services) {
       setServices(services);
@@ -156,7 +154,7 @@ const page = () => {
       <WrapperContainer exceedNav>
         <Skeleton className="h-[50px] w-full rounded-2xl mt-5" />
         <Skeleton className="h-[500px] w-full rounded-2xl mt-5" />
-        <div className="grid grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {Array.from({ length: 4 }).map((_, index) => (
             <Skeleton
               key={index}
@@ -171,7 +169,7 @@ const page = () => {
   return (
     <WrapperContainer exceedNav>
       <CarsDetailsBreadCrump />
-      <div className="mt-10">
+      <div className="mt-10"> 
         <CarDetailsCard
           dailyPrice={data?.dailyPrice}
           freeKm={data.allowedKm}
@@ -197,8 +195,8 @@ const page = () => {
       </div>
 
       {services && services.length > 0 && (
-        <div className="my-8 grid grid-cols-4 gap-4">
-          <h3 className="col-span-4 font-bold text-2xl my-4">
+        <div className="my-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <h3 className="col-span-1 my-4 text-xl font-bold sm:col-span-2 lg:col-span-4 lg:text-2xl">
             الخدمات المقدمة
           </h3>
           {services?.map((service) => (
@@ -210,7 +208,7 @@ const page = () => {
           ))}
         </div>
       )}
-      <div className="grid grid-cols-4 gap-4 mt-4">
+      <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <DriverCard
           image={"/driver/driverImage.png"}
           serviceName={"خدمة سائق"}
