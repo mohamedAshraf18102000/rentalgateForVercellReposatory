@@ -54,7 +54,9 @@ const DrawerLocationChange = ({
 
   const [showAddForm, setShowAddForm] = useState(false);
   const [isPhoneValid, setIsPhoneValid] = useState(false);
-  const [selectedAddressId, setSelectedAddressId] = useState<number | null>(null);
+  const [selectedAddressId, setSelectedAddressId] = useState<number | null>(
+    null,
+  );
   const queryClient = useQueryClient();
   const { setLocation, latitude, longitude } = useLocationStore();
   const { data: userAddresses, isLoading: isLoadingAddresses } =
@@ -149,7 +151,11 @@ const DrawerLocationChange = ({
   }, [showAddForm, reset]);
 
   useEffect(() => {
-    if (selectedAddressId || !userAddresses?.length || !defaultLocationNames.length) {
+    if (
+      selectedAddressId ||
+      !userAddresses?.length ||
+      !defaultLocationNames.length
+    ) {
       return;
     }
 
@@ -419,18 +425,21 @@ const DrawerLocationChange = ({
           >
             عرض حجوزاتي
           </Button>
-          <Button
-            type="button"
-            className="text-base! w-1/2"
-            onClick={handleSaveLocation}
-            disabled={showAddForm || !selectedAddressId || isChangingLocation}
-          >
-            {isChangingLocation ? "جاري الحفظ..." : "حفظ التعديلات"}
-          </Button>
+          {showAddForm ? (
+            <Button
+              type="button"
+              className="text-base! w-1/2"
+              onClick={handleSaveLocation}
+              disabled={showAddForm || !selectedAddressId || isChangingLocation}
+            >
+              {isChangingLocation ? "جاري الحفظ..." : "حفظ التعديلات"}
+            </Button>
+          ) : null}
+
           {showAddForm ? (
             <Button
               type="submit"
-              className="text-base! w-1/2 border-2 bg-StatusRed text-white hover:bg-StatusRed/95"
+              className="text-base! w-1/2 border-2 "
               disabled={isPending}
             >
               {isPending ? "جاري الإضافة..." : "إضافة"}

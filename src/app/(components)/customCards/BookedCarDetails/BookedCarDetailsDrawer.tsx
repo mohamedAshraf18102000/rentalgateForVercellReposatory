@@ -26,6 +26,7 @@ import {
 } from "lucide-react";
 import { ReservationDetailsResponse } from "@/types/myBookings/BookingDetails";
 import { useLocale } from "next-intl";
+import type { ExtendReservationDriverPayload } from "@/services/mybookings/extendReservation.service";
 
 import { format } from "date-fns";
 import { ar, enUS } from "date-fns/locale";
@@ -46,6 +47,11 @@ const DrawerLocationChange = dynamic(
 
 const BookingPaymentDetailsCollapseLazy = dynamic(
   () => import("./DrawerSections/BookingPaymentDetailsCollapse"),
+  { ssr: false },
+);
+
+const BookingExtending = dynamic(
+  () => import("./DrawerSections/DrawerLocation/BookingExtending"),
   { ssr: false },
 );
 
@@ -72,10 +78,15 @@ const BookedCarDetailsDrawer = ({
 }: BookedCarDetailsDrawerProps) => {
   const getStatusLabel = useStatusLabel();
 
+  console.log("data>>>>>>>", data);
+
   const locale = useLocale();
   const dateLocale = locale === "ar" ? ar : enUS;
   const [activeView, setActiveView] = useState<
-    "booking-details" | "cancel-booking" | "location-details"
+    | "booking-details"
+    | "cancel-booking"
+    | "location-details"
+    | "booking-extending"
   >("booking-details");
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [normalReceiveAddress, setNormalReceiveAddress] = useState<
@@ -230,6 +241,15 @@ const BookedCarDetailsDrawer = ({
     !data || isNormalReceiveAddressLoading || isNormalDeliverAddressLoading;
   const isChangedLocationLoading =
     isChangedReceiveAddressLoading || isChangedDeliverAddressLoading;
+  const extendReservationMeta = data as
+    | (ReservationDetailsResponse & {
+        driver?: ExtendReservationDriverPayload | null;
+        points?: Record<string, unknown> | null;
+        promoCode?: string | null;
+        carOfferPkId?: number | null;
+        pricing?: boolean;
+      })
+    | undefined;
 
   return (
     <Sheet
@@ -315,7 +335,10 @@ const BookedCarDetailsDrawer = ({
                   </div>
 
                   <div>
-                    <Button className="p-3">
+                    <Button
+                      className="p-3"
+                      onClick={() => setActiveView("booking-extending")}
+                    >
                       <SquarePen className="text-white w-5! h-5!" />
                     </Button>
                   </div>
@@ -447,6 +470,24 @@ const BookedCarDetailsDrawer = ({
               setShowLocationDetails={(showLocationDetails) =>
                 setActiveView(
                   showLocationDetails ? "location-details" : "booking-details",
+                )
+              }
+            />
+          ) : activeView === "booking-extending" ? (
+            <BookingExtending
+              reservationId={data?.reservationId}
+              bookingStartDate={data?.startDate}
+              bookingEndDate={data?.endDate}
+              driver={extendReservationMeta?.driver}
+              points={extendReservationMeta?.points}
+              promoCode={extendReservationMeta?.promoCode}
+              carOfferPkId={extendReservationMeta?.carOfferPkId}
+              pricing={extendReservationMeta?.pricing}
+              setShowBookingExtending={(showBookingExtending) =>
+                setActiveView(
+                  showBookingExtending
+                    ? "booking-extending"
+                    : "booking-details",
                 )
               }
             />
