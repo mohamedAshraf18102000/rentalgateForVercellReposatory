@@ -26,7 +26,7 @@ const LocationFrom_To = ({
         <Minus className="rotate-90 w-8 h-8 mx-2" />
       </div>
       <div className="flex items-center">
-        <MapPin className=" w-8 h-8 mx-2" />
+        <MapPin className=" w-6 h-6 mx-3" />
         <span>إلـى:</span>
         <span title={deliverLocationName} className="mx-2 line-clamp-1">
           {deliverAddress ?? deliverLocationName}

@@ -325,12 +325,35 @@ const BookedCarDetailsDrawer = ({
                   {isNormalLocationLoading ? (
                     <LocationFromToSkeleton />
                   ) : (
-                    <LocationFrom_To
-                      receiveLocationName={data?.receiveLocationName}
-                      deliverLocationName={data?.deliverLocationName}
-                      receiveAddress={normalReceiveAddress}
-                      deliverAddress={normalDeliverAddress}
-                    />
+                    <div className="flex flex-col gap-3 w-full">
+                      <LocationFrom_To
+                        receiveLocationName={data?.receiveLocationName}
+                        deliverLocationName={data?.deliverLocationName}
+                        receiveAddress={normalReceiveAddress}
+                        deliverAddress={normalDeliverAddress}
+                      />
+
+                      <Separator className="w-[90%]! mx-auto!" />
+
+                      {data?.locationChanges && (
+                        <div className="">
+                          <p className="text-StatusRedBG">
+                            <span>*</span>
+                            تم تغير موقع الاستلام و التسليم
+                          </p>
+                          {isChangedLocationLoading ? (
+                            <LocationFromToSkeleton />
+                          ) : (
+                            <LocationFrom_To
+                              receiveLocationName={""}
+                              deliverLocationName={""}
+                              receiveAddress={changedReceiveAddress}
+                              deliverAddress={changedDeliverAddress}
+                            />
+                          )}
+                        </div>
+                      )}
+                    </div>
                   )}
 
                   {data?.locationChanges === null &&
@@ -349,24 +372,6 @@ const BookedCarDetailsDrawer = ({
                     )}
                 </div>
 
-                {data?.locationChanges && (
-                  <div className="mt-3 bg-Grey100 p-3 rounded-2xl">
-                    <p className="text-StatusRedBG">
-                      <span>*</span>
-                      تم تغير موقع الاستلام و التسليم الي
-                    </p>
-                    {isChangedLocationLoading ? (
-                      <LocationFromToSkeleton />
-                    ) : (
-                      <LocationFrom_To
-                        receiveLocationName={""}
-                        deliverLocationName={""}
-                        receiveAddress={changedReceiveAddress}
-                        deliverAddress={changedDeliverAddress}
-                      />
-                    )}
-                  </div>
-                )}
                 {data &&
                   data?.reservationServices &&
                   data?.reservationServices.length > 0 && (
