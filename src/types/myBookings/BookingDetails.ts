@@ -56,7 +56,12 @@ export type ReservationDetailsResponse = {
 
   locationChanges: unknown | null;
 
-  reservationServices: unknown[]; // refine later if you have structure
+  reservationServices: {
+    serviceId: number;
+    arabicName: string;
+    englishName: string;
+    price: number;
+  }[];
   reservationExtends: unknown[]; // refine later if you have structure
 
   reservationForOther: unknown | null;

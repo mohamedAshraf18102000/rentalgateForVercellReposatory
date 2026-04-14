@@ -46,6 +46,9 @@ const BookedCarDetailsDrawer = ({
   const dateLocale = locale === "ar" ? ar : enUS;
   const [showCancelBooking, setShowCancelBooking] = useState(false);
 
+  console.log(data);
+
+
   return (
     <Sheet
       onOpenChange={(open) => {
@@ -94,7 +97,7 @@ const BookedCarDetailsDrawer = ({
                     <div className="text-base flex items-center gap-2">
                       <CarRentIcon />
                       <span>مدة الإيجار:</span>
-                      <span className="text-Grey700">(15 يوم)</span>
+                      <span className="text-Grey700">( {data?.days} يوم )</span>
                     </div>
 
                     <div className="text-base flex items-center gap-2 mt-3">
@@ -149,7 +152,7 @@ const BookedCarDetailsDrawer = ({
                     </div>
                   </div>
 
-                  <div>
+                  <div className="">
                     <Button className="p-3">
                       <SquarePen className="text-white w-5! h-5!" />
                     </Button>
@@ -157,13 +160,13 @@ const BookedCarDetailsDrawer = ({
                 </div>
                 <Separator className="my-3" />
                 <div className="grid grid-cols-3 gap-3">
-                  {Array.from({ length: 5 }).map((_, index) => (
+                  {data?.reservationServices.map((service) => (
                     <div
-                      key={index}
+                      key={service.serviceId}
                       className="bg-StatusGreen p-2 border-2 border-StatusDarkGreen flex items-center rounded-xl font-bold"
                     >
-                      <span className="text-StatusDarkGreen mx-1">الخدمة:</span>
-                      <span>70.00</span>
+                      <span className="text-StatusDarkGreen mx-1">{service.arabicName}</span>
+                      <span>{service.price}</span>
                       <SaudiRiyalIcon />
                     </div>
                   ))}
@@ -175,8 +178,8 @@ const BookedCarDetailsDrawer = ({
                   </div>
                   <div className="flex items-center">
                     {/* <span className="line-through mx-3 text-sm text-Grey500">
-                15.00
-              </span> */}
+                      15.00
+                    </span> */}
                     <span className="text-xl font-bold">{data?.total}</span>
                     <SaudiRiyal className="w-8! h-8!" />
                   </div>
