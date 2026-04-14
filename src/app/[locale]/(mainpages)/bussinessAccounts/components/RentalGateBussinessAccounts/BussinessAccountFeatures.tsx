@@ -20,17 +20,24 @@ const featurePoints = [
 const BussinessAccountFeatures = () => {
   return (
     <>
-      <div className="flex items-center gap-4">
-        <div className="bg-primary p-3 w-fit rounded-[8px]">
-          <Sparkles color="#FFF" />
+      <div className="flex items-center gap-2 sm:gap-3 md:gap-4">
+        <div className="bg-primary w-fit rounded-[8px] p-2 sm:p-2.5 md:p-3">
+          <Sparkles color="#FFF" className="size-4 sm:size-5 md:size-6" />
         </div>
-        <p className="font-bold text-2xl">المميزات</p>
+        <p className="text-lg font-bold sm:text-xl md:text-2xl">المميزات</p>
       </div>
-      <Separator className="my-4! bg-[#E3ECED]" />
+      <Separator className="my-3! bg-[#E3ECED] sm:my-4!" />
       {featurePoints.map((item, index) => (
-        <div key={index} className="flex items-start mt-6 gap-2">
-          <ShieldRight />
-          <p className="text-lg text-Grey600">{item.title}</p>
+        <div
+          key={index}
+          className="mt-4 flex items-start gap-2 sm:mt-5 md:mt-6"
+        >
+          <span className="mt-1 shrink-0 scale-90 sm:scale-100">
+            <ShieldRight />
+          </span>
+          <p className="text-sm leading-7 text-Grey600 sm:text-base md:text-lg">
+            {item.title}
+          </p>
         </div>
       ))}
     </>
