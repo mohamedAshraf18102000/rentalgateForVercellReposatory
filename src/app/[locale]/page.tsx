@@ -27,6 +27,7 @@ export default async function HomePage({ params }: Props) {
 
   try {
     homeData = await getHomePageDetails();
+    console.log("homeData", homeData);
   } catch (error) {
     console.error("Error fetching home data:", error);
   }
@@ -36,14 +37,16 @@ export default async function HomePage({ params }: Props) {
   return (
     <main>
       {homeData && <HomeStoreHydrator data={homeData} />}
-      <HomeSlider />
+      <HomeSlider bannersData={homeData?.banners ?? []} />
       <PickUpArea />
       <RentalGateInfo />
       <RentalBookingSearchSection />
-      <SuccessPartners />
-      <Offers />
+      <SuccessPartners companiesData={homeData?.companies ?? []} />
+      {homeData?.todayOffers.length && (
+        <Offers todayOffersData={homeData?.todayOffers ?? []} />
+      )}
       <MostRequestedCars locale={locale} />
-      <CompanyOffers />
+      <CompanyOffers latestOffersData={homeData?.latestOffers ?? []} />
       <HomeMockups />
       <WrapperContainer>
         <BussinessAccountsContent withOutStepper />

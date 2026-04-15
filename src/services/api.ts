@@ -1,10 +1,24 @@
 import { getCookie } from "@/util/cookies";
 
+const getAuthToken = async () => {
+  if (typeof document !== "undefined") {
+    return getCookie("authToken");
+  }
+
+  try {
+    const { cookies } = await import("next/headers");
+    const cookieStore = await cookies();
+    return cookieStore.get("authToken")?.value ?? null;
+  } catch {
+    return null;
+  }
+};
+
 export async function fetcher<T>(
   url: string,
   options?: RequestInit,
 ): Promise<T> {
-  const token = typeof document !== "undefined" ? getCookie("authToken") : null;
+  const token = await getAuthToken();
 
   let currentLocale = "ar";
   if (typeof document !== "undefined") {
@@ -37,6 +51,8 @@ export async function fetcher<T>(
       errorMessage = errorData.message || errorData.error || "API Error";
     } catch (e) {
       // Not a JSON error or empty body
+      console.log("Error fetching data:", e);
+
     }
     throw new Error(errorMessage);
   }

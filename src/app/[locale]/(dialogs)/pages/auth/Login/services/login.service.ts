@@ -4,7 +4,7 @@
 
 import type { LoginApiResponse, LoginPayload } from "../types/api.types";
 
-const LOGIN_API_URL = "api/clients/login";
+const LOGIN_API_URL = "/clients/login";
 
 export const loginUser = async (
   payload: LoginPayload,

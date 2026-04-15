@@ -1,3 +1,5 @@
+"use client";
+
 import WrapperContainer from "@/app/(components)/wrapperContainer/WrapperContainer";
 import UserReferal from "../userProfile/components/UserReferal";
 import { OwnedOffersStatus } from "./components/OwnedOffersStatus";

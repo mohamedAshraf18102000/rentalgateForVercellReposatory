@@ -4,11 +4,10 @@ import Image from "next/image";
 import PartnersIcon from "../../../../constants/icons/PartnersIcon";
 import SuccessPartnersMerquee from "@/app/(components)/home/SuccessPartnersMerquee";
 import { useHomeStore } from "@/lib/stores/useHomeStore";
+import { Company } from "@/types/home/home";
 
-const SuccessPartners = () => {
-  const partners = useHomeStore((state) => state.data?.companies);
-  const displayPartners = partners || [];
-
+const SuccessPartners = ({ companiesData }: { companiesData: Company[] }) => {
+  const displayPartners = companiesData || [];
 
   return (
     <WrapperContainer className="flex flex-col lg:flex-row gap-6 lg:gap-10 h-auto lg:h-72 my-10 px-4 md:px-0">

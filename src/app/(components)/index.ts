@@ -41,6 +41,7 @@ import {
 } from "./ui/select";
 import { PageLoader } from "./ui/PageLoader";
 import { PhoneInput } from "./ui/phone-input";
+import HashAnchorScroller from "./HashAnchorScroller";
 export {
   Header,
   Footer,
@@ -84,4 +85,5 @@ export {
   SelectValue,
   PageLoader,
   PhoneInput,
+  HashAnchorScroller,
 };

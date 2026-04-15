@@ -179,6 +179,7 @@ import { format } from "date-fns";
 import { buildReservationPayload } from "../(mainpages)/reservation/utils/buildReservationPayload";
 import { Separator } from "@/app/(components)/ui/separator";
 import ReservationDetailsSkeleton from "../(mainpages)/reservation/components/reservationDrawer/components/ReservationDetailsSkeleton";
+import { useBookingTerms } from "@/hooks/api/booking/useBookingTerms";
 
 const page = () => {
   const formData = useBookedCarDetailsStore((s) => s.formData);
@@ -198,9 +199,12 @@ const page = () => {
     console.log(formData);
   };
 
+  const { data: bookingTermsQuery } = useBookingTerms();
+  console.log("bookingTermsQuery", bookingTermsQuery);
+
   return (
     <>
-      <WrapperContainer exceedNav className="bg-red-950 text-white h-[500px]">
+      {/* <WrapperContainer exceedNav className="bg-red-950 text-white h-[500px]">
         <div className="">page</div>
         <Button onClick={handleCalculateQuotePrice}>
           Calculate Quote Price
@@ -215,7 +219,7 @@ const page = () => {
         </div>
       </WrapperContainer>
 
-      <Separator />
+      <Separator /> */}
     </>
   );
 };

@@ -5,10 +5,13 @@ import { DialogWrapper } from "@/app/(components)";
 import GoogleMapsLocation from "@/app/(components)/mapsLocation/GoogleMapsLocation";
 import { useLocationStore } from "@/lib/stores/useLocationStore";
 import { LocateFixed } from "lucide-react";
+import { usePathname } from "next/navigation";
 
 export function CurrentLocationDialog() {
   const { address, isDialogOpen, openDialog, closeDialog, setLocation } =
     useLocationStore();
+  const pathname = usePathname();
+  const isTermsPage = pathname.includes("/terms&conditions");
 
   // Temporary state — only committed to the store on save
   const [tempLocation, setTempLocation] = useState<{
@@ -18,12 +21,21 @@ export function CurrentLocationDialog() {
   } | null>(null);
 
   useEffect(() => {
+    if (isTermsPage) {
+      return;
+    }
     const hasClosed = sessionStorage.getItem("hasClosedLocationDialog");
     if (!hasClosed) {
       const timer = setTimeout(() => openDialog(), 3000);
       return () => clearTimeout(timer);
     }
-  }, [openDialog]);
+  }, [isTermsPage, openDialog]);
+
+  useEffect(() => {
+    if (isTermsPage && isDialogOpen) {
+      closeDialog();
+    }
+  }, [closeDialog, isDialogOpen, isTermsPage]);
 
   // Reset temp state whenever the dialog opens so we start fresh
   useEffect(() => {

@@ -21,7 +21,9 @@ import { useRouter } from "next/navigation";
 import { useCancelUserReservation } from "@/hooks/api/booking/useCancelUserReservation";
 import { UseGetCancelReasons } from "@/hooks/api/booking/UseGetCancelReasons";
 import type { FormEvent } from "react";
-
+import { Checkbox } from "@/app/(components)/ui/checkbox";
+import { Link } from "@/i18n/routing";
+import { CheckedState } from "@radix-ui/react-checkbox";
 
 interface CancelConfirmationProps {
   setShowCancelBooking: (show: boolean) => void;
@@ -36,8 +38,14 @@ const CancelConfirmation = ({
   const router = useRouter();
   const [cancelReason, setCancelReason] = useState<string>("");
   const [notes, setNotes] = useState<string>("");
-  const { mutate: cancelUserReservation, isPending } = useCancelUserReservation();
+  const [isTermsAccepted, setIsTermsAccepted] = useState(false);
+  const { mutate: cancelUserReservation, isPending } =
+    useCancelUserReservation();
   const { data: cancelReasons } = UseGetCancelReasons();
+
+  const handleTermsCheckChange = (checked: CheckedState) => {
+    setIsTermsAccepted(checked === true);
+  };
 
   const handleCancelBooking = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -85,7 +93,7 @@ const CancelConfirmation = ({
             <p className="font-bold text-[18px]">
               هل انت متأكد من انك تريد الغاء الحجز؟
             </p>
-            <span className="text-Grey700 mt-2">
+            <span className="text-Grey700 mt-2 text-sm">
               هل تريد فعلاً الغاء الحجز؟ لا يمكن التراجع عن هذه العملية.
             </span>
           </div>
@@ -133,23 +141,23 @@ const CancelConfirmation = ({
                 onChange={(event) => setNotes(event.target.value)}
               />
 
-              {/* <div className="flex flex-wrap items-center gap-2">
+              <div className="flex flex-wrap items-center gap-2">
                 <Checkbox
                   width={20}
                   height={20}
-                  checked={false}
-                  onCheckedChange={() => { }}
+                  checked={isTermsAccepted}
+                  onCheckedChange={handleTermsCheckChange}
                 />
                 <label className="text-sm font-bold sm:text-sm">
                   <Link
                     target="_blank"
-                    href="/terms-and-conditions"
+                    href="/terms&conditions#cancelation-terms"
                     className="underline"
                   >
                     الموافقة علي الشروط و الأحكام
                   </Link>
                 </label>
-              </div> */}
+              </div>
             </div>
           </div>
         </div>
@@ -165,7 +173,9 @@ const CancelConfirmation = ({
             type="submit"
             variant="destructive"
             className="text-base! w-full sm:w-1/2 border-2 bg-StatusRed text-white hover:bg-StatusRed/95"
-            disabled={!reservationId || !cancelReason || isPending}
+            disabled={
+              !reservationId || !cancelReason || !isTermsAccepted || isPending
+            }
           >
             {t("confirmCancelBookingWithId")}
           </Button>

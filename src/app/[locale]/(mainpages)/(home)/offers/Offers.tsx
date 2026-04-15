@@ -3,12 +3,9 @@ import OffersCarousel from "@/app/(components)/offersCarousel/OffersCarousel";
 
 import WrapperContainer from "@/app/(components)/wrapperContainer/WrapperContainer";
 import Image from "next/image";
-import { useHomeStore } from "@/lib/stores/useHomeStore";
+import { TodaysOffer } from "@/types/home/home";
 
-const Offers = () => {
-  const todayOffersRaw = useHomeStore((state) => state.data?.todayOffers);
-  const todayOffers = todayOffersRaw || [];
-
+const Offers = ({ todayOffersData }: { todayOffersData: TodaysOffer[] }) => {
   return (
     <WrapperContainer className="my-10">
       <div className="flex flex-col items-center justify-center">
@@ -37,7 +34,7 @@ const Offers = () => {
           />
         </div>
       </div>
-      <OffersCarousel offers={todayOffers} />
+      <OffersCarousel offers={todayOffersData} />
     </WrapperContainer>
   );
 };

@@ -1,6 +1,6 @@
-"use client";
+ "use client";
 
-import * as React from "react";
+import { useRef } from "react";
 import Image from "next/image";
 import Autoplay from "embla-carousel-autoplay";
 import {
@@ -8,7 +8,7 @@ import {
   CarouselContent,
   CarouselItem,
 } from "@/app/(components)/ui/carousel";
-import { useHomeStore } from "@/lib/stores/useHomeStore";
+import { Banner } from "@/types/home/home";
 
 const sliderHeightClass =
   "h-[min(42svh,22rem)] min-h-[12.5rem] " +
@@ -18,25 +18,24 @@ const sliderHeightClass =
   "xl:h-[min(82svh,48rem)] " +
   "2xl:h-dvh 2xl:max-h-dvh";
 
-const HomeSlider = () => {
-  const { data } = useHomeStore();
-  const plugin = React.useRef(
-    Autoplay({ delay: 10000, stopOnInteraction: false }),
+const HomeSlider = ({ bannersData }: { bannersData: Banner[] }) => {
+  const autoplayPlugin = useRef(
+    Autoplay({ delay: 20000, stopOnInteraction: false }),
   );
 
   return (
     <section dir="ltr" className="w-full">
       <div className={`relative w-full overflow-hidden ${sliderHeightClass}`}>
         <Carousel
-          plugins={[plugin.current]}
           className="h-full w-full"
+          plugins={[autoplayPlugin.current]}
           opts={{
             align: "start",
             loop: true,
           }}
         >
           <CarouselContent className={`ml-0 ${sliderHeightClass}`}>
-            {data?.banners.map((image, index) => (
+            {bannersData?.map((image: any, index: number) => (
               <CarouselItem key={index} className="relative h-full pl-0">
                 <div className="relative h-full w-full">
                   <Image
