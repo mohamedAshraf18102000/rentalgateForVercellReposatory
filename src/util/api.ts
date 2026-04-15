@@ -1,8 +1,8 @@
 // API Configuration
 import { getAuthHeader } from './auth';
 
-export const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'https://rentalgate.net/api';
-export const AUTH_BASE_URL = process.env.NEXT_PUBLIC_AUTH_BASE_URL || 'https://rentalgate.net/auth';
+export const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'https://api.rentalgate.net/api';
+export const AUTH_BASE_URL = process.env.NEXT_PUBLIC_AUTH_BASE_URL || 'https://api.rentalgate.net/auth';
 
 // Helper function to build full API URLs
 export const URL = (endpoint: string): string => {
@@ -51,7 +51,7 @@ export const authenticatedFetch = async (
   options: RequestInit = {}
 ): Promise<Response> => {
   const fullUrl = url.startsWith('http') ? url : `${API_BASE_URL}${url}`;
-  
+
   const headers = getApiHeaders(options.headers as Record<string, string>);
 
   return fetch(fullUrl, {

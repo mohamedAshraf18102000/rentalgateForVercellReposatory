@@ -19,7 +19,7 @@ export async function fetcher<T>(
     }
   }
 
-  const res = await fetch(`https://rentalgate.net/api${url}`, {
+  const res = await fetch(`https://api.rentalgate.net/api${url}`, {
     ...options,
     headers: {
       "Content-Type": "application/json",

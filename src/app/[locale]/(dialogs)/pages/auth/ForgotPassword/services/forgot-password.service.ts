@@ -22,7 +22,7 @@ export const forgetPassword = async (
   payload: ForgetPasswordPayload,
 ): Promise<ForgetPasswordResponse> => {
   const response = await fetch(
-    `https://rentalgate.net/api${FORGET_PASSWORD_API_URL}`,
+    `https://api.rentalgate.net/api${FORGET_PASSWORD_API_URL}`,
     {
       method: "POST",
       headers: {
@@ -45,7 +45,7 @@ export const verifyOTP = async (
   payload: VerifyOTPPayload,
 ): Promise<VerifyOTPResponse> => {
   const response = await fetch(
-    `https://rentalgate.net/api${VERIFY_OTP_API_URL}`,
+    `https://api.rentalgate.net/api${VERIFY_OTP_API_URL}`,
     {
       method: "POST",
       headers: {
@@ -68,7 +68,7 @@ export const resendOTP = async (
   payload: ResendOTPPayload,
 ): Promise<ResendOTPResponse> => {
   const response = await fetch(
-    `https://rentalgate.net/api${RESEND_OTP_API_URL}`,
+    `https://api.rentalgate.net/api${RESEND_OTP_API_URL}`,
     {
       method: "POST",
       headers: {
@@ -91,7 +91,7 @@ export const resetPassword = async (
   payload: ResetPasswordPayload,
 ): Promise<ResetPasswordResponse> => {
   const response = await fetch(
-    `https://rentalgate.net/api${RESET_PASSWORD_API_URL}`,
+    `https://api.rentalgate.net/api${RESET_PASSWORD_API_URL}`,
     {
       method: "POST",
       headers: {

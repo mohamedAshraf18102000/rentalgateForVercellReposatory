@@ -9,7 +9,7 @@ const LOGIN_API_URL = "api/clients/login";
 export const loginUser = async (
   payload: LoginPayload,
 ): Promise<LoginApiResponse> => {
-  const response = await fetch(`https://rentalgate.net/${LOGIN_API_URL}`, {
+  const response = await fetch(`https://api.rentalgate.net/api${LOGIN_API_URL}`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

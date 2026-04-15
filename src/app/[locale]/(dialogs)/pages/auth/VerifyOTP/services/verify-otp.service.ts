@@ -7,7 +7,7 @@ const RESEND_API_URL = "/clients/resend-registration-otp";
 export const verifyOTP = async (
   payload: VerifyOTPPayload,
 ): Promise<VerifyOTPResponse> => {
-  const response = await fetch(`https://rentalgate.net/api${VERIFY_API_URL}`, {
+  const response = await fetch(`https://api.rentalgate.net/api${VERIFY_API_URL}`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -28,7 +28,7 @@ export const verifyOTP = async (
 export const resendRegistrationOTP = async (
   payload: SignUpPayload,
 ): Promise<VerifyOTPResponse> => {
-  const response = await fetch(`https://rentalgate.net/api${RESEND_API_URL}`, {
+  const response = await fetch(`https://api.rentalgate.net/api${RESEND_API_URL}`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -51,7 +51,7 @@ export const verifyForgotOTP = async (
   code: string,
 ): Promise<VerifyOTPResponse> => {
   const response = await fetch(
-    `https://rentalgate.net/api/clients/auth/reset-password-verification`,
+    `https://api.rentalgate.net/api/clients/auth/reset-password-verification`,
     {
       method: "POST",
       headers: {
@@ -74,7 +74,7 @@ export const resendForgotOTP = async (
   email: string,
   channel: "EMAIL" | "WHATSAPP",
 ): Promise<{ status: boolean; message: string }> => {
-  const response = await fetch(`https://rentalgate.net/api/clients/auth/resend`, {
+  const response = await fetch(`https://api.rentalgate.net/api/clients/auth/resend`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
