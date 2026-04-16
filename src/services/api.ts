@@ -41,7 +41,6 @@ export async function fetcher<T>(
       ...(token ? { Authorization: `Bearer ${token}` } : {}),
       ...(options?.headers || {}),
     },
-    cache: "no-store",
   });
 
   if (!res.ok) {
