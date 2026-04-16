@@ -38,7 +38,7 @@ export async function fetcher<T>(
     headers: {
       "Content-Type": "application/json",
       "Accept-Language": currentLocale,
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      ...(token ? { Authorization: `Bearer ${token}` } : {}), 
       ...(options?.headers || {}),
     },
   });
