@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useEffect, useMemo, useState } from "react";
-import { useParams } from "next/navigation";
+import { useLocale } from "next-intl";
 
 const getRemainingMsUntilEndOfDay = () => {
   const now = new Date();
@@ -26,8 +26,8 @@ const getTimeParts = (remainingMs: number) => {
 };
 
 const OffersCountDown = () => {
-  const params = useParams<{ locale?: string }>();
-  const locale = params?.locale?.toLowerCase() ?? "ar";
+  // `useLocale` is deterministic for SSR/CSR, avoiding hydration mismatches.
+  const locale = useLocale().toLowerCase();
   const isArabic = locale.startsWith("ar");
 
   const content = useMemo(
@@ -40,7 +40,9 @@ const OffersCountDown = () => {
     [isArabic],
   );
 
-  const [remainingMs, setRemainingMs] = useState(getRemainingMsUntilEndOfDay);
+  // Important: initial state must be deterministic across SSR and hydration.
+  // We start updating "real time" only after mount.
+  const [remainingMs, setRemainingMs] = useState(0);
 
   useEffect(() => {
     let timeoutId: ReturnType<typeof setTimeout>;
@@ -54,6 +56,7 @@ const OffersCountDown = () => {
       }, delay);
     };
 
+    setRemainingMs(getRemainingMsUntilEndOfDay());
     scheduleNextTick();
 
     return () => {

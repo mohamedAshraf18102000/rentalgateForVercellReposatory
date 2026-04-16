@@ -1,6 +1,6 @@
 import WrapperContainer from "@/app/(components)/wrapperContainer/WrapperContainer";
-import { PickupDialog } from "../../(dialogs)/PickupDialog/PickUpDialog";
 import PickUpCardsSection from "./PickupCardSection";
+import { HomePickUpDialog } from "../../(dialogs)/PickupDialog/HomePickUpDialog";
 
 const PickUpArea = () => {
   return (
@@ -9,11 +9,11 @@ const PickUpArea = () => {
         <div className="w-full flex flex-col items-center justify-center mb-8">
           <h2 className="font-bold text-3xl">مكان الأستلام</h2>
           <p className="text-Grey700 text-base font-normal">
-            إينما تكن, سياراتك ستكون في إنتظارك
+            أينما تكن, سياراتك ستكون في إنتظارك
           </p>
         </div>
         <PickUpCardsSection />
-        <PickupDialog />
+        <HomePickUpDialog />
       </WrapperContainer>
     </>
   );

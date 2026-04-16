@@ -5,62 +5,44 @@ import Image from "next/image";
 import Marquee from "react-fast-marquee";
 
 const PartnerLogo = ({ src, alt }: { src: string; alt: string }) => (
-  <div className="flex items-center justify-center mx-3 md:mx-5">
+  <div className="flex items-center justify-center mx-1 md:mx-1">
     <div
-      className="relative w-[160px] h-[90px] md:w-[200px] md:h-[110px] flex items-center justify-center p-3 
-                    rounded-xl bg-white/60 backdrop-blur-sm border border-gray-100
+      className="relative h-[120px] md:h-[150px] flex items-center justify-center p-5 overflow-hidden
+                    bg-white/60 backdrop-blur-sm border border-gray-200
                     transition-all duration-300 ease-in-out
-                    hover:scale-105 hover:shadow-lg hover:shadow-gray-200/50 hover:bg-white"
+                    hover:scale-105 hover:shadow-2xl  hover:shadow-gray-200/50 hover:bg-white"
+      style={{
+        aspectRatio: "0.85 / 0.866",
+        clipPath: "polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%)",
+      }}
     >
-      <Image
-        src={src}
-        alt={alt}
-        width={180}
-        height={100}
-        className="w-full h-full object-contain transition-transform duration-300 ease-in-out"
-      />
+      <div className="w-[90px] h-[90px] md:w-[90px] md:h-[90px] rounded-full bg-white flex items-center justify-center overflow-hidden shadow-sm">
+        <Image
+          src={src}
+          alt={alt}
+          width={120}
+          height={120}
+          className="w-full h-full object-cover transition-transform duration-300 ease-in-out rounded-full border-2 border-Grey200"
+        />
+      </div>
     </div>
   </div>
 );
 
 const SuccessPartnersMerquee = ({ partners }: { partners: Company[] }) => {
-  const midPoint = Math.ceil(partners.length / 2);
-  const row1 = partners.slice(0, midPoint);
-  const row2 = partners.slice(midPoint);
-
   return (
     <section className="w-full h-full flex items-center justify-center">
-      <div
-        className="w-full flex flex-col gap-4 overflow-hidden py-2"
-        dir="ltr"
-      >
-        {/* Row 1 — scrolls left */}
+      <div className="w-full overflow-hidden py-2" dir="ltr">
         <Marquee
+          className="overflow-hidden h-[200px]"
           autoFill={true}
           pauseOnHover={true}
-          speed={40}
+          speed={50}
           gradientColor="#ffffff"
           gradientWidth={80}
           direction="left"
         >
-          {row1.map((partner) => (
-            <PartnerLogo
-              key={partner.id}
-              src={`${process.env.NEXT_PUBLIC_IMAGES_PREFIX_URL}/${partner.logo}`}
-              alt={partner.name}
-            />
-          ))}
-        </Marquee>
-
-        <Marquee
-          autoFill={true}
-          pauseOnHover={true}
-          speed={30}
-          gradientColor="#ffffff"
-          gradientWidth={80}
-          direction="right"
-        >
-          {row2.map((partner) => (
+          {partners.map((partner) => (
             <PartnerLogo
               key={partner.id}
               src={`${process.env.NEXT_PUBLIC_IMAGES_PREFIX_URL}/${partner.logo}`}

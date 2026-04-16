@@ -27,7 +27,7 @@ const pickupCardDetails: PickUpCardDetails[] = [
   {
     key: "currentLocation",
     title: "أو من أي موقع أينما كان",
-    description: "إينما تكن, سياراتك ستكون في إنتظارك",
+    description: "أينما تكن, سياراتك ستكون في إنتظارك",
     image: "/pickupCard/Showroom.png",
   },
 ];

@@ -26,7 +26,7 @@ export const getCompanyCars = async (
   const query: string[] = [];
 
   // required params
-  query.push(`page=${filters?.page ?? page}`);  
+  query.push(`page=${filters?.page ?? page}`);
   query.push(`size=${filters?.size ?? 20}`);
 
   // helper function
@@ -34,12 +34,27 @@ export const getCompanyCars = async (
     if (value !== undefined && value !== null && value !== "") {
       query.push(`${key}=${value}`);
     } else {
-      // 👈 هنا بنبعت key بس بدون value
       query.push(key);
     }
   };
 
   if (filters) {
+    const hasAirport =
+      filters.airportId !== undefined &&
+      filters.airportId !== null &&
+      filters.airportId !== "";
+    const hasTrainStation =
+      filters.trainStationId !== undefined &&
+      filters.trainStationId !== null &&
+      filters.trainStationId !== "";
+
+    // Backend expects different searchType based on the active location.
+    const searchTypeToUse = hasAirport
+      ? "airport"
+      : hasTrainStation
+        ? "train"
+        : filters.searchType ?? "location";
+
     addParam("maxPrice", filters.maxPrice);
     addParam("minPrice", filters.minPrice);
     addParam("categoryId", filters.categoryId);
@@ -50,16 +65,19 @@ export const getCompanyCars = async (
     addParam("locationType", filters.locationType);
 
     // params إضافية
-    addParam("searchType", filters.searchType ?? "location");
+    addParam("searchType", searchTypeToUse);
     addParam("priceType", filters.priceType ?? "");
     addParam("sortBy", filters.sortBy ?? "");
 
-    if (filters.latitude != null) {
-      query.push(`latitude=${filters.latitude}`);
-    }
+    // When searching by airport/train station, backend does not accept lat/lng.
+    if (!(hasAirport || hasTrainStation)) {
+      if (filters.latitude != null) {
+        query.push(`latitude=${filters.latitude}`);
+      }
 
-    if (filters.longitude != null) {
-      query.push(`longitude=${filters.longitude}`);
+      if (filters.longitude != null) {
+        query.push(`longitude=${filters.longitude}`);
+      }
     }
   }
 
