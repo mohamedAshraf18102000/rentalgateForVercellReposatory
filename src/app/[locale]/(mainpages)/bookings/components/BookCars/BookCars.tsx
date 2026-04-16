@@ -6,7 +6,6 @@ import { useForm } from "react-hook-form";
 import { useUserPreferedFiltersStore } from "@/lib/stores/useUserPreferedFiltersStore";
 import { useCompanyCars } from "../../hooks/useCompanyCars";
 import CarSearchForm from "../CarSearchForm";
-import ActiveFiltersBadges from "../ActiveFiltersBadges";
 import CarsGrid from "../CarsGrid";
 import LoadMoreButton from "../LoadMoreButton";
 import { Skeleton } from "@/app/(components)/ui/skeleton";

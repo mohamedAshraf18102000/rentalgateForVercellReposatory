@@ -1,7 +1,7 @@
 "use client";
 
 import OffersCarousel from "@/app/(components)/offersCarousel/OffersCarousel";
-import { LatestOffer, TodaysOffer } from "@/types/home/home";
+import { LatestOffer } from "@/types/home/home";
 
 const offerSlideImageClass =
   "min-h-[11rem] h-[min(42vw,15rem)] sm:h-64 sm:min-h-[16rem] " +

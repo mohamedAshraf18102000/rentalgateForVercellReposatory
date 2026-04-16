@@ -14,6 +14,7 @@ import { useLocale } from "next-intl";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { LatestOffer, TodaysOffer } from "@/types/home/home";
+import { useRouter } from "next/navigation";
 
 interface OffersCarouselProps {
   itemsPerSlide?: 1 | 2;
@@ -27,7 +28,7 @@ const OffersCarousel = ({
   offers,
 }: OffersCarouselProps) => {
   const locale = useLocale();
-
+  const router = useRouter();
   const isRtl = locale === "ar";
   const basisClass = itemsPerSlide === 1 ? "basis-full" : "basis-1/2";
   return (
@@ -42,7 +43,11 @@ const OffersCarousel = ({
       >
         <CarouselContent>
           {offers.map((offer) => (
-            <CarouselItem key={offer.offerId} className={basisClass}>
+            <CarouselItem
+              onClick={() => router.push(`/offeredCars/${offer.offerId}`)}
+              key={offer.offerId}
+              className={basisClass + " cursor-pointer"}
+            >
               <div className="p-1">
                 <Card className="p-0 m-0 rounded-2xl overflow-hidden">
                   <CardContent
