@@ -67,7 +67,7 @@ const OffersCarousel = ({
                           <p className="text-white text-lg font-bold mt-5">
                             {"detailsArabic" in offer
                               ? offer.detailsArabic
-                              : offer.offerCarsDescription}
+                              : ""}
                           </p>
                         </div>
                       </div>
