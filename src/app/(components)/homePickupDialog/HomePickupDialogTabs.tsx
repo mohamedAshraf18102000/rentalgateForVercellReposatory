@@ -24,10 +24,10 @@ const HomePickupDialogTabs = ({
     >
       <WrapperContainer className="w-full">
         <TabsList className="text-base! flex items-start justify-center mx-auto">
-          <TabsTrigger value="currentLocation">موقعك الخاصHome</TabsTrigger>
-          <TabsTrigger value="airport">مطارHome</TabsTrigger>
-          <TabsTrigger value="trainStation">محطة قطارHome</TabsTrigger>
-          <TabsTrigger value="branches">الفروعHome</TabsTrigger>
+          <TabsTrigger value="currentLocation">موقعك الخاص</TabsTrigger>
+          <TabsTrigger value="airport">مطار</TabsTrigger>
+          <TabsTrigger value="trainStation">محطة قطار</TabsTrigger>
+          <TabsTrigger value="branches">الفروع</TabsTrigger>
         </TabsList>
 
         <div className="relative min-h-[450px] max-h-[450px] rounded-2xl overflow-auto border border-Grey100 shadow-sm mt-3">

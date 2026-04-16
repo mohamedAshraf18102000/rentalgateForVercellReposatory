@@ -5,9 +5,22 @@ import { RadioGroup, RadioGroupItem } from "../../ui/radio-group";
 import { Separator } from "../../ui/separator";
 import { useGetTrainStations } from "@/hooks/api/useGetTrainStations";
 import { Skeleton } from "../../ui/skeleton";
+import { useUserPreferedFiltersStore } from "@/lib/stores/useUserPreferedFiltersStore";
 
 const HomeTrainLocations = () => {
   const { data: trainStationsData, isPending } = useGetTrainStations();
+  const { setFilter } = useUserPreferedFiltersStore();
+
+  const handleStationSelection = (value: string) => {
+    const id = value.replace("station-", "");
+    const selectedStation = trainStationsData?.content?.find(
+      (station) => station.stationId.toString() === id,
+    );
+
+    setFilter("pickupType", "trainStation");
+    setFilter("pickupId", id);
+    setFilter("pickupName", selectedStation?.arabicName || "");
+  };
 
   return (
     <div className="w-full h-full overflow-y-auto">
@@ -24,6 +37,7 @@ const HomeTrainLocations = () => {
         <RadioGroup
           dir="rtl"
           className="flex flex-col gap-y-2 w-[95%] mx-auto mt-2"
+          onValueChange={handleStationSelection}
         >
           <p className="text-base font-bold">محطات القطار الأكثر شهرة:</p>
 

@@ -73,9 +73,25 @@ const StepContent = forwardRef<StepContentRef, StepContentProps>(
       mode: "onChange",
       reValidateMode: "onChange",
       defaultValues: {
-        // Step 1 – location names always start empty (user must select each time)
-        pickupName: "",
-        carReturnLocation: "",
+        // Step 1 – hydrate locations from stores, fallback return to pickup
+        pickupName:
+          formData.pickupName && formData.pickupName !== "الموقع الحالي"
+            ? formData.pickupName
+            : filters.pickupName && filters.pickupName !== "الموقع الحالي"
+              ? filters.pickupName
+              : "",
+        carReturnLocation:
+          formData.carReturnLocation &&
+          formData.carReturnLocation !== "الموقع الحالي"
+            ? formData.carReturnLocation
+            : filters.carReturnLocation &&
+                filters.carReturnLocation !== "الموقع الحالي"
+              ? filters.carReturnLocation
+              : formData.pickupName && formData.pickupName !== "الموقع الحالي"
+                ? formData.pickupName
+                : filters.pickupName && filters.pickupName !== "الموقع الحالي"
+                  ? filters.pickupName
+                  : "",
         fromDate: formData.fromDate
           ? new Date(formData.fromDate)
           : filters.fromDate
@@ -120,15 +136,24 @@ const StepContent = forwardRef<StepContentRef, StepContentProps>(
       if (!_hasHydrated) return;
       reset(
         {
-          // Step 1 – Restore from store, but keep empty if it's just the placeholder
+          // Step 1 – restore from stores, fallback return to pickup
           pickupName:
             formData.pickupName && formData.pickupName !== "الموقع الحالي"
               ? formData.pickupName
+              : filters.pickupName && filters.pickupName !== "الموقع الحالي"
+                ? filters.pickupName
               : "",
           carReturnLocation:
             formData.carReturnLocation &&
             formData.carReturnLocation !== "الموقع الحالي"
               ? formData.carReturnLocation
+              : filters.carReturnLocation &&
+                  filters.carReturnLocation !== "الموقع الحالي"
+                ? filters.carReturnLocation
+                : formData.pickupName && formData.pickupName !== "الموقع الحالي"
+                  ? formData.pickupName
+                  : filters.pickupName && filters.pickupName !== "الموقع الحالي"
+                    ? filters.pickupName
               : "",
           fromDate: formData.fromDate
             ? new Date(formData.fromDate)

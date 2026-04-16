@@ -4,13 +4,24 @@ import { PlaneTakeoff } from "lucide-react";
 import { Label } from "../../ui/label";
 import { RadioGroup, RadioGroupItem } from "../../ui/radio-group";
 import { Separator } from "../../ui/separator";
-import { usePickupDialogStore } from "@/lib/stores/usePickupDialogStore";
-import { useBookedCarDetailsStore } from "@/lib/stores/useBookedCarDetailsStore";
 import { useGetAirports } from "@/hooks/api/useGetAirports";
 import { Skeleton } from "../../ui/skeleton";
+import { useUserPreferedFiltersStore } from "@/lib/stores/useUserPreferedFiltersStore";
 
 const HomeAirportLocations = () => {
   const { data: airportsData, isPending } = useGetAirports();
+  const { setFilter } = useUserPreferedFiltersStore();
+
+  const handleAirportSelection = (value: string) => {
+    const id = value.replace("airport-", "");
+    const selectedAirport = airportsData?.content?.find(
+      (airport) => airport.airportId.toString() === id,
+    );
+
+    setFilter("pickupType", "airport");
+    setFilter("pickupId", id);
+    setFilter("pickupName", selectedAirport?.arabicName || "");
+  };
 
   return (
     <div className="w-full h-full">
@@ -27,7 +38,7 @@ const HomeAirportLocations = () => {
         <RadioGroup
           dir="rtl"
           className="flex flex-col gap-y-2 w-[95%] mx-auto mt-2"
-          value={""}
+          onValueChange={handleAirportSelection}
         >
           <p className="text-base font-bold">المطارات الأكثر شهرة:</p>
 

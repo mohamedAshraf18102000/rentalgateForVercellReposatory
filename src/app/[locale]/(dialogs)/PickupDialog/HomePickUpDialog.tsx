@@ -6,6 +6,9 @@ import UpdateUserSavedLocationDialog from "@/app/[locale]/(mainpages)/userProfil
 import { useState } from "react";
 import { useUserPreferedFiltersStore } from "@/lib/stores/useUserPreferedFiltersStore";
 import HomePickupDialogTabs from "@/app/(components)/homePickupDialog/HomePickupDialogTabs";
+import { useRouter } from "next/navigation";
+import { useLocale } from "next-intl";
+import { useBookedCarDetailsStore } from "@/lib/stores/useBookedCarDetailsStore";
 
 export function HomePickUpDialog({ title }: { title?: string }) {
   const {
@@ -18,14 +21,61 @@ export function HomePickUpDialog({ title }: { title?: string }) {
     target,
     setIsUnsavedMapLocation,
   } = usePickupDialogStore();
-  const { filters, setFilter } = useUserPreferedFiltersStore();
+  const { filters, setFilter, applyFilters } = useUserPreferedFiltersStore();
+  const { setFormData } = useBookedCarDetailsStore();
   const [showSaveDialog, setShowSaveDialog] = useState(false);
+  const router = useRouter();
+  const locale = useLocale();
+
+  const syncPickupFiltersToReservationStore = () => {
+    const mappedPickupType =
+      filters.pickupType === "airport"
+        ? "AIRPORT"
+        : filters.pickupType === "trainStation"
+          ? "TRAIN_STATION"
+          : filters.pickupType === "currentLocation"
+            ? "MY_LOCATION"
+            : null;
+    const mappedLocationId = filters.pickupId || null;
+    const mappedAirportId =
+      filters.pickupType === "airport" && filters.pickupId
+        ? Number(filters.pickupId)
+        : null;
+    const mappedTrainId =
+      filters.pickupType === "trainStation" && filters.pickupId
+        ? Number(filters.pickupId)
+        : null;
+
+    setFormData({
+      pickupName: filters.pickupName || "",
+      pickupId: mappedLocationId,
+      pickupLat: filters.pickupLat ?? null,
+      pickupLong: filters.pickupLng ?? null,
+      pickupType: mappedPickupType,
+      pickupAirportId: mappedAirportId,
+      pickupTrainId: mappedTrainId,
+      carReturnLocation: filters.pickupName || "",
+      carReturnLocationId: mappedLocationId,
+      returnLat: filters.pickupLat ?? null,
+      returnLong: filters.pickupLng ?? null,
+      returnType: mappedPickupType,
+      returnAirportId: mappedAirportId,
+      returnTrainId: mappedTrainId,
+    });
+  };
 
   const handleConfirm = () => {
     if (activeTab === "currentLocation" && isUnsavedMapLocation) {
       setShowSaveDialog(true);
     } else {
+      if (target === "pickup") {
+        syncPickupFiltersToReservationStore();
+        applyFilters();
+      }
       confirmDialog();
+      if (target === "pickup") {
+        router.push(`/${locale}/bookings`);
+      }
     }
   };
 
@@ -84,10 +134,25 @@ export function HomePickUpDialog({ title }: { title?: string }) {
             setFilter("pickupLng", address.longitude);
             setFilter("pickupType", "currentLocation");
             setFilter("pickupId", String(address.addressId));
+            setFormData({
+              pickupName: address.addressName,
+              pickupLat: address.latitude,
+              pickupLong: address.longitude,
+              pickupType: "MY_LOCATION",
+              pickupId: String(address.addressId),
+              pickupAirportId: null,
+              pickupTrainId: null,
+            });
+          }
+          if (target === "pickup") {
+            applyFilters();
           }
           setIsUnsavedMapLocation(false);
           setShowSaveDialog(false);
           confirmDialog();
+          if (target === "pickup") {
+            router.push(`/${locale}/bookings`);
+          }
         }}
       />
     </>
