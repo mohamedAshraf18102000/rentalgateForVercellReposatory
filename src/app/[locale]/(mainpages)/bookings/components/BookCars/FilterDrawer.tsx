@@ -21,6 +21,8 @@ const FilterDrawer = () => {
     filters.priceMin !== "",
     filters.priceTo !== "",
     filters.categoryId !== "",
+    filters.brandId !== "",
+    filters.modelId !== "",
     filters.pickupId !== "" && filters.pickupId !== "current-location",
   ].filter(Boolean).length;
 

@@ -42,7 +42,7 @@ export default async function HomePage({ params }: Props) {
       <RentalGateInfo />
       <RentalBookingSearchSection />
       <SuccessPartners companiesData={homeData?.companies ?? []} />
-      {homeData?.todayOffers.length && (
+      {(homeData?.todayOffers?.length ?? 0) > 0 && (
         <Offers todayOffersData={homeData?.todayOffers ?? []} />
       )}
       <MostRequestedCars locale={locale} />

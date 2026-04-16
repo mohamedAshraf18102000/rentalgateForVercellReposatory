@@ -10,6 +10,7 @@ const footerNav = [
   { href: "/bookings", key: "booking" as const },
   { href: "/bussinessAccounts", key: "businessAccount" as const },
   { href: "/userProfile", key: "footerPersonal" as const },
+  { href: "/terms&conditions", key: "termsAndConditions" as const },
 ];
 
 function YoutubeIcon({ className }: { className?: string }) {

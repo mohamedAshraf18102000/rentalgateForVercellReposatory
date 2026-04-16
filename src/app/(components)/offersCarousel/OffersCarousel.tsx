@@ -47,7 +47,7 @@ const OffersCarousel = ({
                 <Card className="p-0 m-0 rounded-2xl overflow-hidden">
                   <CardContent
                     className={cn(
-                      "flex h-72 items-center justify-center relative px-0! py-0!",
+                      "flex h-80 items-center justify-center relative px-0! py-0!",
                       className,
                     )}
                   >

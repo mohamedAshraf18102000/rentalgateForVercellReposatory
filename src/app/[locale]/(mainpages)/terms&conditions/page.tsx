@@ -2,10 +2,11 @@ import WrapperContainer from "@/app/(components)/wrapperContainer/WrapperContain
 import {
   getBookingTerms,
   getCancelationTerms,
+  getPaymentTerms,
 } from "@/services/termsAndConditions/cancelationTerms.service";
 import { TermItem } from "@/types/termsAndConditions/cancelationTerms";
 import { setRequestLocale } from "next-intl/server";
-import { FileText, Ban } from "lucide-react";
+import { FileText, Ban, HandCoins } from "lucide-react";
 import { Separator } from "@/app/(components)/ui/separator";
 import { Badge, Card, HashAnchorScroller } from "@/app/(components)";
 import { CardContent, CardHeader, CardTitle } from "@/app/(components)/ui/card";
@@ -38,6 +39,7 @@ const Page = async ({ params }: Props) => {
 
   let cancelationTerms: TermItem[] = [];
   let bookingTerms: TermItem[] = [];
+  let paymentTerms: TermItem[] = [];
 
   try {
     const response = await getCancelationTerms();
@@ -53,8 +55,18 @@ const Page = async ({ params }: Props) => {
     console.error("Error fetching booking terms:", error);
   }
 
+  try {
+    const response = await getPaymentTerms();
+    paymentTerms = response.content ?? [];
+  } catch (error) {
+    console.error("Error fetching payment terms:", error);
+  }
+
   return (
-    <WrapperContainer className="bg-background min-h-screen" exceedNav>
+    <WrapperContainer
+      className="bg-background min-h-screen rounded-2xl"
+      exceedNav
+    >
       <HashAnchorScroller offset={100} />
       <div className="px-4 py-10">
         {/* Page Header */}
@@ -91,6 +103,34 @@ const Page = async ({ params }: Props) => {
               {bookingTerms.length > 0 ? (
                 <div className="divide-y divide-border">
                   {bookingTerms.map((term) => (
+                    <TermSection key={term.termsId} term={term} />
+                  ))}
+                </div>
+              ) : (
+                <EmptyState message="لا توجد شروط متاحة حاليًا." />
+              )}
+            </CardContent>
+          </Card>
+
+          <Card id="payment-terms" className="border border-border shadow-sm">
+            <CardHeader className="pb-3">
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-base font-semibold flex items-center gap-2">
+                  <HandCoins className="w-4 h-4" />
+                  شروط الدفع
+                </CardTitle>
+                {paymentTerms.length > 0 && (
+                  <Badge variant="secondary" className="text-xs">
+                    {cancelationTerms.length} بند
+                  </Badge>
+                )}
+              </div>
+              <Separator />
+            </CardHeader>
+            <CardContent className="pt-0">
+              {paymentTerms.length > 0 ? (
+                <div className="divide-y divide-border">
+                  {paymentTerms.map((term) => (
                     <TermSection key={term.termsId} term={term} />
                   ))}
                 </div>

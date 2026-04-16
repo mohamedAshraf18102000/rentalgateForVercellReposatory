@@ -3,7 +3,6 @@ import WrapperContainer from "@/app/(components)/wrapperContainer/WrapperContain
 import Image from "next/image";
 import PartnersIcon from "../../../../constants/icons/PartnersIcon";
 import SuccessPartnersMerquee from "@/app/(components)/home/SuccessPartnersMerquee";
-import { useHomeStore } from "@/lib/stores/useHomeStore";
 import { Company } from "@/types/home/home";
 
 const SuccessPartners = ({ companiesData }: { companiesData: Company[] }) => {

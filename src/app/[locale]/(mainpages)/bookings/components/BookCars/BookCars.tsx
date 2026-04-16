@@ -122,16 +122,6 @@ const BookCars = () => {
           shown={allCars.length}
           total={totalElements}
         />
-
-        <ActiveFiltersBadges
-          filters={appliedFilters}
-          setFilter={setFilter}
-          fromDate={fromDate}
-          toDate={toDate}
-          rentalDays={rentalDays}
-          clearFromDate={() => setValue("fromDate", null)}
-          clearToDate={() => setValue("toDate", null)}
-        />
       </div>
       {isLoading ? (
         <div className="mt-6 grid grid-cols-1 gap-4 sm:mt-8 sm:gap-6 md:grid-cols-2 md:mt-10 lg:grid-cols-3">
