@@ -151,12 +151,6 @@ export const clearAllCookies = (): void => {
     try {
       // Dynamically import stores to avoid circular dependency
       import('@/lib/api/stores').then((stores) => {
-        // Reset validation store
-        const validationState = stores.useValidationStore.getState();
-        if (validationState?.reset) {
-          validationState.reset();
-        }
-
         // Reset filter store
         const filterState = stores.useFilterStore.getState();
         if (filterState?.reset) {
