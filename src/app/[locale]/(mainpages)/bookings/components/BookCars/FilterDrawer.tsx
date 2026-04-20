@@ -54,7 +54,7 @@ const FilterDrawer = () => {
         </SheetHeader>
         <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-3 pb-2 sm:px-4 sm:pb-3">
           <div className="w-full p-1 sm:p-2">
-            <DrawerAccordion /> 
+            <DrawerAccordion />
           </div>
         </div>
         <SheetFooter className="mt-auto grid w-full max-w-none grid-cols-1 gap-2 border-t-2 p-3 shadow-[0px_-13px_15px_0px_#01250514] sm:grid-cols-2 sm:gap-3 sm:p-5">
