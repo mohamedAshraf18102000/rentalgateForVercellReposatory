@@ -2,8 +2,8 @@
 import WrapperContainer from "@/app/(components)/wrapperContainer/WrapperContainer";
 import Image from "next/image";
 import PartnersIcon from "../../../../constants/icons/PartnersIcon";
-import SuccessPartnersMerquee from "@/app/(components)/home/SuccessPartnersMerquee";
 import { Company } from "@/types/home/home";
+import SuccessPartnersMerquee from "@/app/(components)/home/SuccessPartnersMerquee";
 
 const SuccessPartners = ({ companiesData }: { companiesData: Company[] }) => {
   const displayPartners = companiesData || [];
@@ -30,7 +30,7 @@ const SuccessPartners = ({ companiesData }: { companiesData: Company[] }) => {
           </p>
         </div>
       </div>
-      <div className="w-full lg:w-2/3 h-[220px] lg:h-full relative rounded-2xl overflow-hidden bg-gray-50/50">
+      <div className="w-full lg:w-2/3 h-[220px] lg:h-full relative rounded-2xl overflow-hidden flex flex-col">
         <SuccessPartnersMerquee partners={displayPartners} />
       </div>
     </WrapperContainer>

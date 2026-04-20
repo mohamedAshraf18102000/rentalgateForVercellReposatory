@@ -228,17 +228,40 @@
 
 "use client";
 
+import Image from "next/image";
+import SuccessPartnersMerquee from "@/app/(components)/home/SuccessPartnersMerquee";
+import { Company } from "@/types/home/home";
 import WrapperContainer from "@/app/(components)/wrapperContainer/WrapperContainer";
-import { useBookedCarDetailsStore } from "@/lib/stores/useBookedCarDetailsStore";
+import PartnersIcon from "@/constants/icons/PartnersIcon";
 
-const page = () => {
-  const resetForm = useBookedCarDetailsStore((s) => s.resetForm);
-  const formData = useBookedCarDetailsStore((s) => s.formData);
+const page = ({ companiesData }: { companiesData: Company[] }) => {
+  const displayPartners = companiesData || [];
+
   return (
-    <WrapperContainer exceedNav>
-      <button onClick={() => resetForm()}>Click Here</button>
-      <br />
-      <button onClick={() => console.log(formData)}>log form Data</button>
+    <WrapperContainer className="flex flex-col lg:flex-row gap-6 lg:gap-10 h-auto lg:h-72 my-10 px-4 md:px-0 mt-50">
+      <div className="w-full lg:w-1/3 min-h-[220px] lg:h-full relative rounded-2xl overflow-hidden shadow-xl">
+        <Image
+          src="/successPartners/frame1.png"
+          alt="frame1"
+          fill
+          className="object-cover"
+        />
+
+        <div className="absolute inset-0 z-40 text-white p-6 md:p-8 flex flex-col justify-center items-start">
+          <div className="flex items-center gap-3">
+            <PartnersIcon />
+            <h5 className="font-extrabold text-2xl md:text-3xl lg:text-4xl">
+              شركائنا في النجاح
+            </h5>
+          </div>
+          <p className="text-sm md:text-base lg:text-lg w-full md:w-3/4 mt-3 opacity-90 leading-relaxed">
+            نجاحنا لا يكتمل إلا بشركائنا الذين نعتز بثقتهم وتعاونهم
+          </p>
+        </div>
+      </div>
+      <div className="w-full lg:w-2/3 h-[220px] lg:h-full relative rounded-2xl overflow-hidden bg-gray-50/50">
+        <SuccessPartnersMerquee partners={displayPartners} />
+      </div>
     </WrapperContainer>
   );
 };
