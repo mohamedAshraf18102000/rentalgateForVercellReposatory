@@ -1,6 +1,13 @@
 import { formatLocalDateTime } from "@/lib/utils/formatLocalDateTime";
 
 export const buildReservationPayload = (formData: any) => {
+  const reservationForOther = formData.reservationForOther;
+  const hasReservationForOtherData =
+    !!reservationForOther?.name ||
+    !!reservationForOther?.phone ||
+    !!reservationForOther?.nationalId ||
+    !!reservationForOther?.licenseImage;
+
   return {
     companyCarBranchId: formData.carDetails?.ccbId ?? null,
     startDate: formatLocalDateTime(formData.fromDate),
@@ -57,14 +64,22 @@ export const buildReservationPayload = (formData: any) => {
     },
     points: formData.points?.type
       ? {
-          type: formData.points.type,
-          pointsPkId: formData.points.pointsPkId ?? null,
-        }
+        type: formData.points.type,
+        pointsPkId: formData.points.pointsPkId ?? null,
+      }
       : null,
     extraKm: {
       extraKmApplied: formData.extraKmApplied,
       extraKmType: formData.extraKmType,
       extraKmQuotaId: null,
     },
+    reservationForOther: hasReservationForOtherData
+      ? {
+        name: reservationForOther?.name ?? "",
+        phone: reservationForOther?.phone ?? "",
+        nationalId: reservationForOther?.nationalId ?? "",
+        licenseImage: reservationForOther?.licenseImage ?? "",
+      }
+      : null,
   };
 };

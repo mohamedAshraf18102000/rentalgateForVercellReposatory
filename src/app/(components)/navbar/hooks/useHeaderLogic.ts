@@ -23,9 +23,15 @@ export function useHeaderLogic() {
 
   // Handlers
   const handleLogout = React.useCallback(() => {
-    logout();
-    clearClientData(); // Clear client data from Zustand store
     router.push("/");
+    logout();
+    clearClientData();
+    setTimeout(() => {
+      localStorage.removeItem("booked-car-details-storage");
+      sessionStorage.removeItem("user-prefered-filters-storage");
+      localStorage.removeItem("user-prefered-filters-storage");
+      window.location.reload();
+    }, 1000);
   }, [router, clearClientData]);
 
   const handleLanguageChange = React.useCallback(() => {

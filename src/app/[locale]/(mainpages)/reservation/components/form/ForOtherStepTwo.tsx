@@ -6,7 +6,6 @@ import {
   FieldErrors,
   UseFormSetValue,
   UseFormTrigger,
-  useWatch,
 } from "react-hook-form";
 import { IdCard, User } from "lucide-react";
 import { useMutation } from "@tanstack/react-query";
@@ -16,7 +15,6 @@ import { Input } from "@/app/(components)";
 import { Separator } from "@/app/(components)/ui/separator";
 import { InputFileUpload } from "@/app/(components)/ui/inputFileUpload";
 import { ReservationFormValues } from "@/lib/validations/reservationSchema";
-import { useBookedCarDetailsStore } from "@/lib/stores/useBookedCarDetailsStore";
 import CountryPhone from "@/app/(components)/template/phone/CountryPhone";
 
 interface StepTwoProps {
@@ -27,12 +25,6 @@ interface StepTwoProps {
 }
 
 const StepTwo = ({ control, errors, setValue }: StepTwoProps) => {
-  const { formData, setFormField } = useBookedCarDetailsStore();
-
-  console.log(errors);
-
-  const residenceTypeStr = useWatch({ control, name: "idNumber" });
-
   const {
     mutateAsync: doUploadImage,
     isPending,
@@ -121,11 +113,7 @@ const StepTwo = ({ control, errors, setValue }: StepTwoProps) => {
                   {...field}
                   label="صورة الرخصة"
                   placeholder="أدخل صورة الرخصة"
-                  initialFile={formData.licenseImageFile}
                   onFileChange={async (file) => {
-                    // Save File in store so preview survives step navigation
-                    setFormField("licenseImageFile", file);
-
                     if (file) {
                       try {
                         const uploadedImageName = await doUploadImage(file);
@@ -133,8 +121,6 @@ const StepTwo = ({ control, errors, setValue }: StepTwoProps) => {
                         setValue("OtherPersonLicenseImage", uploadedImageName, {
                           shouldValidate: true,
                         });
-                        // Save string in store
-                        setFormField("licenseImage", uploadedImageName);
                       } catch (err) {
                         console.error("Upload failed", err);
                       }
@@ -142,7 +128,6 @@ const StepTwo = ({ control, errors, setValue }: StepTwoProps) => {
                       setValue("OtherPersonLicenseImage", "", {
                         shouldValidate: true,
                       });
-                      setFormField("licenseImage", "");
                     }
                   }}
                 />

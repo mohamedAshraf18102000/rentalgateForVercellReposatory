@@ -41,6 +41,12 @@ export interface ReservationFormData {
   personalId: string;
   passportNumber: string;
   borderNumber: string;
+  reservationForOther: {
+    name: string;
+    phone: string;
+    nationalId: string;
+    licenseImage: string;
+  };
 
   // Step 3
   plan: PricingType | null;
@@ -75,7 +81,7 @@ export interface ReservationFormData {
   rentalDays: number | null;
 }
 
-const initialFormData: ReservationFormData = {
+const createInitialFormData = (): ReservationFormData => ({
   company_id: null,
   pickupName: "",
   pickupLat: null,
@@ -99,6 +105,12 @@ const initialFormData: ReservationFormData = {
   personalId: "",
   passportNumber: "",
   borderNumber: "",
+  reservationForOther: {
+    name: "",
+    phone: "",
+    nationalId: "",
+    licenseImage: "",
+  },
   plan: null,
   services: [],
   driver: null,
@@ -116,7 +128,7 @@ const initialFormData: ReservationFormData = {
   returnTrainId: null,
   returnAirportId: null,
   rentalDays: 0,
-};
+});
 
 export interface BookedCarDetailsState {
   carDetails: CarDetailsResponse | null;
@@ -154,7 +166,7 @@ export const useBookedCarDetailsStore = create<BookedCarDetailsState>()(
       services: [],
       airports: [],
       trainStations: [],
-      formData: initialFormData,
+      formData: createInitialFormData(),
       showPricesWithTax: true,
 
       _hasHydrated: false,
@@ -185,7 +197,8 @@ export const useBookedCarDetailsStore = create<BookedCarDetailsState>()(
           },
         })),
 
-      resetForm: () => set({ formData: initialFormData }),
+      resetForm: () => set({ formData: createInitialFormData() }),
+
     }),
     {
       name: "booked-car-details-storage",

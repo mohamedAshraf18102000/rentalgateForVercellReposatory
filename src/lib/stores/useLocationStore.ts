@@ -12,15 +12,20 @@ interface LocationState {
   setLocation: (lat: number | null, lng: number | null, address?: string | null) => void;
   openDialog: () => void;
   closeDialog: () => void;
+  resetLocationState: () => void;
 }
+
+const initialLocationState = {
+  latitude: null as number | null,
+  longitude: null as number | null,
+  address: null as string | null,
+  isDialogOpen: false,
+};
 
 export const useLocationStore = create<LocationState>()(
   persist(
     (set) => ({
-      latitude: null,
-      longitude: null,
-      address: null,
-      isDialogOpen: false,
+      ...initialLocationState,
       setLatitude: (latitude) => set({ latitude }),
       setLongitude: (longitude) => set({ longitude }),
       setAddress: (address) => set({ address }),
@@ -28,6 +33,7 @@ export const useLocationStore = create<LocationState>()(
         set({ latitude, longitude, address }),
       openDialog: () => set({ isDialogOpen: true }),
       closeDialog: () => set({ isDialogOpen: false }),
+      resetLocationState: () => set(initialLocationState),
     }),
     {
       name: "user-location-storage",

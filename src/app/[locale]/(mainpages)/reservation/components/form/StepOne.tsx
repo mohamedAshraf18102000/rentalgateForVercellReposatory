@@ -30,7 +30,6 @@ interface StepOneProps {
 
 const StepOne = ({ control, errors, watch, setValue }: StepOneProps) => {
   const formData = useBookedCarDetailsStore((state) => state.formData);
-  console.log("-------formData", formData);
 
   const { openDialog } = usePickupDialogStore();
 

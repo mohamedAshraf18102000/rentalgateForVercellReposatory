@@ -323,11 +323,13 @@ const StepContent = forwardRef<StepContentRef, StepContentProps>(
           const values = getValues();
 
           if (isForOtherReservation) {
-            console.log("For other reservation step 2 data:", {
-              OtherPersonName: values.OtherPersonName,
-              OtherPersonPhoneNumber: values.OtherPersonPhoneNumber,
-              OtherPersonLicenseImage: values.OtherPersonLicenseImage,
-              OtherPersonalId: values.OtherPersonalId,
+            setFormData({
+              reservationForOther: {
+                name: values.OtherPersonName || "",
+                phone: values.OtherPersonPhoneNumber || "",
+                nationalId: values.OtherPersonalId || "",
+                licenseImage: values.OtherPersonLicenseImage || "",
+              },
             });
             return true;
           }
