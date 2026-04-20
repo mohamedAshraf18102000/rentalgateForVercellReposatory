@@ -1,5 +1,4 @@
 import Image from "next/image";
-import { Button } from "../../ui/button";
 import { FavCategoryTabs } from "./FavCategoryTabs";
 import { useUserPreferedFiltersStore, CarCategory } from "@/lib/stores/useUserPreferedFiltersStore";
 import { useRouter } from "next/navigation";
@@ -9,13 +8,6 @@ const FavCategoryComponent = () => {
   const { filters, setFilter, applyFilters } = useUserPreferedFiltersStore();
   const router = useRouter();
   const locale = useLocale();
-
-  const handleShowResults = () => {
-    if (!filters.carCategory) return;
-
-    applyFilters();
-    router.push(`/${locale}/bookings`);
-  };
 
   return (
     <div className="h-[480px] md:h-full rounded-2xl! overflow-hidden shadow-lg border-2 border-white">
@@ -37,12 +29,10 @@ const FavCategoryComponent = () => {
           onValueChange={(value) => {
             setFilter("carCategory", value as CarCategory);
             setFilter("categoryId", value);
+            applyFilters();
+            router.push(`/${locale}/bookings`);
           }} 
         />
-
-        <Button className="mt-4 text-sm" onClick={handleShowResults}>
-          إظهار النتائج
-        </Button>
       </div>
     </div>
   );

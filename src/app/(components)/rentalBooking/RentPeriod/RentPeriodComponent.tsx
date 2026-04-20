@@ -1,10 +1,10 @@
 import Image from "next/image";
 import { PeriodSearchTabs } from "./PeriodSearchTabs";
-import { Button } from "../../ui/button";
 import {
   useUserPreferedFiltersStore,
   RentPeriod,
 } from "@/lib/stores/useUserPreferedFiltersStore";
+import { Info } from "lucide-react";
 
 const RentPeriodComponent = () => {
   const { filters, setFilter } = useUserPreferedFiltersStore();
@@ -33,7 +33,10 @@ const RentPeriodComponent = () => {
           }
         />
 
-        <Button className="mt-4 text-sm">إظهار النتائج</Button>
+        <div className="bg-primary w-[60%] mx-auto mt-3 text-white text-center rounded-[8px] text-sm flex items-center justify-center gap-2 py-2">
+          <Info size={20} />
+          <span>الإيجار السنوي لا ينتهي بالتمليك</span>
+        </div>
       </div>
     </div>
   );

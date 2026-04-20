@@ -18,37 +18,37 @@ export const PeriodSearchTabs: React.FC<PeriodSearchProps> = ({
       onValueChange={(newValue) => onValueChange(newValue as RentPeriod)}
       className="w-full"
     >
-      <TabsList className="bg-Grey100 p-1 md:p-2 w-full flex justify-between h-auto">
+      <TabsList className="bg-transparent p-1 md:p-2 w-full flex justify-between h-auto">
         <TabsTrigger
           value="daily"
-          className="login-tab-trigger flex-1 py-2 md:py-3"
+          className="login-tab-trigger flex-1 py-2 md:py-3 bg-[#F2F2F2]"
         >
           <span className="login-tab-text text-xs sm:text-sm md:text-base">
-            يومي
+            باليوم
           </span>
         </TabsTrigger>
         <TabsTrigger
           value="weekly"
-          className="login-tab-trigger flex-1 py-2 md:py-3"
+          className="login-tab-trigger flex-1 py-2 md:py-3 bg-[#F2F2F2]"
         >
           <span className="login-tab-text text-xs sm:text-sm md:text-base">
-            أسبوعي
+            بالأسبوع
           </span>
         </TabsTrigger>
         <TabsTrigger
           value="monthly"
-          className="login-tab-trigger flex-1 py-2 md:py-3"
+          className="login-tab-trigger flex-1 py-2 md:py-3 bg-[#F2F2F2]"
         >
           <span className="login-tab-text text-xs sm:text-sm md:text-base">
-            شهري
+            بالشهر
           </span>
         </TabsTrigger>
         <TabsTrigger
           value="yearly"
-          className="login-tab-trigger flex-1 py-2 md:py-3"
+          className="login-tab-trigger flex-1 py-2 md:py-3 bg-[#F2F2F2]"
         >
           <span className="login-tab-text text-xs sm:text-sm md:text-base">
-            سنوي
+            بالسنة
           </span>
         </TabsTrigger>
       </TabsList>
