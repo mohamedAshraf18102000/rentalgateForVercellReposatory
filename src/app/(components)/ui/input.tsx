@@ -66,180 +66,189 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
     },
     ref,
   ) => {
-  const [showPassword, setShowPassword] = React.useState(false);
+    const [showPassword, setShowPassword] = React.useState(false);
 
-  const isPassword = type === "password";
-  const hasStartIcon = !!startIcon;
-  const hasEndIcon = !!endIcon || isPassword;
-  const hasEndButton = !!endButton;
-  const hasStartButton = !!startButton;
+    const isPassword = type === "password";
+    const hasStartIcon = !!startIcon;
+    const hasEndIcon = !!endIcon || isPassword;
+    const hasEndButton = !!endButton;
+    const hasStartButton = !!startButton;
 
-  const inputPadding = React.useMemo(() => {
-    let padding = "";
+    const inputPadding = React.useMemo(() => {
+      let padding = "";
 
-    // Start padding (left in LTR, right in RTL)
-    if (
-      hasStartButton &&
-      typeof startButton === "object" &&
-      "title" in startButton
-    ) {
-      padding += "pl-20 rtl:pr-20 rtl:pl-2 ";
-    } else if (hasStartIcon || hasStartButton) {
-      padding += "pl-8 rtl:pr-8 rtl:pl-2 ";
-    }
+      // Start padding (left in LTR, right in RTL)
+      if (
+        hasStartButton &&
+        typeof startButton === "object" &&
+        "title" in startButton
+      ) {
+        padding += "pl-20 rtl:pr-20 rtl:pl-2 ";
+      } else if (hasStartIcon || hasStartButton) {
+        padding += "pl-8 rtl:pr-8 rtl:pl-2 ";
+      }
 
-    // End padding (right in LTR, left in RTL)
-    if (hasEndButton && typeof endButton === "object" && "title" in endButton) {
-      padding += "pr-20 rtl:pl-20 rtl:pr-2 ";
-    } else if (hasEndIcon || hasEndButton || isPassword) {
-      padding += "pr-8 rtl:pl-8 rtl:pr-2 ";
-    }
+      // End padding (right in LTR, left in RTL)
+      if (
+        hasEndButton &&
+        typeof endButton === "object" &&
+        "title" in endButton
+      ) {
+        padding += "pr-20 rtl:pl-20 rtl:pr-2 ";
+      } else if (hasEndIcon || hasEndButton || isPassword) {
+        padding += "pr-8 rtl:pl-8 rtl:pr-2 ";
+      }
 
-    return padding;
-  }, [
-    hasStartIcon,
-    hasEndIcon,
-    hasEndButton,
-    hasStartButton,
-    endButton,
-    startButton,
-    isPassword,
-  ]);
+      return padding;
+    }, [
+      hasStartIcon,
+      hasEndIcon,
+      hasEndButton,
+      hasStartButton,
+      endButton,
+      startButton,
+      isPassword,
+    ]);
 
-  const renderButton = (
-    button:
-      | React.ReactNode
-      | {
-          title: string;
-          icon?: React.ReactNode;
-          variant?:
-            | "default"
-            | "outline"
-            | "destructive"
-            | "ghost"
-            | "link"
-            | "secondary";
-          onClick?: () => void;
-        },
-    position: "start" | "end",
-  ) => {
-    if (!button) return null;
+    const renderButton = (
+      button:
+        | React.ReactNode
+        | {
+            title: string;
+            icon?: React.ReactNode;
+            variant?:
+              | "default"
+              | "outline"
+              | "destructive"
+              | "ghost"
+              | "link"
+              | "secondary";
+            onClick?: () => void;
+          },
+      position: "start" | "end",
+    ) => {
+      if (!button) return null;
 
-    if (React.isValidElement(button)) {
-      return button;
-    }
+      if (React.isValidElement(button)) {
+        return button;
+      }
 
-    if (typeof button === "object" && "title" in button) {
-      return (
-        <Button
-          title={button.title}
-          icon={button.icon}
-          variant={button.variant || "default"}
-          onClick={button.onClick}
-          size="sm"
-          className={cn(
-            "absolute top-1/2 -translate-y-1/2 h-6 px-2 z-10",
-            position === "end"
-              ? "right-1 rtl:left-1 rtl:right-auto"
-              : "left-1 rtl:right-1 rtl:left-auto",
-          )}
-        />
-      );
-    }
+      if (typeof button === "object" && "title" in button) {
+        return (
+          <Button
+            title={button.title}
+            icon={button.icon}
+            variant={button.variant || "default"}
+            onClick={button.onClick}
+            size="sm"
+            className={cn(
+              "absolute top-1/2 -translate-y-1/2 h-6 px-2 z-10",
+              position === "end"
+                ? "right-1 rtl:left-1 rtl:right-auto"
+                : "left-1 rtl:right-1 rtl:left-auto",
+            )}
+          />
+        );
+      }
 
-    return null;
-  };
+      return null;
+    };
 
-  const inputElement = (
-    <input
-      ref={ref}
-      type={isPassword ? (showPassword ? "text" : "password") : type}
-      data-slot="input"
-      className={cn(
-        "bg-input/20 dark:bg-input/30 border-input focus-visible:border-ring focus-visible:ring-ring/30 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:aria-invalid:border-destructive/50 rounded-[8px] border px-2 py-0.5 text-sm transition-colors file:h-6 file:text-xs/relaxed file:font-medium focus-visible:ring-2 aria-invalid:ring-2 md:text-xs/relaxed file:text-foreground placeholder:text-muted-foreground w-full min-w-0 outline-none file:inline-flex file:border-0 file:bg-transparent disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50",
-        size === "sm" && "h-7",
-        size === "md" && "h-10",
-        size === "lg" && "h-11",
-        errorMessage &&
-          "border-red-500 focus-visible:border-red-500 focus-visible:ring-red-500/30",
-        inputPadding,
-        className,
-      )}
-      {...props}
-    />
-  );
-
-  // Simple input without icons/buttons/label
-  const needsWrapper =
-    hasStartIcon || hasEndIcon || hasEndButton || hasStartButton || isPassword;
-
-  const inputWithWrapper = needsWrapper ? (
-    <div className={cn("relative w-full", wrapperClassName)}>
-      {/* Start Icon */}
-      {hasStartIcon && (
-        <span className="absolute left-2 rtl:right-2 rtl:left-auto top-1/2 -translate-y-1/2 flex items-center justify-center text-muted-foreground pointer-events-none z-10 [&>svg]:size-4 [&>svg]:shrink-0">
-          {startIcon}
-        </span>
-      )}
-
-      {/* Start Button */}
-      {hasStartButton && renderButton(startButton, "start")}
-
-      {inputElement}
-
-      {/* Password Toggle */}
-      {isPassword && (
-        <button
-          type="button"
-          onClick={() => setShowPassword(!showPassword)}
-          className="absolute right-2 rtl:left-2 rtl:right-auto top-1/2 -translate-y-1/2 p-1 text-muted-foreground hover:text-foreground transition-colors z-10"
-        >
-          {showPassword ? (
-            <Eye className="size-4" />
-          ) : (
-            <EyeOff className="size-4" />
-          )}
-        </button>
-      )}
-
-      {/* End Icon (only if not password) */}
-      {hasEndIcon && !hasEndButton && !isPassword && (
-        <span className="absolute right-2 rtl:left-2 rtl:right-auto top-1/2 -translate-y-1/2 flex items-center justify-center text-muted-foreground pointer-events-none z-10 [&>svg]:size-4 [&>svg]:shrink-0">
-          {endIcon}
-        </span>
-      )}
-
-      {/* End Button */}
-      {hasEndButton && renderButton(endButton, "end")}
-    </div>
-  ) : (
-    inputElement
-  );
-
-  // If no label, return input (with or without wrapper)
-  if (!label) {
-    return inputWithWrapper;
-  }
-
-  // With label
-  return (
-    <div className="space-y-1.5 w-full">
-      <label
+    const inputElement = (
+      <input
+        ref={ref}
+        type={isPassword ? (showPassword ? "text" : "password") : type}
+        data-slot="input"
         className={cn(
-          "flex items-center gap-1.5 text-sm font-medium text-foreground",
-          labelClassName,
+          "bg-input/20 dark:bg-input/30 border-input focus-visible:border-ring focus-visible:ring-ring/30 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:aria-invalid:border-destructive/50 rounded-[8px] border px-2 py-0.5 text-sm transition-colors file:h-6 file:text-xs/relaxed file:font-medium focus-visible:ring-2 aria-invalid:ring-2 md:text-xs/relaxed file:text-foreground placeholder:text-muted-foreground w-full min-w-0 outline-none file:inline-flex file:border-0 file:bg-transparent disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50",
+          size === "sm" && "h-7",
+          size === "md" && "h-10",
+          size === "lg" && "h-11",
+          errorMessage &&
+            "border-red-500 focus-visible:border-red-500 focus-visible:ring-red-500/30",
+          inputPadding,
+          className,
         )}
-      >
-        {labelIcon && labelIcon}
-        {label}
-      </label>
-      <div className="mt-2">{inputWithWrapper}</div>
-      {errorMessage && (
-        <p className="text-xs text-red-500 mt-1">{errorMessage}</p>
-      )}
-    </div>
-  );
-});
+        {...props}
+      />
+    );
+
+    // Simple input without icons/buttons/label
+    const needsWrapper =
+      hasStartIcon ||
+      hasEndIcon ||
+      hasEndButton ||
+      hasStartButton ||
+      isPassword;
+
+    const inputWithWrapper = needsWrapper ? (
+      <div className={cn("relative w-full", wrapperClassName)}>
+        {/* Start Icon */}
+        {hasStartIcon && (
+          <span className="absolute left-2 rtl:right-2 rtl:left-auto top-1/2 -translate-y-1/2 flex items-center justify-center text-muted-foreground pointer-events-none z-10 [&>svg]:size-4 [&>svg]:shrink-0">
+            {startIcon}
+          </span>
+        )}
+
+        {/* Start Button */}
+        {hasStartButton && renderButton(startButton, "start")}
+
+        {inputElement}
+
+        {/* Password Toggle */}
+        {isPassword && (
+          <button
+            type="button"
+            onClick={() => setShowPassword(!showPassword)}
+            className="absolute right-2 rtl:left-2 rtl:right-auto top-1/2 -translate-y-1/2 p-1 text-muted-foreground hover:text-foreground transition-colors z-10"
+          >
+            {showPassword ? (
+              <Eye className="size-4" />
+            ) : (
+              <EyeOff className="size-4" />
+            )}
+          </button>
+        )}
+
+        {/* End Icon (only if not password) */}
+        {hasEndIcon && !hasEndButton && !isPassword && (
+          <span className="absolute right-2 rtl:left-2 rtl:right-auto top-1/2 -translate-y-1/2 flex items-center justify-center text-muted-foreground pointer-events-none z-10 [&>svg]:size-4 [&>svg]:shrink-0">
+            {endIcon}
+          </span>
+        )}
+
+        {/* End Button */}
+        {hasEndButton && renderButton(endButton, "end")}
+      </div>
+    ) : (
+      inputElement
+    );
+
+    // If no label, return input (with or without wrapper)
+    if (!label) {
+      return inputWithWrapper;
+    }
+
+    // With label
+    return (
+      <div className="space-y-1.5 w-full">
+        <label
+          className={cn(
+            "flex items-center gap-1.5 text-sm font-medium text-foreground",
+            labelClassName,
+          )}
+        >
+          {labelIcon && labelIcon}
+          {label}
+        </label>
+        <div className="mt-2">{inputWithWrapper}</div>
+        {errorMessage && (
+          <p className="text-xs text-StatusRedBG! mt-1">{errorMessage}</p>
+        )}
+      </div>
+    );
+  },
+);
 
 Input.displayName = "Input";
 

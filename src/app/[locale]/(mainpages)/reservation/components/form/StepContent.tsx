@@ -18,30 +18,15 @@ import {
 
 import StepOne from "./StepOne";
 import StepTwo from "./StepTwo";
+import ForOtherStepTwo from "./ForOtherStepTwo";
 import StepThree from "./StepThree";
 import { useClientStore } from "@/lib/api/stores";
 import { calculateRentalPrice } from "@/lib/utils/calculateRentalPrice";
 import { completeUserProfile } from "@/services/userProfile/completeUserProfile.service";
 
-const mapLocationType = (
-  type?: string,
-): "BRANCH" | "MY_LOCATION" | "TRAIN_STATION" | "AIRPORT" => {
-  switch (type) {
-    case "currentLocation":
-      return "MY_LOCATION";
-    case "airport":
-      return "AIRPORT";
-    case "trainStation":
-      return "TRAIN_STATION";
-    case "branches":
-      return "BRANCH";
-    default:
-      return "BRANCH";
-  }
-};
-
 interface StepContentProps {
   activeStep: number;
+  isForOtherReservation?: boolean;
 }
 
 export interface StepContentRef {
@@ -50,7 +35,7 @@ export interface StepContentRef {
 }
 
 const StepContent = forwardRef<StepContentRef, StepContentProps>(
-  ({ activeStep }, ref) => {
+  ({ activeStep, isForOtherReservation = false }, ref) => {
     const { displayStep, animationClass } = useStepAnimation(activeStep);
     const { filters, setFilter } = useUserPreferedFiltersStore();
     const { latitude, longitude, address } = useLocationStore();
@@ -117,6 +102,7 @@ const StepContent = forwardRef<StepContentRef, StepContentProps>(
         returnAirportId:
           formData.returnAirportId || filters.carReturnAirportId || null,
         // Step 2 – hydrate from reservation form store
+        isForOtherReservation,
         idNumber: formData.idNumber || "0",
         nationality: formData.nationality || "",
         licenseImage: formData.licenseImage || "",
@@ -142,7 +128,7 @@ const StepContent = forwardRef<StepContentRef, StepContentProps>(
               ? formData.pickupName
               : filters.pickupName && filters.pickupName !== "الموقع الحالي"
                 ? filters.pickupName
-              : "",
+                : "",
           carReturnLocation:
             formData.carReturnLocation &&
             formData.carReturnLocation !== "الموقع الحالي"
@@ -154,7 +140,7 @@ const StepContent = forwardRef<StepContentRef, StepContentProps>(
                   ? formData.pickupName
                   : filters.pickupName && filters.pickupName !== "الموقع الحالي"
                     ? filters.pickupName
-              : "",
+                    : "",
           fromDate: formData.fromDate
             ? new Date(formData.fromDate)
             : filters.fromDate
@@ -181,6 +167,7 @@ const StepContent = forwardRef<StepContentRef, StepContentProps>(
           returnAirportId:
             formData.returnAirportId || filters.carReturnAirportId || null,
           // Step 2
+          isForOtherReservation,
           idNumber: formData.idNumber || "0",
           nationality: formData.nationality || "",
           licenseImage: formData.licenseImage || "",
@@ -314,19 +301,37 @@ const StepContent = forwardRef<StepContentRef, StepContentProps>(
           }
           return isValid;
         } else if (displayStep === 2) {
-          fieldsToValidate = [
-            "idNumber",
-            "nationality",
-            "licenseImage",
-            "licenceExpiryDate",
-            "personalId",
-            "passportNumber",
-            "borderNumber",
-          ];
+          fieldsToValidate = isForOtherReservation
+            ? [
+                "OtherPersonName",
+                "OtherPersonPhoneNumber",
+                "OtherPersonLicenseImage",
+                "OtherPersonalId",
+              ]
+            : [
+                "idNumber",
+                "nationality",
+                "licenseImage",
+                "licenceExpiryDate",
+                "personalId",
+                "passportNumber",
+                "borderNumber",
+              ];
           const isValid = await trigger(fieldsToValidate);
           if (!isValid) return false;
 
           const values = getValues();
+
+          if (isForOtherReservation) {
+            console.log("For other reservation step 2 data:", {
+              OtherPersonName: values.OtherPersonName,
+              OtherPersonPhoneNumber: values.OtherPersonPhoneNumber,
+              OtherPersonLicenseImage: values.OtherPersonLicenseImage,
+              OtherPersonalId: values.OtherPersonalId,
+            });
+            return true;
+          }
+
           const residenceType = values.idNumber;
 
           try {
@@ -541,7 +546,14 @@ const StepContent = forwardRef<StepContentRef, StepContentProps>(
       },
       {
         step: 2,
-        content: (
+        content: isForOtherReservation ? (
+          <ForOtherStepTwo
+            control={control}
+            errors={errors}
+            setValue={setValue}
+            trigger={trigger}
+          />
+        ) : (
           <StepTwo
             control={control}
             errors={errors}

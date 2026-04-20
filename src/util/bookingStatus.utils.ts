@@ -49,8 +49,8 @@ export const statusTranslations = {
         en: "Wallet Paid",
     },
     LOCATION_CHANGED: {
-        ar: "تم تغيير موقع الاستلام",
-        en: "Location Changed",
+        ar: "تم تغيير الموقع وفى انتظار الدفع",
+        en: "Location Changed and Waiting for Payment",
     },
 } as const;
 

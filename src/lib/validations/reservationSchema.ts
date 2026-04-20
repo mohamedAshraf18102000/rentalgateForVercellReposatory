@@ -37,6 +37,13 @@ export const reservationSchema = z
       }),
 
     // Step 2 - Tenant Details
+    isForOtherReservation: z.boolean().optional(),
+    name: z.string().optional(),
+    phoneNumber: z.string().optional(),
+    OtherPersonName: z.string().optional(),
+    OtherPersonPhoneNumber: z.string().optional(),
+    OtherPersonalId: z.string().optional(),
+    OtherPersonLicenseImage: z.string().optional(),
     idNumber: z.string().min(1, "يجب إدخال نوع الإقامة"),
     nationality: z.string().min(1, "يجب إدخال الجنسية"),
     personalId: z.string().optional(),
@@ -65,6 +72,52 @@ export const reservationSchema = z
     extraKmApplied: z.boolean().optional(),
   })
   .superRefine((data, ctx) => {
+    if (data.isForOtherReservation) {
+      if (!data.OtherPersonName || data.OtherPersonName.trim() === "") {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "يجب إدخال الاسم",
+          path: ["OtherPersonName"],
+        });
+      }
+
+      if (
+        !data.OtherPersonPhoneNumber ||
+        data.OtherPersonPhoneNumber.trim() === ""
+      ) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "يجب إدخال رقم الجوال",
+          path: ["OtherPersonPhoneNumber"],
+        });
+      } else if (!/^\+?[0-9]{8,15}$/.test(data.OtherPersonPhoneNumber.trim())) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "رقم الجوال غير صالح",
+          path: ["OtherPersonPhoneNumber"],
+        });
+      }
+
+      if (
+        !data.OtherPersonLicenseImage ||
+        data.OtherPersonLicenseImage.trim() === ""
+      ) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "يجب إرفاق صورة الرخصة",
+          path: ["OtherPersonLicenseImage"],
+        });
+      }
+
+      if (!data.OtherPersonalId || data.OtherPersonalId.trim() === "") {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "يجب إدخال رقم الهوية",
+          path: ["OtherPersonalId"],
+        });
+      }
+    }
+
     // 0: Citizen, 1: Resident, 2: Visitor, 3: Gulf Citizen
 
     // Personal ID is required for 0, 1, and 3

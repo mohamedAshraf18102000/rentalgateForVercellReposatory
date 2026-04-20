@@ -278,16 +278,17 @@ const BookedCarDetailsDrawer = ({
                   <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center">
                     <div className="relative h-34 w-full overflow-hidden rounded-2xl sm:w-[40%]">
                       <Image src="/Card_Cars.png" fill alt="img" />
-                      <Badge
-                        className={`absolute top-0 -right-2 rounded-none rounded-bl-2xl p-3 text-xs font-bold sm:p-4 sm:text-sm ${data?.reservationStatus === "STARTED" ? "bg-StatusGreen text-StatusDarkGreen" : "bg-StatusBrownBG text-StatusBrown200"}`}
-                      >
-                        {getStatusLabel(
-                          data?.reservationStatus as ReservationStatus,
-                        )}
-                      </Badge>
                     </div>
                     <div className="flex w-full flex-col gap-y-2">
                       <div>
+                        <Badge
+                          className={`rounded-lg p-3 mb-2 text-xs font-bold sm:p-4 sm:text-sm ${data?.reservationStatus === "STARTED" ? "bg-StatusGreen text-StatusDarkGreen" : "bg-StatusBrownBG text-StatusBrown200"}`}
+                        >
+                          {getStatusLabel(
+                            data?.reservationStatus as ReservationStatus,
+                          )}
+                        </Badge>
+                        <br />
                         <span className="mx-2">رقم الحجز:</span>
                         <span className="font-bold text-lg">
                           {data?.reservationId}

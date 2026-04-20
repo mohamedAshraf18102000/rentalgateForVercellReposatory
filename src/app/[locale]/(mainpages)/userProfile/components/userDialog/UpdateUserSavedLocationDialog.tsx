@@ -19,9 +19,8 @@ import {
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import GoogleMapsLocation from "@/app/(components)/mapsLocation/GoogleMapsLocation";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import CountryPhone from "@/app/(components)/template/phone/CountryPhone";
-import { getUserAddress } from "@/services/userProfile/getUserAddress.service";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {

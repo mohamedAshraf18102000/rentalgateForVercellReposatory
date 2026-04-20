@@ -245,6 +245,7 @@ const CarDetailsCard = ({
               variant="outline"
               className="w-full text-sm! sm:w-auto sm:text-base!"
               icon={<ChevronLeft className="w-8 h-8" />}
+              onClick={() => router.push(`/reservation/${ccbId}?forOther=true`)}
             >
               حجز للغير
             </Button>

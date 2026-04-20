@@ -20,14 +20,18 @@ const BookedCarsDetails = ({ data }: { data: Reservation }) => {
 
   const t = useTranslations("common");
   const locale = useLocale();
+  const isRTL = locale === "ar";
   const dateLocale = locale === "ar" ? ar : enUS;
 
-  const {
-    data: reservationDetails,
-    refetch,
-  } = useGetUserReservationById(data.reservationId, false);
+  const { data: reservationDetails, refetch } = useGetUserReservationById(
+    data.reservationId,
+    false,
+  );
   return (
-    <div className="flex min-h-0 flex-col overflow-hidden rounded-2xl border-2 sm:min-h-[240px] sm:flex-row">
+    <div
+      dir={isRTL ? "rtl" : "ltr"}
+      className="flex min-h-0 flex-col overflow-hidden rounded-2xl border-2 sm:min-h-[240px] sm:flex-row"
+    >
       <div className="relative h-[200px] w-full shrink-0 sm:h-auto sm:w-[40%]">
         <Image
           src={`${process.env.NEXT_PUBLIC_IMAGES_PREFIX_URL}${data.carImage}`}
@@ -36,7 +40,9 @@ const BookedCarsDetails = ({ data }: { data: Reservation }) => {
           fill
         />
         <Badge
-          className={`absolute top-0 -right-2 rounded-none rounded-bl-2xl p-3 text-xs font-bold sm:p-4 sm:text-sm ${data.reservationStatus === "STARTED" ? "bg-StatusGreen text-StatusDarkGreen" : "bg-StatusBrownBG text-StatusBrown200"}`}
+          className={`absolute top-0 max-w-[calc(100%-0.5rem)] whitespace-normal wrap-break-word rounded-none p-3 text-xs leading-tight font-bold sm:p-4 sm:text-sm ${
+            isRTL ? "-right-2 rounded-bl-2xl" : "-left-2 rounded-br-2xl"
+          } ${data.reservationStatus === "STARTED" ? "bg-StatusGreen text-StatusDarkGreen" : "bg-StatusBrownBG text-StatusBrown200"}`}
         >
           {getStatusLabel(data.reservationStatus)}
         </Badge>
@@ -104,7 +110,11 @@ const BookedCarsDetails = ({ data }: { data: Reservation }) => {
               <Button
                 variant="outline"
                 className="w-full text-base! sm:w-auto"
-                icon={<ChevronLeft className="h-6 w-6 sm:h-8 sm:w-8" />}
+                icon={
+                  <ChevronLeft
+                    className={`h-6 w-6 sm:h-8 sm:w-8 ${isRTL ? "" : "rotate-180"}`}
+                  />
+                }
               >
                 {t("viewDetails")}
               </Button>

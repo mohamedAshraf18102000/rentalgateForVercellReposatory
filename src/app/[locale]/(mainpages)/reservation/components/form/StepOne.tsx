@@ -221,7 +221,7 @@ const StepOne = ({ control, errors, watch, setValue }: StepOneProps) => {
             )}
           />
           {errors.fromDate && (
-            <p className="text-red-500 text-xs mb-3 flex items-center gap-1">
+            <p className="text-StatusRedBG text-xs mb-3 flex items-center gap-1">
               {String(errors.fromDate?.message)}
             </p>
           )}
@@ -245,7 +245,7 @@ const StepOne = ({ control, errors, watch, setValue }: StepOneProps) => {
             )}
           />
           {errors.toDate && (
-            <p className="text-red-500 text-xs mb-3 flex items-center gap-1">
+            <p className="text-StatusRedBG text-xs mb-3 flex items-center gap-1">
               {String(errors.toDate?.message)}
             </p>
           )}

@@ -63,6 +63,7 @@ function InputFileUpload({
   const [isDragging, setIsDragging] = React.useState(false);
   const [file, setFile] = React.useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = React.useState<string | null>(null);
+  const [isObjectPreviewUrl, setIsObjectPreviewUrl] = React.useState(false);
   const [showPreview, setShowPreview] = React.useState(false);
   const inputRef = React.useRef<HTMLInputElement>(null);
   const mergedRef = useMergedRef(inputRef, forwardedRef);
@@ -70,11 +71,14 @@ function InputFileUpload({
   // Hydrate from initialFile or initialPreviewUrl (e.g. from a store or API)
   React.useEffect(() => {
     if (initialFile && !file) {
+      if (!(initialFile instanceof Blob)) return;
       const url = URL.createObjectURL(initialFile);
       setFile(initialFile);
       setPreviewUrl(url);
+      setIsObjectPreviewUrl(true);
     } else if (initialPreviewUrl && !file) {
       setPreviewUrl(initialPreviewUrl);
+      setIsObjectPreviewUrl(false);
       // Construct a mock File to represent the existing server image
       setFile({
         name: initialPreviewUrl.split("/").pop() || "الرخصة الحالية",
@@ -88,14 +92,15 @@ function InputFileUpload({
   // Cleanup object URL on unmount or file change
   React.useEffect(() => {
     return () => {
-      if (previewUrl) URL.revokeObjectURL(previewUrl);
+      if (previewUrl && isObjectPreviewUrl) URL.revokeObjectURL(previewUrl);
     };
-  }, [previewUrl]);
+  }, [previewUrl, isObjectPreviewUrl]);
 
   const handleFile = (incoming: File) => {
-    if (previewUrl) URL.revokeObjectURL(previewUrl);
+    if (previewUrl && isObjectPreviewUrl) URL.revokeObjectURL(previewUrl);
     setFile(incoming);
     setPreviewUrl(URL.createObjectURL(incoming));
+    setIsObjectPreviewUrl(true);
     onFileChange?.(incoming);
   };
 
@@ -128,9 +133,10 @@ function InputFileUpload({
   };
 
   const handleRemove = () => {
-    if (previewUrl) URL.revokeObjectURL(previewUrl);
+    if (previewUrl && isObjectPreviewUrl) URL.revokeObjectURL(previewUrl);
     setFile(null);
     setPreviewUrl(null);
+    setIsObjectPreviewUrl(false);
     if (inputRef.current) inputRef.current.value = "";
     onFileRemove?.();
     onFileChange?.(null);

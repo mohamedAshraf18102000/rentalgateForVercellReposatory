@@ -27,6 +27,7 @@ import { buildReservationPayload } from "../utils/buildReservationPayload";
 import { toast } from "sonner";
 import { Skeleton } from "@/app/(components)/ui/skeleton";
 import GoogleMapsPolyLineLocation from "@/app/(components)/mapsLocation/GoogleMapsPolyLinedLocation";
+import { useSearchParams } from "next/navigation";
 
 const pricingTypeLabels: Record<PricingType, string> = {
   DAILY: "يومي",
@@ -42,6 +43,8 @@ const page = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
   const stepContentRef = useRef<StepContentRef>(null);
+  const searchParams = useSearchParams();
+  const isForOtherReservation = searchParams.get("forOther") === "true";
   const carDetails = useBookedCarDetailsStore((s) => s.carDetails);
   const formData = useBookedCarDetailsStore((s) => s.formData);
   const { filters } = useUserPreferedFiltersStore();
@@ -213,6 +216,12 @@ const page = () => {
     const isValid = await stepContentRef.current?.validateStep();
     if (isValid) {
       if (activeStep === 1 && step >= 2) {
+        if (isForOtherReservation) {
+          setIsStepTwoSkipped(false);
+          setActiveStep(2);
+          return;
+        }
+
         setIsLoading(true);
         try {
           const { completeness } = await getUserProfileCompletnessState();
@@ -349,7 +358,11 @@ const page = () => {
                 </Button>
               </div>
               <Separator className="my-3" />
-              <StepContent ref={stepContentRef} activeStep={activeStep} />
+              <StepContent
+                ref={stepContentRef}
+                activeStep={activeStep}
+                isForOtherReservation={isForOtherReservation}
+              />
             </div>
             <div className="w-1/4">
               <div className="">
