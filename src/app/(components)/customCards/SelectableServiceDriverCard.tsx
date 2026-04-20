@@ -1,7 +1,6 @@
 "use client";
 
-import { CircleAlert, Minus, Plus, SaudiRiyal } from "lucide-react";
-import { useState } from "react";
+import { Minus, Plus, SaudiRiyal } from "lucide-react";
 import { Badge } from "../ui/badge";
 import { CompanyService } from "@/types/companyDrivers";
 import WarningMessage from "../WarningMessage";
@@ -64,37 +63,36 @@ const SelectableServiceDriverCard = ({
   };
 
   return (
-    <>
-      <label
-        htmlFor={checkboxId}
-        dir="rtl"
-        className={`
-        w-full text-right rounded-lg py-2 px-4 flex flex-col gap-2 transition-all duration-300 relative overflow-hidden cursor-pointer
+    <label
+      htmlFor={checkboxId}
+      dir="rtl"
+      className={`
+        relative flex w-full cursor-pointer flex-col gap-2 overflow-hidden rounded-lg px-3 py-3 text-right transition-all duration-300 sm:px-4
         ${
           selected
-            ? "bg-white border-primary border-[0.5px] shadow-lg"
-            : "bg-Grey100 border-transparent hover:border-gray-200"
+            ? "border-[0.5px] border-primary bg-white shadow-lg"
+            : "border-transparent bg-Grey100 hover:border-gray-200"
         }
       `}
-      >
-        <input
-          id={checkboxId}
-          type="checkbox"
-          checked={selected}
-          onChange={onToggle}
-          className="sr-only"
-        />
-        <div className="flex items-start justify-between gap-4 w-full">
-          {/* Checkbox indicator - Top Right in RTL */}
+    >
+      <input
+        id={checkboxId}
+        type="checkbox"
+        checked={selected}
+        onChange={onToggle}
+        className="sr-only"
+      />
+      <div className="flex w-full items-start justify-between gap-2 sm:gap-4">
+        <div className="flex min-w-0 flex-1 items-start justify-between gap-3 sm:gap-4">
           <div
             className={`
-            shrink-0 w-6 h-6 rounded-lg flex items-center justify-center transition-all duration-200 order-1
-            ${selected ? "bg-black" : "bg-white border-2 border-gray-100"}
-          `}
+              order-1 flex h-5 w-5 shrink-0 items-center justify-center rounded-md transition-all duration-200 sm:h-6 sm:w-6 sm:rounded-lg
+              ${selected ? "bg-black" : "border-2 border-gray-100 bg-white"}
+            `}
           >
             {selected && (
               <svg
-                className="w-4 h-4 text-white"
+                className="h-3 w-3 text-white sm:h-4 sm:w-4"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -109,41 +107,40 @@ const SelectableServiceDriverCard = ({
             )}
           </div>
 
-          {/* Service info - to the left of checkbox in RTL */}
-          <div className="flex-1 min-w-0 pr-0 text-right order-2">
-            <p className="font-bold text-base text-gray-900 leading-tight">
+          <div className="order-2 min-w-0 flex-1 text-right">
+            <p className="text-sm font-bold leading-tight text-gray-900 sm:text-base">
               سائق خاص
-              <span className="text-base font-normal mx-1">
+              <span className="mx-1 text-sm font-normal sm:text-base">
                 (اليوم = {driver?.dayNumberHours} ساعات)
               </span>
             </p>
-            <p className="text-xs text-gray-500 mt-1 font-medium line-clamp-2 leading-relaxed">
+            <p className="mt-1 line-clamp-2 text-xs font-medium leading-relaxed text-gray-500">
               <span className="mx-1">لا يمكن الإستفادة من خدمة السائق إلا</span>
               <span>{driver?.cdsType === "in" ? "داخل" : "خارج"}</span>{" "}
               <span>المدينة المحددة</span>
             </p>
 
-            <div className="bg-white p-2 w-fit flex items-center rounded-lg mt-3">
-              <p className="font-bold">عدد الساعات في اليوم:</p>
-              <div className="flex items-center gap-2 mx-2">
+            <div className="mt-3 flex w-full flex-wrap items-center gap-2 rounded-lg bg-white p-2 sm:w-fit">
+              <p className="text-sm font-bold sm:text-base">عدد الساعات في اليوم:</p>
+              <div className="mx-1 flex items-center gap-2 sm:mx-2">
                 <button
                   type="button"
                   onClick={handleHoursDecrement}
                   disabled={hoursPerDay <= minHours}
-                  className="bg-gray-100 p-2 rounded-lg w-8 h-8 flex items-center justify-center font-bold hover:bg-red-200 transition duration-300 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
+                  className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg bg-gray-100 p-2 font-bold transition duration-300 hover:bg-red-200 disabled:cursor-not-allowed disabled:opacity-40"
                 >
-                  <Minus />
+                  <Minus className="h-4 w-4" />
                 </button>
-                <span className="font-bold min-w-6 text-center">
+                <span className="min-w-6 text-center text-sm font-bold sm:text-base">
                   {hoursPerDay}
                 </span>
                 <button
                   type="button"
                   onClick={handleHoursIncrement}
                   disabled={hoursPerDay >= maxHours}
-                  className="bg-gray-100 p-2 rounded-lg w-8 h-8 flex items-center justify-center font-bold hover:bg-green-200 transition duration-300 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
+                  className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg bg-gray-100 p-2 font-bold transition duration-300 hover:bg-green-200 disabled:cursor-not-allowed disabled:opacity-40"
                 >
-                  <Plus />
+                  <Plus className="h-4 w-4" />
                 </button>
               </div>
             </div>
@@ -156,26 +153,26 @@ const SelectableServiceDriverCard = ({
               message={`حد اقصى لعدد ساعات اليوم ${driver?.dayNumberHours ?? ""} ساعة`}
             />
 
-            <div className="bg-white p-2 w-fit flex items-center rounded-lg mt-3">
-              <p className="font-bold">عدد الأيام:</p>
-              <div className="flex items-center gap-2 mx-2">
+            <div className="mt-3 flex w-full flex-wrap items-center gap-2 rounded-lg bg-white p-2 sm:w-fit">
+              <p className="text-sm font-bold sm:text-base">عدد الأيام:</p>
+              <div className="mx-1 flex items-center gap-2 sm:mx-2">
                 <button
                   type="button"
                   onClick={handleDaysDecrement}
                   disabled={numberOfDays <= 1}
-                  className="bg-gray-100 p-2 rounded-lg w-8 h-8 flex items-center justify-center font-bold hover:bg-red-200 transition duration-300 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
+                  className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg bg-gray-100 p-2 font-bold transition duration-300 hover:bg-red-200 disabled:cursor-not-allowed disabled:opacity-40"
                 >
-                  <Minus />
+                  <Minus className="h-4 w-4" />
                 </button>
-                <span className="font-bold min-w-6 text-center">
+                <span className="min-w-6 text-center text-sm font-bold sm:text-base">
                   {numberOfDays}
                 </span>
                 <button
                   type="button"
                   onClick={handleDaysIncrement}
-                  className="bg-gray-100 p-2 rounded-lg w-8 h-8 flex items-center justify-center font-bold hover:bg-green-200 transition duration-300 cursor-pointer"
+                  className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg bg-gray-100 p-2 font-bold transition duration-300 hover:bg-green-200"
                 >
-                  <Plus />
+                  <Plus className="h-4 w-4" />
                 </button>
               </div>
             </div>
@@ -183,21 +180,21 @@ const SelectableServiceDriverCard = ({
               message={`مدة الحجز الخاصة بك هي (${numberOfDays} أيام)`}
             />
 
-            <div className=" w-fit flex items-center rounded-lg gap-1 mt-2">
-              <p className="font-bold text-lg">{driver?.dailyPrice}</p>
-              <SaudiRiyal className="w-5 h-5" />
-              <p className="">/</p>
-              <p className="">يوم</p>
+            <div className="mt-2 flex w-fit items-center gap-1 rounded-lg">
+              <p className="text-base font-bold sm:text-lg">{driver?.dailyPrice}</p>
+              <SaudiRiyal className="h-4 w-4 sm:h-5 sm:w-5" />
+              <p>/</p>
+              <p>يوم</p>
             </div>
           </div>
-          {badge && (
-            <Badge className="text-sm font-bold absolute top-2 left-2 bg-StatusGreen text-StatusDarkGreen border-2 border-StatusDarkGreen p-4 rounded-lg">
-              {badge}
-            </Badge>
-          )}
         </div>
-      </label>
-    </>
+        {badge && (
+          <Badge className="shrink-0 rounded-lg border-2 border-StatusDarkGreen bg-StatusGreen px-2 py-3! text-xs font-bold text-StatusDarkGreen sm:px-3 sm:py-2 sm:text-sm">
+            {badge}
+          </Badge>
+        )}
+      </div>
+    </label>
   );
 };
 

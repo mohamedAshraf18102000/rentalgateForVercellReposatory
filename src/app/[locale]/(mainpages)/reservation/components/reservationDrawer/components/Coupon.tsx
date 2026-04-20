@@ -86,7 +86,7 @@ const Coupon = ({ onApplied, isCalculating }: CouponProps) => {
       <p className="text-base font-bold mb-2">أدخل كود الخصم:</p>
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="flex items-start gap-8"
+        className="flex flex-col items-stretch gap-3 sm:flex-row sm:items-start sm:gap-4"
       >
         <div className="flex-1 relative">
           <Input
@@ -112,7 +112,7 @@ const Coupon = ({ onApplied, isCalculating }: CouponProps) => {
         </div>
         <Button
           type="submit"
-          className="underline underline-offset-2 flex items-center disabled:opacity-50 shrink-0 mt-3"
+          className="mt-0 flex shrink-0 items-center self-end underline underline-offset-2 disabled:opacity-50 sm:mt-3"
           disabled={isPending || isCalculating}
         >
           {isPending || isCalculating ? (

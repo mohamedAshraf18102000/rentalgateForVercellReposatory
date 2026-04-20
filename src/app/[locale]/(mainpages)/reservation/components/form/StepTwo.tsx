@@ -49,7 +49,7 @@ const StepTwo = ({ control, errors, setValue }: StepTwoProps) => {
 
   return (
     <>
-      <div className="grid grid-cols-2 gap-5">
+      <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
         <div className="col-span-1">
           <Controller
             name="idNumber"
@@ -160,7 +160,7 @@ const StepTwo = ({ control, errors, setValue }: StepTwoProps) => {
       <Separator className="my-4" />
 
       <div>
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           <div>
             <Controller
               name="licenseImage"
@@ -209,7 +209,7 @@ const StepTwo = ({ control, errors, setValue }: StepTwoProps) => {
               </p>
             )}
           </div>
-          <div />
+          <div className="hidden md:block" />
           <div>
             <Controller
               name="licenceExpiryDate"

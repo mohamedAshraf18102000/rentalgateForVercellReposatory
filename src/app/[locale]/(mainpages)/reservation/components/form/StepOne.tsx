@@ -110,7 +110,7 @@ const StepOne = ({ control, errors, watch, setValue }: StepOneProps) => {
 
   return (
     <div className="">
-      <div className="w-full flex items-center gap-3">
+      <div className="flex w-full flex-col items-start gap-3 lg:flex-row lg:items-center">
         <div className="w-full relative">
           <Controller
             name="pickupName"
@@ -131,18 +131,18 @@ const StepOne = ({ control, errors, watch, setValue }: StepOneProps) => {
           <button
             type="button"
             onClick={handleOpenPickupLocationDialog}
-            className="absolute top-0 left-2 flex items-center gap-2 underline"
+            className="absolute left-2 top-0 flex items-center gap-1 text-xs underline sm:gap-2 sm:text-sm"
           >
             <MapPinPlus />
             حدد مكان الاستلام
           </button>
         </div>
-        <ArrowLeft className="w-15 h-15 mt-8" />
+        <ArrowLeft className="mt-2 hidden h-12 w-12 shrink-0 lg:mt-8 lg:block" />
         <div className="w-full relative">
           <button
             type="button"
             onClick={handleOpenReturnLocationDialog}
-            className="absolute top-0 left-2 flex items-center gap-2 underline"
+            className="absolute left-2 top-0 flex items-center gap-1 text-xs underline sm:gap-2 sm:text-sm"
           >
             <MapPinPlus />
             التسليم في مكان اخر
@@ -166,7 +166,7 @@ const StepOne = ({ control, errors, watch, setValue }: StepOneProps) => {
         </div>
       </div>
 
-      <div className="w-full grid grid-cols-2 gap-15 items-center text-sm">
+      <div className="grid w-full grid-cols-1 items-center gap-4 text-sm md:grid-cols-2 md:gap-15">
         {formData.pickupType === "AIRPORT" ||
         formData.pickupType === "TRAIN_STATION" ||
         formData.pickupType === "MY_LOCATION" ? (
@@ -191,7 +191,7 @@ const StepOne = ({ control, errors, watch, setValue }: StepOneProps) => {
 
       <Separator className="mt-3 my-4" />
 
-      <div className="w-full flex items-end gap-3 mb-1">
+      <div className="mb-1 flex w-full flex-col items-start gap-3 lg:flex-row lg:items-end">
         <div className="w-full">
           <Controller
             name="fromDate"
@@ -225,7 +225,7 @@ const StepOne = ({ control, errors, watch, setValue }: StepOneProps) => {
             </p>
           )}
         </div>
-        <ArrowLeft className="w-15 h-15 pt-5" />
+        <ArrowLeft className="hidden h-12 w-12 shrink-0 pt-5 lg:block" />
         <div className="w-full">
           <Controller
             name="toDate"
@@ -268,7 +268,7 @@ const StepOne = ({ control, errors, watch, setValue }: StepOneProps) => {
           أختر من أفضل عروض التأجير المضافة حديثاً
         </p>
       </div>
-      <div className="grid grid-cols-3 gap-5">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {Array.from({ length: 3 }).map((_, index) => (
           <OffersCard key={index} />
         ))}

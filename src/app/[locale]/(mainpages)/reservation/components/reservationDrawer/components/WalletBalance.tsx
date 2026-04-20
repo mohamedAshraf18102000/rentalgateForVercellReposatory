@@ -11,14 +11,14 @@ const WalletBalance = () => {
   console.log(wallet);
 
   return (
-    <div className="p-2 rounded-xl flex justify-between items-center">
-      <div className="flex items-center gap-2">
+    <div className="flex flex-col justify-between gap-2 rounded-xl p-2 sm:flex-row sm:items-center">
+      <div className="flex flex-wrap items-center gap-2">
         <Switch id="wallet-switch" />
         <p className="text-sm">أستخدم رصيد المحفظة:</p>
         <p className="font-bold">{formatPrice(wallet?.balance || 0)}</p>
         <SaudiRiyal className="h-6 w-6" />
       </div>
-      <div className="h-7 w-7">
+      <div className="h-7 w-7 self-end sm:self-auto">
         <img src="/profile/actionIcons/wallet.webp" alt="" />
       </div>
     </div>

@@ -51,7 +51,7 @@ const Discounts = ({ onApplied, isCalculating }: DiscountsProps) => {
   }, [api]);
   return (
     <div className="">
-      <div className="flex items-center gap-4 mb-2">
+      <div className="mb-2 flex flex-wrap items-center gap-3 sm:gap-4">
         <p className="text-base font-bold"> القسائم و الخصومات:</p>
         {formData.points?.pointsPkId && (
           <button
@@ -67,7 +67,7 @@ const Discounts = ({ onApplied, isCalculating }: DiscountsProps) => {
           </button>
         )}
       </div>
-      <div className="w-fit bg-StatusGreen px-3 py-1 rounded-lg font-bold text-StatusDarkGreen border-2 border-StatusDarkGreen flex items-center">
+      <div className="flex w-full flex-wrap items-center rounded-lg border-2 border-StatusDarkGreen bg-StatusGreen px-3 py-1 text-sm font-bold text-StatusDarkGreen sm:w-fit sm:text-base">
         <span>لديك {userPointsData?.availablePoints} نقطة</span>
         <LucideEqualApproximately className="mx-2" />
         <span>{userPointsData?.availablePointsValue}</span>
@@ -107,7 +107,7 @@ const Discounts = ({ onApplied, isCalculating }: DiscountsProps) => {
               {filteredPointPackages.map((pkg, index) => (
                 <CarouselItem
                   key={pkg.packageId}
-                  className={`${filteredPointPackages.length > 1 ? "basis-[90%]" : ""} select-none`}
+                  className={`${filteredPointPackages.length > 1 ? "basis-[95%] sm:basis-[90%]" : ""} select-none`}
                 >
                   <RadioOfferCard
                     title={pkg.name + " (" + pkg.points + ")"}

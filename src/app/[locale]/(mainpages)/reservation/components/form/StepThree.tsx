@@ -102,10 +102,10 @@ const StepThree = ({ control, errors }: StepThreeProps) => {
   return (
     <div className="space-y-6">
       <div className="relative">
-        <h2 className="text-xl font-semibold text-gray-900 leading-tight">
+        <h2 className="text-lg font-semibold leading-tight text-gray-900 sm:text-xl">
           الخدمات الإضافية
         </h2>
-        <p className="text-sm text-gray-500 mt-1 font-medium">
+        <p className="mt-1 text-xs font-medium text-gray-500 sm:text-sm">
           اختر ما يناسبك من الخدمات لتجربة قيادة متكاملة ومميزة
         </p>
       </div>

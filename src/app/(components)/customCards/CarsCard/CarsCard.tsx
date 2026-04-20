@@ -81,7 +81,7 @@ const CarsCard = ({
           {typeof firstBadgeTitle === "string" &&
             firstBadgeTitle.length > 0 && (
               <Badge
-                className={`text-sm z-30 font-bold absolute top-0 -right-2  p-4 ${firstBadgeColor === "red" ? "bg-StatusBrownBG text-StatusBrown200" : "bg-StatusGreen text-StatusDarkGreen"}`}
+                className={`absolute top-0 -right-2 z-30 p-2 text-xs font-bold sm:p-4 sm:text-sm ${firstBadgeColor === "red" ? "bg-StatusBrownBG text-StatusBrown200" : "bg-StatusGreen text-StatusDarkGreen"}`}
               >
                 {firstBadgeTitle}
               </Badge>
@@ -89,7 +89,7 @@ const CarsCard = ({
 
           {extraBadgeTitle && (
             <Badge
-              className={`text-sm font-bold z-50 absolute top-10 -right-2  p-4 ${extraBadgeColor === "red" ? "bg-StatusBrownBG text-StatusBrown200" : "bg-StatusGreen text-StatusDarkGreen"}`}
+              className={`absolute top-10 -right-2 z-50 p-2 text-xs font-bold sm:p-4 sm:text-sm ${extraBadgeColor === "red" ? "bg-StatusBrownBG text-StatusBrown200" : "bg-StatusGreen text-StatusDarkGreen"}`}
             >
               {extraBadgeTitle}
             </Badge>
@@ -99,7 +99,7 @@ const CarsCard = ({
 
           <figcaption className="flex items-center gap-2 absolute bottom-0 left-1/2 -translate-x-1/2 z-50">
             <ExeclusiveOfferIcon />
-            <span className="text-sm font-bold text-StatusDarkGreen">
+            <span className="text-xs font-bold text-StatusDarkGreen sm:text-sm">
               عرض خاص
             </span>
           </figcaption>
@@ -107,9 +107,9 @@ const CarsCard = ({
 
         <CardHeader className="mt-5">
           <CardTitle className="font-bold flex justify-between items-start">
-            <h3 className="w-3/4 text-base">{carName}</h3>
+            <h3 className="w-3/4 text-sm sm:text-base">{carName}</h3>
 
-            <Badge className="text-sm font-bold" variant="secondary">
+            <Badge className="text-xs font-bold sm:text-sm" variant="secondary">
               {carBrand}
             </Badge>
           </CardTitle>
@@ -125,11 +125,11 @@ const CarsCard = ({
                   height={100}
                   className="w-[50px] h-[50px] object-fill rounded-2xl border-2 border-Grey100 p-0.5"
                 />
-                <span className="text-base">{companyName}</span>
+                <span className="text-sm sm:text-base">{companyName}</span>
               </div>
 
               <div className="flex items-center gap-1">
-                <data value="4.2" className="font-bold text-base">
+                <data value="4.2" className="text-sm font-bold sm:text-base">
                   4.2
                 </data>
                 <StarIcon />
@@ -141,7 +141,7 @@ const CarsCard = ({
           <CardContent className="p-0">
             <div className="flex items-center gap-1">
               <FreeKmIcon />
-              <p className="text-sm">
+              <p className="text-xs sm:text-sm">
                 الكيلومترات المجانية: <strong>{freeKm} كم / اليوم</strong>
               </p>
             </div>
@@ -152,29 +152,35 @@ const CarsCard = ({
                 {showTax ? (
                   <>
                     {priceBeforeOffer && priceBeforeOffer > (carPrice || 0) && (
-                      <span className="line-through text-sm text-Grey500">
+                      <span className="text-xs text-Grey500 line-through sm:text-sm">
                         {formatPrice(priceBeforeOffer)}
                       </span>
                     )}
-                    <data value="10.56" className="text-base mx-2 font-bold">
+                    <data
+                      value="10.56"
+                      className="mx-2 text-sm font-bold sm:text-base"
+                    >
                       {formatPrice(carPrice!)}
                     </data>
                   </>
                 ) : (
                   <>
                     {priceBeforeOffer && priceBeforeOffer > (carPrice || 0) && (
-                      <span className="line-through text-sm text-Grey500">
+                      <span className="text-xs text-Grey500 line-through sm:text-sm">
                         {formatPrice(getPriceWithoutTax(priceBeforeOffer))}
                       </span>
                     )}
-                    <data value="10.56" className="text-base mx-2 font-bold">
+                    <data
+                      value="10.56"
+                      className="mx-2 text-sm font-bold sm:text-base"
+                    >
                       {formatPrice(getPriceWithoutTax(carPrice!))}
                     </data>
                   </>
                 )}
 
-                <p className="flex items-center text-base">
-                  <SaudiRiyal className="w-5 h-5" />
+                <p className="flex items-center text-sm sm:text-base">
+                  <SaudiRiyal className="h-4 w-4 sm:h-5 sm:w-5" />
                   <span className="mx-1">/ يوم</span>
                 </p>
               </div>

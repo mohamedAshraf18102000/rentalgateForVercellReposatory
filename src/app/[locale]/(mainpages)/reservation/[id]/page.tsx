@@ -286,7 +286,9 @@ const page = () => {
         <div className="w-full">
           <ReservationBreadCrump carId={carDetails?.ccbId} />
           <div
-            className={`w-full grid ${isStepTwoSkipped ? "grid-cols-2" : "grid-cols-3"} gap-5`}
+            className={`w-full grid grid-cols-1 gap-3 md:gap-5 ${
+              isStepTwoSkipped ? "md:grid-cols-2" : "md:grid-cols-3"
+            }`}
           >
             <Stepper
               stepNum="1"
@@ -313,15 +315,15 @@ const page = () => {
             />
           </div>
 
-          <div className="flex gap-4 w-full mt-10">
-            <div className="w-3/4 bg-white h-fit rounded-2xl p-4">
-              <div className="flex justify-between">
-                <div className="flex items-center">
+          <div className="mt-6 flex w-full flex-col gap-4 lg:mt-10 lg:flex-row">
+            <div className="h-fit w-full rounded-2xl bg-white p-4 lg:w-3/4">
+              <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+                <div className="flex flex-wrap items-center">
                   <span className="mx-2 text-base">أجمالي التكلفة:</span>
                   {isCalculating ? (
                     <Skeleton className="h-6 w-36 bg-Grey200 rounded-sm" />
                   ) : (
-                    <div className="flex items-center">
+                    <div className="flex flex-wrap items-center">
                       {pricingDetails.totalPrice <
                         pricingDetails.originalTotalPrice && (
                         <span className="text-Grey500 mx-2 line-through text-sm">
@@ -332,7 +334,7 @@ const page = () => {
                         {formatPrice(pricingDetails.totalPrice)}
                       </span>
                       <SaudiRiyal />
-                      <span className="mx-1 text-Grey500 text-sm">
+                      <span className="mx-1 text-Grey500 text-xs sm:text-sm">
                         ({pricingDetails.days}
                         {pricingDetails.days > 1 && pricingDetails.days < 11
                           ? " أيام"
@@ -348,11 +350,11 @@ const page = () => {
                     activeStep === 3 ? <HandCoins className="h-5! w-5!" /> : ""
                   }
                   onClick={handleNext}
-                  className="text-base!"
+                  className="w-full text-sm! md:w-auto md:text-base!"
                   loading={isLoading || isCalculating}
                   icon={<ChevronLeft className="w-5! h-5!" />}
                 >
-                  <span className="mx-2">
+                  <span className="mx-2 text-sm md:text-base">
                     {activeStep === 3 ? "إتمام الحجز" : "التالي"}
                   </span>
                 </Button>
@@ -364,7 +366,7 @@ const page = () => {
                 isForOtherReservation={isForOtherReservation}
               />
             </div>
-            <div className="w-1/4">
+            <div className="w-full lg:w-1/4">
               <div className="">
                 <CarsCard
                   freeKm={carDetails?.allowedKm}
@@ -383,13 +385,10 @@ const page = () => {
                   extraContent={
                     (formData.returnType === "BRANCH" ||
                       formData.pickupType === "BRANCH") && (
-                      <div
-                        className="mt-2 w-full rounded-2xl overflow-visible relative"
-                        style={{ height: "220px" }}
-                      >
+                      <div className="relative mt-2 h-[180px] w-full overflow-visible rounded-2xl sm:h-[220px]">
                         <GoogleMapsPolyLineLocation
                           hideUserLocation
-                          containerHeight="220px"
+                          containerHeight="100%"
                           destinationLat={carDetails?.latitude}
                           destinationLng={carDetails?.longitude}
                           disableMapClickToChangeLocation

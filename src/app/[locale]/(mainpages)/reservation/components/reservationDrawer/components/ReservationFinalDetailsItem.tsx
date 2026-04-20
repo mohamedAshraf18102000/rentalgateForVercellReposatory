@@ -34,15 +34,15 @@ const ReservationFinalDetailsItem = ({
         {filteredItems.map((item, index) => (
           <div
             key={index}
-            className="flex justify-between items-center text-base"
+            className="flex items-start justify-between gap-2 text-base sm:items-center"
           >
             <p
-              className={`font-medium text-Grey700  ${largeText ? "text-base" : "text-sm"}`}
+              className={`font-medium text-Grey700 ${largeText ? "text-base" : "text-sm"} max-w-[60%] sm:max-w-none`}
             >
               {item.label}
             </p>
             <div
-              className={`flex items-center gap-1 ${largeText ? "text-base" : "text-sm"} ${offer ? "bg-StatusGreen text-StatusDarkGreen" : ""} p-1 rounded-lg`}
+              className={`flex shrink-0 items-center gap-1 ${largeText ? "text-base" : "text-sm"} ${offer ? "bg-StatusGreen text-StatusDarkGreen" : ""} rounded-lg p-1`}
             >
               {item.isCalculating ? (
                 <Skeleton className="bg-Grey400 h-4 w-8" />

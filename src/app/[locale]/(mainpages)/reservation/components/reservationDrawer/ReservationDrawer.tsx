@@ -38,15 +38,15 @@ const ReservationDrawer = ({
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent
         dir="rtl"
-        className="flex flex-col p-0 "
+        className="flex w-full max-w-full flex-col p-0 sm:max-w-xl"
         onOpenAutoFocus={(e) => e.preventDefault()}
       >
-        <SheetHeader className="text-start! mt-10 px-6 ">
+        <SheetHeader className="text-start! mt-8 px-4 sm:mt-10 sm:px-6">
           <SheetTitle>إتمام الدفع</SheetTitle>
           <Separator className="my-2" />
         </SheetHeader>
-        <div className="flex-1 overflow-y-auto px-4">
-          <div className="w-full p-2">
+        <div className="flex-1 overflow-y-auto px-3 sm:px-4">
+          <div className="w-full p-1.5 sm:p-2">
             <h1 className="text-base font-bold">تفاصيل الحجز</h1>
             <div className="bg-Grey100 p-3 mt-3 rounded-xl min-h-[500px]">
               {isCalculating ? (
