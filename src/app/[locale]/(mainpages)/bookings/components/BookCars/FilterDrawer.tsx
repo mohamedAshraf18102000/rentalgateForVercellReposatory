@@ -15,12 +15,13 @@ import { useUserPreferedFiltersStore } from "@/lib/stores/useUserPreferedFilters
 const FilterDrawer = () => {
   const { resetFilters, filters, applyFilters } = useUserPreferedFiltersStore();
 
+  const hasCategoryFilter = !!filters.carCategory || filters.categoryId !== "";
+
   const activeFiltersCount = [
     !!filters.rentPeriod,
-    !!filters.carCategory,
+    hasCategoryFilter,
     filters.priceMin !== "",
     filters.priceTo !== "",
-    filters.categoryId !== "",
     filters.brandId !== "",
     filters.modelId !== "",
     filters.pickupId !== "" && filters.pickupId !== "current-location",

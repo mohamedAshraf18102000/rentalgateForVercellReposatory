@@ -130,15 +130,17 @@ const SuccessPartnersMerquee = ({ partners }: { partners: Company[] }) => {
   return (
     <section className="w-full overflow-hidden py-4 relative h-full" dir="ltr">
       <div
-        className="absolute left-0 top-0 bottom-0 w-20 z-10 pointer-events-none rounded-none"
+        className="absolute left-0 top-0 bottom-0 w-100 z-10 pointer-events-none"
         style={{
-          background: "linear-gradient(to top, #F5F5F5/50%, transparent)",
+          background:
+            "linear-gradient(to right, rgba(236, 238, 242, 1) 0%, rgba(236, 238, 242, 0) 100%)",
         }}
       />
       <div
-        className="absolute right-0 top-0 bottom-0 w-20 z-10 pointer-events-none rounded-none"
+        className="absolute right-0 top-0 bottom-0 w-100 z-10 pointer-events-none"
         style={{
-          background: "linear-gradient(to left, #F5F5F5/50%, transparent)",
+          background:
+            "linear-gradient(to left, rgba(236, 238, 242, 1) 0%, rgba(236, 238, 242, 0) 100%)",
         }}
       />
 

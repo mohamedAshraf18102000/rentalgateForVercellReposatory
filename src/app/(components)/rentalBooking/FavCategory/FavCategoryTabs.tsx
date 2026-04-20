@@ -2,6 +2,7 @@
 
 import { Tabs, TabsList, TabsTrigger } from "@/ui";
 import { CarCategory } from "@/lib/stores/useUserPreferedFiltersStore";
+import { useHomeStore } from "@/lib/stores/useHomeStore";
 
 interface PeriodSearchProps {
   value: CarCategory;
@@ -12,6 +13,7 @@ export const FavCategoryTabs: React.FC<PeriodSearchProps> = ({
   value,
   onValueChange,
 }) => {
+  const carCategories = useHomeStore((s) => s.data?.carCategories);
   return (
     <Tabs
       value={value}
@@ -19,38 +21,17 @@ export const FavCategoryTabs: React.FC<PeriodSearchProps> = ({
       className="w-full"
     >
       <TabsList className="bg-Grey100 p-1 md:p-2 w-full flex justify-between h-auto">
-        <TabsTrigger
-          value="small"
-          className="login-tab-trigger flex-1 py-2 md:py-3"
-        >
-          <span className="login-tab-text text-xs sm:text-sm md:text-base">
-            صغيرة
-          </span>
-        </TabsTrigger>
-        <TabsTrigger
-          value="economy"
-          className="login-tab-trigger flex-1 py-2 md:py-3"
-        >
-          <span className="login-tab-text text-xs sm:text-sm md:text-base">
-            إقتصادية
-          </span>
-        </TabsTrigger>
-        <TabsTrigger
-          value="family"
-          className="login-tab-trigger flex-1 py-2 md:py-3"
-        >
-          <span className="login-tab-text text-xs sm:text-sm md:text-base">
-            عائلية
-          </span>
-        </TabsTrigger>
-        <TabsTrigger
-          value="luxury"
-          className="login-tab-trigger flex-1 py-2 md:py-3"
-        >
-          <span className="login-tab-text text-xs sm:text-sm md:text-base">
-            فاخرة
-          </span>
-        </TabsTrigger>
+        {carCategories?.map((category) => (
+          <TabsTrigger
+            key={category.categoryId}
+            value={category.categoryId.toString()}
+            className="login-tab-trigger flex-1 py-2 md:py-3"
+          >
+            <span className="login-tab-text text-xs sm:text-sm md:text-base">
+              {category.arabicName}
+            </span>
+          </TabsTrigger>
+        ))}
       </TabsList>
     </Tabs>
   );

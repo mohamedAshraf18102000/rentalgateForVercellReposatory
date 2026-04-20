@@ -27,6 +27,10 @@ const DrawerAccordion = () => {
     queryKey: ["company-cars-categories"],
     queryFn: () => getCompanyCarsCategories(),
   });
+  const selectedCategoryName =
+    filters.categoryName ||
+    data?.find((cat) => cat.categoryId.toString() === filters.categoryId)?.arabicName ||
+    "";
 
   const { data: airports, isLoading: airportsLoading } = useQuery({
     queryKey: ["airports"],
@@ -344,8 +348,8 @@ const DrawerAccordion = () => {
             onClose: () => setFilter("priceTo", ""),
           },
           {
-            condition: !!filters.categoryName,
-            title: filters.categoryName,
+            condition: !!filters.categoryId,
+            title: selectedCategoryName,
             onClose: () => {
               setFilter("categoryId", "");
               setFilter("categoryName", "");
