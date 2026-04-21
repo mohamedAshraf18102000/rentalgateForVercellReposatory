@@ -19,8 +19,8 @@ export interface ReservationFormData {
   carReturnLocationId: string | null;
   returnLat: number | null;
   returnLong: number | null;
-  fromDate: Date | null;
-  toDate: Date | null;
+  fromDate: string | null;
+  toDate: string | null;
   price: number | null;
   originalPrice: number | null;
   promoData: {
@@ -37,7 +37,7 @@ export interface ReservationFormData {
   email: string;
   licenseImage: string;
   licenseImageFile: File | null;
-  licenceExpiryDate: Date | null;
+  licenceExpiryDate: string | null;
   personalId: string;
   passportNumber: string;
   borderNumber: string;
@@ -207,20 +207,6 @@ export const useBookedCarDetailsStore = create<BookedCarDetailsState>()(
       storage: createJSONStorage(() => localStorage),
 
       onRehydrateStorage: () => (state) => {
-        if (state?.formData) {
-          state.formData.fromDate = state.formData.fromDate
-            ? new Date(state.formData.fromDate)
-            : null;
-
-          state.formData.toDate = state.formData.toDate
-            ? new Date(state.formData.toDate)
-            : null;
-
-          state.formData.licenceExpiryDate = state.formData.licenceExpiryDate
-            ? new Date(state.formData.licenceExpiryDate)
-            : null;
-        }
-
         state?.setHasHydrated(true);
       },
 

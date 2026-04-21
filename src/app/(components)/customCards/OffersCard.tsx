@@ -5,9 +5,16 @@ import Image from "next/image";
 type TofferPackageProps = {
   offerPackage: OfferPackage;
   className?: string;
+  warningAvailable?: boolean;
+  warnToTakeOfferDate?: string;
 };
 
-const OffersCard = ({ offerPackage, className }: TofferPackageProps) => {
+const OffersCard = ({
+  offerPackage,
+  className,
+  warnToTakeOfferDate,
+  warningAvailable,
+}: TofferPackageProps) => {
   return (
     <div className="border-2 w-full flex items-end rounded-2xl relative overflow-hidden min-h-[100px] sm:min-h-[100px]">
       {/* Badge */}
@@ -44,9 +51,12 @@ const OffersCard = ({ offerPackage, className }: TofferPackageProps) => {
           </span>
         </p>
 
-        <span className="text-xs font-bold text-StatusDarkGreen">
-          للاستفادة من العرض يرجي اختيار تاريخ الانتهاء
-        </span>
+        {warningAvailable && (
+          <span className="text-xs font-semibold text-StatusDarkGreen">
+            <span> للاستفادة من العرض اختر تاريخ الانتهاء حتي</span>{" "}
+            <span className="font-extrabold">{warnToTakeOfferDate}</span>
+          </span>
+        )}
       </div>
     </div>
   );

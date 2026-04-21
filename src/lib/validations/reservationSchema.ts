@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { formatLocalDateTime } from "@/lib/utils/formatLocalDateTime";
 
 export const reservationSchema = z
   .object({
@@ -72,6 +73,28 @@ export const reservationSchema = z
     extraKmApplied: z.boolean().optional(),
   })
   .superRefine((data, ctx) => {
+    const MIN_RENTAL_MS = 2 * 60 * 60 * 1000;
+
+    const formattedFromDate = formatLocalDateTime(data.fromDate);
+    const formattedToDate = formatLocalDateTime(data.toDate);
+
+    if (formattedFromDate && formattedToDate) {
+      const normalizedFromDate = new Date(formattedFromDate);
+      const normalizedToDate = new Date(formattedToDate);
+
+      if (
+        !Number.isNaN(normalizedFromDate.getTime()) &&
+        !Number.isNaN(normalizedToDate.getTime()) &&
+        normalizedToDate.getTime() - normalizedFromDate.getTime() < MIN_RENTAL_MS
+      ) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "يجب أن يكون وقت التسليم بعد الاستلام بساعتين على الأقل",
+          path: ["toDate"],
+        });
+      }
+    }
+
     if (data.isForOtherReservation) {
       if (!data.OtherPersonName || data.OtherPersonName.trim() === "") {
         ctx.addIssue({

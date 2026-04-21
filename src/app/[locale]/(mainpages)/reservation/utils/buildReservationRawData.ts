@@ -1,4 +1,5 @@
 import { BookedCarDetailsState } from "@/lib/stores/useBookedCarDetailsStore";
+import { formatLocalDateTime } from "@/lib/utils/formatLocalDateTime";
 
 export const buildReservationRawData = (
   bookedCarDetails: BookedCarDetailsState,
@@ -10,10 +11,10 @@ export const buildReservationRawData = (
     returnLatitude: bookedCarDetails.formData.returnLat,
     returnLongitude: bookedCarDetails.formData.returnLong,
     startDate: bookedCarDetails.formData.fromDate
-      ? (bookedCarDetails.formData.fromDate as Date).toISOString()
+      ? formatLocalDateTime(bookedCarDetails.formData.fromDate)
       : "",
     endDate: bookedCarDetails.formData.toDate
-      ? (bookedCarDetails.formData.toDate as Date).toISOString()
+      ? formatLocalDateTime(bookedCarDetails.formData.toDate)
       : "",
     services: bookedCarDetails.formData.services?.length
       ? bookedCarDetails.formData.services

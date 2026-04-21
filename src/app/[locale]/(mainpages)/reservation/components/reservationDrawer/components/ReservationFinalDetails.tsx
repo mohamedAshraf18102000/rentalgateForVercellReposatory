@@ -7,6 +7,7 @@ import { Skeleton } from "@/app/(components)/ui/skeleton";
 
 import { calculateServicePrice } from "@/lib/utils/calculateServicePrice";
 import { CalculateQuotePriceResponse } from "@/services/calculateQuotePrice/calculateQuotePrice.service";
+import { formatLocalDateTime } from "@/lib/utils/formatLocalDateTime";
 
 type ReservationFinalDetailsProps = {
   data?: CalculateQuotePriceResponse;
@@ -21,9 +22,16 @@ const ReservationFinalDetails = ({
 
   const rentalDays = useMemo(() => {
     if (formData.fromDate && formData.toDate) {
-      const diffTime = Math.abs(
-        formData.toDate.getTime() - formData.fromDate.getTime(),
-      );
+      const normalizedFromDate = formatLocalDateTime(formData.fromDate);
+      const normalizedToDate = formatLocalDateTime(formData.toDate);
+      if (!normalizedFromDate || !normalizedToDate) return 1;
+
+      const fromDate = new Date(normalizedFromDate);
+      const toDate = new Date(normalizedToDate);
+      if (Number.isNaN(fromDate.getTime()) || Number.isNaN(toDate.getTime()))
+        return 1;
+
+      const diffTime = Math.abs(toDate.getTime() - fromDate.getTime());
       return Math.ceil(diffTime / (1000 * 60 * 60 * 24)) || 1;
     }
     return 1;
@@ -78,12 +86,22 @@ const ReservationFinalDetails = ({
         itemHeader="الخصومات و العروض:"
         items={[
           {
-            label: `خصم عرض ال ( ${rentalDays} يوم )`,
+            label: `خصم:`,
             isAvailable:
               !!reservationData && reservationData.businessDiscount !== null,
             value: (
               <span dir="ltr">
                 -{formatPrice(reservationData?.businessDiscount || 0)}
+              </span>
+            ),
+          },
+          {
+            label: `خصم عرض ال ( ${rentalDays} يوم )`,
+            isAvailable:
+              !!reservationData && reservationData.carDaysDiscount !== 0,
+            value: (
+              <span dir="ltr">
+                -{formatPrice(reservationData?.carDaysDiscount || 0)}
               </span>
             ),
           },

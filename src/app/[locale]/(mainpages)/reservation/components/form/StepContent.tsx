@@ -23,6 +23,7 @@ import StepThree from "./StepThree";
 import { useClientStore } from "@/lib/api/stores";
 import { calculateRentalPrice } from "@/lib/utils/calculateRentalPrice";
 import { completeUserProfile } from "@/services/userProfile/completeUserProfile.service";
+import { formatLocalDateTime } from "@/lib/utils/formatLocalDateTime";
 
 interface StepContentProps {
   activeStep: number;
@@ -36,6 +37,23 @@ export interface StepContentRef {
 
 const StepContent = forwardRef<StepContentRef, StepContentProps>(
   ({ activeStep, isForOtherReservation = false }, ref) => {
+    const getRentalDays = (fromDate?: Date | string, toDate?: Date | string) => {
+      const normalizedFromDate = formatLocalDateTime(fromDate);
+      const normalizedToDate = formatLocalDateTime(toDate);
+
+      if (!normalizedFromDate || !normalizedToDate) return 0;
+
+      const from = new Date(normalizedFromDate);
+      const to = new Date(normalizedToDate);
+
+      if (Number.isNaN(from.getTime()) || Number.isNaN(to.getTime())) return 0;
+
+      const diffTime = to.getTime() - from.getTime();
+      if (diffTime <= 0) return 0;
+
+      return Math.ceil(diffTime / (1000 * 60 * 60 * 24)) || 1;
+    };
+
     const { displayStep, animationClass } = useStepAnimation(activeStep);
     const { filters, setFilter } = useUserPreferedFiltersStore();
     const { latitude, longitude, address } = useLocationStore();
@@ -106,7 +124,9 @@ const StepContent = forwardRef<StepContentRef, StepContentProps>(
         idNumber: formData.idNumber || "0",
         nationality: formData.nationality || "",
         licenseImage: formData.licenseImage || "",
-        licenceExpiryDate: formData.licenceExpiryDate ?? undefined,
+        licenceExpiryDate: formData.licenceExpiryDate
+          ? new Date(formData.licenceExpiryDate)
+          : undefined,
         personalId: formData.personalId || "",
         passportNumber: formData.passportNumber || "",
         borderNumber: formData.borderNumber || "",
@@ -171,7 +191,9 @@ const StepContent = forwardRef<StepContentRef, StepContentProps>(
           idNumber: formData.idNumber || "0",
           nationality: formData.nationality || "",
           licenseImage: formData.licenseImage || "",
-          licenceExpiryDate: formData.licenceExpiryDate ?? undefined,
+          licenceExpiryDate: formData.licenceExpiryDate
+            ? new Date(formData.licenceExpiryDate)
+            : undefined,
           personalId: formData.personalId || "",
           passportNumber: formData.passportNumber || "",
           borderNumber: formData.borderNumber || "",
@@ -260,10 +282,7 @@ const StepContent = forwardRef<StepContentRef, StepContentProps>(
           if (isValid) {
             const values = getValues();
             if (values.fromDate && values.toDate && carDetails) {
-              const diffTime = Math.abs(
-                values.toDate.getTime() - values.fromDate.getTime(),
-              );
-              const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) || 1;
+              const diffDays = getRentalDays(values.fromDate, values.toDate);
 
               const effectivePricing = calculateRentalPrice({
                 days: diffDays,
@@ -389,12 +408,12 @@ const StepContent = forwardRef<StepContentRef, StepContentProps>(
       setFormData({
         pickupName: initialValues.pickupName,
         carReturnLocation: initialValues.carReturnLocation,
-        fromDate: initialValues.fromDate,
-        toDate: initialValues.toDate,
+        fromDate: formatLocalDateTime(initialValues.fromDate),
+        toDate: formatLocalDateTime(initialValues.toDate),
         idNumber: initialValues.idNumber,
         nationality: initialValues.nationality,
         licenseImage: initialValues.licenseImage as string,
-        licenceExpiryDate: initialValues.licenceExpiryDate,
+        licenceExpiryDate: formatLocalDateTime(initialValues.licenceExpiryDate),
         personalId: initialValues.personalId,
         passportNumber: initialValues.passportNumber,
         borderNumber: initialValues.borderNumber,
@@ -417,15 +436,17 @@ const StepContent = forwardRef<StepContentRef, StepContentProps>(
           update.pickupName = value.pickupName;
         if (value.carReturnLocation !== undefined)
           update.carReturnLocation = value.carReturnLocation;
-        if (value.fromDate !== undefined) update.fromDate = value.fromDate;
-        if (value.toDate !== undefined) update.toDate = value.toDate;
+        if (value.fromDate !== undefined)
+          update.fromDate = formatLocalDateTime(value.fromDate);
+        if (value.toDate !== undefined)
+          update.toDate = formatLocalDateTime(value.toDate);
         if (value.idNumber !== undefined) update.idNumber = value.idNumber;
         if (value.nationality !== undefined)
           update.nationality = value.nationality;
         if (value.licenseImage !== undefined)
           update.licenseImage = value.licenseImage as string;
         if (value.licenceExpiryDate !== undefined)
-          update.licenceExpiryDate = value.licenceExpiryDate;
+          update.licenceExpiryDate = formatLocalDateTime(value.licenceExpiryDate);
         if (value.personalId !== undefined)
           update.personalId = value.personalId;
         if (value.passportNumber !== undefined)
@@ -442,10 +463,7 @@ const StepContent = forwardRef<StepContentRef, StepContentProps>(
           update.extraKmApplied = value.extraKmApplied as boolean;
 
         if (value.fromDate && value.toDate) {
-          const from = new Date(value.fromDate);
-          const to = new Date(value.toDate);
-          const diffTime = Math.abs(to.getTime() - from.getTime());
-          const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) || 1;
+          const diffDays = getRentalDays(value.fromDate, value.toDate);
           update.rentalDays = diffDays;
         }
 
@@ -477,15 +495,15 @@ const StepContent = forwardRef<StepContentRef, StepContentProps>(
         setFormData(update);
 
         if (value.fromDate) {
-          const iso = (value.fromDate as Date).toISOString();
-          if (filters.fromDate !== iso) {
-            setFilter("fromDate", iso);
+          const formattedFromDate = formatLocalDateTime(value.fromDate);
+          if (formattedFromDate && filters.fromDate !== formattedFromDate) {
+            setFilter("fromDate", formattedFromDate);
           }
         }
         if (value.toDate) {
-          const iso = (value.toDate as Date).toISOString();
-          if (filters.toDate !== iso) {
-            setFilter("toDate", iso);
+          const formattedToDate = formatLocalDateTime(value.toDate);
+          if (formattedToDate && filters.toDate !== formattedToDate) {
+            setFilter("toDate", formattedToDate);
           }
         }
         if (value.pickupTrainId !== undefined) {

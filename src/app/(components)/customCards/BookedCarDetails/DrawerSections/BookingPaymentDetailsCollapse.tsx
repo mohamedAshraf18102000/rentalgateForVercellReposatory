@@ -28,7 +28,11 @@ const BookingPaymentDetailsCollapse = ({
   return (
     <Card className="w-full border-0! p-0! mb-3 mt-5">
       <CardContent className="px-0!">
-        <Collapsible open={open} onOpenChange={setOpen} className="data-[state=open]:bg-muted border-none! p-2!">
+        <Collapsible
+          open={open}
+          onOpenChange={setOpen}
+          className="data-[state=open]:bg-muted border-none! p-2!"
+        >
           <CollapsibleTrigger asChild>
             <Button
               variant="ghost"

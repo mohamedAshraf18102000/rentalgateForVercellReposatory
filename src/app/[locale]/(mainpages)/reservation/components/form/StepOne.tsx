@@ -22,6 +22,7 @@ import { useBookedCarDetailsStore } from "@/lib/stores/useBookedCarDetailsStore"
 import WarningMessage from "@/app/(components)/WarningMessage";
 import { useRentalDays } from "@/hooks/useCalculateRentalDays";
 import { getBestOffer } from "@/lib/utils/getBestOffer";
+import { formatLocalDateTime } from "@/lib/utils/formatLocalDateTime";
 
 interface StepOneProps {
   control: Control<ReservationFormValues>;
@@ -31,13 +32,37 @@ interface StepOneProps {
 }
 
 const StepOne = ({ control, errors, watch, setValue }: StepOneProps) => {
+  const MIN_RENTAL_HOURS = 2;
+  const MIN_RENTAL_MS = MIN_RENTAL_HOURS * 60 * 60 * 1000;
   const formData = useBookedCarDetailsStore((state) => state.formData);
   const offerPackages = useBookedCarDetailsStore(
     (state) => state.carDetails?.offerPackages,
   );
-  const rentalDays = useRentalDays(watch("fromDate"), watch("toDate"));
+  const fromDate = watch("fromDate");
+  const toDate = watch("toDate");
+  const minToDate = fromDate ? new Date(fromDate.getTime() + MIN_RENTAL_MS) : null;
+  const rentalDays = useRentalDays(fromDate, toDate);
   const bestOffer = getBestOffer(offerPackages ?? [], rentalDays);
+  const matchedOfferAtSameDays =
+    offerPackages
+      ?.filter((offer) => rentalDays === offer.days)
+      .sort((a, b) => b.days - a.days)[0] ?? null;
+  const offerForRecommendation = bestOffer ?? matchedOfferAtSameDays;
   const { openDialog } = usePickupDialogStore();
+  const recommendedOfferEndDate =
+    fromDate && offerForRecommendation
+      ? new Date(
+          fromDate.getTime() +
+            (offerForRecommendation.days + offerForRecommendation.extraDays) *
+              24 *
+              60 *
+              60 *
+              1000,
+        )
+      : null;
+  const warnToTakeOfferDate = recommendedOfferEndDate
+    ? `${recommendedOfferEndDate.toLocaleDateString("ar-GB").replace(/\//g, "-")} ${recommendedOfferEndDate.toLocaleTimeString("ar-GB", { hour: "numeric", minute: "2-digit", hour12: true })}`
+    : "";
 
   const handleOpenReturnLocationDialog = () => {
     openDialog("currentLocation", "return", () => {
@@ -76,6 +101,28 @@ const StepOne = ({ control, errors, watch, setValue }: StepOneProps) => {
       setValue("returnTrainId", updatedFormData.returnTrainId || null);
       setValue("returnAirportId", updatedFormData.returnAirportId || null);
     });
+  };
+
+  const isDateLessThanMinimumRental = (
+    startDate: Date | null | undefined,
+    endDate: Date | null | undefined,
+  ) => {
+    const formattedStartDate = formatLocalDateTime(startDate);
+    const formattedEndDate = formatLocalDateTime(endDate);
+
+    if (!formattedStartDate || !formattedEndDate) return false;
+
+    const normalizedStartDate = new Date(formattedStartDate);
+    const normalizedEndDate = new Date(formattedEndDate);
+
+    if (
+      Number.isNaN(normalizedStartDate.getTime()) ||
+      Number.isNaN(normalizedEndDate.getTime())
+    ) {
+      return false;
+    }
+
+    return normalizedEndDate.getTime() - normalizedStartDate.getTime() < MIN_RENTAL_MS;
   };
 
   const handleOpenPickupLocationDialog = () => {
@@ -215,11 +262,7 @@ const StepOne = ({ control, errors, watch, setValue }: StepOneProps) => {
                 value={field.value}
                 onChange={(date: Date | null) => {
                   field.onChange(date);
-                  if (
-                    date &&
-                    watch("toDate") &&
-                    new Date(watch("toDate")!) < date
-                  ) {
+                  if (isDateLessThanMinimumRental(date, watch("toDate"))) {
                     setValue("toDate", undefined);
                   }
                 }}
@@ -245,9 +288,16 @@ const StepOne = ({ control, errors, watch, setValue }: StepOneProps) => {
                 inputClassName="text-base!"
                 withTime
                 allowClear
-                minDate={watch("fromDate") ? watch("fromDate") : undefined}
+                minDate={minToDate ?? undefined}
                 value={field.value}
-                onChange={field.onChange}
+                onChange={(date: Date | null) => {
+                  if (isDateLessThanMinimumRental(fromDate, date)) {
+                    field.onChange(undefined);
+                    return;
+                  }
+
+                  field.onChange(date);
+                }}
               />
             )}
           />
@@ -283,7 +333,12 @@ const StepOne = ({ control, errors, watch, setValue }: StepOneProps) => {
           </div>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {offerPackages.map((offer) => (
-              <OffersCard key={offer.ccoId} offerPackage={offer} />
+              <OffersCard
+                key={offer.ccoId}
+                offerPackage={offer}
+                warningAvailable={warnToTakeOfferDate !== ""}
+                warnToTakeOfferDate={warnToTakeOfferDate}
+              />
             ))}
           </div>
         </>
