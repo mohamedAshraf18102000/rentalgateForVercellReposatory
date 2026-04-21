@@ -4,12 +4,15 @@ import { useEffect, useState } from "react";
 import { DialogWrapper } from "@/app/(components)";
 import GoogleMapsLocation from "@/app/(components)/mapsLocation/GoogleMapsLocation";
 import { useLocationStore } from "@/lib/stores/useLocationStore";
+import { useBookedCarDetailsStore } from "@/lib/stores/useBookedCarDetailsStore";
 import { LocateFixed } from "lucide-react";
 import { usePathname } from "next/navigation";
 
 export function CurrentLocationDialog() {
   const { address, isDialogOpen, openDialog, closeDialog, setLocation } =
     useLocationStore();
+  const { resetForm, clearCarDetails, clearServices } =
+    useBookedCarDetailsStore();
   const pathname = usePathname();
   const isTermsPage = pathname.includes("/terms&conditions");
 
@@ -61,6 +64,12 @@ export function CurrentLocationDialog() {
   const handleSave = () => {
     if (tempLocation) {
       setLocation(tempLocation.lat, tempLocation.lng, tempLocation.address);
+      setTimeout(() => {
+        clearCarDetails();
+        clearServices();
+        resetForm();
+        localStorage.removeItem("booked-car-details-storage");
+      }, 1000);
     }
     closeDialog();
     sessionStorage.setItem("hasClosedLocationDialog", "true");

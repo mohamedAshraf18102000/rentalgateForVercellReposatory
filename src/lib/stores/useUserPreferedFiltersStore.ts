@@ -27,11 +27,11 @@ export interface BookingFilters {
   carReturnLocationLng?: number;
   carReturnLocationId?: string;
   carReturnLocationType?:
-    | "airport"
-    | "trainStation"
-    | "currentLocation"
-    | "branches"
-    | "";
+  | "airport"
+  | "trainStation"
+  | "currentLocation"
+  | "branches"
+  | "";
   pickupTrainId?: number;
   pickupAirportId?: number;
   carReturnTrainId?: number;
@@ -86,7 +86,7 @@ export const useUserPreferedFiltersStore = create<UserPreferedFiltersState>()(
     }),
     {
       name: "user-prefered-filters-storage",
-      storage: createJSONStorage(() => localStorage),
+      storage: createJSONStorage(() => sessionStorage),
     },
   ),
 );

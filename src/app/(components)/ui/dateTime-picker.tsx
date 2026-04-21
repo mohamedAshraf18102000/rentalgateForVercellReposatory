@@ -17,6 +17,20 @@ import { ar, enUS } from "date-fns/locale";
 import "react-day-picker/dist/style.css";
 import "./style.css";
 import { buttonVariants } from "./button";
+import { DialogWrapper } from "./dialog-wrapper"; // adjust path
+
+// ─── Hook ─────────────────────────────────────────────────────────────────────
+
+function useIsMobile(breakpoint = 768) {
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < breakpoint);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, [breakpoint]);
+  return isMobile;
+}
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -43,11 +57,9 @@ interface DatePickerProps {
   minDaysFromToday?: number;
   minDate?: Date | null;
   locale?: string;
-  /** Enable time selection alongside the calendar */
   withTime?: boolean;
   pickerDateLabel?: string;
   pickerTimeLabel?: string;
-  /** Show an X button to clear the selected date */
   allowClear?: boolean;
 }
 
@@ -72,92 +84,66 @@ const englishDays = [
   "Saturday",
 ];
 
-function formatDate(
-  date: Date | null | undefined,
-  locale: string = "ar",
-): string {
+function formatDate(date: Date | null | undefined, locale = "ar"): string {
   if (!date) return "";
-  const dateObj = date instanceof Date ? date : new Date(date);
-  if (isNaN(dateObj.getTime())) return "";
-
-  const isArabic = locale === "ar";
-  const days = isArabic ? arabicDays : englishDays;
-  const day = days[dateObj.getDay()];
-  const dayNum = dateObj.getDate();
-  const month = dateObj.getMonth() + 1;
-  const year = dateObj.getFullYear();
-
-  return `${day} ${dayNum}-${month}-${year}`;
+  const d = date instanceof Date ? date : new Date(date);
+  if (isNaN(d.getTime())) return "";
+  const days = locale === "ar" ? arabicDays : englishDays;
+  return `${days[d.getDay()]} ${d.getDate()}-${d.getMonth() + 1}-${d.getFullYear()}`;
 }
 
-function formatDateTime(
-  date: Date | null | undefined,
-  locale: string = "ar",
-): string {
+function formatDateTime(date: Date | null | undefined, locale = "ar"): string {
   if (!date) return "";
-  const dateObj = date instanceof Date ? date : new Date(date);
-  if (isNaN(dateObj.getTime())) return "";
-
-  const isArabic = locale === "ar";
-  const datePart = formatDate(dateObj, locale);
-  const hours = dateObj.getHours();
-  const minutes = dateObj.getMinutes().toString().padStart(2, "0");
+  const d = date instanceof Date ? date : new Date(date);
+  if (isNaN(d.getTime())) return "";
+  const datePart = formatDate(d, locale);
+  const h = d.getHours();
+  const m = d.getMinutes().toString().padStart(2, "0");
   const ampm =
-    hours >= 12 ? (isArabic ? "مساءً" : "Pm") : isArabic ? "صباحاً" : "Am";
-  const displayHour = hours % 12 === 0 ? 12 : hours % 12;
-  return `${datePart}  ${displayHour}:${minutes} ${ampm}`;
+    h >= 12
+      ? locale === "ar"
+        ? "مساءً"
+        : "Pm"
+      : locale === "ar"
+        ? "صباحاً"
+        : "Am";
+  return `${datePart}  ${h % 12 === 0 ? 12 : h % 12}:${m} ${ampm}`;
 }
 
-/** Generate time slots every 30 minutes from 00:00 to 23:30 */
-function generateTimeSlots(): {
-  hours: number;
-  minutes: number;
-}[] {
+function generateTimeSlots() {
   const slots: { hours: number; minutes: number }[] = [];
-  for (let h = 0; h < 24; h++) {
-    for (const m of [0, 30]) {
-      slots.push({
-        hours: h,
-        minutes: m,
-      });
-    }
-  }
+  for (let h = 0; h < 24; h++)
+    for (const m of [0, 30]) slots.push({ hours: h, minutes: m });
   return slots;
 }
-
 const TIME_SLOTS = generateTimeSlots();
 
-// ─── TimePicker sub-component ─────────────────────────────────────────────────
-
-interface TimePickerProps {
-  selectedDate: Date | null | undefined;
-  onTimeSelect: (hours: number, minutes: number) => void;
-  locale?: string;
-}
+// ─── TimePicker ───────────────────────────────────────────────────────────────
 
 function TimePicker({
   selectedDate,
   onTimeSelect,
   locale = "ar",
-}: TimePickerProps) {
-  const selectedHours = selectedDate?.getHours() ?? -1;
-  const selectedMinutes = selectedDate?.getMinutes() ?? -1;
-
+}: {
+  selectedDate: Date | null | undefined;
+  onTimeSelect: (h: number, m: number) => void;
+  locale?: string;
+}) {
+  const selH = selectedDate?.getHours() ?? -1;
+  const selM = selectedDate?.getMinutes() ?? -1;
   const activeRef = useRef<HTMLButtonElement | null>(null);
 
   useEffect(() => {
     activeRef.current?.scrollIntoView({ block: "center", behavior: "smooth" });
-  }, [selectedHours, selectedMinutes]);
+  }, [selH, selM]);
 
   return (
     <div
-      className="time-picker-scroll bg-Grey100 p-2 rounded-2xl grid grid-cols-3 gap-2 overflow-y-auto max-h-[325px] pr-1"
+      className="time-picker-scroll bg-Grey100 p-2 rounded-2xl grid grid-cols-3 gap-2 overflow-y-auto max-h-[260px] sm:max-h-[325px] pr-1"
       style={{ scrollbarWidth: "thin" }}
     >
       {TIME_SLOTS.map((slot) => {
-        const isActive =
-          slot.hours === selectedHours && slot.minutes === selectedMinutes;
-
+        const isActive = slot.hours === selH && slot.minutes === selM;
         const displayH = slot.hours % 12 === 0 ? 12 : slot.hours % 12;
         const displayM = slot.minutes.toString().padStart(2, "0");
         const ampm =
@@ -170,7 +156,6 @@ function TimePicker({
               : "Am";
         const label = `${displayH}:${displayM} ${ampm}`;
 
-        // Gray out hours that are in the past if selected date is today
         const now = new Date();
         const isToday =
           selectedDate &&
@@ -188,7 +173,7 @@ function TimePicker({
             ref={isActive ? activeRef : null}
             onClick={() => onTimeSelect(slot.hours, slot.minutes)}
             className={cn(
-              "rounded-2xl px-4 py-2.5 text-sm font-medium transition-all whitespace-nowrap text-left",
+              "rounded-2xl px-3 sm:px-4 py-2.5 text-xs sm:text-sm font-medium transition-all whitespace-nowrap text-left",
               isActive
                 ? "bg-gray-900 text-white shadow-md"
                 : isPast
@@ -204,19 +189,7 @@ function TimePicker({
   );
 }
 
-// ─── Calendar sub-component ───────────────────────────────────────────────────
-
-interface CalendarProps {
-  selected: Date | null | undefined;
-  onSelect: (date: Date | undefined) => void;
-  locale: string;
-  minAllowedDate: Date;
-  maxAllowedDate?: Date | null;
-  fromValue?: Date | null;
-  mode?: "single" | "range";
-  rangeSelected?: { from?: Date; to?: Date };
-  onRangeSelect?: (range: { from?: Date; to?: Date } | undefined) => void;
-}
+// ─── CalendarPanel ────────────────────────────────────────────────────────────
 
 function CalendarPanel({
   selected,
@@ -224,63 +197,36 @@ function CalendarPanel({
   locale,
   minAllowedDate,
   maxAllowedDate,
-  fromValue,
-  mode = "single",
-  rangeSelected,
-  onRangeSelect,
-}: CalendarProps) {
+}: {
+  selected: Date | null | undefined;
+  onSelect: (date: Date | undefined) => void;
+  locale: string;
+  minAllowedDate: Date;
+  maxAllowedDate?: Date | null;
+}) {
   const dayPickerLocale = locale === "ar" ? ar : enUS;
   const defaultMonth = selected ?? minAllowedDate;
 
   const chevronComponents = {
-    Chevron: ({ orientation }: { orientation?: string }) => {
-      if (orientation === "left") {
-        return (
-          <div
-            className={cn(buttonVariants({ variant: "outline", size: "icon" }))}
-          >
-            <ChevronRight className="h-4 w-4" />
-          </div>
-        );
-      }
-      return (
+    Chevron: ({ orientation }: { orientation?: string }) =>
+      orientation === "left" ? (
+        <div
+          className={cn(buttonVariants({ variant: "outline", size: "icon" }))}
+        >
+          <ChevronRight className="h-4 w-4" />
+        </div>
+      ) : (
         <div
           className={cn(buttonVariants({ variant: "outline", size: "icon" }))}
         >
           <ChevronLeft className="h-4 w-4" />
         </div>
-      );
-    },
+      ),
   };
-
-  if (mode === "range" && onRangeSelect) {
-    return (
-      <DayPicker
-        mode="range"
-        defaultMonth={defaultMonth ?? undefined}
-        onSelect={(range) =>
-          onRangeSelect(range as { from?: Date; to?: Date } | undefined)
-        }
-        locale={dayPickerLocale}
-        disabled={(date) => {
-          const d = new Date(date);
-          d.setHours(0, 0, 0, 0);
-          if (d < minAllowedDate) return true;
-          if (fromValue) {
-            const f = new Date(fromValue);
-            f.setHours(0, 0, 0, 0);
-            return d < f;
-          }
-          return false;
-        }}
-        components={chevronComponents}
-      />
-    );
-  }
 
   return (
     <DayPicker
-      className="bg-Grey100 p-2 rounded-2xl"
+      className="bg-Grey100 p-2 rounded-2xl w-full max-w-full overflow-hidden"
       mode="single"
       selected={selected ?? undefined}
       defaultMonth={defaultMonth ?? undefined}
@@ -298,19 +244,7 @@ function CalendarPanel({
   );
 }
 
-// ─── DateTimePicker popover content ──────────────────────────────────────────
-
-interface DateTimeContentProps {
-  selectedDate: Date | null | undefined;
-  onDateChange: (date: Date | undefined) => void;
-  locale: string;
-  minAllowedDate: Date;
-  maxAllowedDate?: Date | null;
-  withTime?: boolean;
-  title?: string;
-  pickerDateLabel?: string;
-  pickerTimeLabel?: string;
-}
+// ─── DateTimeContent ──────────────────────────────────────────────────────────
 
 function DateTimeContent({
   selectedDate,
@@ -322,7 +256,17 @@ function DateTimeContent({
   title,
   pickerDateLabel,
   pickerTimeLabel,
-}: DateTimeContentProps) {
+}: {
+  selectedDate: Date | null | undefined;
+  onDateChange: (date: Date | undefined) => void;
+  locale: string;
+  minAllowedDate: Date;
+  maxAllowedDate?: Date | null;
+  withTime?: boolean;
+  title?: string;
+  pickerDateLabel?: string;
+  pickerTimeLabel?: string;
+}) {
   const isArabic = locale === "ar";
   const displayDateLabel = pickerDateLabel || (isArabic ? "من يوم:" : "Day:");
   const displayTimeLabel =
@@ -335,19 +279,17 @@ function DateTimeContent({
   }
 
   return (
-    // RED
-    <div className="p-4 rounded-2xl">
-      {title && <div className="text-[16px] font-semibold mb-2">{title}</div>}
+    <div className="p-3 sm:p-4 rounded-2xl">
+      {title && <div className="text-[15px] sm:text-[16px] font-semibold mb-2">{title}</div>}
       {title && <hr className="my-3" />}
       <div
         className={cn(
-          "flex gap-4",
-          locale === "ar" ? "flex-row" : "flex-row-reverse",
+          "flex flex-col gap-4 lg:flex-row",
+          locale === "ar" ? "lg:flex-row" : "lg:flex-row-reverse",
         )}
       >
-        {/* Time column */}
-        <div className="">
-          <p className="text-base! mb-3">{displayDateLabel}</p>
+        <div className="w-full lg:w-auto">
+          <p className="text-sm sm:text-base! mb-2 sm:mb-3">{displayDateLabel}</p>
           <CalendarPanel
             selected={selectedDate}
             onSelect={onDateChange}
@@ -356,10 +298,9 @@ function DateTimeContent({
             maxAllowedDate={maxAllowedDate}
           />
         </div>
-
         {withTime && (
-          <div className="">
-            <p className="text-base! mb-3">{displayTimeLabel}</p>
+          <div className="w-full lg:w-auto">
+            <p className="text-sm sm:text-base! mb-2 sm:mb-3">{displayTimeLabel}</p>
             <TimePicker
               selectedDate={selectedDate}
               onTimeSelect={handleTimeSelect}
@@ -372,7 +313,126 @@ function DateTimeContent({
   );
 }
 
-// ─── Main DatePicker export ───────────────────────────────────────────────────
+// ─── computeAllowedDates ──────────────────────────────────────────────────────
+
+function computeAllowedDates(minDate?: Date | null, minDaysFromToday = 0) {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  let minAllowedDate: Date;
+  if (minDate) {
+    minAllowedDate = new Date(minDate);
+    minAllowedDate.setHours(0, 0, 0, 0);
+    if (minAllowedDate < today) minAllowedDate = new Date(today);
+  } else {
+    minAllowedDate = new Date(today);
+  }
+
+  let maxAllowedDate: Date | null = null;
+  if (!minDate && minDaysFromToday > 0) {
+    maxAllowedDate = new Date(today);
+    maxAllowedDate.setDate(today.getDate() + minDaysFromToday - 1);
+    maxAllowedDate.setHours(23, 59, 59, 999);
+  }
+
+  return { minAllowedDate, maxAllowedDate };
+}
+
+// ─── PickerShell ──────────────────────────────────────────────────────────────
+// Renders a Popover on desktop, DialogWrapper bottom-sheet on mobile/tablet.
+// Both open/onOpenChange are fully controlled by the parent — no internal state.
+
+function PickerShell({
+  open,
+  onOpenChange,
+  trigger,
+  isMobile,
+  title,
+  selectedDate,
+  onDateChange,
+  locale,
+  minAllowedDate,
+  maxAllowedDate,
+  withTime,
+  pickerDateLabel,
+  pickerTimeLabel,
+}: {
+  open: boolean;
+  onOpenChange: (v: boolean) => void;
+  trigger: ReactNode;
+  isMobile: boolean;
+  title?: string;
+  selectedDate: Date | null | undefined;
+  onDateChange: (date: Date | undefined) => void;
+  locale: string;
+  minAllowedDate: Date;
+  maxAllowedDate?: Date | null;
+  withTime?: boolean;
+  pickerDateLabel?: string;
+  pickerTimeLabel?: string;
+}) {
+  const isArabic = locale === "ar";
+
+  const pickerContent = (
+    <DateTimeContent
+      selectedDate={selectedDate}
+      onDateChange={onDateChange}
+      locale={locale}
+      minAllowedDate={minAllowedDate}
+      maxAllowedDate={maxAllowedDate}
+      withTime={withTime}
+      // On mobile the title lives in the sheet header, not inside the content
+      title={isMobile ? undefined : title}
+      pickerDateLabel={pickerDateLabel}
+      pickerTimeLabel={pickerTimeLabel}
+    />
+  );
+
+  // ── Mobile / tablet → DialogWrapper bottom sheet ──────────────────────────
+  if (isMobile) {
+    return (
+      <>
+        {/* Trigger rendered outside the sheet so it stays in normal DOM flow */}
+        <div onClick={() => onOpenChange(true)}>{trigger}</div>
+
+        <DialogWrapper
+          open={open}
+          onOpenChange={onOpenChange}
+          header={title ? { mainTitle: title } : undefined}
+          content={pickerContent}
+          scrollableContent
+          maxScrollHeight="70vh"
+          footer={
+            // withTime needs an explicit confirm; plain date-pick closes on day tap
+            withTime ? (
+              <button
+                className="w-full rounded-xl bg-gray-900 text-white py-3 text-sm font-medium"
+                onClick={() => onOpenChange(false)}
+              >
+                {isArabic ? "تأكيد" : "Confirm"}
+              </button>
+            ) : undefined
+          }
+        />
+      </>
+    );
+  }
+
+  // ── Desktop → Popover (original behaviour) ───────────────────────────────
+  return (
+    <Popover open={open} onOpenChange={onOpenChange}>
+      <PopoverTrigger asChild>{trigger}</PopoverTrigger>
+      <PopoverContent
+        className="w-fit max-w-[95vw] p-0 rounded-2xl! overflow-auto"
+        align="start"
+      >
+        {pickerContent}
+      </PopoverContent>
+    </Popover>
+  );
+}
+
+// ─── Main DateTimePicker ──────────────────────────────────────────────────────
 
 export function DateTimePicker({
   label,
@@ -402,8 +462,11 @@ export function DateTimePicker({
   pickerTimeLabel,
   allowClear = false,
 }: DatePickerProps) {
-  const [open, setOpen] = useState(false);
-  const [isFromSelected, setIsFromSelected] = useState(true);
+  // ── All hooks at the top — never inside conditionals ──────────────────────
+  const isMobile = useIsMobile();
+  const [singleOpen, setSingleOpen] = useState(false);
+  const [fromOpen, setFromOpen] = useState(false);
+  const [toOpen, setToOpen] = useState(false);
 
   const isArabic = locale === "ar";
   const defaultPlaceholder =
@@ -415,192 +478,151 @@ export function DateTimePicker({
     (isArabic ? "حدد يوم أستلام السيارة:" : "Select car pickup day:");
 
   const isRange = onFromChange !== undefined || onToChange !== undefined;
-  const displayValue = isRange ? (isFromSelected ? fromValue : toValue) : value;
-
-  // Compute min/max dates
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-
-  let minAllowedDate: Date;
-  if (minDate) {
-    minAllowedDate = new Date(minDate);
-    minAllowedDate.setHours(0, 0, 0, 0);
-    if (minAllowedDate < today) minAllowedDate = new Date(today);
-  } else {
-    minAllowedDate = new Date(today);
-  }
-
-  let maxAllowedDate: Date | null = null;
-  if (!minDate && minDaysFromToday > 0) {
-    maxAllowedDate = new Date(today);
-    maxAllowedDate.setDate(today.getDate() + minDaysFromToday - 1);
-    maxAllowedDate.setHours(23, 59, 59, 999);
-  }
-
   const formatFn = withTime ? formatDateTime : formatDate;
+  const { minAllowedDate, maxAllowedDate } = computeAllowedDates(
+    minDate,
+    minDaysFromToday,
+  );
 
   // ── Range variant ─────────────────────────────────────────────────────────
   if (isRange) {
-    const currentValue = isFromSelected ? fromValue : toValue;
-
-    function handleDateChange(date: Date | undefined) {
+    function handleFromDateChange(date: Date | undefined) {
       if (!date) return;
-      // Keep existing time if withTime
-      const base = withTime && currentValue ? new Date(currentValue) : date;
-      if (withTime && currentValue) {
+      const base = withTime && fromValue ? new Date(fromValue) : date;
+      if (withTime && fromValue)
         base.setFullYear(date.getFullYear(), date.getMonth(), date.getDate());
-      }
-      if (isFromSelected) onFromChange?.(base);
-      else onToChange?.(base);
+      onFromChange?.(base);
+      if (!withTime) setFromOpen(false);
     }
 
-    const rangeTitle = isFromSelected
-      ? fromDialogTitle || defaultDialogTitle
-      : toDialogTitle || defaultDialogTitle;
+    function handleToDateChange(date: Date | undefined) {
+      if (!date) return;
+      const base = withTime && toValue ? new Date(toValue) : date;
+      if (withTime && toValue)
+        base.setFullYear(date.getFullYear(), date.getMonth(), date.getDate());
+      onToChange?.(base);
+      if (!withTime) setToOpen(false);
+    }
+
+    const fromTrigger = (
+      <div
+        role="button"
+        tabIndex={0}
+        className={cn(
+          "flex items-center justify-between md:justify-center gap-1 md:gap-2 cursor-pointer rounded-lg px-2 md:px-2 py-1.5 md:py-1.5 w-full md:w-fit min-h-9 transition-colors",
+          fromOpen ? "bg-[#ECEEF2]" : "bg-transparent hover:bg-[#ECEEF2]",
+        )}
+      >
+        <span className="text-xs md:text-sm font-medium text-gray-700 whitespace-nowrap shrink-0">
+          {defaultFromLabel}
+        </span>
+        <span className="text-xs md:text-sm font-medium text-gray-900 underline truncate flex-1 min-w-0">
+          {fromValue ? formatFn(fromValue, locale) : defaultPlaceholder}
+        </span>
+        {allowClear && fromValue ? (
+          <span
+            role="button"
+            tabIndex={0}
+            className="shrink-0 w-4 h-4 md:w-5 md:h-5 flex items-center justify-center rounded-full hover:bg-gray-300 transition-colors"
+            onClick={(e: MouseEvent) => {
+              e.stopPropagation();
+              onFromChange?.(null);
+            }}
+          >
+            <X className="w-3 h-3 md:w-3.5 md:h-3.5 text-gray-500" />
+          </span>
+        ) : (
+          <span className="shrink-0 w-3 h-3 md:w-4 md:h-4 flex items-center justify-center">
+            <EditIcon />
+          </span>
+        )}
+      </div>
+    );
+
+    const toTrigger = (
+      <div
+        role="button"
+        tabIndex={0}
+        className={cn(
+          "flex items-center justify-between md:justify-center gap-1 md:gap-2 cursor-pointer rounded-lg px-2 md:px-2 py-1.5 md:py-1.5 w-full md:w-fit min-h-9 transition-colors",
+          toOpen ? "bg-[#ECEEF2]" : "bg-transparent hover:bg-[#ECEEF2]",
+        )}
+      >
+        <span className="text-xs md:text-sm font-medium text-gray-700 whitespace-nowrap shrink-0">
+          {defaultToLabel}
+        </span>
+        <span className="text-xs md:text-sm font-medium text-gray-900 underline truncate flex-1 min-w-0">
+          {toValue ? formatFn(toValue, locale) : defaultPlaceholder}
+        </span>
+        {allowClear && toValue ? (
+          <span
+            role="button"
+            tabIndex={0}
+            className="shrink-0 w-4 h-4 md:w-5 md:h-5 flex items-center justify-center rounded-full hover:bg-gray-300 transition-colors"
+            onClick={(e: MouseEvent) => {
+              e.stopPropagation();
+              onToChange?.(null);
+            }}
+          >
+            <X className="w-3 h-3 md:w-3.5 md:h-3.5 text-gray-500" />
+          </span>
+        ) : (
+          <span className="shrink-0 w-3 h-3 md:w-4 md:h-4 flex items-center justify-center">
+            <EditIcon />
+          </span>
+        )}
+      </div>
+    );
 
     return (
       <div className={cn("space-y-2", className)}>
-        <div className="flex flex-wrap md:flex-nowrap gap-2 ">
+        <div className="flex flex-wrap md:flex-nowrap gap-2">
           {/* From */}
           <div className="flex-1 min-w-0">
-            <Popover
-              open={isFromSelected && open}
-              onOpenChange={(isOpen) => {
-                setOpen(isOpen);
-                setIsFromSelected(true);
-              }}
-            >
-              <PopoverTrigger asChild>
-                <div
-                  role="button"
-                  tabIndex={0}
-                  className={cn(
-                    "flex items-center justify-center gap-1 md:gap-2 cursor-pointer rounded-lg px-1.5 md:px-2 py-1 md:py-1.5 w-full md:w-fit transition-colors",
-                    isFromSelected && open
-                      ? "bg-[#ECEEF2]"
-                      : "bg-transparent hover:bg-[#ECEEF2]",
-                  )}
-                >
-                  <span className="text-xs md:text-sm font-medium text-gray-700 whitespace-nowrap">
-                    {defaultFromLabel}
-                  </span>
-                  <span className="text-xs md:text-sm font-medium text-gray-900 underline truncate">
-                    {fromValue
-                      ? formatFn(fromValue, locale)
-                      : defaultPlaceholder}
-                  </span>
-                  {allowClear && fromValue ? (
-                    <span
-                      role="button"
-                      tabIndex={0}
-                      className="shrink-0 w-4 h-4 md:w-5 md:h-5 flex items-center justify-center rounded-full hover:bg-gray-300 transition-colors"
-                      onClick={(e: MouseEvent) => {
-                        e.stopPropagation();
-                        onFromChange?.(null);
-                      }}
-                    >
-                      <X className="w-3 h-3 md:w-3.5 md:h-3.5 text-gray-500" />
-                    </span>
-                  ) : (
-                    <span className="shrink-0 w-3 h-3 md:w-4 md:h-4 flex items-center justify-center">
-                      <EditIcon />
-                    </span>
-                  )}
-                </div>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto p-0" align="start">
-                <DateTimeContent
-                  selectedDate={fromValue}
-                  onDateChange={(d) => {
-                    if (!d) return;
-                    onFromChange?.(d);
-                    if (!withTime) setOpen(false);
-                  }}
-                  locale={locale}
-                  minAllowedDate={minAllowedDate}
-                  maxAllowedDate={maxAllowedDate}
-                  withTime={withTime}
-                  title={fromDialogTitle || defaultDialogTitle}
-                  pickerDateLabel={pickerDateLabel}
-                  pickerTimeLabel={pickerTimeLabel}
-                />
-              </PopoverContent>
-            </Popover>
+            <PickerShell
+              open={fromOpen}
+              onOpenChange={setFromOpen}
+              trigger={fromTrigger}
+              isMobile={isMobile}
+              title={fromDialogTitle || defaultDialogTitle}
+              selectedDate={fromValue}
+              onDateChange={handleFromDateChange}
+              locale={locale}
+              minAllowedDate={minAllowedDate}
+              maxAllowedDate={maxAllowedDate}
+              withTime={withTime}
+              pickerDateLabel={pickerDateLabel}
+              pickerTimeLabel={pickerTimeLabel}
+            />
           </div>
 
           {/* To */}
           <div className="flex-1 min-w-0">
             {toDisabled ? (
-              <div className="flex items-center justify-center gap-1 md:gap-2 bg-[#ECEEF2] rounded-lg px-1.5 md:px-2 py-1 md:py-1.5 w-full md:w-fit opacity-75">
-                <span className="text-xs md:text-sm font-medium text-gray-700 whitespace-nowrap">
+              <div className="flex items-center justify-between md:justify-center gap-1 md:gap-2 bg-[#ECEEF2] rounded-lg px-2 md:px-2 py-1.5 md:py-1.5 w-full md:w-fit min-h-9 opacity-75">
+                <span className="text-xs md:text-sm font-medium text-gray-700 whitespace-nowrap shrink-0">
                   {defaultToLabel}
                 </span>
-                <span className="text-xs md:text-sm font-medium text-gray-900 underline truncate">
+                <span className="text-xs md:text-sm font-medium text-gray-900 underline truncate flex-1 min-w-0">
                   {toValue ? formatFn(toValue, locale) : defaultPlaceholder}
                 </span>
               </div>
             ) : (
-              <Popover
-                open={!isFromSelected && open}
-                onOpenChange={(isOpen) => {
-                  setOpen(isOpen);
-                  setIsFromSelected(false);
-                }}
-              >
-                <PopoverTrigger asChild>
-                  <div
-                    role="button"
-                    tabIndex={0}
-                    className={cn(
-                      "flex items-center justify-center gap-1 md:gap-2 cursor-pointer rounded-lg px-1.5 md:px-2 py-1 md:py-1.5 w-full md:w-fit transition-colors",
-                      !isFromSelected && open
-                        ? "bg-[#ECEEF2]"
-                        : "bg-transparent hover:bg-[#ECEEF2]",
-                    )}
-                  >
-                    <span className="text-xs md:text-sm font-medium text-gray-700 whitespace-nowrap">
-                      {defaultToLabel}
-                    </span>
-                    <span className="text-xs md:text-sm font-medium text-gray-900 underline truncate">
-                      {toValue ? formatFn(toValue, locale) : defaultPlaceholder}
-                    </span>
-                    {allowClear && toValue ? (
-                      <span
-                        role="button"
-                        tabIndex={0}
-                        className="shrink-0 w-4 h-4 md:w-5 md:h-5 flex items-center justify-center rounded-full hover:bg-gray-300 transition-colors"
-                        onClick={(e: MouseEvent) => {
-                          e.stopPropagation();
-                          onToChange?.(null);
-                        }}
-                      >
-                        <X className="w-3 h-3 md:w-3.5 md:h-3.5 text-gray-500" />
-                      </span>
-                    ) : (
-                      <span className="shrink-0 w-3 h-3 md:w-4 md:h-4 flex items-center justify-center">
-                        <EditIcon />
-                      </span>
-                    )}
-                  </div>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="start">
-                  <DateTimeContent
-                    selectedDate={toValue}
-                    onDateChange={(d) => {
-                      if (!d) return;
-                      onToChange?.(d);
-                      if (!withTime) setOpen(false);
-                    }}
-                    locale={locale}
-                    minAllowedDate={minAllowedDate}
-                    maxAllowedDate={maxAllowedDate}
-                    withTime={withTime}
-                    title={toDialogTitle || defaultDialogTitle}
-                    pickerDateLabel={pickerDateLabel}
-                    pickerTimeLabel={pickerTimeLabel}
-                  />
-                </PopoverContent>
-              </Popover>
+              <PickerShell
+                open={toOpen}
+                onOpenChange={setToOpen}
+                trigger={toTrigger}
+                isMobile={isMobile}
+                title={toDialogTitle || defaultDialogTitle}
+                selectedDate={toValue}
+                onDateChange={handleToDateChange}
+                locale={locale}
+                minAllowedDate={minAllowedDate}
+                maxAllowedDate={maxAllowedDate}
+                withTime={withTime}
+                pickerDateLabel={pickerDateLabel}
+                pickerTimeLabel={pickerTimeLabel}
+              />
             )}
           </div>
         </div>
@@ -609,6 +631,25 @@ export function DateTimePicker({
   }
 
   // ── Single variant ────────────────────────────────────────────────────────
+  const singleTrigger = (
+    <div
+      role="button"
+      tabIndex={0}
+      className="flex items-center gap-2 cursor-pointer"
+    >
+      <Input
+        readOnly
+        value={formatFn(value, locale)}
+        placeholder={defaultPlaceholder}
+        className={cn(
+          "cursor-pointer w-full",
+          allowClear && value ? "pe-8" : "",
+          inputClassName,
+        )}
+      />
+    </div>
+  );
+
   return (
     <div className={cn("space-y-2", className)}>
       {label && (
@@ -623,42 +664,25 @@ export function DateTimePicker({
         </label>
       )}
       <div className="relative">
-        <Popover open={open} onOpenChange={setOpen}>
-          <PopoverTrigger asChild>
-            <div
-              role="button"
-              tabIndex={0}
-              className="flex items-center gap-2 cursor-pointer"
-            >
-              <Input
-                readOnly
-                value={formatFn(displayValue, locale)}
-                placeholder={defaultPlaceholder}
-                className={cn(
-                  "cursor-pointer w-full",
-                  allowClear && value ? "pe-8" : "",
-                  inputClassName,
-                )}
-              />
-            </div>
-          </PopoverTrigger>
-          <PopoverContent className="w-auto p-0 rounded-2xl!" align="start">
-            <DateTimeContent
-              selectedDate={value}
-              onDateChange={(d) => {
-                if (!d) return;
-                onChange?.(d);
-                if (!withTime) setOpen(false);
-              }}
-              locale={locale}
-              minAllowedDate={minAllowedDate}
-              maxAllowedDate={maxAllowedDate}
-              withTime={withTime}
-              pickerDateLabel={pickerDateLabel}
-              pickerTimeLabel={pickerTimeLabel}
-            />
-          </PopoverContent>
-        </Popover>
+        <PickerShell
+          open={singleOpen}
+          onOpenChange={setSingleOpen}
+          trigger={singleTrigger}
+          isMobile={isMobile}
+          title={dialogTitle}
+          selectedDate={value}
+          onDateChange={(d) => {
+            if (!d) return;
+            onChange?.(d);
+            if (!withTime) setSingleOpen(false);
+          }}
+          locale={locale}
+          minAllowedDate={minAllowedDate}
+          maxAllowedDate={maxAllowedDate}
+          withTime={withTime}
+          pickerDateLabel={pickerDateLabel}
+          pickerTimeLabel={pickerTimeLabel}
+        />
         {allowClear && value && (
           <span
             role="button"

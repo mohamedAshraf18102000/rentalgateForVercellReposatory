@@ -28,6 +28,7 @@ import { toast } from "sonner";
 import { Skeleton } from "@/app/(components)/ui/skeleton";
 import GoogleMapsPolyLineLocation from "@/app/(components)/mapsLocation/GoogleMapsPolyLinedLocation";
 import { useSearchParams } from "next/navigation";
+import { useRentalDays } from "@/hooks/useCalculateRentalDays";
 
 const pricingTypeLabels: Record<PricingType, string> = {
   DAILY: "يومي",
@@ -68,15 +69,7 @@ const page = () => {
 
   // sync plan into store whenever pricingType changes
 
-  const rentalDays = useMemo(() => {
-    if (filters.fromDate && filters.toDate) {
-      const from = new Date(filters.fromDate);
-      const to = new Date(filters.toDate);
-      const diffTime = Math.abs(to.getTime() - from.getTime());
-      return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    }
-    return 0;
-  }, [filters.fromDate, filters.toDate]);
+  const rentalDays = useRentalDays(filters.fromDate, filters.toDate);
 
   const pricingDetails = useMemo(() => {
     const effectiveDays = rentalDays > 0 ? rentalDays : 1;
@@ -193,9 +186,15 @@ const page = () => {
     [pricingDetails.originalPricePerDay, pricingDetails.pricePerDay],
   );
 
+  const pricingTypeLabel = pricingDetails.pricingType
+    ? pricingTypeLabels[pricingDetails.pricingType]
+    : "";
+
   const discountBadge =
     discountPercentage > 0
-      ? `خصم ${discountPercentage}% - ${pricingTypeLabels[pricingDetails.pricingType]}`
+      ? pricingTypeLabel
+        ? `خصم ${discountPercentage}% - ${pricingTypeLabel}`
+        : `خصم ${discountPercentage}%`
       : "";
 
   const handleStepNavigation = async (step: number) => {
@@ -339,7 +338,7 @@ const page = () => {
                         {pricingDetails.days > 1 && pricingDetails.days < 11
                           ? " أيام"
                           : " يوم"}
-                        / حجز {pricingTypeLabels[pricingDetails.pricingType]})
+                        / حجز {pricingTypeLabel})
                       </span>
                     </div>
                   )}

@@ -29,7 +29,6 @@ export function useHeaderLogic() {
     setTimeout(() => {
       localStorage.removeItem("booked-car-details-storage");
       sessionStorage.removeItem("user-prefered-filters-storage");
-      localStorage.removeItem("user-prefered-filters-storage");
       window.location.reload();
     }, 1000);
   }, [router, clearClientData]);

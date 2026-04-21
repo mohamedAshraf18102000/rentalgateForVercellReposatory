@@ -8,6 +8,9 @@ import { ContactUsDialog } from "@/app/(components)/ContactUsDialog";
 import { BUTTON_STYLES, NAVBAR_STYLES } from "../constants";
 import { useHeaderLogic } from "../hooks/useHeaderLogic";
 import { useLocationStore } from "@/lib/stores/useLocationStore";
+import { usePathname } from "next/navigation";
+import { toast } from "sonner";
+import Link from "next/link";
 
 interface NavbarActionsProps {
   translations: {
@@ -35,14 +38,34 @@ export const NavbarActions: React.FC<NavbarActionsProps> = ({
     handleBookingsClick,
   } = useHeaderLogic();
 
+  const pathname = usePathname();
+
   const [contactDialogOpen, setContactDialogOpen] = React.useState(false);
   const address = useLocationStore((state) => state.address);
   const openLocationDialog = useLocationStore((state) => state.openDialog);
 
+  const ToastError = () => {
+    return (
+      <span onClick={() => console.log("clicked")}>
+        يرجي التوجه <Link className="underline underline-offset-3!" href="/bookings">للصفحه السابقة</Link> لتحديث الموقع
+      </span>
+    );
+  };
+
+  const handleOpenLocationDialog = () => {
+    if (pathname.includes("/reservation") || pathname.includes("/carDetails")) {
+      toast.error((<ToastError />) as React.ReactNode, {
+        position: "top-center",
+      });
+      return;
+    }
+    openLocationDialog();
+  };
+
   return (
     <>
       <div className={NAVBAR_STYLES.actionsWrapper}>
-        <button title={address?.toString()} onClick={openLocationDialog}>
+        <button title={address?.toString()} onClick={handleOpenLocationDialog}>
           {address && address?.length > 20
             ? `${address?.slice(0, 20)}...`
             : address}

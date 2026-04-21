@@ -33,15 +33,15 @@
 
 /* ===== STEP NUMBER CIRCLE ===== */
 .stepper-circle {
-  width: 52px;
-  height: 52px;
-  min-width: 52px;
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 900;
-  font-size: 1.3rem;
+  font-size: 1rem;
   color: white;
   background: var(--step-inactive-color);
   transition:
@@ -62,7 +62,7 @@
 
 /* ===== STEPPER TEXT ===== */
 .stepper-title {
-  font-size: 0.95rem;
+  font-size: 0.82rem;
   font-weight: 700;
   line-height: 1.4;
   color: var(--step-inactive-color);
@@ -74,9 +74,43 @@
 }
 
 .stepper-description {
-  font-size: 0.8rem;
+  font-size: 0.72rem;
   color: #6b7280;
   margin-top: 3px;
+}
+
+@media (min-width: 640px) {
+  .stepper-circle {
+    width: 48px;
+    height: 48px;
+    min-width: 48px;
+    font-size: 1.15rem;
+  }
+
+  .stepper-title {
+    font-size: 0.9rem;
+  }
+
+  .stepper-description {
+    font-size: 0.78rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .stepper-circle {
+    width: 52px;
+    height: 52px;
+    min-width: 52px;
+    font-size: 1.3rem;
+  }
+
+  .stepper-title {
+    font-size: 0.95rem;
+  }
+
+  .stepper-description {
+    font-size: 0.8rem;
+  }
 }
 
 /* ===== FADE ANIMATIONS ===== */

@@ -20,6 +20,8 @@ import { useLocationStore } from "@/lib/stores/useLocationStore";
 import { ReservationFormValues } from "@/lib/validations/reservationSchema";
 import { useBookedCarDetailsStore } from "@/lib/stores/useBookedCarDetailsStore";
 import WarningMessage from "@/app/(components)/WarningMessage";
+import { useRentalDays } from "@/hooks/useCalculateRentalDays";
+import { getBestOffer } from "@/lib/utils/getBestOffer";
 
 interface StepOneProps {
   control: Control<ReservationFormValues>;
@@ -30,7 +32,11 @@ interface StepOneProps {
 
 const StepOne = ({ control, errors, watch, setValue }: StepOneProps) => {
   const formData = useBookedCarDetailsStore((state) => state.formData);
-
+  const offerPackages = useBookedCarDetailsStore(
+    (state) => state.carDetails?.offerPackages,
+  );
+  const rentalDays = useRentalDays(watch("fromDate"), watch("toDate"));
+  const bestOffer = getBestOffer(offerPackages ?? [], rentalDays);
   const { openDialog } = usePickupDialogStore();
 
   const handleOpenReturnLocationDialog = () => {
@@ -198,6 +204,7 @@ const StepOne = ({ control, errors, watch, setValue }: StepOneProps) => {
             control={control}
             render={({ field }) => (
               <DateTimePicker
+                placeholder="اختر تاريخ ووقت الاستلام"
                 {...field}
                 label="مدة و وقت الإيجار:"
                 labelIcon={<CarRentIcon />}
@@ -232,6 +239,7 @@ const StepOne = ({ control, errors, watch, setValue }: StepOneProps) => {
             control={control}
             render={({ field }) => (
               <DateTimePicker
+                placeholder="اختر تاريخ ووقت التسليم"
                 {...field}
                 className="w-full"
                 inputClassName="text-base!"
@@ -250,29 +258,36 @@ const StepOne = ({ control, errors, watch, setValue }: StepOneProps) => {
           )}
         </div>
       </div>
+      {bestOffer && (
+        <div className="bg-StatusGreen p-2 rounded-xl flex items-center justify-center gap-3 text-StatusDarkGreen mt-5">
+          <div className="scale-130">
+            <ExeclusiveOfferIcon />
+          </div>
 
-      <div className="bg-StatusGreen p-2 rounded-xl flex items-center justify-center gap-3 text-StatusDarkGreen mt-5">
-        <div className="scale-130">
-          <ExeclusiveOfferIcon />
+          <p className="flex gap-1 items-center">
+            <span className="text-sm font-extrabold">
+              {bestOffer.extraDays} يوم
+            </span>
+            <span>مجانا لأن مدة الأيجار أكثر من</span>
+            <span className="text-sm font-extrabold">
+              {bestOffer.days} أيام
+            </span>
+          </p>
         </div>
-        <p className="flex gap-1 items-center">
-          <span className="text-sm font-extrabold">يومين</span>
-          <span>مجانا لأن مدة الأيجار أكثر من</span>
-          <span className="text-sm font-extrabold">7 أيام</span>
-        </p>
-      </div>
-      <Separator className="my-2" />
-      <div className="mb-6">
-        <p className="text-base">عروض رينتال جيت:</p>
-        <p className="text-sm text-Grey600 mt-2">
-          أختر من أفضل عروض التأجير المضافة حديثاً
-        </p>
-      </div>
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {Array.from({ length: 3 }).map((_, index) => (
-          <OffersCard key={index} />
-        ))}
-      </div>
+      )}
+      {offerPackages && offerPackages.length > 0 && (
+        <>
+          <Separator className="my-2" />
+          <div className="mb-6">
+            <p className="text-base">عروض رينتال جيت:</p>
+          </div>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {offerPackages.map((offer) => (
+              <OffersCard key={offer.ccoId} offerPackage={offer} />
+            ))}
+          </div>
+        </>
+      )}
     </div>
   );
 };

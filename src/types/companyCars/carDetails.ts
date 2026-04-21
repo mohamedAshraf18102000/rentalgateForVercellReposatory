@@ -104,7 +104,15 @@ export interface KilometerPackage {
   notes: string | null;
 }
 
-export interface OfferPackage {}
+export interface OfferPackage {
+  ccoId: number;
+  days: number,
+  extraDays: number;
+  startDate: string | null;
+  endDate: string | null;
+  applyOnFullCost: boolean;
+  notes: string | null;
+}
 
 export interface Airport {
   caId: number;
@@ -134,4 +142,4 @@ export interface TrainStation {
   name: string;
 }
 
-export interface Rating {}
+export interface Rating { }
