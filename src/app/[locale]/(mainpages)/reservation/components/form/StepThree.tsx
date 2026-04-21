@@ -18,6 +18,9 @@ interface StepThreeProps {
 const StepThree = ({ control, errors }: StepThreeProps) => {
   const services = useBookedCarDetailsStore((s) => s.services);
   const formdata = useBookedCarDetailsStore((s) => s.formData);
+  const companyDriverDetails = useBookedCarDetailsStore(
+    (s) => s.carDetails?.company,
+  );
   const { data: companyDriversPricing } = useCompanyDriversPricing(
     formdata.company_id!,
   );
@@ -147,6 +150,7 @@ const StepThree = ({ control, errors }: StepThreeProps) => {
               onToggle={() => toggleService(0, "unlimited")}
             />
           )}
+
           {services.map((service) => {
             const id = service.serviceId;
             const calculatedPrice = calculateServicePrice(

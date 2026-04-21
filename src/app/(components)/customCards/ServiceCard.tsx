@@ -48,10 +48,6 @@ const ServiceCard = ({ service, showTax }: ServiceCardProps) => {
           </div>
         </div>
       </div>
-
-      <p className="absolute -top-1 left-0 rounded-r-xl bg-gray-100 px-2 py-1 text-xs font-bold sm:p-2 sm:text-sm">
-        خارج المدينة
-      </p>
     </div>
   );
 };

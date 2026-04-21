@@ -65,6 +65,8 @@ const page = () => {
     queryFn: () => getCarServices(Number(id)),
   });
 
+  console.log("services", services);
+
   useEffect(() => {
     if (services) {
       setServices(services);
@@ -169,7 +171,7 @@ const page = () => {
   return (
     <WrapperContainer exceedNav>
       <CarsDetailsBreadCrump />
-      <div className="mt-10"> 
+      <div className="mt-10">
         <CarDetailsCard
           dailyPrice={data?.dailyPrice}
           freeKm={data.allowedKm}
