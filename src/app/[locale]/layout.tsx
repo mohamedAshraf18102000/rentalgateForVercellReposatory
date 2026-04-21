@@ -113,9 +113,9 @@ export async function generateMetadata({
       },
     },
     icons: {
-      icon: [{ url: "/logoSm.png", type: "image/png" }],
-      apple: [{ url: "/logoSm.png", type: "image/png" }],
-      shortcut: "/logoSm.png",
+      icon: [{ url: "/logo-rental.png", type: "image/png" }],
+      apple: [{ url: "/logo-rental.png", type: "image/png" }],
+      shortcut: "/logo-rental.png",
     },
     manifest: "/manifest.json",
     alternates: {

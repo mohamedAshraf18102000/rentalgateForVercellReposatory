@@ -44,6 +44,9 @@ const page = () => {
     queryFn: () => getCompanyCarsByID(Number(id)),
   });
 
+  console.log(data);
+  
+
   useEffect(() => {
     if (data) {
       setCarDetails(data);
@@ -51,6 +54,7 @@ const page = () => {
       setTrainStations(data.trainStations ?? []);
       setFormData({
         company_id: data.company.companyId,
+        branchId: data.branchId,
         carDetails: {
           unlimitedKm: data.unlimitedKm,
           unlimitedKmPrice: data.unlimitedKmPrice,

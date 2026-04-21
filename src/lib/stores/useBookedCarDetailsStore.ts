@@ -73,6 +73,7 @@ export interface ReservationFormData {
 
   pickupType: "BRANCH" | "MY_LOCATION" | "TRAIN_STATION" | "AIRPORT" | null;
   returnType: "BRANCH" | "MY_LOCATION" | "TRAIN_STATION" | "AIRPORT" | null;
+  branchId: number | null;
   pickupTrainId: number | null;
   pickupAirportId: number | null;
   returnTrainId: number | null;
@@ -120,6 +121,7 @@ const createInitialFormData = (): ReservationFormData => ({
   carDetails: null,
   pickupType: null,
   returnType: null,
+  branchId: null,
   referalcode: null,
   pickupId: null,
   carReturnLocationId: null,
