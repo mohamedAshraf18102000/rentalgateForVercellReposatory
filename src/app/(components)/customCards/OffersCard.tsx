@@ -43,6 +43,10 @@ const OffersCard = ({ offerPackage, className }: TofferPackageProps) => {
             {offerPackage.extraDays > 1 ? "أيام" : "يوم"} مجاناً
           </span>
         </p>
+
+        <span className="text-xs font-bold text-StatusDarkGreen">
+          للاستفادة من العرض يرجي اختيار تاريخ الانتهاء
+        </span>
       </div>
     </div>
   );

@@ -8,7 +8,7 @@ export const WHATSAPP_MESSAGE =
 
 export const NAVBAR_STYLES = {
   header:
-    "fixed top-0 z-50 w-full h-[62px] py-[10px] px-[80px] bg-white border-b-[0.5px] border-[#D0D0D0] shadow-[0px_4px_4px_0px_#C0C0C01A] hidden md:flex md:items-center",
+    "fixed top-0 z-99 w-full h-[62px] py-[10px] px-[80px] bg-white border-b-[0.5px] border-[#D0D0D0] shadow-[0px_4px_4px_0px_#C0C0C01A] hidden md:flex md:items-center",
   container: "w-full max-w-[1440px] mx-auto flex items-center justify-between",
   navbar: "flex justify-between items-center w-full h-full",
   leftSection: "flex gap-5 items-center",
