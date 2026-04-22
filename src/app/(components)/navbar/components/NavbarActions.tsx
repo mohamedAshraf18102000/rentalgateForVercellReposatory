@@ -70,7 +70,11 @@ export const NavbarActions: React.FC<NavbarActionsProps> = ({
   return (
     <>
       <div className={NAVBAR_STYLES.actionsWrapper}>
-        <button title={address?.toString()} onClick={handleOpenLocationDialog}>
+        <button
+          className="underline underline-offset-1"
+          title={address?.toString()}
+          onClick={handleOpenLocationDialog}
+        >
           {address && address?.length > 20
             ? `${address?.slice(0, 20)}...`
             : address}
