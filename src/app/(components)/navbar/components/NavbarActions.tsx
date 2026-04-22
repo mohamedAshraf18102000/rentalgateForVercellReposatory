@@ -12,6 +12,8 @@ import { usePathname } from "next/navigation";
 import { toast } from "sonner";
 import Link from "next/link";
 import { useBookedCarDetailsStore } from "@/lib/stores/useBookedCarDetailsStore";
+import { ChevronDown, MapPinPlus } from "lucide-react";
+import PositioningIcon from "@/constants/icons/PositioningIcon";
 
 interface NavbarActionsProps {
   translations: {
@@ -70,15 +72,35 @@ export const NavbarActions: React.FC<NavbarActionsProps> = ({
   return (
     <>
       <div className={NAVBAR_STYLES.actionsWrapper}>
-        <button
-          className="underline underline-offset-1"
-          title={address?.toString()}
-          onClick={handleOpenLocationDialog}
-        >
-          {address && address?.length > 20
-            ? `${address?.slice(0, 20)}...`
-            : address}
-        </button>
+        {address ? (
+          <button
+            className="underline underline-offset-1 flex items-center gap-1 cursor-pointer hover:bg-Grey100 p-1 rounded-xl transition duration-200"
+            title={address?.toString()}
+            onClick={handleOpenLocationDialog}
+          >
+            <span className="scale-90">
+              <PositioningIcon />
+            </span>
+            {address && address?.length > 20
+              ? `${address?.slice(0, 20)}...`
+              : address}
+
+            <ChevronDown className="w-4 h-4" />
+          </button>
+        ) : (
+          <div
+            className="flex items-center gap-1 cursor-pointer hover:bg-Grey100 p-1 rounded-xl transition duration-200"
+            onClick={handleOpenLocationDialog}
+          >
+            <span className="scale-90">
+              <PositioningIcon />
+            </span>
+            <span className="text-sm underline underline-offset-3">
+              حدد مكان الاستلام
+            </span>
+            <ChevronDown className="w-4 h-4" />
+          </div>
+        )}
 
         <LanguageSwitcher
           currentLocale={locale}
