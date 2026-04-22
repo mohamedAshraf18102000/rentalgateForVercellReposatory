@@ -126,7 +126,11 @@ const BussinessAccountsContent = ({
       </div>
 
       <div className="relative mt-6 grid w-full min-w-0 max-w-full grid-cols-1 gap-6 sm:mt-8 lg:mt-10 lg:grid-cols-2 lg:gap-5 xl:gap-6">
-        <div className="flex flex-col overflow-hidden rounded-2xl border-2 border-white min-h-88 sm:min-h-96 lg:min-h-104 lg:max-h-[min(90vh,36rem)]">
+        <div
+          className={`flex flex-col rounded-2xl border-2 border-white min-h-88 sm:min-h-96 lg:min-h-104 lg:max-h-[min(90vh,36rem)] ${
+            activeStep === 1 ? "overflow-visible" : "overflow-hidden"
+          }`}
+        >
           <div className="flex min-h-0 flex-1 flex-col bg-[url(/bussinesAccounts/img1.png)] bg-cover bg-center bg-no-repeat p-4 sm:p-5 md:p-6">
             <h6 className="text-balance font-bold text-lg sm:text-xl md:text-2xl">
               ماهو حساب الأعمال🤔؟!!
@@ -139,7 +143,11 @@ const BussinessAccountsContent = ({
                 className="mt-3 flex min-h-0 w-full max-w-full flex-1 flex-col sm:mt-4 md:max-w-[90%] lg:max-w-[min(100%,28rem)]"
                 onSubmit={handleNextStep}
               >
-                <div className="min-h-0 flex-1 overflow-y-auto overscroll-y-contain px-0.5 pe-2 [-webkit-overflow-scrolling:touch]">
+                <div
+                  className={`min-h-0 flex-1 overscroll-y-contain px-0.5 pe-2 [-webkit-overflow-scrolling:touch] ${
+                    activeStep === 1 ? "overflow-visible" : "overflow-y-auto"
+                  }`}
+                >
                   <BussinessAccountsStepContent activeStep={activeStep} />
                 </div>
                 <div className="mt-3 flex shrink-0 justify-center sm:mt-4 sm:justify-end">

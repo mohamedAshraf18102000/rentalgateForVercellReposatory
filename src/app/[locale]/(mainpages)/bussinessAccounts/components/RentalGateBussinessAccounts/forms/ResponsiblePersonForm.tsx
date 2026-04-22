@@ -41,29 +41,31 @@ const ResponsiblePersonForm = () => {
         name="responsableMobile"
         control={control}
         render={({ field }) => (
-          <div>
-            <CountryPhone
-              inputClassName="bg-white!"
-              labelClassName="text-base! text-primary!"
-              placeholder={"رقم الجوال:"}
-              defaultCountry="sa"
-              showValidation={false}
-              label={"رقم الجوال:"}
-              className={`border-2! rounded-xl! ${errors.responsableMobile ? "border-red-500!" : "border-Grey400!"}`}
-              value={field.value}
-              onChange={(val) => {
-                field.onChange(val);
-                if (errors.responsableMobile) {
-                  trigger("responsableMobile");
-                }
-              }}
-            />
+          <>
+            <div className="relative z-50 overflow-visible">
+              <CountryPhone
+                inputClassName="bg-white!"
+                labelClassName="text-base! text-primary!"
+                placeholder={"رقم الجوال:"}
+                defaultCountry="sa"
+                showValidation={false}
+                label={"رقم الجوال:"}
+                className={`relative z-50 border-2! rounded-xl! ${errors.responsableMobile ? "border-red-500!" : "border-Grey400!"}`}
+                value={field.value}
+                onChange={(val) => {
+                  field.onChange(val);
+                  if (errors.responsableMobile) {
+                    trigger("responsableMobile");
+                  }
+                }}
+              />
+            </div>
             {errors.responsableMobile && (
               <span className="text-red-500 text-sm mt-1 block">
                 {errors.responsableMobile.message as string}
               </span>
             )}
-          </div>
+          </>
         )}
       />
     </div>

@@ -10,6 +10,7 @@ import FilterDrawer from "./BookCars/FilterDrawer";
 import { useUserPreferedFiltersStore } from "@/lib/stores/useUserPreferedFiltersStore";
 import { useLocationStore } from "@/lib/stores/useLocationStore";
 import { useBookedCarDetailsStore } from "@/lib/stores/useBookedCarDetailsStore";
+import { usePickupDialogStore } from "@/lib/stores/usePickupDialogStore";
 
 const CarSearchForm = ({
   control,
@@ -24,26 +25,30 @@ const CarSearchForm = ({
   const toDate = watch("toDate");
   const { filters } = useUserPreferedFiltersStore();
   const { address } = useLocationStore();
+  const { openDialog } = usePickupDialogStore();
   const showPricesWithTax = useBookedCarDetailsStore(
     (state) => state.showPricesWithTax,
   );
   const setShowPricesWithTax = useBookedCarDetailsStore(
     (state) => state.setShowPricesWithTax,
   );
+  const handleOpenLocationDialog = () => {
+    openDialog("currentLocation", "pickup");
+  };
 
   return (
     <>
-      <div className="flex flex-wrap items-center gap-2">
+      <label className="flex flex-wrap cursor-pointer items-center gap-2 hover:bg-Grey100 rounded-lg p-2 w-fit transition-all duration-300">
         <Checkbox
-          width={25}
-          height={25}
+          width={22}
+          height={22}
           checked={showPricesWithTax}
           onCheckedChange={(checked) => setShowPricesWithTax(checked === true)}
         />
-        <label className="text-sm font-bold sm:text-base">
+        <span className="text-sm font-bold sm:text-base">
           عرض الأسعار بالضريبة
-        </label>
-      </div>
+        </span>
+      </label>
 
       <form
         onSubmit={handleSubmit(handleSearch)}
@@ -66,7 +71,8 @@ const CarSearchForm = ({
                 return (
                   <div
                     title={displayPickupName}
-                    className="h-[40px] rounded-lg p-2 w-full bg-[#eceef2] flex items-center gap-2"
+                    onClick={handleOpenLocationDialog}
+                    className="h-[40px] rounded-lg p-2 w-full bg-[#eceef2] flex items-center gap-2 cursor-pointer"
                   >
                     <p className="text-sm line-clamp-1">{displayPickupName}</p>
                   </div>
