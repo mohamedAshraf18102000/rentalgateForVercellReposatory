@@ -6,7 +6,7 @@ import UpdateUserSavedLocationDialog from "@/app/[locale]/(mainpages)/userProfil
 import { useState } from "react";
 import { useUserPreferedFiltersStore } from "@/lib/stores/useUserPreferedFiltersStore";
 import HomePickupDialogTabs from "@/app/(components)/homePickupDialog/HomePickupDialogTabs";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useLocale } from "next-intl";
 import { useBookedCarDetailsStore } from "@/lib/stores/useBookedCarDetailsStore";
 
@@ -25,7 +25,10 @@ export function HomePickUpDialog({ title }: { title?: string }) {
   const { setFormData } = useBookedCarDetailsStore();
   const [showSaveDialog, setShowSaveDialog] = useState(false);
   const router = useRouter();
+  const pathname = usePathname();
   const locale = useLocale();
+  const bookingsPath = `/${locale}/bookings`;
+  const isOnBookingsPage = pathname === bookingsPath;
 
   const syncPickupFiltersToReservationStore = () => {
     const mappedPickupType =
@@ -74,7 +77,9 @@ export function HomePickUpDialog({ title }: { title?: string }) {
       }
       confirmDialog();
       if (target === "pickup") {
-        router.push(`/${locale}/bookings`);
+        if (!isOnBookingsPage) {
+          router.push(bookingsPath);
+        }
       }
     }
   };
@@ -151,7 +156,9 @@ export function HomePickUpDialog({ title }: { title?: string }) {
           setShowSaveDialog(false);
           confirmDialog();
           if (target === "pickup") {
-            router.push(`/${locale}/bookings`);
+            if (!isOnBookingsPage) {
+              router.push(bookingsPath);
+            }
           }
         }}
       />

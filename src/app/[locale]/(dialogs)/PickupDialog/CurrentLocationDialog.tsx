@@ -40,7 +40,6 @@ export function CurrentLocationDialog() {
     }
   }, [closeDialog, isDialogOpen, isTermsPage]);
 
-  // Reset temp state whenever the dialog opens so we start fresh
   useEffect(() => {
     if (isDialogOpen) {
       setTempLocation(null);

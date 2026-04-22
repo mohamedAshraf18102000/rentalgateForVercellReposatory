@@ -2,6 +2,7 @@ import WrapperContainer from "@/app/(components)/wrapperContainer/WrapperContain
 import BookingsPanner from "./components/BookingsPanner";
 import BookingBreadCrump from "./components/BookingBreadCrump";
 import BookCars from "./components/BookCars/BookCars";
+import { HomePickUpDialog } from "../../(dialogs)/PickupDialog/HomePickUpDialog";
 
 const BookingsPage = () => {
   return (
@@ -10,6 +11,7 @@ const BookingsPage = () => {
         <BookingsPanner />
         <BookingBreadCrump />
         <BookCars />
+        <HomePickUpDialog />
       </div>
     </WrapperContainer>
   );

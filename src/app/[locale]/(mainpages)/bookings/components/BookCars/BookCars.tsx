@@ -13,6 +13,7 @@ import { useLocationStore } from "@/lib/stores/useLocationStore";
 import { useBookedCarDetailsStore } from "@/lib/stores/useBookedCarDetailsStore";
 import { calculateRentalPrice } from "@/lib/utils/calculateRentalPrice";
 import { Button } from "@/app/(components)";
+import { usePickupDialogStore } from "@/lib/stores/usePickupDialogStore";
 
 interface FormValues {
   location: string;
@@ -21,8 +22,8 @@ interface FormValues {
 }
 
 const BookCars = () => {
-  const openLocationDialog = useLocationStore((state) => state.openDialog);
-
+  const { openDialog } = usePickupDialogStore();
+  const address = useLocationStore((state) => state.address);
   const rentalDays =
     useBookedCarDetailsStore((state) => state.formData.rentalDays) ?? 0;
   const { appliedFilters, filters, setFilter } = useUserPreferedFiltersStore();
@@ -113,7 +114,7 @@ const BookCars = () => {
   };
 
   const handleOpenLocationDialog = () => {
-    openLocationDialog();
+    openDialog("currentLocation", "pickup");
   };
 
   return (
@@ -145,15 +146,36 @@ const BookCars = () => {
         <div className="mt-6 flex h-[min(50vh,24rem)] w-full items-center justify-center rounded-2xl bg-white shadow sm:mt-8 sm:h-[22rem] md:mt-10 md:h-[25rem]">
           <div className="flex flex-col items-center gap-4 px-4 text-center sm:px-8">
             <div className="flex flex-col gap-1.5 justify-center items-center">
-              <p className="text-base font-medium text-foreground">
-                حدد موقع الاستلام لعرض السيارات المتاحة.
-              </p>
-              <Button
-                onClick={handleOpenLocationDialog}
-                className="text-sm text-white  cursor-pointer"
-              >
-                حدد مكان الاستلام
-              </Button>
+              <img
+                src="/notFound/notFound.webp"
+                alt="notFound"
+                className="w-[250px] h-[250px]"
+              />
+              {address !== null ? (
+                <>
+                  <p className="text-base font-medium text-foreground">
+                    لا يوجد سيارات متاحة في هذا الموقع
+                  </p>
+                  <Button
+                    onClick={handleOpenLocationDialog}
+                    className="text-sm text-white  cursor-pointer"
+                  >
+                    حدد مكان الاستلام
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <p className="text-base font-medium text-foreground">
+                    حدد موقع الاستلام لعرض السيارات المتاحة.
+                  </p>
+                  <Button
+                    onClick={handleOpenLocationDialog}
+                    className="text-sm text-white  cursor-pointer"
+                  >
+                    حدد مكان الاستلام
+                  </Button>
+                </>
+              )}
             </div>
           </div>
         </div>
