@@ -100,7 +100,7 @@ const CarDetailsCard = ({
             <img
               src={`${process.env.NEXT_PUBLIC_IMAGES_PREFIX_URL}/${car.image}`}
               alt="سيارة للإيجار"
-              className="relative z-20 w-full object-contain scale-85 mb-5"
+              className="relative z-20 w-full object-contain scale-85 mb-5 max-h-[400px]"
             />
 
             {typeof firstBadgeTitle === "string" &&

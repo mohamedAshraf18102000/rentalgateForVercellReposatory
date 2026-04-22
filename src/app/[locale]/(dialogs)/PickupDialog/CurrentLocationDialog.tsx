@@ -65,9 +65,9 @@ export function CurrentLocationDialog() {
     if (tempLocation) {
       setLocation(tempLocation.lat, tempLocation.lng, tempLocation.address);
       setTimeout(() => {
+        resetForm();
         clearCarDetails();
         clearServices();
-        resetForm();
         localStorage.removeItem("booked-car-details-storage");
       }, 1000);
     }

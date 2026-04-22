@@ -27,8 +27,9 @@ import { buildReservationPayload } from "../utils/buildReservationPayload";
 import { toast } from "sonner";
 import { Skeleton } from "@/app/(components)/ui/skeleton";
 import GoogleMapsPolyLineLocation from "@/app/(components)/mapsLocation/GoogleMapsPolyLinedLocation";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useRentalDays } from "@/hooks/useCalculateRentalDays";
+import { resetReservationState } from "@/lib/stores/resetReservationState";
 
 const pricingTypeLabels: Record<PricingType, string> = {
   DAILY: "يومي",
@@ -39,17 +40,18 @@ const pricingTypeLabels: Record<PricingType, string> = {
 };
 
 const page = () => {
+  const router = useRouter();
   const [activeStep, setActiveStep] = useState<number>(1);
   const [isStepTwoSkipped, setIsStepTwoSkipped] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
+  const [formResetKey, setFormResetKey] = useState<number>(0);
   const stepContentRef = useRef<StepContentRef>(null);
   const searchParams = useSearchParams();
   const isForOtherReservation = searchParams.get("forOther") === "true";
   const carDetails = useBookedCarDetailsStore((s) => s.carDetails);
   const formData = useBookedCarDetailsStore((s) => s.formData);
   const { filters } = useUserPreferedFiltersStore();
-  // const resetReservationForm = useBookedCarDetailsStore((s) => s.resetForm);
   const setFormField = useBookedCarDetailsStore((s) => s.setFormField);
 
   const calculateUserQoutePayload = buildReservationPayload(formData);
@@ -271,6 +273,14 @@ const page = () => {
     calculateQuotePrice(buildReservationPayload(latestFormData));
   };
 
+  const handleResetForm = () => {
+    stepContentRef.current?.resetForm();
+    resetReservationState();
+    router.push("/bookings");
+    setActiveStep(1);
+    setFormResetKey((prev) => prev + 1);
+  };
+
   return (
     <>
       <ReservationDrawer
@@ -343,23 +353,36 @@ const page = () => {
                     </div>
                   )}
                 </div>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={handleResetForm}
+                    className="text-sm text-Grey500 underline underline-offset-2 cursor-pointer"
+                  >
+                    إعاده الاعدادات للافتراضي
+                  </button>
 
-                <Button
-                  startIcon={
-                    activeStep === 3 ? <HandCoins className="h-5! w-5!" /> : ""
-                  }
-                  onClick={handleNext}
-                  className="w-full text-sm! md:w-auto md:text-base!"
-                  loading={isLoading || isCalculating}
-                  icon={<ChevronLeft className="w-5! h-5!" />}
-                >
-                  <span className="mx-2 text-sm md:text-base">
-                    {activeStep === 3 ? "إتمام الحجز" : "التالي"}
-                  </span>
-                </Button>
+                  <Button
+                    startIcon={
+                      activeStep === 3 ? (
+                        <HandCoins className="h-5! w-5!" />
+                      ) : (
+                        ""
+                      )
+                    }
+                    onClick={handleNext}
+                    className="w-full text-sm! md:w-auto md:text-base!"
+                    loading={isLoading || isCalculating}
+                    icon={<ChevronLeft className="w-5! h-5!" />}
+                  >
+                    <span className="mx-2 text-sm md:text-base">
+                      {activeStep === 3 ? "إتمام الحجز" : "التالي"}
+                    </span>
+                  </Button>
+                </div>
               </div>
               <Separator className="my-3" />
               <StepContent
+                key={formResetKey}
                 ref={stepContentRef}
                 activeStep={activeStep}
                 isForOtherReservation={isForOtherReservation}

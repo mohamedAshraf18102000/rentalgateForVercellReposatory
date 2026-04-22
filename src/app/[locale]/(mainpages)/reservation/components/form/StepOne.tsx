@@ -40,7 +40,9 @@ const StepOne = ({ control, errors, watch, setValue }: StepOneProps) => {
   );
   const fromDate = watch("fromDate");
   const toDate = watch("toDate");
-  const minToDate = fromDate ? new Date(fromDate.getTime() + MIN_RENTAL_MS) : null;
+  const minToDate = fromDate
+    ? new Date(fromDate.getTime() + MIN_RENTAL_MS)
+    : null;
   const rentalDays = useRentalDays(fromDate, toDate);
   const bestOffer = getBestOffer(offerPackages ?? [], rentalDays);
   const matchedOfferAtSameDays =
@@ -122,7 +124,10 @@ const StepOne = ({ control, errors, watch, setValue }: StepOneProps) => {
       return false;
     }
 
-    return normalizedEndDate.getTime() - normalizedStartDate.getTime() < MIN_RENTAL_MS;
+    return (
+      normalizedEndDate.getTime() - normalizedStartDate.getTime() <
+      MIN_RENTAL_MS
+    );
   };
 
   const handleOpenPickupLocationDialog = () => {

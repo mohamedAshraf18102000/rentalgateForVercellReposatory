@@ -33,11 +33,15 @@ interface StepContentProps {
 export interface StepContentRef {
   validateStep: () => Promise<boolean>;
   getValues: () => ReservationFormValues;
+  resetForm: () => void;
 }
 
 const StepContent = forwardRef<StepContentRef, StepContentProps>(
   ({ activeStep, isForOtherReservation = false }, ref) => {
-    const getRentalDays = (fromDate?: Date | string, toDate?: Date | string) => {
+    const getRentalDays = (
+      fromDate?: Date | string,
+      toDate?: Date | string,
+    ) => {
       const normalizedFromDate = formatLocalDateTime(fromDate);
       const normalizedToDate = formatLocalDateTime(toDate);
 
@@ -383,6 +387,38 @@ const StepContent = forwardRef<StepContentRef, StepContentProps>(
         return await trigger(fieldsToValidate);
       },
       getValues: () => getValues(),
+      resetForm: () => {
+        reset(
+          {
+            pickupName: "",
+            carReturnLocation: "",
+            fromDate: undefined,
+            toDate: undefined,
+            pickupLat: null,
+            pickupLong: null,
+            pickupId: null,
+            returnLat: null,
+            returnLong: null,
+            carReturnLocationId: null,
+            pickupTrainId: null,
+            pickupAirportId: null,
+            returnTrainId: null,
+            returnAirportId: null,
+            idNumber: "0",
+            nationality: "",
+            licenseImage: "",
+            licenceExpiryDate: undefined,
+            personalId: "",
+            passportNumber: "",
+            borderNumber: "",
+            services: [],
+            driver: null,
+            extraKmType: "QUOTA",
+            extraKmApplied: false,
+          },
+          { keepErrors: false },
+        );
+      },
     }));
 
     // Sync address -> store & form if filter is still placeholder
@@ -446,7 +482,9 @@ const StepContent = forwardRef<StepContentRef, StepContentProps>(
         if (value.licenseImage !== undefined)
           update.licenseImage = value.licenseImage as string;
         if (value.licenceExpiryDate !== undefined)
-          update.licenceExpiryDate = formatLocalDateTime(value.licenceExpiryDate);
+          update.licenceExpiryDate = formatLocalDateTime(
+            value.licenceExpiryDate,
+          );
         if (value.personalId !== undefined)
           update.personalId = value.personalId;
         if (value.passportNumber !== undefined)

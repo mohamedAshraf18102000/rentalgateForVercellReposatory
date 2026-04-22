@@ -11,6 +11,7 @@ import { useLocationStore } from "@/lib/stores/useLocationStore";
 import { usePathname } from "next/navigation";
 import { toast } from "sonner";
 import Link from "next/link";
+import { useBookedCarDetailsStore } from "@/lib/stores/useBookedCarDetailsStore";
 
 interface NavbarActionsProps {
   translations: {
@@ -47,7 +48,11 @@ export const NavbarActions: React.FC<NavbarActionsProps> = ({
   const ToastError = () => {
     return (
       <span onClick={() => console.log("clicked")}>
-        يرجي التوجه <Link className="underline underline-offset-3!" href="/bookings">للصفحه السابقة</Link> لتحديث الموقع
+        يرجي التوجه{" "}
+        <Link className="underline underline-offset-3!" href="/bookings">
+          للصفحه السابقة
+        </Link>{" "}
+        لتحديث الموقع
       </span>
     );
   };
