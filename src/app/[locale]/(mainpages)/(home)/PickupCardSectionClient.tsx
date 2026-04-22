@@ -1,11 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import PickUpCard from "@/app/(components)/customCards/PickUpCard";
 import CurrentLocationPickupCard from "@/app/(components)/customCards/CurrentLocationPickupCard";
 import { usePickupDialogStore } from "@/lib/stores/usePickupDialogStore";
-import { useRouter } from "next/navigation";
-import { useLocationStore } from "@/lib/stores/useLocationStore";
 import { PickUpCardDetails } from "@/types/pickUpTypes";
 
 interface PickupCardSectionClientProps {
@@ -15,28 +12,10 @@ interface PickupCardSectionClientProps {
 export default function PickupCardSectionClient({
   pickupCardDetails,
 }: PickupCardSectionClientProps) {
-  const address = useLocationStore((state) => state.address);
-  const openLocationDialog = useLocationStore((state) => state.openDialog);
   const { openDialog } = usePickupDialogStore();
-  const router = useRouter();
-  const [pendingLocationNavigation, setPendingLocationNavigation] =
-    useState(false);
-
-  useEffect(() => {
-    if (pendingLocationNavigation && address !== null) {
-      setPendingLocationNavigation(false);
-      router.push(`/bookings`);
-    }
-  }, [address, pendingLocationNavigation, router]);
 
   const hadnleLocationClick = () => {
-    if (address === null) {
-      setPendingLocationNavigation(true);
-      openLocationDialog();
-      return;
-    }
-
-    router.push(`/bookings`);
+    openDialog("currentLocation", "pickup");
   };
 
   return (

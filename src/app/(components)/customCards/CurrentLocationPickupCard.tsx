@@ -39,7 +39,7 @@ const CurrentLocationPickupCard = ({
                 موقع استلام السيارة:
               </label>
               <Input
-                className="text-sm! md:text-base! rounded-xl"
+                className="text-sm! md:text-base! rounded-xl cursor-pointer"
                 type="search"
                 placeholder="أدخل العنوان..."
                 startIcon={
@@ -47,6 +47,7 @@ const CurrentLocationPickupCard = ({
                 }
                 readOnly
                 value={address !== null ? address?.toString() : ""}
+                onClick={onClick}
               />
 
               <div className="flex justify-center md:justify-end">
