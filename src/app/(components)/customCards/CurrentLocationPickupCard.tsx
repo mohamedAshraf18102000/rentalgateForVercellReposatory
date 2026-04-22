@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { Button, Input } from "@/app/(components)";
 import { MapPin } from "lucide-react";
+import { useLocationStore } from "@/lib/stores/useLocationStore";
 
 const CurrentLocationPickupCard = ({
   title,
@@ -11,6 +12,8 @@ const CurrentLocationPickupCard = ({
   description: string;
   onClick: () => void;
 }) => {
+  const address = useLocationStore((state) => state.address);
+
   return (
     <div className="w-full px-4 md:px-0">
       <div className="bg-white w-full max-w-5xl mt-6 md:mt-10 mx-auto rounded-[18px] grid grid-cols-1 md:grid-cols-2 overflow-hidden shadow-xl border-2 border-white min-h-[350px]">
@@ -33,7 +36,7 @@ const CurrentLocationPickupCard = ({
 
             <div className="mt-6 md:mt-8">
               <label className="text-sm md:text-base font-normal text-primary block text-right mb-2">
-                حدد موقع أستلام السيارة:
+                موقع استلام السيارة:
               </label>
               <Input
                 className="text-sm! md:text-base! rounded-xl"
@@ -42,6 +45,8 @@ const CurrentLocationPickupCard = ({
                 startIcon={
                   <MapPin className="w-5! h-5! md:w-6! md:h-6! text-primary" />
                 }
+                readOnly
+                value={address !== null ? address?.toString() : ""}
               />
 
               <div className="flex justify-center md:justify-end">

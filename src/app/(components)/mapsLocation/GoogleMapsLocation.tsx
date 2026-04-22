@@ -52,6 +52,7 @@ const GoogleMapsLocation = ({
   const [locationLoading, setLocationLoading] = useState(
     !(initialLat && initialLng) && !latitude && !longitude,
   );
+  const [mapLoading, setMapLoading] = useState(true);
   const [isLocating, setIsLocating] = useState(false);
   const mapRef = useRef<google.maps.Map | null>(null);
   const onLocationChangeRef = useRef(onLocationChange);
@@ -175,15 +176,7 @@ const GoogleMapsLocation = ({
       console.error("Geocode failed:", err);
     }
   };
-
-  if (!isLoaded || locationLoading)
-    return (
-      <div className="w-full h-full relative">
-        <div className="flex items-center justify-center h-full min-h-[300px]">
-          <Skeleton className="w-full h-full" />
-        </div>
-      </div>
-    );
+  const showInitialLoading = !isLoaded || locationLoading;
 
   return (
     <div
@@ -218,7 +211,17 @@ const GoogleMapsLocation = ({
       )}
 
       <div className="relative w-full rounded-2xl overflow-hidden flex-1">
-        {!hideUserLocation && (
+        {showInitialLoading && (
+          <div className="absolute inset-0 z-50">
+            <Skeleton className="h-full w-full bg-Grey100" />
+          </div>
+        )}
+        {!showInitialLoading && mapLoading && (
+          <div className="absolute inset-0 z-40 flex items-center justify-center bg-white/70">
+            <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+          </div>
+        )}
+        {!hideUserLocation && !showInitialLoading && (
           <button
             type="button"
             onClick={handleLocateUser}
@@ -233,40 +236,46 @@ const GoogleMapsLocation = ({
             )}
           </button>
         )}
-        <GoogleMap
-          mapContainerStyle={{ width: "100%", height: "100%" }}
-          center={currentLocation}
-          zoom={zoomPercent}
-          options={{
-            mapTypeControl: false,
-            fullscreenControl: false,
-            streetViewControl: false,
-          }}
-          onLoad={(map) => {
-            mapRef.current = map;
-          }}
-          onClick={async (e) => {
-            const newPos = { lat: e.latLng!.lat(), lng: e.latLng!.lng() };
-            setCurrentLocation(newPos);
-            clearPredictions();
-            setInputValue("");
-            const address = await reverseGeocode(newPos.lat, newPos.lng);
-            handleSetLocation(newPos.lat, newPos.lng, address, true);
-          }}
-        >
-          <div className="bg-red-600! p-10!">
-            <Marker position={currentLocation} />
-          </div>
-          {/* <Marker
-            position={currentLocation}
-            icon={{
-              url: "/images/car-marker.png",
-              scaledSize: new google.maps.Size(40, 40),
-              origin: new google.maps.Point(0, 0),
-              anchor: new google.maps.Point(20, 20),
+        {!showInitialLoading && (
+          <GoogleMap
+            mapContainerStyle={{ width: "100%", height: "100%" }}
+            center={currentLocation}
+            zoom={zoomPercent}
+            options={{
+              mapTypeControl: false,
+              fullscreenControl: false,
+              streetViewControl: false,
             }}
-          /> */}
-        </GoogleMap>
+            onLoad={(map) => {
+              mapRef.current = map;
+              setMapLoading(true);
+            }}
+            onTilesLoaded={() => {
+              setMapLoading(false);
+            }}
+            onClick={async (e) => {
+              const newPos = { lat: e.latLng!.lat(), lng: e.latLng!.lng() };
+              setCurrentLocation(newPos);
+              clearPredictions();
+              setInputValue("");
+              const address = await reverseGeocode(newPos.lat, newPos.lng);
+              handleSetLocation(newPos.lat, newPos.lng, address, true);
+            }}
+          >
+            <div className="bg-red-600! p-10!">
+              <Marker position={currentLocation} />
+            </div>
+            {/* <Marker
+              position={currentLocation}
+              icon={{
+                url: "/images/car-marker.png",
+                scaledSize: new google.maps.Size(40, 40),
+                origin: new google.maps.Point(0, 0),
+                anchor: new google.maps.Point(20, 20),
+              }}
+            /> */}
+          </GoogleMap>
+        )}
       </div>
     </div>
   );

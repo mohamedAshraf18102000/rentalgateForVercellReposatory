@@ -310,7 +310,7 @@ const page = () => {
               <Stepper
                 stepNum="2"
                 title="تفاصيل المستأجر"
-                description="كان لوريم إيبسوم ولايزال المعيار للنص"
+                description="استكمال بيانات المستأجر"
                 isActive={activeStep === 2}
                 onClick={() => handleStepNavigation(2)}
               />
@@ -318,7 +318,7 @@ const page = () => {
             <Stepper
               stepNum={isStepTwoSkipped ? "2" : "3"}
               title="تحديد الخدمات"
-              description="كان لوريم إيبسوم ولايزال المعيار للنص"
+              description="تحديد خدمات السيارة"
               isActive={activeStep === 3}
               onClick={() => handleStepNavigation(3)}
             />
