@@ -20,6 +20,8 @@ interface FormValues {
 }
 
 const BookCars = () => {
+  const openLocationDialog = useLocationStore((state) => state.openDialog);
+
   const rentalDays =
     useBookedCarDetailsStore((state) => state.formData.rentalDays) ?? 0;
   const { appliedFilters, filters, setFilter } = useUserPreferedFiltersStore();
@@ -109,6 +111,10 @@ const BookCars = () => {
     }
   };
 
+  const handleOpenLocationDialog = () => {
+    openLocationDialog();
+  };
+
   return (
     <section className="mt-6 sm:mt-10 md:mt-14 lg:mt-[60px]">
       <div className="rounded-2xl bg-white p-3 sm:p-4 md:p-5">
@@ -141,6 +147,12 @@ const BookCars = () => {
               <p className="text-base font-medium text-foreground">
                 لا توجد سيارات حالياً
               </p>
+              <button
+                onClick={handleOpenLocationDialog}
+                className="text-sm text-Grey500 underline underline-offset-2 cursor-pointer"
+              >
+                فتح الموقع
+              </button>
             </div>
           </div>
         </div>
