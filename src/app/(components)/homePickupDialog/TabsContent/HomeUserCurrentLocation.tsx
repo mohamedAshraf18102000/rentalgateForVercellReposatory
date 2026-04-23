@@ -4,14 +4,18 @@ import { UserAddress } from "@/types/userProfile/userAddress";
 import { usePickupDialogStore } from "@/lib/stores/usePickupDialogStore";
 import { useBookedCarDetailsStore } from "@/lib/stores/useBookedCarDetailsStore";
 import { useUserPreferedFiltersStore } from "@/lib/stores/useUserPreferedFiltersStore";
+import { useLocationStore } from "@/lib/stores/useLocationStore";
+import { useAuth } from "../../navbar/hooks/useAuth";
 
 const HomeUserCurrentLocation = () => {
+  const { authenticated } = useAuth();
   const { data: userAddresses, isLoading: isLoadingAddresses } =
-    useUserAddreses();
+    useUserAddreses(authenticated);
 
   const { setFormField, formData } = useBookedCarDetailsStore();
   const { target, setIsUnsavedMapLocation } = usePickupDialogStore();
   const { setFilter } = useUserPreferedFiltersStore();
+  const setLocation = useLocationStore((state) => state.setLocation);
 
   const isAirport =
     target === "return"
@@ -19,6 +23,8 @@ const HomeUserCurrentLocation = () => {
       : !!formData.pickupAirportId;
   const isTrain =
     target === "return" ? !!formData.returnTrainId : !!formData.pickupTrainId;
+  const selectedAddressId =
+    target === "return" ? formData.carReturnLocationId : formData.pickupId;
 
   // If the stored location is an airport or train station, we ignore it and use undefined
   // to let GoogleMapsLocation default to the user's real location.
@@ -37,6 +43,7 @@ const HomeUserCurrentLocation = () => {
         : formData.pickupLong || undefined;
 
   const handleSelectAddress = (address: UserAddress) => {
+    setLocation(address.latitude, address.longitude, address.addressName);
     setIsUnsavedMapLocation(false);
     if (target === "return") {
       // Update BookedCarDetailsStore only
@@ -73,6 +80,7 @@ const HomeUserCurrentLocation = () => {
     isManual?: boolean,
   ) => {
     if (isManual === false) return;
+    setLocation(lat, lng, address);
     setIsUnsavedMapLocation(true);
     if (target === "return") {
       // Update BookedCarDetailsStore
@@ -112,37 +120,43 @@ const HomeUserCurrentLocation = () => {
         />
       </div>
 
-      <div className="absolute px-4 py-3 bottom-2 left-1/2 -translate-x-1/2 bg-white/95 backdrop-blur-md text-primary shadow-2xl border border-Grey100 w-[94%] rounded-2xl z-20">
-        <div className="flex justify-between items-center mb-3">
-          <h5 className="font-bold text-base">العناوين المسجلة</h5>
-          {/* <button className="font-bold text-sm border-2 px-3 py-1.5 rounded-lg flex items-center gap-1 hover:bg-Grey200 transition-colors">
-            عرض الكل <ChevronLeft className="w-4 h-4" />
-          </button> */}
-        </div>
+      {authenticated && (
+        <div className="absolute px-4 py-3 bottom-2 left-1/2 -translate-x-1/2 bg-white/95 backdrop-blur-md text-primary shadow-2xl border border-Grey100 w-[94%] rounded-2xl z-20">
+          <div className="flex justify-between items-center mb-3">
+            <h5 className="font-bold text-base">العناوين المسجلة</h5>
+            {/* <button className="font-bold text-sm border-2 px-3 py-1.5 rounded-lg flex items-center gap-1 hover:bg-Grey200 transition-colors">
+              عرض الكل <ChevronLeft className="w-4 h-4" />
+            </button> */}
+          </div>
 
-        {userAddresses?.length === 0 && (
-          <p className="text-center text-Grey600 text-sm">
-            لا توجد عناوين مسجلة
-          </p>
-        )}
-        <div className="flex overflow-x-auto gap-3 pb-2 ">
-          {userAddresses?.map((address) => (
-            <button
-              title={address.address}
-              key={address.addressId}
-              onClick={() => handleSelectAddress(address)}
-              className="bg-white border border-Grey100 p-3 rounded-xl hover:border-primary/30 transition-all cursor-pointer shadow-sm group text-start min-w-[calc(33.33%-8px)]"
-            >
-              <p className="font-bold text-xs mb-1 group-hover:text-primary leading-tight line-clamp-1">
-                {address.addressName}
-              </p>
-              <p className="line-clamp-1 text-Grey600 text-[10px] leading-tight">
-                {address.address}
-              </p>
-            </button>
-          ))}
+          {userAddresses?.length === 0 && (
+            <p className="text-center text-Grey600 text-sm">
+              لا توجد عناوين مسجلة
+            </p>
+          )}
+          <div className="flex overflow-x-auto gap-3 pb-2 ">
+            {userAddresses?.map((address) => (
+              <button
+                title={address.address}
+                key={address.addressId}
+                onClick={() => handleSelectAddress(address)}
+                className={`bg-white border p-3 rounded-xl transition-all cursor-pointer shadow-sm group text-start min-w-[calc(33.33%-8px)] ${
+                  String(selectedAddressId) === String(address.addressId)
+                    ? "border-black"
+                    : "border-Grey100 hover:border-primary/30"
+                }`}
+              >
+                <p className="font-bold text-xs mb-1 group-hover:text-primary leading-tight line-clamp-1">
+                  {address.addressName}
+                </p>
+                <p className="line-clamp-1 text-Grey600 text-[10px] leading-tight">
+                  {address.address}
+                </p>
+              </button>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
     </>
   );
 };

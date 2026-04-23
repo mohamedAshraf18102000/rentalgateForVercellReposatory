@@ -30,7 +30,7 @@ const HomePickupDialogTabs = ({
           <TabsTrigger value="branches">الفروع</TabsTrigger>
         </TabsList>
 
-        <div className="relative min-h-[450px] max-h-[450px] rounded-2xl overflow-auto border border-Grey100 shadow-sm mt-3">
+        <div className="relative min-h-[420px] max-h-[420px] rounded-2xl overflow-auto border border-Grey100 shadow-sm mt-3 3xl:max-h-[450px]!">
           <TabsContent
             className="w-full h-full mt-0! flex"
             value="currentLocation"

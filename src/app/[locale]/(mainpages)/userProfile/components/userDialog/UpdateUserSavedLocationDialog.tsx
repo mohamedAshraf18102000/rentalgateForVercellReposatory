@@ -259,6 +259,31 @@ const UpdateUserSavedLocationDialog = ({
                   }}
                 />
               </div>
+              <Controller
+                name="mobile"
+                control={control}
+                render={({ field }) => (
+                  <div className="w-full">
+                    <CountryPhone
+                      value={field.value}
+                      onChange={field.onChange}
+                      onBlur={field.onBlur}
+                      defaultCountry="sa"
+                      labelClassName="text-base!"
+                      inputClassName="text-sm! bg-Grey100! border-1! border-red-500!"
+                      label="رقم الجوال:"
+                      placeholder="أدخل رقم الجوال"
+                      showValidation={true}
+                      onValidationChange={setIsPhoneValid}
+                    />
+                    {errors.mobile && !isPhoneValid && (
+                      <p className="text-xs text-StatusRed mt-1">
+                        {errors.mobile.message}
+                      </p>
+                    )}
+                  </div>
+                )}
+              />
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <Input
                   {...register("addressName")}
@@ -348,32 +373,6 @@ const UpdateUserSavedLocationDialog = ({
                   errorMessage={errors.flatNo?.message}
                 />
               </div>
-
-              <Controller
-                name="mobile"
-                control={control}
-                render={({ field }) => (
-                  <div className="w-full">
-                    <CountryPhone
-                      value={field.value}
-                      onChange={field.onChange}
-                      onBlur={field.onBlur}
-                      defaultCountry="sa"
-                      labelClassName="text-base!"
-                      inputClassName="text-sm! bg-Grey100!"
-                      label="رقم الجوال:"
-                      placeholder="أدخل رقم الجوال"
-                      showValidation={true}
-                      onValidationChange={setIsPhoneValid}
-                    />
-                    {errors.mobile && !isPhoneValid && (
-                      <p className="text-xs text-red-500 mt-1">
-                        {errors.mobile.message}
-                      </p>
-                    )}
-                  </div>
-                )}
-              />
 
               <Input
                 {...register("additionalInfo")}

@@ -56,17 +56,14 @@ const page = () => {
 
   const calculateUserQoutePayload = buildReservationPayload(formData);
 
-  const company_logo = `${process.env.NEXT_PUBLIC_IMAGES_PREFIX_URL}${carDetails?.company.logo}`;
-
-  console.log(company_logo);
-
   const {
     mutate: calculateQuotePrice,
+    mutateAsync: calculateQuotePriceAsync,
+    reset: resetQuoteState,
     isPending: isCalculating,
     data: calculatedQuotePricingData,
     isError: isQuoteError,
     error,
-    isSuccess: isQuoteSuccess,
   } = useCalculateQuotePrice();
 
   // sync plan into store whenever pricingType changes
@@ -137,43 +134,31 @@ const page = () => {
     };
   }, [carDetails, rentalDays, calculatedQuotePricingData]);
 
-  // Trigger quote calculation whenever relevant form data changes
-  useEffect(() => {
-    const payload = buildReservationPayload(formData);
-    // Only calculate if we have the basics
-    if (
-      payload.companyCarBranchId &&
-      payload.startDate &&
-      payload.endDate &&
-      payload.startDate !== "null" &&
-      payload.endDate !== "null" &&
-      payload.receive?.type &&
-      payload.deliver?.type
-    ) {
-      const handler = setTimeout(() => {
-        calculateQuotePrice(payload);
-      }, 500); // 500ms debounce
-      return () => clearTimeout(handler);
+  const handleStepOneNavigation = async (step: number) => {
+    if (isForOtherReservation) {
+      setIsStepTwoSkipped(false);
+      setActiveStep(2);
+      return;
     }
-  }, [
-    formData.fromDate,
-    formData.toDate,
-    formData.services,
-    formData.driver,
-    formData.extraKmApplied,
-    formData.extraKmType,
-    formData.promoData?.code,
-    formData.referalcode,
-    formData.points,
-    formData.pickupType,
-    formData.returnType,
-    formData.pickupLat,
-    formData.pickupLong,
-    formData.returnLat,
-    formData.returnLong,
-    carDetails?.ccbId,
-    calculateQuotePrice,
-  ]);
+
+    setIsLoading(true);
+    try {
+      const { completeness } = await getUserProfileCompletnessState();
+      if (completeness) {
+        setIsStepTwoSkipped(true);
+        setActiveStep(3);
+        return;
+      } else {
+        setIsStepTwoSkipped(false);
+      }
+    } catch (error) {
+      console.error("Error checking profile completeness:", error);
+    } finally {
+      setIsLoading(false);
+    }
+
+    setActiveStep(step);
+  };
 
   useEffect(() => {
     setFormField("plan", pricingDetails.pricingType);
@@ -207,50 +192,30 @@ const page = () => {
 
     if (step === activeStep) return;
 
-    if (isQuoteError && error?.message !== "FE-STOP-TOAST") {
-      toast.error(error?.message, {
-        position: "top-center",
-      });
-      return;
-    }
-
     const isValid = await stepContentRef.current?.validateStep();
     if (isValid) {
       if (activeStep === 1 && step >= 2) {
-        if (isForOtherReservation) {
-          setIsStepTwoSkipped(false);
-          setActiveStep(2);
-          return;
-        }
-
-        setIsLoading(true);
-        try {
-          const { completeness } = await getUserProfileCompletnessState();
-          if (completeness) {
-            setIsStepTwoSkipped(true);
-            setActiveStep(3);
-            return;
-          } else {
-            setIsStepTwoSkipped(false);
-          }
-        } catch (error) {
-          console.error("Error checking profile completeness:", error);
-        } finally {
-          setIsLoading(false);
-        }
+        await handleStepOneNavigation(step);
+        return;
       }
       setActiveStep(step);
     }
   };
 
   const handleNext = async () => {
-    if (
-      isQuoteError &&
-      error?.message !== "الرجاء ملئ جميع البيانات المطلوبة"
-    ) {
-      toast.error(error?.message, {
-        position: "top-center",
-      });
+    if (activeStep === 1) {
+      const isValid = await stepContentRef.current?.validateStep();
+      if (!isValid) return;
+
+      try {
+        resetQuoteState();
+        const latestFormData = useBookedCarDetailsStore.getState().formData;
+        await calculateQuotePriceAsync(buildReservationPayload(latestFormData));
+      } catch {
+        return;
+      }
+
+      await handleStepOneNavigation(2);
       return;
     }
 

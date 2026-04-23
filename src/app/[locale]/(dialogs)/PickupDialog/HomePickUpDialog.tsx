@@ -9,6 +9,7 @@ import HomePickupDialogTabs from "@/app/(components)/homePickupDialog/HomePickup
 import { usePathname, useRouter } from "next/navigation";
 import { useLocale } from "next-intl";
 import { useBookedCarDetailsStore } from "@/lib/stores/useBookedCarDetailsStore";
+import { useAuth } from "@/app/(components)/navbar/hooks/useAuth";
 
 export function HomePickUpDialog({ title }: { title?: string }) {
   const {
@@ -23,6 +24,7 @@ export function HomePickUpDialog({ title }: { title?: string }) {
   } = usePickupDialogStore();
   const { filters, setFilter, applyFilters } = useUserPreferedFiltersStore();
   const { setFormData } = useBookedCarDetailsStore();
+  const { authenticated } = useAuth();
   const [showSaveDialog, setShowSaveDialog] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
@@ -68,7 +70,7 @@ export function HomePickUpDialog({ title }: { title?: string }) {
   };
 
   const handleConfirm = () => {
-    if (activeTab === "currentLocation" && isUnsavedMapLocation) {
+    if (activeTab === "currentLocation" && isUnsavedMapLocation && authenticated) {
       setShowSaveDialog(true);
     } else {
       if (target === "pickup") {
@@ -94,6 +96,7 @@ export function HomePickUpDialog({ title }: { title?: string }) {
   return (
     <>
       <DialogWrapper
+        className=""
         open={open}
         onOpenChange={setOpen}
         size="lg"
@@ -119,49 +122,51 @@ export function HomePickUpDialog({ title }: { title?: string }) {
           </div>
         }
       />
-      <UpdateUserSavedLocationDialog
-        open={showSaveDialog}
-        setOpen={setShowSaveDialog}
-        initialShowAddForm={true}
-        initialLat={initialLat}
-        initialLng={initialLng}
-        initialAddress={initialAddress}
-        onSuccess={(address) => {
-          if (target === "return") {
-            setFilter("carReturnLocation", address.addressName);
-            setFilter("carReturnLocationLat", address.latitude);
-            setFilter("carReturnLocationLng", address.longitude);
-            setFilter("carReturnLocationType", "currentLocation");
-            setFilter("carReturnLocationId", String(address.addressId));
-          } else {
-            setFilter("pickupName", address.addressName);
-            setFilter("pickupLat", address.latitude);
-            setFilter("pickupLng", address.longitude);
-            setFilter("pickupType", "currentLocation");
-            setFilter("pickupId", String(address.addressId));
-            setFormData({
-              pickupName: address.addressName,
-              pickupLat: address.latitude,
-              pickupLong: address.longitude,
-              pickupType: "MY_LOCATION",
-              pickupId: String(address.addressId),
-              pickupAirportId: null,
-              pickupTrainId: null,
-            });
-          }
-          if (target === "pickup") {
-            applyFilters();
-          }
-          setIsUnsavedMapLocation(false);
-          setShowSaveDialog(false);
-          confirmDialog();
-          if (target === "pickup") {
-            if (!isOnBookingsPage) {
-              router.push(bookingsPath);
+      {authenticated && (
+        <UpdateUserSavedLocationDialog
+          open={showSaveDialog}
+          setOpen={setShowSaveDialog}
+          initialShowAddForm={true}
+          initialLat={initialLat}
+          initialLng={initialLng}
+          initialAddress={initialAddress}
+          onSuccess={(address) => {
+            if (target === "return") {
+              setFilter("carReturnLocation", address.addressName);
+              setFilter("carReturnLocationLat", address.latitude);
+              setFilter("carReturnLocationLng", address.longitude);
+              setFilter("carReturnLocationType", "currentLocation");
+              setFilter("carReturnLocationId", String(address.addressId));
+            } else {
+              setFilter("pickupName", address.addressName);
+              setFilter("pickupLat", address.latitude);
+              setFilter("pickupLng", address.longitude);
+              setFilter("pickupType", "currentLocation");
+              setFilter("pickupId", String(address.addressId));
+              setFormData({
+                pickupName: address.addressName,
+                pickupLat: address.latitude,
+                pickupLong: address.longitude,
+                pickupType: "MY_LOCATION",
+                pickupId: String(address.addressId),
+                pickupAirportId: null,
+                pickupTrainId: null,
+              });
             }
-          }
-        }}
-      />
+            if (target === "pickup") {
+              applyFilters();
+            }
+            setIsUnsavedMapLocation(false);
+            setShowSaveDialog(false);
+            confirmDialog();
+            if (target === "pickup") {
+              if (!isOnBookingsPage) {
+                router.push(bookingsPath);
+              }
+            }
+          }}
+        />
+      )}
     </>
   );
 }
