@@ -29,7 +29,8 @@ const DrawerAccordion = () => {
   });
   const selectedCategoryName =
     filters.categoryName ||
-    data?.find((cat) => cat.categoryId.toString() === filters.categoryId)?.arabicName ||
+    data?.find((cat) => cat.categoryId.toString() === filters.categoryId)
+      ?.arabicName ||
     "";
 
   const { data: airports, isLoading: airportsLoading } = useQuery({
@@ -216,7 +217,11 @@ const DrawerAccordion = () => {
               <RadioGroup
                 dir="rtl"
                 className="flex flex-col gap-3 px-1"
-                value={filters.pickupId}
+                value={
+                  filters.pickupType === "currentLocation"
+                    ? "current-location"
+                    : ""
+                }
                 onValueChange={(val) => {
                   setFilter("pickupType", "currentLocation");
                   setFilter("pickupId", val);

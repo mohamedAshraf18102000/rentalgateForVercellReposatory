@@ -18,7 +18,6 @@ const FilterDrawer = () => {
   const hasCategoryFilter = !!filters.carCategory || filters.categoryId !== "";
 
   const activeFiltersCount = [
-    !!filters.rentPeriod,
     hasCategoryFilter,
     filters.priceMin !== "",
     filters.priceTo !== "",
@@ -38,7 +37,7 @@ const FilterDrawer = () => {
             <Funnel className="size-4 shrink-0 sm:size-4.5" aria-hidden />
             <span>تصفية </span>
             {activeFiltersCount > 0 && (
-              <div className="absolute -top-1 -end-1 flex size-5 items-center justify-center rounded-full bg-StatusRedBG/90 text-[11px] font-bold text-white sm:text-[12px]">
+              <div className="absolute -top-2 -start-2 flex size-5 items-center justify-center rounded-full bg-StatusRedBG/90 text-[11px] font-bold text-white sm:text-[12px]">
                 {activeFiltersCount}
               </div>
             )}
