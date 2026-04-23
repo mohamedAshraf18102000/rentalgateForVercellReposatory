@@ -11,7 +11,6 @@ import { cn } from "@/lib/utils";
 import { Button, buttonVariants } from "@/app/(components)/ui/button";
 
 const CALENDAR_STYLES = `
-  @import url('https://fonts.googleapis.com/css2?family=Geist+Mono:wght@300;400;500;600&family=Instrument+Serif:ital@0;1&display=swap');
 
   .cal-root {
     padding: 24px;
@@ -219,15 +218,20 @@ function Calendar({
   className,
   classNames,
   showOutsideDays = true,
-  captionLayout = "label",
+  captionLayout = "dropdown",
   buttonVariant = "ghost",
   formatters,
   components,
+  startMonth,
+  endMonth,
   ...props
 }: React.ComponentProps<typeof DayPicker> & {
   buttonVariant?: React.ComponentProps<typeof Button>["variant"];
 }) {
   const defaultClassNames = getDefaultClassNames();
+  const today = new Date();
+  const defaultStartMonth = new Date(today.getFullYear() - 50, 0);
+  const defaultEndMonth = new Date(today.getFullYear() + 10, 11);
 
   return (
     <>
@@ -236,6 +240,8 @@ function Calendar({
         showOutsideDays={showOutsideDays}
         className={cn("cal-root group/calendar", className)}
         captionLayout={captionLayout}
+        startMonth={startMonth ?? defaultStartMonth}
+        endMonth={endMonth ?? defaultEndMonth}
         formatters={{
           formatMonthDropdown: (date) =>
             date.toLocaleString("default", { month: "short" }),
@@ -267,7 +273,7 @@ function Calendar({
             defaultClassNames.dropdown_root,
           ),
           dropdown: cn(
-            "absolute inset-0 opacity-0",
+            "relative h-8 cursor-pointer appearance-none bg-transparent px-2 pr-6 text-sm opacity-100",
             defaultClassNames.dropdown,
           ),
           caption_label: cn("cal-caption", defaultClassNames.caption_label),

@@ -76,3 +76,12 @@
   border-radius: 0px !important;
   margin: 0px !important;
 }
+
+.rdp .rdp-dropdowns .rdp-dropdown_root,
+.rdp .rdp-dropdowns .rdp-dropdown,
+.cal-root .rdp-dropdown_root,
+.cal-root .rdp-dropdown {
+  padding: 5px 10px 5px 10px !important;
+  border-radius: 8px !important;
+  cursor: pointer !important;
+}
