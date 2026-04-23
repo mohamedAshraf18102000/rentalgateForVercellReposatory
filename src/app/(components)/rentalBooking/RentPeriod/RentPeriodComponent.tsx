@@ -10,8 +10,8 @@ const RentPeriodComponent = () => {
   const { filters, setFilter } = useUserPreferedFiltersStore();
 
   return (
-    <div className="h-[480px] md:h-full rounded-2xl! overflow-hidden shadow-lg border-2 border-white">
-      <div className="relative h-[200px] md:h-[50%] overflow-hidden">
+    <div className="h-full md:h-full rounded-2xl! overflow-hidden shadow-lg border-2 border-white">
+      <div className="relative h-[200px]! md:h-[50%] overflow-hidden">
         <Image
           src="/rentalSearch/img1.webp"
           alt="bgApp2"
@@ -19,7 +19,7 @@ const RentPeriodComponent = () => {
           className="object-cover"
         />
       </div>
-      <div className="bg-white h-[280px] md:h-[50%] p-4 text-center">
+      <div className="bg-white h-full p-4 text-center">
         <h4 className="font-bold text-xl md:text-2xl mb-2 md:mb-3 whitespace-nowrap">
           أبحث بمدة الإيجار
         </h4>
@@ -33,9 +33,9 @@ const RentPeriodComponent = () => {
           }
         />
 
-        <div className="bg-primary w-[60%] mx-auto mt-3 text-white text-center rounded-[8px] text-sm flex items-center justify-center gap-2 py-2">
-          <Info size={20} />
-          <span>الإيجار السنوي لا ينتهي بالتمليك</span>
+        <div className="bg-primary w-full sm:w-[80%] md:w-[60%] mx-auto mt-3 text-white text-center rounded-[8px] text-xs sm:text-sm flex items-center justify-center gap-1.5 sm:gap-2 py-2 px-3">
+          <Info className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" />
+          <span className="leading-snug">الإيجار السنوي لا ينتهي بالتمليك</span>
         </div>
       </div>
     </div>

@@ -21,25 +21,26 @@ export const FavCategoryTabs: React.FC<PeriodSearchProps> = ({
       onValueChange={(newValue) => onValueChange(newValue as CarCategory)}
       className="w-full"
     >
-      <TabsList className="bg-transparent relative">
+      <TabsList className="bg-transparent grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 h-fit">
         {carCategories?.map((category) => (
-          <React.Fragment key={category.categoryId}>
-            <TabsTrigger
-              value={category.categoryId.toString()}
-              className="login-tab-trigger flex-1 py-2 md:py-3 bg-[url(/cars/carCateforyBG.png)] bg-cover bg-center bg-no-repeat"
-            >
-              <img
-                src={`${process.env.NEXT_PUBLIC_IMAGES_PREFIX_URL}/${category.icon}`}
-                alt=""
-                className="w-full h-full object-cover"
-              />
-              <div className="absolute top-13 left-1/2 -translate-x-1/2">
-                <span className="login-tab-text text-xs sm:text-sm md:text-base">
-                  {category.arabicName}
-                </span>
+          <TabsTrigger
+            key={category.categoryId}
+            value={category.categoryId.toString()}
+            className="login-tab-trigger flex-1 h-auto p-0 bg-transparent data-[state=active]:bg-transparent"
+          >
+            <div className="h-fit p-2 flex flex-col gap-1 items-center">
+              <div className="w-full p-1 bg-[url(/cars/carCateforyBG.png)] bg-cover bg-center bg-no-repeat rounded-2xl">
+                <img
+                  src={`${process.env.NEXT_PUBLIC_IMAGES_PREFIX_URL}${category.icon}`}
+                  alt="img"
+                  className="object-contain scale-75 sm:scale-100"
+                />
               </div>
-            </TabsTrigger>
-          </React.Fragment>
+              <span className="login-tab-text text-sm!">
+                {category.arabicName}
+              </span>
+            </div>
+          </TabsTrigger>
         ))}
       </TabsList>
     </Tabs>
