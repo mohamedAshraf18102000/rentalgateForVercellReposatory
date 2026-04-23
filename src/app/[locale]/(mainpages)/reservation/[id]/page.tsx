@@ -51,6 +51,7 @@ const page = () => {
   const isForOtherReservation = searchParams.get("forOther") === "true";
   const carDetails = useBookedCarDetailsStore((s) => s.carDetails);
   const formData = useBookedCarDetailsStore((s) => s.formData);
+  const isShowTax = useBookedCarDetailsStore((s) => s.showPricesWithTax);
   const { filters } = useUserPreferedFiltersStore();
   const setFormField = useBookedCarDetailsStore((s) => s.setFormField);
 
@@ -356,6 +357,7 @@ const page = () => {
             <div className="w-full lg:w-1/4">
               <div className="">
                 <CarsCard
+                  showTax={isShowTax}
                   freeKm={carDetails?.allowedKm}
                   carName={carDetails?.car.carName}
                   companyName={carDetails?.company.arabicName}
