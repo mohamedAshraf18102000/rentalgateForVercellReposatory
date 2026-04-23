@@ -24,7 +24,7 @@ const CALENDAR_STYLES = `
 
   /* ── Header ── */
   .cal-caption {
-    font-family: 'Instrument Serif', serif;
+    font-family: 'arial', serif;
     font-size: 1.05rem;
     font-weight: 400;
     color: #1a1a1a;
@@ -306,20 +306,29 @@ function Calendar({
             if (orientation === "left")
               return (
                 <ChevronRightIcon
-                  className={cn("size-3.5", className)}
+                  className={cn(
+                    "size-5 stroke-0 stroke-width-0 fill-black!",
+                    className,
+                  )}
                   {...props}
                 />
               );
             if (orientation === "right")
               return (
                 <ChevronLeftIcon
-                  className={cn("size-3.5", className)}
+                  className={cn(
+                    "5 stroke-0 stroke-width-0 fill-black!",
+                    className,
+                  )}
                   {...props}
                 />
               );
             return (
               <ChevronDownIcon
-                className={cn("size-3.5", className)}
+                className={cn(
+                  "5 stroke-0 stroke-width-0 fill-black!",
+                  className,
+                )}
                 {...props}
               />
             );
