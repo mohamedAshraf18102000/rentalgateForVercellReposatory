@@ -1,4 +1,4 @@
- "use client";
+"use client";
 
 import { useRef } from "react";
 import Image from "next/image";
@@ -6,7 +6,11 @@ import Autoplay from "embla-carousel-autoplay";
 import {
   Carousel,
   CarouselContent,
+  CarouselDots,
   CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+  CustomCarouselDots,
 } from "@/app/(components)/ui/carousel";
 import { Banner } from "@/types/home/home";
 
@@ -50,6 +54,9 @@ const HomeSlider = ({ bannersData }: { bannersData: Banner[] }) => {
               </CarouselItem>
             ))}
           </CarouselContent>
+          <div className="flex items-center justify-center gap-4 absolute bottom-7 left-0 w-full">
+            <CustomCarouselDots className="py-2" />
+          </div>
         </Carousel>
       </div>
     </section>

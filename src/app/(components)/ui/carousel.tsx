@@ -309,6 +309,39 @@ const CarouselDots = React.forwardRef<
 });
 CarouselDots.displayName = "CarouselDots";
 
+const CustomCarouselDots = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement>
+>(({ className, ...props }, ref) => {
+  const { selectedIndex, scrollSnaps, scrollTo } = useCarousel();
+
+  return (
+    <div
+      ref={ref}
+      className={cn(
+        "flex flex-wrap items-center justify-center gap-1.5 sm:gap-2",
+        className,
+      )}
+      {...props}
+    >
+      {scrollSnaps.map((_, index) => (
+        <button
+          key={index}
+          onClick={() => scrollTo(index)}
+          className={cn(
+            "rounded-full p-0.5 transition-all duration-300 ease-in-out",
+            index === selectedIndex
+              ? "h-2.5 w-7 bg-white sm:h-3 sm:w-10"
+              : "h-2.5 w-2.5 bg-gray-400 hover:bg-white sm:h-3 sm:w-3",
+          )}
+          aria-label={`Go to slide ${index + 1}`}
+        />
+      ))}
+    </div>
+  );
+});
+CustomCarouselDots.displayName = "CustomCarouselDots";
+
 export {
   type CarouselApi,
   Carousel,
@@ -317,4 +350,5 @@ export {
   CarouselPrevious,
   CarouselNext,
   CarouselDots,
+  CustomCarouselDots,
 };
