@@ -1,5 +1,7 @@
 import { getCookie } from "@/util/cookies";
 
+type AppLocale = "ar" | "en";
+
 const getAuthToken = async () => {
   if (typeof document !== "undefined") {
     return getCookie("authToken");
@@ -14,33 +16,55 @@ const getAuthToken = async () => {
   }
 };
 
+const isValidLocale = (value: string | null | undefined): value is AppLocale =>
+  value === "ar" || value === "en";
+
+const getCurrentLocale = async (): Promise<AppLocale> => {
+  if (typeof document !== "undefined") {
+    const pathSegment = window.location.pathname.split("/")[1];
+    if (isValidLocale(pathSegment)) {
+      return pathSegment;
+    }
+
+    const cookieLocale = getCookie("NEXT_LOCALE");
+    if (isValidLocale(cookieLocale)) {
+      return cookieLocale;
+    }
+
+    return "ar";
+  }
+
+  try {
+    const { cookies } = await import("next/headers");
+    const cookieStore = await cookies();
+    const cookieLocale = cookieStore.get("NEXT_LOCALE")?.value;
+    if (isValidLocale(cookieLocale)) {
+      return cookieLocale;
+    }
+  } catch {
+    // Ignore and fallback to default locale.
+  }
+
+  return "ar";
+};
+
 export async function fetcher<T>(
   url: string,
   options?: RequestInit,
 ): Promise<T> {
   const token = await getAuthToken();
-
-  let currentLocale = "ar";
-  if (typeof document !== "undefined") {
-    const pathSegment = window.location.pathname.split("/")[1];
-    if (pathSegment === "ar" || pathSegment === "en") {
-      currentLocale = pathSegment;
-    } else {
-      const cookieLocale = getCookie("NEXT_LOCALE");
-      if (cookieLocale === "ar" || cookieLocale === "en") {
-        currentLocale = cookieLocale;
-      }
-    }
+  const currentLocale = await getCurrentLocale();
+  const requestHeaders = new Headers(options?.headers);
+  requestHeaders.set("Content-Type", "application/json");
+  requestHeaders.set("Accept-Language", currentLocale);
+  requestHeaders.set("X-Locale", currentLocale);
+  if (token) {
+    requestHeaders.set("Authorization", `Bearer ${token}`);
   }
 
   const res = await fetch(`https://api.rentalgate.net/api${url}`, {
     ...options,
-    headers: {
-      "Content-Type": "application/json",
-      "Accept-Language": currentLocale,
-      ...(token ? { Authorization: `Bearer ${token}` } : {}), 
-      ...(options?.headers || {}),
-    },
+    headers: requestHeaders,
   });
 
   if (!res.ok) {

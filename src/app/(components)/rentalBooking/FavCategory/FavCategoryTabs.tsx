@@ -37,7 +37,7 @@ export const FavCategoryTabs: React.FC<PeriodSearchProps> = ({
                 />
               </div>
               <span className="login-tab-text text-sm!">
-                {category.arabicName}
+                {category.name}
               </span>
             </div>
           </TabsTrigger>

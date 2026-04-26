@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 import { FavCategoryTabs } from "./FavCategoryTabs";
 import {
@@ -5,12 +7,13 @@ import {
   CarCategory,
 } from "@/lib/stores/useUserPreferedFiltersStore";
 import { useRouter } from "next/navigation";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 
 const FavCategoryComponent = () => {
   const { filters, setFilter, applyFilters } = useUserPreferedFiltersStore();
   const router = useRouter();
   const locale = useLocale();
+  const t = useTranslations("home");
 
   return (
     <div className="h-full md:h-full rounded-2xl! overflow-hidden shadow-lg border-2 border-white">
@@ -24,10 +27,10 @@ const FavCategoryComponent = () => {
       </div>
       <div className="bg-white h-full p-4 text-center">
         <h4 className="font-bold text-xl md:text-2xl mb-2 md:mb-3 whitespace-nowrap">
-          أبحث بالفئة المفضلة
+          {t("favCategoryCard.title")}
         </h4>
         <p className="text-sm text-Grey700 mb-3">
-          اختر الفئة التي تناسب احتياجك، وإحنا نسهّل عليك البحث
+          {t("favCategoryCard.description")}
         </p>
         <FavCategoryTabs
           value={filters.carCategory}

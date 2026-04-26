@@ -1,18 +1,11 @@
-"use client";
 import Image from "next/image";
 import { useTranslations, useLocale } from "next-intl";
 import { cn } from "@/lib/utils";
-// import { useSharedStore } from "@/lib/api/stores";
 
 function HomeMockups() {
   const t = useTranslations("home");
   const locale = useLocale();
   const isRTL = locale === "ar";
-
-  // const { sharedData } = useSharedStore();
-
-  // const contact = sharedData?.contacts?.[0];
-  // console.log(contact);
 
   return (
     <div className="container-custom pt-[30px]">

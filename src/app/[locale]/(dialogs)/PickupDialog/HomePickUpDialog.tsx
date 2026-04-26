@@ -7,7 +7,7 @@ import { useState } from "react";
 import { useUserPreferedFiltersStore } from "@/lib/stores/useUserPreferedFiltersStore";
 import HomePickupDialogTabs from "@/app/(components)/homePickupDialog/HomePickupDialogTabs";
 import { usePathname, useRouter } from "next/navigation";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useBookedCarDetailsStore } from "@/lib/stores/useBookedCarDetailsStore";
 import { useAuth } from "@/app/(components)/navbar/hooks/useAuth";
 
@@ -29,6 +29,7 @@ export function HomePickUpDialog({ title }: { title?: string }) {
   const router = useRouter();
   const pathname = usePathname();
   const locale = useLocale();
+  const t = useTranslations("home");
   const bookingsPath = `/${locale}/bookings`;
   const isOnBookingsPage = pathname === bookingsPath;
 
@@ -70,7 +71,11 @@ export function HomePickUpDialog({ title }: { title?: string }) {
   };
 
   const handleConfirm = () => {
-    if (activeTab === "currentLocation" && isUnsavedMapLocation && authenticated) {
+    if (
+      activeTab === "currentLocation" &&
+      isUnsavedMapLocation &&
+      authenticated
+    ) {
       setShowSaveDialog(true);
     } else {
       if (target === "pickup") {
@@ -101,7 +106,10 @@ export function HomePickUpDialog({ title }: { title?: string }) {
         onOpenChange={setOpen}
         size="lg"
         header={{
-          mainTitle: target === "return" ? "مكان التسليم" : "مكان الأستلام",
+          mainTitle:
+            target === "return"
+              ? t("pickupDialog.returnTitle")
+              : t("pickupDialog.pickupTitle"),
         }}
         content={<HomePickupDialogTabs customDefaultValue={activeTab} />}
         footer={
@@ -110,14 +118,14 @@ export function HomePickUpDialog({ title }: { title?: string }) {
               onClick={closeDialog}
               className="w-full px-2 py-3 text-center font-normal text-primary underline underline-offset-3 sm:w-fit"
             >
-              إغلاق
+              {t("pickupDialog.close")}
             </button>
 
             <button
               onClick={handleConfirm}
               className="w-full rounded-[12px] bg-primary px-5 py-3 font-bold text-white sm:w-fit"
             >
-              {title || "أظهار النتائج"}
+              {title || t("pickupDialog.showResults")}
             </button>
           </div>
         }

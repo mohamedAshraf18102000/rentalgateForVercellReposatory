@@ -1,4 +1,3 @@
-"use client";
 import FavCategoryComponent from "@/app/(components)/rentalBooking/FavCategory/FavCategoryComponent";
 import RentPeriodComponent from "@/app/(components)/rentalBooking/RentPeriod/RentPeriodComponent";
 import WrapperContainer from "@/app/(components)/wrapperContainer/WrapperContainer";

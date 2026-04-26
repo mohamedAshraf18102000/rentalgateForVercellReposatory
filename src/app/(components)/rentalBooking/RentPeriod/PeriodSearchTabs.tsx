@@ -13,6 +13,7 @@ import { DateRange } from "react-day-picker";
 import { cn } from "@/lib/utils";
 import { Separator } from "../../ui/separator";
 import { Calendar1 } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 interface PeriodSearchProps {
   value: RentPeriod;
@@ -21,7 +22,7 @@ interface PeriodSearchProps {
 
 type RecommendationOption = {
   id: string;
-  label: string;
+  labelKey: string;
   amount: number;
 };
 
@@ -29,24 +30,24 @@ type SelectableRentPeriod = Exclude<RentPeriod, "">;
 
 const RECOMMENDATIONS: Record<SelectableRentPeriod, RecommendationOption[]> = {
   daily: [
-    { id: "2d", label: "يومين", amount: 2 },
-    { id: "3d", label: "3 ايام", amount: 3 },
-    { id: "5d", label: "5 ايام", amount: 5 },
+    { id: "2d", labelKey: "recommendations.daily.2d", amount: 2 },
+    { id: "3d", labelKey: "recommendations.daily.3d", amount: 3 },
+    { id: "5d", labelKey: "recommendations.daily.5d", amount: 5 },
   ],
   weekly: [
-    { id: "1w", label: "اسبوع", amount: 1 },
-    { id: "2w", label: "2 اسبوع", amount: 2 },
-    { id: "3w", label: "3 اسبوع", amount: 3 },
+    { id: "1w", labelKey: "recommendations.weekly.1w", amount: 1 },
+    { id: "2w", labelKey: "recommendations.weekly.2w", amount: 2 },
+    { id: "3w", labelKey: "recommendations.weekly.3w", amount: 3 },
   ],
   monthly: [
-    { id: "1m", label: "شهر", amount: 1 },
-    { id: "2m", label: "2 شهر", amount: 2 },
-    { id: "3m", label: "3 شهر", amount: 3 },
+    { id: "1m", labelKey: "recommendations.monthly.1m", amount: 1 },
+    { id: "2m", labelKey: "recommendations.monthly.2m", amount: 2 },
+    { id: "3m", labelKey: "recommendations.monthly.3m", amount: 3 },
   ],
   yearly: [
-    { id: "1y", label: "سنة", amount: 1 },
-    { id: "2y", label: "2 سنة", amount: 2 },
-    { id: "3y", label: "3 سنة", amount: 3 },
+    { id: "1y", labelKey: "recommendations.yearly.1y", amount: 1 },
+    { id: "2y", labelKey: "recommendations.yearly.2y", amount: 2 },
+    { id: "3y", labelKey: "recommendations.yearly.3y", amount: 3 },
   ],
 };
 
@@ -85,8 +86,8 @@ const getActivePeriod = (period: RentPeriod): SelectableRentPeriod =>
 const toStartOfDay = (date: Date): Date =>
   new Date(date.getFullYear(), date.getMonth(), date.getDate());
 
-const formatDate = (date: Date): string =>
-  date.toLocaleDateString("ar-EG", {
+const formatDate = (date: Date, locale: string): string =>
+  date.toLocaleDateString(locale, {
     day: "2-digit",
     month: "2-digit",
     year: "numeric",
@@ -96,6 +97,7 @@ export const PeriodSearchTabs: React.FC<PeriodSearchProps> = ({
   value,
   onValueChange,
 }) => {
+  const t = useTranslations("home.rentPeriodCard");
   const activePeriod = getActivePeriod(value);
   const [isCalendarOpen, setIsCalendarOpen] = React.useState(false);
   const [startDate, setStartDate] = React.useState<Date>(
@@ -103,12 +105,13 @@ export const PeriodSearchTabs: React.FC<PeriodSearchProps> = ({
   );
   const [selectedRecommendation, setSelectedRecommendation] =
     React.useState<string>(RECOMMENDATIONS[activePeriod][0].id);
+  const locale = React.useMemo(() => t("dateLocale"), [t]);
 
   const periods: { value: RentPeriod; label: string }[] = [
-    { value: "daily", label: "باليوم" },
-    { value: "weekly", label: "بالأسبوع" },
-    { value: "monthly", label: "بالشهر" },
-    { value: "yearly", label: "بالسنة" },
+    { value: "daily", label: t("tabs.daily") },
+    { value: "weekly", label: t("tabs.weekly") },
+    { value: "monthly", label: t("tabs.monthly") },
+    { value: "yearly", label: t("tabs.yearly") },
   ];
 
   React.useEffect(() => {
@@ -168,10 +171,14 @@ export const PeriodSearchTabs: React.FC<PeriodSearchProps> = ({
         {selectedRange.from && selectedRange.to && (
           <p className="text-xs text-Grey700 text-center my-2 font-bold flex items-center justify-center gap-2">
             <Calendar1 className="w-4 h-4" />
-            <span>من</span>
-            <span className="underline">{formatDate(selectedRange.from)}</span>
-            <span className="mx-2">إلى</span>
-            <span className="underline">{formatDate(selectedRange.to)}</span>
+            <span>{t("dateRange.from")}</span>
+            <span className="underline">
+              {formatDate(selectedRange.from, locale)}
+            </span>
+            <span className="mx-2">{t("dateRange.to")}</span>
+            <span className="underline">
+              {formatDate(selectedRange.to, locale)}
+            </span>
           </p>
         )}
         <Separator />
@@ -188,7 +195,7 @@ export const PeriodSearchTabs: React.FC<PeriodSearchProps> = ({
                   : "bg-white text-Grey700 border-Grey300 hover:border-primary",
               )}
             >
-              {option.label}
+              {t(option.labelKey)}
             </button>
           ))}
         </div>

@@ -1,12 +1,11 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
-import { Button, CarCard } from "@/ui";
+import { useState, useEffect } from "react";
+import { Button } from "@/ui";
 import { ArrowIcon } from "@/icons";
-import Autoplay from "embla-carousel-autoplay";
 import { ProtectedLink } from "../../../(components)/ProtectedLink";
 import { useTranslations } from "next-intl";
-import { fetchHomeData, type CarCardData } from "@/constants/api";
+import { type CarCardData } from "@/constants/api";
 import { type CarouselApi } from "@/app/(components)/ui/carousel";
 import MoreRequestedCarsCarousel from "@/app/(components)/mostRequestedCars/MoreRequestedCarsCarousel";
 
@@ -29,23 +28,6 @@ export const MostRequestedCars = ({ locale }: { locale: string }) => {
       setCurrent(api.selectedScrollSnap());
     });
   }, [api]);
-
-  // useEffect(() => {
-  //   const loadCars = async () => {
-  //     try {
-  //       setIsLoading(true);
-  //       const data = await fetchHomeData(locale);
-  //       setCars(data);
-  //     } catch (error) {
-  //       console.error("Error fetching cars:", error);
-  //       setCars([]);
-  //     } finally {
-  //       setIsLoading(false);
-  //     }
-  //   };
-
-  //   loadCars();
-  // }, []);
 
   if (isLoading) {
     return (

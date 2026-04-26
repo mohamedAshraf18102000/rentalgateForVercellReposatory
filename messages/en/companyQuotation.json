@@ -48,6 +48,36 @@
     "next": "Next",
     "back": "Back",
     "submit": "Request a quote"
+  },
+  "businessAccount": {
+    "stepper": {
+      "responsible": {
+        "title": "Responsible Person Data",
+        "description": "Lorem Ipsum has been and remains the standard placeholder text"
+      },
+      "company": {
+        "title": "Company Data",
+        "description": "Lorem Ipsum has been and remains the standard placeholder text"
+      },
+      "notes": {
+        "title": "Notes",
+        "description": "Lorem Ipsum has been and remains the standard placeholder text"
+      }
+    },
+    "hero": {
+      "title": "What is a Business Account 🤔?!!",
+      "description": "An account designed specifically for companies and business owners."
+    },
+    "actions": {
+      "nextStep": "Next Step",
+      "joinNow": "Join Now!"
+    },
+    "steps": {
+      "first": "First step",
+      "second": "Second step",
+      "third": "Third step"
+    },
+    "featuresTitle": "Features"
   }
 }
 

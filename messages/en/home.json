@@ -6,6 +6,36 @@
   "mostRequestedCars": "Most Requested Cars",
   "viewAll": "View All",
   "appDownload": "Download Rental Gate app and book your car with ease",
+  "pickupArea": {
+    "title": "Pickup Location",
+    "description": "Wherever you are, your car will be waiting for you"
+  },
+  "pickupCards": {
+    "airport": {
+      "title": "From the airport",
+      "description": "Lorem Ipsum has been and remains the standard placeholder text"
+    },
+    "trainStation": {
+      "title": "From the train station",
+      "description": "Lorem Ipsum has been and remains the standard placeholder text"
+    },
+    "branches": {
+      "title": "From the showroom",
+      "description": "Lorem Ipsum has been and remains the standard placeholder text"
+    },
+    "currentLocation": {
+      "title": "Or from any location",
+      "description": "Wherever you are, your car will be waiting for you",
+      "formLabel": "Car pickup location:",
+      "placeholder": "Enter address..."
+    }
+  },
+  "pickupDialog": {
+    "pickupTitle": "Pickup Location",
+    "returnTitle": "Return Location",
+    "close": "Close",
+    "showResults": "Show results"
+  },
   "referral": {
     "title": "Want to earn discounts?!!",
     "description": "For every person you refer, you will get 50% discount on the rental period",
@@ -14,6 +44,69 @@
   "bookings": {
     "title": "My Bookings",
     "description": "View and manage all your bookings (Cars) in one place"
+  },
+  "rentalInfo": {
+    "flexibleRental": {
+      "title": "Flexible rental process",
+      "description": "We provide flexible rental terms that match your needs"
+    },
+    "customerService": {
+      "title": "24/7 customer service",
+      "description": "Our support team is always ready to assist you at any time"
+    },
+    "locations": {
+      "title": "More than 60,000 locations",
+      "description": "Choose from thousands of pickup points to start your journey with ease"
+    }
+  },
+  "rentPeriodCard": {
+    "title": "Search by rental period",
+    "description": "Choose the period that suits your needs, and we will make searching easier for you",
+    "note": "Annual rental does not end with ownership",
+    "dateLocale": "en-GB",
+    "tabs": {
+      "daily": "Daily",
+      "weekly": "Weekly",
+      "monthly": "Monthly",
+      "yearly": "Yearly"
+    },
+    "dateRange": {
+      "from": "From",
+      "to": "To"
+    },
+    "recommendations": {
+      "daily": {
+        "2d": "2 days",
+        "3d": "3 days",
+        "5d": "5 days"
+      },
+      "weekly": {
+        "1w": "1 week",
+        "2w": "2 weeks",
+        "3w": "3 weeks"
+      },
+      "monthly": {
+        "1m": "1 month",
+        "2m": "2 months",
+        "3m": "3 months"
+      },
+      "yearly": {
+        "1y": "1 year",
+        "2y": "2 years",
+        "3y": "3 years"
+      }
+    }
+  },
+  "favCategoryCard": {
+    "title": "Search by favorite category",
+    "description": "Choose the category that matches your needs, and we will make searching easier for you"
+  },
+  "successPartners": {
+    "title": "Our Partners in Success",
+    "description": "Our success is completed by partners whose trust and collaboration we value."
+  },
+  "companyOffers": {
+    "title": "Rental Gate Offers"
   }
 }
 

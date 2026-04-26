@@ -1,6 +1,7 @@
 import ShieldRight from "@/constants/icons/ShieldRight";
 import { Separator } from "@base-ui/react";
 import { Sparkles } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 const featurePoints = [
   {
@@ -18,13 +19,17 @@ const featurePoints = [
 ];
 
 const BussinessAccountFeatures = () => {
+  const t = useTranslations("companyQuotation");
+
   return (
     <>
       <div className="flex items-center gap-2 sm:gap-3 md:gap-4">
         <div className="bg-primary w-fit rounded-[8px] p-2 sm:p-2.5 md:p-3">
           <Sparkles color="#FFF" className="size-4 sm:size-5 md:size-6" />
         </div>
-        <p className="text-lg font-bold sm:text-xl md:text-2xl">المميزات</p>
+        <p className="text-lg font-bold sm:text-xl md:text-2xl">
+          {t("businessAccount.featuresTitle")}
+        </p>
       </div>
       <Separator className="my-3! bg-[#E3ECED] sm:my-4!" />
       {featurePoints.map((item, index) => (

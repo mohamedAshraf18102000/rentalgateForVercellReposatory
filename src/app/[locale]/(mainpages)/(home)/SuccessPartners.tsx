@@ -1,11 +1,12 @@
-"use client";
 import WrapperContainer from "@/app/(components)/wrapperContainer/WrapperContainer";
 import Image from "next/image";
 import PartnersIcon from "../../../../constants/icons/PartnersIcon";
 import { Company } from "@/types/home/home";
 import SuccessPartnersMerquee from "@/app/(components)/home/SuccessPartnersMerquee";
+import { useTranslations } from "next-intl";
 
 const SuccessPartners = ({ companiesData }: { companiesData: Company[] }) => {
+  const t = useTranslations("home");
   const displayPartners = companiesData || [];
 
   return (
@@ -22,11 +23,11 @@ const SuccessPartners = ({ companiesData }: { companiesData: Company[] }) => {
           <div className="flex items-center gap-3">
             <PartnersIcon />
             <h5 className="font-extrabold text-2xl md:text-3xl lg:text-4xl">
-              شركائنا في النجاح
+              {t("successPartners.title")}
             </h5>
           </div>
           <p className="text-sm md:text-base lg:text-lg w-full md:w-3/4 mt-3 opacity-90 leading-relaxed">
-            نجاحنا لا يكتمل إلا بشركائنا الذين نعتز بثقتهم وتعاونهم
+            {t("successPartners.description")}
           </p>
         </div>
       </div>

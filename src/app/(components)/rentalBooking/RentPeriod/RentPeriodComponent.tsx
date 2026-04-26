@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 import { PeriodSearchTabs } from "./PeriodSearchTabs";
 import {
@@ -5,9 +7,11 @@ import {
   RentPeriod,
 } from "@/lib/stores/useUserPreferedFiltersStore";
 import { Info } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 const RentPeriodComponent = () => {
   const { filters, setFilter } = useUserPreferedFiltersStore();
+  const t = useTranslations("home");
 
   return (
     <div className="h-full md:h-full rounded-2xl! overflow-hidden shadow-lg border-2 border-white">
@@ -21,10 +25,10 @@ const RentPeriodComponent = () => {
       </div>
       <div className="bg-white h-full p-4 text-center">
         <h4 className="font-bold text-xl md:text-2xl mb-2 md:mb-3 whitespace-nowrap">
-          أبحث بمدة الإيجار
+          {t("rentPeriodCard.title")}
         </h4>
         <p className="text-sm text-Grey700 mb-3">
-          اختر المدة اللي تناسب احتياجك، وإحنا نسهّل عليك البحث
+          {t("rentPeriodCard.description")}
         </p>
         <PeriodSearchTabs
           value={filters.rentPeriod}
@@ -35,7 +39,7 @@ const RentPeriodComponent = () => {
 
         <div className="bg-primary w-full sm:w-[80%] md:w-[60%] mx-auto mt-3 text-white text-center rounded-[8px] text-xs sm:text-sm flex items-center justify-center gap-1.5 sm:gap-2 py-2 px-3">
           <Info className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" />
-          <span className="leading-snug">الإيجار السنوي لا ينتهي بالتمليك</span>
+          <span className="leading-snug">{t("rentPeriodCard.note")}</span>
         </div>
       </div>
     </div>

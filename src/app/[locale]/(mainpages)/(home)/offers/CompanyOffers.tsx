@@ -1,7 +1,6 @@
-"use client";
-
 import OffersCarousel from "@/app/(components)/offersCarousel/OffersCarousel";
 import { LatestOffer } from "@/types/home/home";
+import { useTranslations } from "next-intl";
 
 const offerSlideImageClass =
   "min-h-[11rem] h-[min(42vw,15rem)] sm:h-64 sm:min-h-[16rem] " +
@@ -13,10 +12,12 @@ function CompanyOffers({
 }: {
   latestOffersData: LatestOffer[];
 }) {
+  const t = useTranslations("home");
+
   return (
     <div className="container-custom mt-6 rounded-2xl overflow-hidden sm:mt-10">
       <h4 className="mb-3 px-2 text-center text-2xl font-bold sm:mb-4 sm:text-3xl md:text-4xl">
-        عروض رينتال جيت
+        {t("companyOffers.title")}
       </h4>
       <OffersCarousel
         offers={latestOffersData}

@@ -2,8 +2,10 @@ import CountryPhone from "@/app/(components)/template/phone/CountryPhone";
 import { Input } from "@/app/(components)/ui/input";
 import { UserRound } from "lucide-react";
 import { useFormContext, Controller } from "react-hook-form";
+import { useTranslations } from "next-intl";
 
 const ResponsiblePersonForm = () => {
+  const t = useTranslations("companyQuotation");
   const {
     register,
     control,
@@ -17,8 +19,8 @@ const ResponsiblePersonForm = () => {
         <Input
           id="responsableName"
           type="text"
-          placeholder="ادخل الاسم"
-          label="اسم المسئول:"
+          placeholder={t("step2.placeholders.name")}
+          label={t("step2.fields.name")}
           className={`bg-white! border-2! rounded-xl! text-base! ${errors.responsableName ? "border-red-500!" : "border-Grey400!"}`}
           labelClassName="text-base text-primary"
           startIcon={<UserRound className="text-primary" />}
@@ -46,10 +48,10 @@ const ResponsiblePersonForm = () => {
               <CountryPhone
                 inputClassName="bg-white!"
                 labelClassName="text-base! text-primary!"
-                placeholder={"رقم الجوال:"}
+                placeholder={t("step2.fields.phone")}
                 defaultCountry="sa"
                 showValidation={false}
-                label={"رقم الجوال:"}
+                label={t("step2.fields.phone")}
                 className={`relative z-50 border-2! rounded-xl! ${errors.responsableMobile ? "border-red-500!" : "border-Grey400!"}`}
                 value={field.value}
                 onChange={(val) => {
