@@ -20,12 +20,14 @@ interface OffersCarouselProps {
   itemsPerSlide?: 1 | 2;
   className?: string;
   offers: TodaysOffer[] | LatestOffer[];
+  withoutDetails?: boolean;
 }
 
 const OffersCarousel = ({
   itemsPerSlide = 2,
   className,
   offers,
+  withoutDetails,
 }: OffersCarouselProps) => {
   const locale = useLocale();
   const router = useRouter();
@@ -63,19 +65,20 @@ const OffersCarousel = ({
                         fill
                         className="object-cover"
                       />
-
-                      <div className="absolute w-full h-full bg-black/50 flex items-center">
-                        <div className="flex flex-col items-start justify-center w-[90%] mx-auto">
-                          <p className="text-white text-3xl font-bold">
-                            {offer.arabicName}
-                          </p>
-                          <p className="text-white text-lg font-bold mt-5">
-                            {"detailsArabic" in offer
-                              ? offer.detailsArabic
-                              : ""}
-                          </p>
+                      {!withoutDetails && (
+                        <div className="absolute w-full h-full bg-black/50 flex items-center">
+                          <div className="flex flex-col items-start justify-center w-[90%] mx-auto">
+                            <p className="text-white text-3xl font-bold">
+                              {offer.arabicName}
+                            </p>
+                            <p className="text-white text-lg font-bold mt-5">
+                              {"detailsArabic" in offer
+                                ? offer.detailsArabic
+                                : ""}
+                            </p>
+                          </div>
                         </div>
-                      </div>
+                      )}
                     </div>
                   </CardContent>
                 </Card>

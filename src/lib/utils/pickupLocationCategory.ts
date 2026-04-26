@@ -18,14 +18,20 @@ type PickupCategory = "airport" | "trainStation" | null;
 
 const AIRPORT_KEYWORDS = ["airport", "مطار"];
 const TRAIN_KEYWORDS = [
+  "train station",
+  "railway station",
   "train",
-  "station",
   "railway",
   "rail",
+  "محطة قطار",
   "قطار",
-  "محطة",
 ];
-const TRAIN_PLACE_TYPES = ["train_station", "transit_station", "subway_station"];
+const TRAIN_PLACE_TYPES = [
+  "train_station",
+  "subway_station",
+  "light_rail_station",
+];
+const TRANSIT_PLACE_TYPES = ["transit_station", "bus_station"];
 const AIRPORT_RADIUS_KM = 5;
 const TRAIN_RADIUS_KM = 3.5;
 const TRAIN_CONFIDENCE_THRESHOLD = 45;
@@ -45,9 +51,9 @@ const distanceInKm = (
   const a =
     Math.sin(dLat / 2) * Math.sin(dLat / 2) +
     Math.cos(toRad(lat1)) *
-      Math.cos(toRad(lat2)) *
-      Math.sin(dLng / 2) *
-      Math.sin(dLng / 2);
+    Math.cos(toRad(lat2)) *
+    Math.sin(dLng / 2) *
+    Math.sin(dLng / 2);
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   return earthRadiusKm * c;
 };
@@ -92,12 +98,20 @@ const calculateTrainConfidence = ({
   nearestStationDistanceKm: number | null;
 }) => {
   let score = 0;
-  const placeTypes = geocodeMeta?.placeTypes ?? [];
+  const placeTypes = (geocodeMeta?.placeTypes ?? []).map((type) =>
+    normalizeText(type),
+  );
   const hasTrainType = placeTypes.some((type) =>
     TRAIN_PLACE_TYPES.includes(normalizeText(type)),
   );
+  const hasTransitType = placeTypes.some((type) =>
+    TRANSIT_PLACE_TYPES.includes(type),
+  );
+  const isTransitWithoutRail = hasTransitType && !hasTrainType;
 
-  if (geocodeMeta?.category === "TRAIN_STATION") score += 60;
+  if (geocodeMeta?.category === "TRAIN_STATION" && !isTransitWithoutRail) {
+    score += 60;
+  }
   if (hasTrainType) score += 25;
   if (containsKeyword(address, TRAIN_KEYWORDS)) score += 20;
 

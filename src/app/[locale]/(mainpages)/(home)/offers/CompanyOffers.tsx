@@ -23,6 +23,7 @@ function CompanyOffers({
         offers={latestOffersData}
         itemsPerSlide={1}
         className={offerSlideImageClass}
+        withoutDetails
       />
     </div>
   );
