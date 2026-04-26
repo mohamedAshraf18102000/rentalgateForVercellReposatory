@@ -168,7 +168,7 @@ export const MostRequestedCars = ({ locale }: { locale: string }) => {
           >
             {t("mostRequestedCars")}
           </h2>
-          <ProtectedLink href="/cars">
+          <ProtectedLink href="/#">
             <Button
               variant="outline"
               size="lg"

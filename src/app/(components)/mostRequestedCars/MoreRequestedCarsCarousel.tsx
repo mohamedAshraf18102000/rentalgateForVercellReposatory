@@ -14,7 +14,9 @@ interface MoreRequestedCarsCarouselProps {
   cars: CarCardData[];
 }
 
-const MoreRequestedCarsCarousel = ({ cars }: MoreRequestedCarsCarouselProps) => {
+const MoreRequestedCarsCarousel = ({
+  cars,
+}: MoreRequestedCarsCarouselProps) => {
   const locale = useLocale();
 
   const isRtl = locale === "ar";
