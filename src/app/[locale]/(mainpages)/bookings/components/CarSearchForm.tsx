@@ -12,6 +12,7 @@ import { useLocationStore } from "@/lib/stores/useLocationStore";
 import { useBookedCarDetailsStore } from "@/lib/stores/useBookedCarDetailsStore";
 import { usePickupDialogStore } from "@/lib/stores/usePickupDialogStore";
 import { useTranslations } from "next-intl";
+import { useEffect } from "react";
 
 const CarSearchForm = ({
   control,
@@ -25,7 +26,7 @@ const CarSearchForm = ({
   const t = useTranslations("home");
   const fromDate = watch("fromDate");
   const toDate = watch("toDate");
-  const { filters } = useUserPreferedFiltersStore();
+  const { filters, setFilter } = useUserPreferedFiltersStore();
   const { address } = useLocationStore();
   const { openDialog } = usePickupDialogStore();
   const showPricesWithTax = useBookedCarDetailsStore(
@@ -34,6 +35,18 @@ const CarSearchForm = ({
   const setShowPricesWithTax = useBookedCarDetailsStore(
     (state) => state.setShowPricesWithTax,
   );
+
+  useEffect(() => {
+    // Keep pickup label in sync when the global current-location changes.
+    if (
+      address &&
+      filters.pickupType === "currentLocation" &&
+      filters.pickupName !== address
+    ) {
+      setFilter("pickupName", address);
+    }
+  }, [address, filters.pickupName, filters.pickupType, setFilter]);
+
   const handleOpenLocationDialog = () => {
     openDialog("currentLocation", "pickup");
   };
