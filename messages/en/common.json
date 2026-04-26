@@ -119,5 +119,6 @@
     "delayCommunicationOrMismatch": "Delay, poor communication, or vehicle mismatch",
     "unexpectedSituation": "Unexpected situation preventing the trip"
   },
-  "confirmCancelBookingWithId": "Confirm cancellation — booking {reservationId}"
+  "confirmCancelBookingWithId": "Confirm cancellation — booking {reservationId}",
+  "outOf": "out of"
 }

@@ -13,15 +13,15 @@
   "pickupCards": {
     "airport": {
       "title": "من المطار",
-      "description": "كان لوريم إيبسوم ولا يزال المعيار للنص الشكلي"
+      "description": ""
     },
     "trainStation": {
       "title": "من محطة القطار",
-      "description": "كان لوريم إيبسوم ولا يزال المعيار للنص الشكلي"
+      "description": ""
     },
     "branches": {
       "title": "من المعرض",
-      "description": "كان لوريم إيبسوم ولا يزال المعيار للنص الشكلي"
+      "description": ""
     },
     "currentLocation": {
       "title": "أو من أي موقع أينما كان",
@@ -43,7 +43,64 @@
   },
   "bookings": {
     "title": "حجوزاتي",
-    "description": "شوف وادير كل حجوزاتك للسيارات من مكان واحد"
+    "description": "شوف وادير كل حجوزاتك للسيارات من مكان واحد",
+    "breadcrumb": {
+      "home": "الرئيسية",
+      "currentPage": "قائمة السيارات"
+    },
+    "searchForm": {
+      "showPricesWithTax": "عرض الأسعار بالضريبة",
+      "pickupLocation": "مكان الاستلام:",
+      "currentLocation": "الموقع الحالي",
+      "rentalPeriod": "مدة الإيجار:",
+      "visibleCars": "السيارات الظاهرة:",
+      "pickupDatePlaceholder": "اختر تاريخ الاستلام",
+      "returnDatePlaceholder": "اختر تاريخ التسليم"
+    },
+    "filterDrawer": {
+      "filter": "تصفية",
+      "filterBy": "تصفية حسب",
+      "resetToDefault": "إعادة للأفتراضي",
+      "apply": "تطبيق"
+    },
+    "drawerAccordion": {
+      "triggers": {
+        "price": "تحديد السعر:",
+        "category": "فئة السيارة:",
+        "location": "مكان الاستلام:",
+        "brand": "ماركة السيارة:",
+        "model": "موديل السيارة:"
+      },
+      "price": {
+        "minPlaceholder": "من...",
+        "maxPlaceholder": "إلى..."
+      },
+      "pickupTypes": {
+        "airport": "مطار",
+        "trainStation": "محطة قطار",
+        "currentLocation": "الموقع الحالي"
+      },
+      "model": {
+        "selectBrandFirst": "اختر ماركة أولاً",
+        "loading": "جاري التحميل..."
+      },
+      "badges": {
+        "from": "من",
+        "to": "إلى"
+      }
+    },
+    "emptyState": {
+      "notFoundAlt": "لا توجد نتائج",
+      "noCarsAtLocation": "لا يوجد سيارات متاحة في هذا الموقع",
+      "pickupPrompt": "حدد موقع الاستلام لعرض السيارات المتاحة.",
+      "selectPickupLocation": "حدد مكان الاستلام"
+    },
+    "panner": {
+      "title": "أستمتع بتجربة تأجير راقية لا تُضاهى",
+      "description": "مع تطبيق \"رينتال جيت\" سيارتك ستجدها في موقعك بكل سهوله، متوفر الأن علي ايفون و اندرويد",
+      "appleAlt": "حمّل من App Store",
+      "googleAlt": "احصل عليه من Google Play"
+    }
   },
   "rentalInfo": {
     "flexibleRental": {
@@ -109,4 +166,3 @@
     "title": "عروض رينتال جيت"
   }
 }
-

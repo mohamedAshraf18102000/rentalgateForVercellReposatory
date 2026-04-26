@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { useTranslations } from "next-intl";
 
 import { useForm } from "react-hook-form";
 import { useUserPreferedFiltersStore } from "@/lib/stores/useUserPreferedFiltersStore";
@@ -22,6 +23,7 @@ interface FormValues {
 }
 
 const BookCars = () => {
+  const t = useTranslations("home");
   const { openDialog } = usePickupDialogStore();
   const address = useLocationStore((state) => state.address);
   const rentalDays =
@@ -148,31 +150,31 @@ const BookCars = () => {
             <div className="flex flex-col gap-1.5 justify-center items-center">
               <img
                 src="/notFound/notFound.webp"
-                alt="notFound"
+                alt={t("bookings.emptyState.notFoundAlt")}
                 className="w-[250px] h-[250px]"
               />
               {address !== null ? (
                 <>
                   <p className="text-base font-medium text-foreground">
-                    لا يوجد سيارات متاحة في هذا الموقع
+                    {t("bookings.emptyState.noCarsAtLocation")}
                   </p>
                   <Button
                     onClick={handleOpenLocationDialog}
                     className="text-sm text-white  cursor-pointer"
                   >
-                    حدد مكان الاستلام
+                    {t("bookings.emptyState.selectPickupLocation")}
                   </Button>
                 </>
               ) : (
                 <>
                   <p className="text-base font-medium text-foreground">
-                    حدد موقع الاستلام لعرض السيارات المتاحة.
+                    {t("bookings.emptyState.pickupPrompt")}
                   </p>
                   <Button
                     onClick={handleOpenLocationDialog}
                     className="text-sm text-white  cursor-pointer"
                   >
-                    حدد مكان الاستلام
+                    {t("bookings.emptyState.selectPickupLocation")}
                   </Button>
                 </>
               )}

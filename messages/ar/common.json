@@ -119,5 +119,6 @@
     "delayCommunicationOrMismatch": "تأخير، ضعف تواصل، أو عدم تطابق المركبة",
     "unexpectedSituation": "ظرف غير متوقع يمنع إتمام الرحلة"
   },
-  "confirmCancelBookingWithId": "تأكيد إلغاء الحجز"
+  "confirmCancelBookingWithId": "تأكيد إلغاء الحجز",
+  "outOf": "من أصل"
 }

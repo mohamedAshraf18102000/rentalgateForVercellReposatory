@@ -43,7 +43,64 @@
   },
   "bookings": {
     "title": "My Bookings",
-    "description": "View and manage all your bookings (Cars) in one place"
+    "description": "View and manage all your bookings (Cars) in one place",
+    "breadcrumb": {
+      "home": "Home",
+      "currentPage": "Car List"
+    },
+    "searchForm": {
+      "showPricesWithTax": "Show prices with tax",
+      "pickupLocation": "Pickup location:",
+      "currentLocation": "Current location",
+      "rentalPeriod": "Rental period:",
+      "visibleCars": "Visible cars:",
+      "pickupDatePlaceholder": "Select pickup date",
+      "returnDatePlaceholder": "Select return date"
+    },
+    "filterDrawer": {
+      "filter": "Filter",
+      "filterBy": "Filter by",
+      "resetToDefault": "Reset to default",
+      "apply": "Apply"
+    },
+    "drawerAccordion": {
+      "triggers": {
+        "price": "Price range:",
+        "category": "Car category:",
+        "location": "Pickup location:",
+        "brand": "Car brand:",
+        "model": "Car model:"
+      },
+      "price": {
+        "minPlaceholder": "From...",
+        "maxPlaceholder": "To..."
+      },
+      "pickupTypes": {
+        "airport": "Airport",
+        "trainStation": "Train station",
+        "currentLocation": "Current location"
+      },
+      "model": {
+        "selectBrandFirst": "Select a brand first",
+        "loading": "Loading..."
+      },
+      "badges": {
+        "from": "From",
+        "to": "To"
+      }
+    },
+    "emptyState": {
+      "notFoundAlt": "No results found",
+      "noCarsAtLocation": "No cars are available at this location.",
+      "pickupPrompt": "Select a pickup location to view available cars.",
+      "selectPickupLocation": "Select pickup location"
+    },
+    "panner": {
+      "title": "Enjoy an unmatched premium car rental experience",
+      "description": "With the \"Rental Gate\" app, your car comes to your location with ease, now available on iPhone and Android.",
+      "appleAlt": "Download on the App Store",
+      "googleAlt": "Get it on Google Play"
+    }
   },
   "rentalInfo": {
     "flexibleRental": {

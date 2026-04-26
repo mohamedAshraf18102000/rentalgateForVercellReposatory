@@ -1,18 +1,21 @@
 import { BreadcrumbNav } from "@/app/(components)/template/BreadcrumbNav";
+import { getTranslations } from "next-intl/server";
 
-const BookingBreadCrump = () => {
+const BookingBreadCrump = async () => {
+  const t = await getTranslations("home");
+
   return (
     <BreadcrumbNav
       className="mt-3 sm:mt-5"
       textColor="text-[var(--color-primary)]"
       items={[
         {
-          label: "الرئيسية",
+          label: t("bookings.breadcrumb.home"),
           href: "/",
         },
         {
           isCurrentPage: true,
-          label: "قائمة السيارات",
+          label: t("bookings.breadcrumb.currentPage"),
           href: "/bookings",
         },
       ]}

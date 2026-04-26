@@ -23,7 +23,7 @@ const Stepper = ({
       <div className="stepper-circle">{stepNum}</div>
       <div>
         <p className="stepper-title">{title}</p>
-        <p className="stepper-description">{description}</p>
+        <p className="stepper-description">{""}</p>
       </div>
     </div>
   );

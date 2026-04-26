@@ -11,8 +11,12 @@ import {
 import { Funnel } from "lucide-react";
 import DrawerAccordion from "./DrawerAccordion/DrawerAccordion";
 import { useUserPreferedFiltersStore } from "@/lib/stores/useUserPreferedFiltersStore";
+import { useLocale, useTranslations } from "next-intl";
 
 const FilterDrawer = () => {
+  const t = useTranslations("home");
+  const locale = useLocale();
+  const isArabic = locale === "ar";
   const { resetFilters, filters, applyFilters } = useUserPreferedFiltersStore();
 
   const hasCategoryFilter = !!filters.carCategory || filters.categoryId !== "";
@@ -28,14 +32,14 @@ const FilterDrawer = () => {
 
   return (
     <Sheet>
-      <SheetTrigger dir="rtl" asChild>
+      <SheetTrigger dir={isArabic ? "rtl" : "ltr"} asChild>
         <button
           type="button"
           className="flex min-h-10 shrink-0 touch-manipulation items-center gap-1.5 rounded-xl border-2 border-Grey400 p-2 text-sm font-bold sm:min-h-11 sm:gap-2 sm:p-2 sm:text-base"
         >
           <div className="relative flex items-center justify-center gap-1.5 px-1.5 sm:gap-2 sm:px-2 w-full">
             <Funnel className="size-4 shrink-0 sm:size-4.5" aria-hidden />
-            <span>تصفية </span>
+            <span>{t("bookings.filterDrawer.filter")}</span>
             {activeFiltersCount > 0 && (
               <div className="absolute -top-2 -start-2 flex size-5 items-center justify-center rounded-full bg-StatusRedBG/90 text-[11px] font-bold text-white sm:text-[12px]">
                 {activeFiltersCount}
@@ -45,11 +49,14 @@ const FilterDrawer = () => {
         </button>
       </SheetTrigger>
       <SheetContent
-        dir="rtl"
+        dir={isArabic ? "rtl" : "ltr"}
+        side={isArabic ? "right" : "left"}
         className="flex h-dvh max-h-dvh w-full max-w-full flex-col gap-0 p-0 sm:max-w-md md:max-w-lg"
       >
         <SheetHeader className="mt-8 px-4 text-start! sm:mt-10 sm:px-6">
-          <SheetTitle className="text-base sm:text-lg">تصفية حسب</SheetTitle>
+          <SheetTitle className="text-base sm:text-lg">
+            {t("bookings.filterDrawer.filterBy")}
+          </SheetTitle>
         </SheetHeader>
         <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-3 pb-2 sm:px-4 sm:pb-3">
           <div className="w-full p-1 sm:p-2">
@@ -62,7 +69,7 @@ const FilterDrawer = () => {
             variant="outline"
             onClick={resetFilters}
           >
-            إعادة للأفتراضي
+            {t("bookings.filterDrawer.resetToDefault")}
           </Button>
 
           <SheetClose asChild>
@@ -71,7 +78,7 @@ const FilterDrawer = () => {
               type="submit"
               onClick={applyFilters}
             >
-              تطبيق
+              {t("bookings.filterDrawer.apply")}
             </Button>
           </SheetClose>
         </SheetFooter>

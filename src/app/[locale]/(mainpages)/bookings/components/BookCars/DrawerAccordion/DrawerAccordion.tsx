@@ -15,10 +15,13 @@ import { getCarModelByBrands } from "@/services/companyCars/carModelByBrands.ser
 import { getAirports } from "@/services/pickupLocations/airports.service";
 import { getTrainstations } from "@/services/pickupLocations/trainStations.service";
 import { useQuery } from "@tanstack/react-query";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 
 const DrawerAccordion = () => {
   const locale = useLocale();
+  const t = useTranslations("home");
+  const isArabic = locale === "ar";
+  const contentDirection = isArabic ? "rtl" : "ltr";
 
   const address = useLocationStore((state) => state.address);
   const { filters, setFilter } = useUserPreferedFiltersStore();
@@ -57,18 +60,18 @@ const DrawerAccordion = () => {
   const items = [
     {
       value: "price",
-      trigger: "تحديد السعر:",
+      trigger: t("bookings.drawerAccordion.triggers.price"),
       content: (
         <div className="flex gap-2">
           <Input
-            placeholder="من..."
+            placeholder={t("bookings.drawerAccordion.price.minPlaceholder")}
             className="bg-white! text-sm!"
             type="number"
             value={filters.priceMin}
             onChange={(e) => setFilter("priceMin", e.target.value)}
           />
           <Input
-            placeholder="إلى..."
+            placeholder={t("bookings.drawerAccordion.price.maxPlaceholder")}
             className="bg-white! text-sm!"
             type="number"
             value={filters.priceTo}
@@ -79,7 +82,7 @@ const DrawerAccordion = () => {
     },
     {
       value: "category",
-      trigger: "فئة السيارة:",
+      trigger: t("bookings.drawerAccordion.triggers.category"),
       content: (
         <RadioGroup
           className="flex flex-col gap-3 px-1"
@@ -92,7 +95,7 @@ const DrawerAccordion = () => {
         >
           {data?.map((cat) => (
             <div
-              dir="rtl"
+              dir={contentDirection}
               key={cat.categoryId}
               className="flex items-center gap-2"
             >
@@ -113,7 +116,7 @@ const DrawerAccordion = () => {
     },
     {
       value: "location",
-      trigger: "مكان الاستلام:",
+      trigger: t("bookings.drawerAccordion.triggers.location"),
       content: (
         <Accordion
           type="single"
@@ -123,11 +126,11 @@ const DrawerAccordion = () => {
         >
           <AccordionItem value="airport" className="border-b-0">
             <AccordionTrigger className="hover:no-underline py-2 text-sm">
-              مطار
+              {t("bookings.drawerAccordion.pickupTypes.airport")}
             </AccordionTrigger>
             <AccordionContent>
               <RadioGroup
-                dir="rtl"
+                dir={contentDirection}
                 className="flex flex-col gap-3 px-1"
                 value={
                   filters.pickupType === "airport"
@@ -141,7 +144,12 @@ const DrawerAccordion = () => {
                   );
                   setFilter("pickupType", "airport");
                   setFilter("pickupId", id);
-                  setFilter("pickupName", airport?.arabicName || "");
+                  setFilter(
+                    "pickupName",
+                    locale === "ar"
+                      ? airport?.arabicName || ""
+                      : airport?.englishName || "",
+                  );
                 }}
               >
                 {airports?.content.map((airport) => (
@@ -157,7 +165,9 @@ const DrawerAccordion = () => {
                       htmlFor={`airport-${airport.airportId}`}
                       className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
                     >
-                      {airport.arabicName}
+                      {locale === "ar"
+                        ? airport.arabicName
+                        : airport.englishName}
                     </Label>
                   </div>
                 ))}
@@ -167,11 +177,11 @@ const DrawerAccordion = () => {
 
           <AccordionItem value="trainStation" className="border-b-0">
             <AccordionTrigger className="hover:no-underline py-2 text-sm">
-              محطة قطار
+              {t("bookings.drawerAccordion.pickupTypes.trainStation")}
             </AccordionTrigger>
             <AccordionContent>
               <RadioGroup
-                dir="rtl"
+                dir={contentDirection}
                 className="flex flex-col gap-3 px-1"
                 value={
                   filters.pickupType === "trainStation"
@@ -185,7 +195,12 @@ const DrawerAccordion = () => {
                   );
                   setFilter("pickupType", "trainStation");
                   setFilter("pickupId", id);
-                  setFilter("pickupName", station?.arabicName || "");
+                  setFilter(
+                    "pickupName",
+                    locale === "ar"
+                      ? station?.arabicName || ""
+                      : station?.englishName || "",
+                  );
                 }}
               >
                 {trainStations?.content.map((station) => (
@@ -201,7 +216,9 @@ const DrawerAccordion = () => {
                       htmlFor={`station-${station.stationId}`}
                       className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
                     >
-                      {station.arabicName}
+                      {locale === "ar"
+                        ? station.arabicName
+                        : station.englishName}
                     </Label>
                   </div>
                 ))}
@@ -211,7 +228,7 @@ const DrawerAccordion = () => {
 
           <AccordionItem value="currentLocation" className="border-b-0">
             <AccordionTrigger className="hover:no-underline py-2 text-sm">
-              الموقع الحالي
+              {t("bookings.drawerAccordion.pickupTypes.currentLocation")}
             </AccordionTrigger>
             <AccordionContent>
               <RadioGroup
@@ -225,7 +242,11 @@ const DrawerAccordion = () => {
                 onValueChange={(val) => {
                   setFilter("pickupType", "currentLocation");
                   setFilter("pickupId", val);
-                  setFilter("pickupName", address || "الموقع الحالي");
+                  setFilter(
+                    "pickupName",
+                    address ||
+                      t("bookings.drawerAccordion.pickupTypes.currentLocation"),
+                  );
                 }}
               >
                 <div className="flex items-center gap-2">
@@ -237,7 +258,8 @@ const DrawerAccordion = () => {
                     htmlFor="current-location"
                     className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
                   >
-                    {address}
+                    {address ||
+                      t("bookings.drawerAccordion.pickupTypes.currentLocation")}
                   </Label>
                 </div>
               </RadioGroup>
@@ -248,7 +270,7 @@ const DrawerAccordion = () => {
     },
     {
       value: "brand",
-      trigger: "ماركة السيارة:",
+      trigger: t("bookings.drawerAccordion.triggers.brand"),
       content: (
         <RadioGroup
           className="flex flex-col gap-3 px-1"
@@ -258,14 +280,19 @@ const DrawerAccordion = () => {
               (b) => b.brandId.toString() === val,
             );
             setFilter("brandId", val);
-            setFilter("brandName", brand?.arabicName || "");
+            setFilter(
+              "brandName",
+              locale === "ar"
+                ? brand?.arabicName || ""
+                : brand?.englishName || "",
+            );
             setFilter("modelId", "");
             setFilter("modelName", "");
           }}
         >
           {brands?.content.map((brand) => (
             <div
-              dir="rtl"
+              dir={contentDirection}
               key={brand.brandId}
               className="flex items-center gap-2"
             >
@@ -293,11 +320,15 @@ const DrawerAccordion = () => {
     },
     {
       value: "model",
-      trigger: "موديل السيارة:",
+      trigger: t("bookings.drawerAccordion.triggers.model"),
       content: !filters.brandId ? (
-        <p className="text-sm text-muted-foreground">اختر ماركة أولاً</p>
+        <p className="text-sm text-muted-foreground">
+          {t("bookings.drawerAccordion.model.selectBrandFirst")}
+        </p>
       ) : carModelsLoading ? (
-        <p className="text-sm text-muted-foreground">جاري التحميل...</p>
+        <p className="text-sm text-muted-foreground">
+          {t("bookings.drawerAccordion.model.loading")}
+        </p>
       ) : (
         <RadioGroup
           className="flex flex-col gap-3 px-1"
@@ -305,12 +336,17 @@ const DrawerAccordion = () => {
           onValueChange={(val) => {
             const model = carModels?.find((m) => m.typeId.toString() === val);
             setFilter("modelId", val);
-            setFilter("modelName", model?.arabicName || "");
+            setFilter(
+              "modelName",
+              locale === "ar"
+                ? model?.arabicName || ""
+                : model?.englishName || "",
+            );
           }}
         >
           {carModels?.map((model) => (
             <div
-              dir="rtl"
+              dir={contentDirection}
               key={model.typeId}
               className="flex items-center gap-2"
             >
@@ -344,12 +380,12 @@ const DrawerAccordion = () => {
         {[
           {
             condition: !!filters.priceMin,
-            title: `من: ${filters.priceMin}`,
+            title: `${t("bookings.drawerAccordion.badges.from")}: ${filters.priceMin}`,
             onClose: () => setFilter("priceMin", ""),
           },
           {
             condition: !!filters.priceTo,
-            title: `إلى: ${filters.priceTo}`,
+            title: `${t("bookings.drawerAccordion.badges.to")}: ${filters.priceTo}`,
             onClose: () => setFilter("priceTo", ""),
           },
           {

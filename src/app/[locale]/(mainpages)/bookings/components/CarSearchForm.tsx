@@ -11,6 +11,7 @@ import { useUserPreferedFiltersStore } from "@/lib/stores/useUserPreferedFilters
 import { useLocationStore } from "@/lib/stores/useLocationStore";
 import { useBookedCarDetailsStore } from "@/lib/stores/useBookedCarDetailsStore";
 import { usePickupDialogStore } from "@/lib/stores/usePickupDialogStore";
+import { useTranslations } from "next-intl";
 
 const CarSearchForm = ({
   control,
@@ -21,6 +22,7 @@ const CarSearchForm = ({
   shown,
   total,
 }: any) => {
+  const t = useTranslations("home");
   const fromDate = watch("fromDate");
   const toDate = watch("toDate");
   const { filters } = useUserPreferedFiltersStore();
@@ -46,7 +48,7 @@ const CarSearchForm = ({
           onCheckedChange={(checked) => setShowPricesWithTax(checked === true)}
         />
         <span className="text-sm font-bold sm:text-base">
-          عرض الأسعار بالضريبة
+          {t("bookings.searchForm.showPricesWithTax")}
         </span>
       </label>
 
@@ -59,15 +61,21 @@ const CarSearchForm = ({
             <div className="w-full min-w-0 lg:min-w-32 lg:flex-1">
               <div className="flex items-center gap-2">
                 <PositioningIcon />
-                <p className="text-sm mb-2">مكان الاستلام:</p>
+                <p className="text-sm mb-2">
+                  {t("bookings.searchForm.pickupLocation")}
+                </p>
               </div>
               {(() => {
+                const currentLocationLabel = t(
+                  "bookings.searchForm.currentLocation",
+                );
                 const displayPickupName =
-                  (filters.pickupName === "الموقع الحالي" ||
+                  (filters.pickupName === currentLocationLabel ||
+                    filters.pickupName === "الموقع الحالي" ||
                     !filters.pickupName) &&
                   address
                     ? address
-                    : filters.pickupName || "الموقع الحالي";
+                    : filters.pickupName || currentLocationLabel;
                 return (
                   <div
                     title={displayPickupName}
@@ -90,7 +98,8 @@ const CarSearchForm = ({
                     withTime
                     inputClassName="text-sm!"
                     className="w-full"
-                    label="مدة الإيجار:"
+                    label={t("bookings.searchForm.rentalPeriod")}
+                    placeholder={t("bookings.searchForm.pickupDatePlaceholder")}
                     labelIcon={<CarRentIcon />}
                     value={field.value}
                     onChange={(date) => {
@@ -116,6 +125,7 @@ const CarSearchForm = ({
                     allowClear
                     withTime
                     className="w-full"
+                    placeholder={t("bookings.searchForm.returnDatePlaceholder")}
                     inputClassName="text-sm!"
                     value={field.value}
                     onChange={field.onChange}
@@ -135,7 +145,7 @@ const CarSearchForm = ({
         </div>
 
         <div className="w-full rounded-2xl border bg-white p-3 sm:p-4 lg:w-[15%] lg:min-w-42">
-          <p className="font-bold">السيارات الظاهرة:</p>
+          <p className="font-bold">{t("bookings.searchForm.visibleCars")}</p>
           <Separator className="my-4" />
           <PaginationDateView
             shown={shown.toString()}
