@@ -3,7 +3,6 @@ import { formatPrice } from "@/lib/utils/formatPrice";
 import { useMemo } from "react";
 import ReservationFinalDetailsItem from "./ReservationFinalDetailsItem";
 import { Percent } from "lucide-react";
-import { Skeleton } from "@/app/(components)/ui/skeleton";
 
 import { calculateServicePrice } from "@/lib/utils/calculateServicePrice";
 import { CalculateQuotePriceResponse } from "@/services/calculateQuotePrice/calculateQuotePrice.service";
@@ -55,6 +54,11 @@ const ReservationFinalDetails = ({
       <ReservationFinalDetailsItem
         itemHeader={t("reservation.finalDetails.additionalServicesCostHeader")}
         items={[
+          {
+            isAvailable: (reservationData?.invoiceFee ?? 0) !== 0,
+            label: "رسوم عقد الإيجار",
+            value: formatPrice(reservationData?.invoiceFee || 0),
+          },
           {
             isAvailable: (reservationData?.servicesPrice ?? 0) !== 0,
             label: t("reservation.finalDetails.additionalServicesLabel"),

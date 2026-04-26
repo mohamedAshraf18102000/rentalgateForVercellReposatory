@@ -69,6 +69,7 @@ export interface CalculateQuotePriceResponse {
   pickupFee: number;
   deliveryFee: number;
   servicesPrice: number;
+  invoiceFee: number;
   driverPrice: number;
   driverExtraPrice: number;
   extraHoursPrice: number;

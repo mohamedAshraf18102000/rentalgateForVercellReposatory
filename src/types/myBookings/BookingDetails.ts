@@ -29,6 +29,7 @@ export type ReservationDetailsResponse = {
 
   receiveFee: number;
   deliverFee: number;
+  invoiceFee: number;
 
   receiveLocationName: string;
   receiveLocationLatitude: number;

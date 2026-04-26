@@ -45,12 +45,16 @@ const BookingPaymentDetailsCollapse = ({
           <CollapsibleContent className="flex flex-col items-start gap-2 pt-0 text-sm">
             <div className="w-full">
               <ReservationFinalDetailsItem
-                itemHeader={t("myBookingsDrawer.paymentDetails.rentalDurationCostHeader")}
+                itemHeader={t(
+                  "myBookingsDrawer.paymentDetails.rentalDurationCostHeader",
+                )}
                 largeText
                 items={[
                   {
                     isAvailable: data?.basePrice !== 0,
-                    label: t("myBookingsDrawer.paymentDetails.subtotalBeforeTaxLabel"),
+                    label: t(
+                      "myBookingsDrawer.paymentDetails.subtotalBeforeTaxLabel",
+                    ),
                     value: formatPrice(data?.basePrice || 0),
                   },
                 ]}
@@ -58,47 +62,69 @@ const BookingPaymentDetailsCollapse = ({
 
               <div className="mt-3">
                 <ReservationFinalDetailsItem
-                  itemHeader={t("myBookingsDrawer.paymentDetails.additionalServicesCostHeader")}
+                  itemHeader={t(
+                    "myBookingsDrawer.paymentDetails.additionalServicesCostHeader",
+                  )}
                   largeText
                   items={[
                     {
                       isAvailable: data?.servicesPrice !== 0,
-                      label: t("myBookingsDrawer.paymentDetails.additionalServicesLabel"),
+                      label: t(
+                        "myBookingsDrawer.paymentDetails.additionalServicesLabel",
+                      ),
                       value: formatPrice(data?.servicesPrice || 0),
                     },
                     {
                       isAvailable: (data?.driverPrice ?? 0) !== 0,
-                      label: t("myBookingsDrawer.paymentDetails.driverServiceLabel"),
+                      label: t(
+                        "myBookingsDrawer.paymentDetails.driverServiceLabel",
+                      ),
                       value: formatPrice(data?.driverPrice || 0),
                     },
                     {
                       isAvailable: (data?.extraKmPrice ?? 0) !== 0,
-                      label: t("myBookingsDrawer.paymentDetails.extraKilometersFeeLabel"),
+                      label: t(
+                        "myBookingsDrawer.paymentDetails.extraKilometersFeeLabel",
+                      ),
                       value: formatPrice(data?.extraKmPrice || 0),
                     },
                     {
                       isAvailable: (data?.receiveFee ?? 0) !== 0,
-                      label: t("myBookingsDrawer.paymentDetails.pickupFeeLabel"),
+                      label: t(
+                        "myBookingsDrawer.paymentDetails.pickupFeeLabel",
+                      ),
                       value: formatPrice(data?.receiveFee || 0),
                     },
                     {
                       isAvailable: (data?.deliverFee ?? 0) !== 0,
-                      label: t("myBookingsDrawer.paymentDetails.deliveryFeeLabel"),
+                      label: t(
+                        "myBookingsDrawer.paymentDetails.deliveryFeeLabel",
+                      ),
                       value: formatPrice(data?.deliverFee || 0),
+                    },
+                    {
+                      isAvailable: (data?.invoiceFee ?? 0) !== 0,
+                      label: "رسوم عقد الإيجار",
+                      value: formatPrice(data?.invoiceFee || 0),
                     },
                   ]}
                 />
               </div>
 
               <ReservationFinalDetailsItem
-                itemHeader={t("myBookingsDrawer.paymentDetails.discountsAndOffersHeader")}
+                itemHeader={t(
+                  "myBookingsDrawer.paymentDetails.discountsAndOffersHeader",
+                )}
                 largeText
                 offer
                 items={[
                   {
-                    label: t("myBookingsDrawer.paymentDetails.rentalDaysOfferDiscountLabel", {
-                      days: data?.days ?? 0,
-                    }),
+                    label: t(
+                      "myBookingsDrawer.paymentDetails.rentalDaysOfferDiscountLabel",
+                      {
+                        days: data?.days ?? 0,
+                      },
+                    ),
                     isAvailable: data.carDaysDiscount !== 0,
                     value: (
                       <span dir="ltr">
@@ -117,7 +143,9 @@ const BookingPaymentDetailsCollapse = ({
                     ),
                   },
                   {
-                    label: t("myBookingsDrawer.paymentDetails.pointsDiscountLabel"),
+                    label: t(
+                      "myBookingsDrawer.paymentDetails.pointsDiscountLabel",
+                    ),
                     isAvailable: (data?.pointsDiscount ?? 0) !== 0,
                     value: (
                       <span dir="ltr" className="p-1 rounded-lg">
@@ -136,7 +164,9 @@ const BookingPaymentDetailsCollapse = ({
                 itemHeader={""}
                 items={[
                   {
-                    label: t("myBookingsDrawer.paymentDetails.totalBeforeTaxLabel"),
+                    label: t(
+                      "myBookingsDrawer.paymentDetails.totalBeforeTaxLabel",
+                    ),
                     value: formatPrice(data?.totalBeforeTax || 0),
                   },
                   {

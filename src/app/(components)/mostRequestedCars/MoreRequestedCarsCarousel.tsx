@@ -8,8 +8,13 @@ import {
 } from "@/app/(components)/ui/carousel";
 import { useLocale } from "next-intl";
 import CarsCard from "../customCards/CarsCard/CarsCard";
+import { type CarCardData } from "@/constants/api";
 
-const MoreRequestedCarsCarousel = () => {
+interface MoreRequestedCarsCarouselProps {
+  cars: CarCardData[];
+}
+
+const MoreRequestedCarsCarousel = ({ cars }: MoreRequestedCarsCarouselProps) => {
   const locale = useLocale();
 
   const isRtl = locale === "ar";
@@ -24,9 +29,21 @@ const MoreRequestedCarsCarousel = () => {
         className="w-full"
       >
         <CarouselContent className="py-5">
-          {Array.from({ length: 6 }).map((_, index) => (
-            <CarouselItem key={index} className="basis-1/4">
-              <CarsCard />
+          {cars.map((car) => (
+            <CarouselItem key={car.id} className="basis-1/4">
+              <CarsCard
+                carImage={car.image}
+                carName={car.title}
+                carBrand={car.brandName || car.categoryEn || car.category}
+                companyLogo="/logos/company-logo.png"
+                companyName="Rental Gate"
+                freeKm={car.mileage}
+                carPrice={car.currentPrice}
+                priceBeforeOffer={car.oldPrice}
+                firstBadgeTitle={car.hasDiscount ? "Offer" : undefined}
+                firstBadgeColor={car.hasDiscount ? "green" : undefined}
+                showTax
+              />
             </CarouselItem>
           ))}
         </CarouselContent>

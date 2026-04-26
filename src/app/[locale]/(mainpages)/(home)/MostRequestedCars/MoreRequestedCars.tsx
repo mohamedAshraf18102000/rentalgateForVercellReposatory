@@ -9,11 +9,99 @@ import { type CarCardData } from "@/constants/api";
 import { type CarouselApi } from "@/app/(components)/ui/carousel";
 import MoreRequestedCarsCarousel from "@/app/(components)/mostRequestedCars/MoreRequestedCarsCarousel";
 
+const dummyCars: CarCardData[] = [
+  {
+    id: 1,
+    image: "/cars/elentra.webp",
+    images: ["/cars/elentra.webp"],
+    category: "SEDAN",
+    categoryAr: "سيدان",
+    categoryEn: "Sedan",
+    title: "Hyundai Elantra 2024",
+    mileage: 250,
+    oldPrice: 220,
+    currentPrice: 180,
+    hasDiscount: true,
+    brandName: "Hyundai",
+    modelEnglishName: "Elantra",
+    modelArabicName: "النترا",
+    year: 2024,
+  },
+  {
+    id: 2,
+    image: "/cars/car1.png",
+    images: ["/cars/car1.png"],
+    category: "SUV",
+    categoryAr: "سويف",
+    categoryEn: "SUV",
+    title: "Kia Sportage 2024",
+    mileage: 250,
+    oldPrice: 220,
+    currentPrice: 180,
+    hasDiscount: true,
+    brandName: "KIA",
+    modelEnglishName: "Kia Sportage",
+    modelArabicName: "كيا سبورتاج",
+    year: 2024,
+  },
+  {
+    id: 3,
+    image: "/cars/elentra.webp",
+    images: ["/cars/elentra.webp"],
+    category: "SEDAN",
+    categoryAr: "سيدان",
+    categoryEn: "Sedan",
+    title: "Hyundai Elantra 2024",
+    mileage: 250,
+    oldPrice: 220,
+    currentPrice: 180,
+    hasDiscount: true,
+    brandName: "Hyundai",
+    modelEnglishName: "Elantra",
+    modelArabicName: "النترا",
+    year: 2024,
+  },
+  {
+    id: 4,
+    image: "/cars/car1.png",
+    images: ["/cars/car1.png"],
+    category: "SUV",
+    categoryAr: "سويف",
+    categoryEn: "SUV",
+    title: "Kia Sportage 2024",
+    mileage: 250,
+    oldPrice: 220,
+    currentPrice: 180,
+    hasDiscount: true,
+    brandName: "KIA",
+    modelEnglishName: "Kia Sportage",
+    modelArabicName: "كيا سبورتاج",
+    year: 2024,
+  },
+  {
+    id: 5,
+    image: "/cars/elentra.webp",
+    images: ["/cars/elentra.webp"],
+    category: "SEDAN",
+    categoryAr: "سيدان",
+    categoryEn: "Sedan",
+    title: "Hyundai Elantra 2024",
+    mileage: 250,
+    oldPrice: 220,
+    currentPrice: 180,
+    hasDiscount: true,
+    brandName: "Hyundai",
+    modelEnglishName: "Elantra",
+    modelArabicName: "النترا",
+    year: 2024,
+  },
+];
+
 export const MostRequestedCars = ({ locale }: { locale: string }) => {
   const t = useTranslations("home");
   const isRTL = locale === "ar";
-  const [cars, setCars] = useState<CarCardData[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [cars, setCars] = useState<CarCardData[]>(dummyCars);
+  const [isLoading, setIsLoading] = useState(false);
   const [api, setApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
 
@@ -93,7 +181,7 @@ export const MostRequestedCars = ({ locale }: { locale: string }) => {
             </Button>
           </ProtectedLink>
         </header>
-        <MoreRequestedCarsCarousel />
+        <MoreRequestedCarsCarousel cars={cars} />
       </section>
     </section>
   );
