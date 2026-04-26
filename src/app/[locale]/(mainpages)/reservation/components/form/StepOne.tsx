@@ -24,6 +24,7 @@ import { useRentalDays } from "@/hooks/useCalculateRentalDays";
 import { getBestOffer } from "@/lib/utils/getBestOffer";
 import { formatLocalDateTime } from "@/lib/utils/formatLocalDateTime";
 import { useLocale, useTranslations } from "next-intl";
+import { useState } from "react";
 
 interface StepOneProps {
   control: Control<ReservationFormValues>;
@@ -40,7 +41,12 @@ const StepOne = ({ control, errors, watch, setValue }: StepOneProps) => {
   const currentLocationLabel = t("currentLocation");
   const MIN_RENTAL_HOURS = 2;
   const MIN_RENTAL_MS = MIN_RENTAL_HOURS * 60 * 60 * 1000;
+  const [isDropoffManuallyChanged, setIsDropoffManuallyChanged] =
+    useState(false);
   const formData = useBookedCarDetailsStore((state) => state.formData);
+  const setBookedCarFormData = useBookedCarDetailsStore(
+    (state) => state.setFormData,
+  );
   const offerPackages = useBookedCarDetailsStore(
     (state) => state.carDetails?.offerPackages,
   );
@@ -83,6 +89,7 @@ const StepOne = ({ control, errors, watch, setValue }: StepOneProps) => {
 
   const handleOpenReturnLocationDialog = () => {
     openDialog("currentLocation", "return", () => {
+      setIsDropoffManuallyChanged(true);
       const { formData: updatedFormData } = useBookedCarDetailsStore.getState();
       const { latitude, longitude, address } = useLocationStore.getState();
 
@@ -157,27 +164,45 @@ const StepOne = ({ control, errors, watch, setValue }: StepOneProps) => {
         address
           ? address
           : updatedFormData.pickupName || "";
+      const pickupLatValue =
+        updatedFormData.pickupType === "MY_LOCATION" &&
+        (!updatedFormData.pickupLat ||
+          updatedFormData.pickupName === currentLocationLabel)
+          ? latitude
+          : updatedFormData.pickupLat || null;
+      const pickupLongValue =
+        updatedFormData.pickupType === "MY_LOCATION" &&
+        (!updatedFormData.pickupLong ||
+          updatedFormData.pickupName === currentLocationLabel)
+          ? longitude
+          : updatedFormData.pickupLong || null;
 
       setValue("pickupName", locationName, { shouldValidate: true });
-      setValue(
-        "pickupLat",
-        updatedFormData.pickupType === "MY_LOCATION" &&
-          (!updatedFormData.pickupLat ||
-            updatedFormData.pickupName === currentLocationLabel)
-          ? latitude
-          : updatedFormData.pickupLat || null,
-      );
-      setValue(
-        "pickupLong",
-        updatedFormData.pickupType === "MY_LOCATION" &&
-          (!updatedFormData.pickupLong ||
-            updatedFormData.pickupName === currentLocationLabel)
-          ? longitude
-          : updatedFormData.pickupLong || null,
-      );
+      setValue("pickupLat", pickupLatValue);
+      setValue("pickupLong", pickupLongValue);
       setValue("pickupId", updatedFormData.pickupId || null);
       setValue("pickupTrainId", updatedFormData.pickupTrainId || null);
       setValue("pickupAirportId", updatedFormData.pickupAirportId || null);
+
+      if (!isDropoffManuallyChanged) {
+        setValue("carReturnLocation", locationName, { shouldValidate: true });
+        setValue("returnLat", pickupLatValue);
+        setValue("returnLong", pickupLongValue);
+        setValue("carReturnLocationId", updatedFormData.pickupId || null);
+        setValue("returnTrainId", updatedFormData.pickupTrainId || null);
+        setValue("returnAirportId", updatedFormData.pickupAirportId || null);
+
+        // Keep store data aligned with form values for payload creation.
+        setBookedCarFormData({
+          carReturnLocation: locationName,
+          returnLat: pickupLatValue,
+          returnLong: pickupLongValue,
+          carReturnLocationId: updatedFormData.pickupId || null,
+          returnTrainId: updatedFormData.pickupTrainId || null,
+          returnAirportId: updatedFormData.pickupAirportId || null,
+          returnType: updatedFormData.pickupType || null,
+        });
+      }
     });
   };
 
@@ -193,24 +218,15 @@ const StepOne = ({ control, errors, watch, setValue }: StepOneProps) => {
                 {...field}
                 label={t("reservation.stepOne.pickupLocationLabel")}
                 placeholder={t("reservation.stepOne.pickupLocationPlaceholder")}
-                className="text-base!"
+                className="text-base! cursor-pointer"
                 labelIcon={<CarRentIcon />}
                 labelClassName="text-base!"
                 readOnly
+                onClick={handleOpenPickupLocationDialog}
                 errorMessage={errors.pickupName?.message}
               />
             )}
           />
-          <button
-            type="button"
-            onClick={handleOpenPickupLocationDialog}
-            className={`absolute top-0 flex items-center gap-1 text-xs underline sm:gap-2 sm:text-sm ${
-              isRTL ? "left-2" : "right-2"
-            }`}
-          >
-            <MapPinPlus />
-            {t("reservation.stepOne.pickPickupLocation")}
-          </button>
         </div>
         <ArrowIcon className="mt-2 hidden h-12 w-12 shrink-0 lg:mt-8 lg:block" />
         <div className="w-full relative">
@@ -231,7 +247,9 @@ const StepOne = ({ control, errors, watch, setValue }: StepOneProps) => {
               <Input
                 {...field}
                 label={t("reservation.stepOne.dropoffLocationLabel")}
-                placeholder={t("reservation.stepOne.dropoffLocationPlaceholder")}
+                placeholder={t(
+                  "reservation.stepOne.dropoffLocationPlaceholder",
+                )}
                 className="text-base!"
                 labelIcon={<CarRentIcon />}
                 labelClassName="text-base!"
@@ -340,7 +358,9 @@ const StepOne = ({ control, errors, watch, setValue }: StepOneProps) => {
 
           <p className="flex gap-1 items-center">
             <span className="text-sm font-extrabold">
-              {t("reservation.stepOne.daysCount", { count: bestOffer.extraDays })}
+              {t("reservation.stepOne.daysCount", {
+                count: bestOffer.extraDays,
+              })}
             </span>
             <span>{t("reservation.stepOne.offerTextPrefix")}</span>
             <span className="text-sm font-extrabold">

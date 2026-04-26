@@ -1,3 +1,5 @@
+"use client";
+
 import { Badge } from "@/app/(components)/ui/badge";
 import {
   Card,
@@ -15,6 +17,7 @@ import StarIcon from "../../../../constants/icons/StarIcon";
 import { PricingType } from "@/lib/utils/calculateRentalPrice";
 import { formatPrice } from "@/lib/utils/formatPrice";
 import { getPriceWithoutTax } from "@/lib/utils/getPriceWithoutTax";
+import { useTranslations } from "next-intl";
 
 interface carsCard {
   advancedCard?: boolean;
@@ -39,14 +42,6 @@ interface carsCard {
   showTax?: boolean;
 }
 
-const pricingTypeLabels: Record<PricingType, string> = {
-  DAILY: "يومي",
-  WEEKLY: "أسبوعي",
-  HALF_MONTHLY: "نصف شهري",
-  MONTHLY: "شهري",
-  YEARLY: "سنوي",
-};
-
 const CarsCard = ({
   advancedCard,
   extraBadgeTitle,
@@ -63,7 +58,17 @@ const CarsCard = ({
   firstBadgeColor,
   priceBeforeOffer,
   showTax,
+  pricingType = "DAILY",
 }: carsCard) => {
+  const t = useTranslations("carDetails");
+  const pricingTypeLabels: Record<PricingType, string> = {
+    DAILY: t("pricingType.daily"),
+    WEEKLY: t("pricingType.weekly"),
+    HALF_MONTHLY: t("pricingType.halfMonthly"),
+    MONTHLY: t("pricingType.monthly"),
+    YEARLY: t("pricingType.yearly"),
+  };
+
   return (
     <article>
       <Card
@@ -75,7 +80,7 @@ const CarsCard = ({
         >
           <img
             src={carImage}
-            alt="سيارة للإيجار"
+            alt={t("carImageAlt")}
             className="relative z-20 w-full object-contain min-h-[250px] max-h-[250px]"
           />
           {typeof firstBadgeTitle === "string" &&
@@ -100,7 +105,7 @@ const CarsCard = ({
           <figcaption className="flex items-center gap-2 absolute bottom-0 left-1/2 -translate-x-1/2 z-50">
             <ExeclusiveOfferIcon />
             <span className="text-xs font-bold text-StatusDarkGreen sm:text-sm">
-              عرض خاص
+              {t("special_offer_title")}
             </span>
           </figcaption>
         </figure>
@@ -142,7 +147,10 @@ const CarsCard = ({
             <div className="flex items-center gap-1">
               <FreeKmIcon />
               <p className="text-xs sm:text-sm">
-                الكيلومترات المجانية: <strong>{freeKm} كم / اليوم</strong>
+                {t("freeKilometersLabel")}{" "}
+                <strong>
+                  {freeKm} {t("kmPerDay")}
+                </strong>
               </p>
             </div>
 
@@ -181,7 +189,11 @@ const CarsCard = ({
 
                 <p className="flex items-center text-sm sm:text-base">
                   <SaudiRiyal className="h-4 w-4 sm:h-5 sm:w-5" />
-                  <span className="mx-1">/ يوم</span>
+                  <span className="mx-1">
+                    {t("pricePerPricingType", {
+                      pricingType: pricingTypeLabels[pricingType],
+                    })}
+                  </span>
                 </p>
               </div>
               {/* {rentalDays && rentalDays > 0 && totalPrice && (

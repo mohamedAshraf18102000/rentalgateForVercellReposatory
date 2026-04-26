@@ -1,3 +1,5 @@
+"use client";
+
 import CarsCard from "@/app/(components)/customCards/CarsCard/CarsCard";
 import { Skeleton } from "@/app/(components)/ui/skeleton";
 import { CarContent } from "@/types/companyCars/cars";
@@ -8,20 +10,13 @@ import {
 import { calculateDiscount } from "@/lib/utils/calculateDiscount";
 import Link from "next/link";
 import { useBookedCarDetailsStore } from "@/lib/stores/useBookedCarDetailsStore";
+import { useTranslations } from "next-intl";
 
 interface CarsGridProps {
   cars: CarContent[];
   isLoading: boolean;
   rentalDays: number;
 }
-
-const pricingTypeLabels: Record<PricingType, string> = {
-  DAILY: "يومي",
-  WEEKLY: "أسبوعي",
-  HALF_MONTHLY: "نصف شهري",
-  MONTHLY: "شهري",
-  YEARLY: "سنوي",
-};
 
 const getOriginalAndOfferPrice = (
   car: CarContent,
@@ -104,6 +99,15 @@ const getCarPricing = (car: CarContent, rentalDays: number) => {
 };
 
 const CarsGrid = ({ cars, isLoading, rentalDays }: CarsGridProps) => {
+  const t = useTranslations("carDetails");
+  const pricingTypeLabels: Record<PricingType, string> = {
+    DAILY: t("pricingType.daily"),
+    WEEKLY: t("pricingType.weekly"),
+    HALF_MONTHLY: t("pricingType.halfMonthly"),
+    MONTHLY: t("pricingType.monthly"),
+    YEARLY: t("pricingType.yearly"),
+  };
+
   if (isLoading) {
     return (
       <div className="mt-6 grid grid-cols-1 gap-4 sm:mt-8 sm:gap-6 md:grid-cols-2 md:mt-10 lg:grid-cols-3 xl:grid-cols-4">
@@ -134,7 +138,7 @@ const CarsGrid = ({ cars, isLoading, rentalDays }: CarsGridProps) => {
 
         const discountBadge =
           discountPercentage > 0
-            ? `خصم ${discountPercentage}% - ${pricingTypeLabels[pricingType]}`
+            ? `${t("discountPrefix")} ${discountPercentage}% - ${pricingTypeLabels[pricingType]}`
             : "";
 
         return (
