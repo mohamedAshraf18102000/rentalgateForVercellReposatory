@@ -11,6 +11,7 @@ import {
 import { Globe, IdCard, Mail, Phone } from "lucide-react";
 import { useMutation } from "@tanstack/react-query";
 import { uploadImage } from "@/services/uploadImages/uploadImage.service";
+import { useTranslations } from "next-intl";
 
 import {
   Input,
@@ -36,6 +37,7 @@ interface StepTwoProps {
 
 const StepTwo = ({ control, errors, setValue }: StepTwoProps) => {
   const { formData, setFormField } = useBookedCarDetailsStore();
+  const t = useTranslations("carDetails");
 
   const residenceTypeStr = useWatch({ control, name: "idNumber" });
 
@@ -57,7 +59,7 @@ const StepTwo = ({ control, errors, setValue }: StepTwoProps) => {
             render={({ field }) => (
               <div className="space-y-1.5 w-full">
                 <Label className="flex items-center gap-1.5 text-sm font-medium text-foreground">
-                  نوع الإقامة:
+                  {t("reservation.stepTwo.residenceTypeLabel")}
                 </Label>
                 <div className="mt-2">
                   <Select
@@ -65,13 +67,25 @@ const StepTwo = ({ control, errors, setValue }: StepTwoProps) => {
                     defaultValue={field.value}
                   >
                     <SelectTrigger className="w-full h-10 px-3 py-2 bg-[#eceef2] border-input rounded-[8px] text-sm text-gray-500">
-                      <SelectValue placeholder="أدخل نوع الإقامة" />
+                      <SelectValue
+                        placeholder={t(
+                          "reservation.stepTwo.residenceTypePlaceholder",
+                        )}
+                      />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="0">مواطن</SelectItem>
-                      <SelectItem value="1">مقيم</SelectItem>
-                      <SelectItem value="2">زائر</SelectItem>
-                      <SelectItem value="3">مواطن خليجي</SelectItem>
+                      <SelectItem value="0">
+                        {t("reservation.stepTwo.residenceTypes.citizen")}
+                      </SelectItem>
+                      <SelectItem value="1">
+                        {t("reservation.stepTwo.residenceTypes.resident")}
+                      </SelectItem>
+                      <SelectItem value="2">
+                        {t("reservation.stepTwo.residenceTypes.visitor")}
+                      </SelectItem>
+                      <SelectItem value="3">
+                        {t("reservation.stepTwo.residenceTypes.gccCitizen")}
+                      </SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -91,9 +105,9 @@ const StepTwo = ({ control, errors, setValue }: StepTwoProps) => {
             render={({ field }) => (
               <Input
                 {...field}
-                label="الجنسية:"
+                  label={t("reservation.stepTwo.nationalityLabel")}
                 startIcon={<Globe className="size-4" />}
-                placeholder="أدخل الجنسية"
+                  placeholder={t("reservation.stepTwo.nationalityPlaceholder")}
                 errorMessage={errors.nationality?.message}
               />
             )}
@@ -108,9 +122,9 @@ const StepTwo = ({ control, errors, setValue }: StepTwoProps) => {
                 <Input
                   type="number"
                   {...field}
-                  label="بطاقة تحقيق الشخصيه"
+                  label={t("reservation.stepTwo.personalIdLabel")}
                   startIcon={<IdCard className="size-4" />}
-                  placeholder="أدخل بطاقة تحقيق الشخصيه"
+                  placeholder={t("reservation.stepTwo.personalIdPlaceholder")}
                   errorMessage={errors.personalId?.message}
                 />
               )}
@@ -127,9 +141,9 @@ const StepTwo = ({ control, errors, setValue }: StepTwoProps) => {
                 <Input
                   type="number"
                   {...field}
-                  label="رقم الباسبور"
+                  label={t("reservation.stepTwo.passportNumberLabel")}
                   startIcon={<IdCard className="size-4" />}
-                  placeholder="أدخل رقم الباسبور"
+                  placeholder={t("reservation.stepTwo.passportNumberPlaceholder")}
                   errorMessage={errors.passportNumber?.message}
                 />
               )}
@@ -146,9 +160,9 @@ const StepTwo = ({ control, errors, setValue }: StepTwoProps) => {
                 <Input
                   type="number"
                   {...field}
-                  label="رقم الحدود"
+                  label={t("reservation.stepTwo.borderNumberLabel")}
                   startIcon={<IdCard className="size-4" />}
-                  placeholder="أدخل رقم الحدود"
+                  placeholder={t("reservation.stepTwo.borderNumberPlaceholder")}
                   errorMessage={errors.borderNumber?.message}
                 />
               )}
@@ -168,8 +182,8 @@ const StepTwo = ({ control, errors, setValue }: StepTwoProps) => {
               render={({ field }) => (
                 <InputFileUpload
                   {...field}
-                  label="صورة الرخصة"
-                  placeholder="أدخل صورة الرخصة"
+                  label={t("reservation.stepTwo.licenseImageLabel")}
+                  placeholder={t("reservation.stepTwo.licenseImagePlaceholder")}
                   initialFile={formData.licenseImageFile}
                   onFileChange={async (file) => {
                     // Save File in store so preview survives step navigation
@@ -196,11 +210,14 @@ const StepTwo = ({ control, errors, setValue }: StepTwoProps) => {
               )}
             />
             {isPending && (
-              <p className="mt-2 text-blue-500 text-sm">جاري رفع الصورة...</p>
+              <p className="mt-2 text-blue-500 text-sm">
+                {t("reservation.stepTwo.uploadingImage")}
+              </p>
             )}
             {uploadError && (
               <p className="mt-2 text-red-500 text-sm">
-                {(uploadError as Error).message || "حدث خطأ أثناء رفع الصورة"}
+                {(uploadError as Error).message ||
+                  t("reservation.stepTwo.uploadImageError")}
               </p>
             )}
             {errors.licenseImage?.message && (
@@ -217,8 +234,8 @@ const StepTwo = ({ control, errors, setValue }: StepTwoProps) => {
               render={({ field }) => (
                 <DateTimePicker
                   {...field}
-                  placeholder="ادخل تاريخ الأنتهاء"
-                  label="تاريخ انتهاء الرخصة:"
+                  placeholder={t("reservation.stepTwo.licenseExpiryPlaceholder")}
+                  label={t("reservation.stepTwo.licenseExpiryLabel")}
                 />
               )}
             />

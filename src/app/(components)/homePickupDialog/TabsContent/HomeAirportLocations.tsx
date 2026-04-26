@@ -54,10 +54,10 @@ const HomeAirportLocations = () => {
                     size={20}
                   />
                   <div className="flex flex-col gap-0.5">
-                    <p className="text-sm truncate">{airport.arabicName}</p>
-                    {airport.arabicName && (
+                    <p className="text-sm truncate">{airport.name}</p>
+                    {airport.name && (
                       <p className="text-xs text-muted-foreground">
-                        {airport.arabicName}
+                        {airport.name}
                       </p>
                     )}
                   </div>

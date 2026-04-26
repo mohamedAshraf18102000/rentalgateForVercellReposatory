@@ -18,16 +18,10 @@ import {
   PricingType,
 } from "@/lib/utils/calculateRentalPrice";
 import DriverCard from "@/app/(components)/customCards/DriverCard";
-
-const pricingTypeLabels: Record<PricingType, string> = {
-  DAILY: "يومي",
-  WEEKLY: "أسبوعي",
-  HALF_MONTHLY: "نصف شهري",
-  MONTHLY: "شهري",
-  YEARLY: "سنوي",
-};
+import { useTranslations } from "next-intl";
 
 const page = () => {
+  const t = useTranslations("carDetails");
   const { id } = useParams();
   const setCarDetails = useBookedCarDetailsStore((s) => s.setCarDetails);
   const setFormData = useBookedCarDetailsStore((s) => s.setFormData);
@@ -43,9 +37,6 @@ const page = () => {
     queryKey: ["company-cars-id", id],
     queryFn: () => getCompanyCarsByID(Number(id)),
   });
-
-  console.log(data);
-  
 
   useEffect(() => {
     if (data) {
@@ -68,8 +59,6 @@ const page = () => {
     queryKey: ["company-cars-services", id],
     queryFn: () => getCarServices(Number(id)),
   });
-
-  console.log("services", services);
 
   useEffect(() => {
     if (services) {
@@ -122,6 +111,16 @@ const page = () => {
   }, [data, rentalDays]);
 
   const pricingType = pricing.pricingType;
+  const pricingTypeLabels: Record<PricingType, string> = useMemo(
+    () => ({
+      DAILY: t("pricingType.daily"),
+      WEEKLY: t("pricingType.weekly"),
+      HALF_MONTHLY: t("pricingType.halfMonthly"),
+      MONTHLY: t("pricingType.monthly"),
+      YEARLY: t("pricingType.yearly"),
+    }),
+    [t],
+  );
 
   const { discountPercentage } = useMemo(
     () =>
@@ -152,7 +151,7 @@ const page = () => {
 
   const discountBadge =
     discountPercentage > 0
-      ? `خصم ${discountPercentage}% - ${pricingTypeLabels[pricingType]}`
+      ? `${t("discountPrefix")} ${discountPercentage}% - ${pricingTypeLabels[pricingType]}`
       : "";
 
   if (isLoading || !data)
@@ -203,7 +202,7 @@ const page = () => {
       {services && services.length > 0 && (
         <div className="my-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <h3 className="col-span-1 my-4 text-xl font-bold sm:col-span-2 lg:col-span-4 lg:text-2xl">
-            الخدمات المقدمة
+            {t("providedServices")}
           </h3>
           {services?.map((service) => (
             <ServiceCard
@@ -217,16 +216,16 @@ const page = () => {
       <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <DriverCard
           image={"/driver/driverImage.png"}
-          serviceName={"خدمة سائق"}
+          serviceName={t("driverService")}
           status={data?.company?.driverServiceOutside === "active"}
-          badgeTitle={"خارج المدينة"}
+          badgeTitle={t("driverOutsideCity")}
         />
 
         <DriverCard
           image={"/driver/driverImage.png"}
-          serviceName={"خدمة سائق"}
+          serviceName={t("driverService")}
           status={data?.company?.driverService === "active"}
-          badgeTitle={"داخل المدينة"}
+          badgeTitle={t("driverInsideCity")}
         />
       </div>
       <Panner />

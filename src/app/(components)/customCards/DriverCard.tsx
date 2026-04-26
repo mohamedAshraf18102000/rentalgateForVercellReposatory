@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { useLocale } from "next-intl";
 
 interface ServiceCardProps {
   image: string;
@@ -13,6 +14,9 @@ const DriverCard = ({
   badgeTitle,
   status,
 }: ServiceCardProps) => {
+  const locale = useLocale();
+  const isRTL = locale === "ar";
+
   if (!status) return null;
   return (
     <div className="relative flex min-h-[92px] overflow-hidden rounded-2xl border-2 border-white">
@@ -23,7 +27,11 @@ const DriverCard = ({
         <p className="text-sm font-extrabold sm:text-base">{serviceName}</p>
       </div>
 
-      <p className="absolute -top-1 left-0 rounded-r-xl bg-gray-100 px-2 py-1 text-xs font-bold sm:p-2 sm:text-sm">
+      <p
+        className={`absolute -top-1 bg-gray-100 px-2 py-1 text-xs font-bold sm:p-2 sm:text-sm ${
+          isRTL ? "left-0 rounded-r-xl" : "right-0 rounded-l-xl"
+        }`}
+      >
         {badgeTitle}
       </p>
     </div>

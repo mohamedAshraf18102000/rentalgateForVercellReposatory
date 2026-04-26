@@ -34,7 +34,19 @@
     "pickupTitle": "Pickup Location",
     "returnTitle": "Return Location",
     "close": "Close",
-    "showResults": "Show results"
+    "showResults": "Show results",
+    "savedAddressesTitle": "Saved addresses",
+    "noSavedAddresses": "No saved addresses",
+    "popularLocations": {
+      "airports": "Most popular airports:",
+      "trainStations": "Most popular train stations:"
+    },
+    "tabs": {
+      "currentLocation": "Your location",
+      "airport": "Airport",
+      "trainStation": "Train station",
+      "branches": "Branches"
+    }
   },
   "referral": {
     "title": "Want to earn discounts?!!",

@@ -6,6 +6,7 @@ import { useMemo } from "react";
 import { formatPrice } from "@/lib/utils/formatPrice";
 import { calculateServicePrice } from "@/lib/utils/calculateServicePrice";
 import { getPriceWithoutTax } from "@/lib/utils/getPriceWithoutTax";
+import { useLocale, useTranslations } from "next-intl";
 
 interface ServiceCardProps {
   service: CompanyService;
@@ -13,6 +14,8 @@ interface ServiceCardProps {
 }
 
 const ServiceCard = ({ service, showTax }: ServiceCardProps) => {
+  const locale = useLocale();
+  const t = useTranslations("carDetails");
   const rentalDays =
     useBookedCarDetailsStore((state) => state.formData.rentalDays) || 1;
 
@@ -29,7 +32,7 @@ const ServiceCard = ({ service, showTax }: ServiceCardProps) => {
       <div className="w-[70%] bg-white p-2 sm:p-3">
         <div className="">
           <p className="text-sm font-extrabold sm:text-base">
-            {service.serviceArabicName}
+            {locale === "ar" ? service.serviceArabicName : service.serviceEnglishName}
           </p>
           <div className="mt-2 flex flex-wrap items-center sm:mt-3">
             <span className="text-base font-bold sm:text-lg">
@@ -42,7 +45,9 @@ const ServiceCard = ({ service, showTax }: ServiceCardProps) => {
             </span>
             {service.csType === "everyday" && (
               <span className="text-sm text-Grey500">
-                {rentalDays > 1 ? `( لـ ${rentalDays} يوم )` : "/ اليوم"}
+                {rentalDays > 1
+                  ? t("forRentalDays", { days: rentalDays })
+                  : t("perDayLabel")}
               </span>
             )}
           </div>

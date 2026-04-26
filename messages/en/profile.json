@@ -94,6 +94,89 @@
       "copyError": "Failed to copy code"
     }
   },
+  "myBookingsPage": {
+    "updateAndSettingsHint": "Update your personal details and adjust your settings",
+    "title": "My bookings",
+    "showAllBookings": "View all bookings",
+    "shownBookingsCount": "Number of displayed bookings",
+    "bookingsImageAlt": "Bookings image",
+    "statusTabs": {
+      "current": "Current",
+      "previous": "Previous"
+    }
+  },
+  "userSavedLocationDialog": {
+    "toast": {
+      "addSuccess": "Address added successfully",
+      "addError": "An error occurred while adding the address",
+      "deleteSuccess": "Address deleted successfully",
+      "deleteError": "An error occurred while deleting the address"
+    },
+    "confirmDelete": "Are you sure you want to delete this address?",
+    "backAria": "Back",
+    "header": {
+      "addNewAddress": "Add New Address",
+      "savedAddresses": "Saved Addresses"
+    },
+    "actions": {
+      "addNewAddress": "Add New Address",
+      "close": "Close",
+      "cancel": "Cancel",
+      "add": "Add",
+      "adding": "Adding..."
+    },
+    "states": {
+      "loadingAddresses": "Loading addresses...",
+      "noSavedAddresses": "No saved addresses"
+    },
+    "fields": {
+      "mobile": {
+        "label": "Mobile number:",
+        "placeholder": "Enter mobile number"
+      },
+      "addressName": {
+        "label": "Place name:",
+        "placeholder": "Example: home, work"
+      },
+      "addressType": {
+        "label": "Address type:",
+        "placeholder": "Select address type",
+        "options": {
+          "home": "Home",
+          "work": "Work",
+          "other": "Other"
+        }
+      },
+      "address": {
+        "label": "Detailed address:",
+        "placeholder": "Enter detailed address"
+      },
+      "street": {
+        "label": "Area:",
+        "placeholder": "District / Street name"
+      },
+      "buildingNo": {
+        "label": "Building:",
+        "placeholder": "Building number"
+      },
+      "floor": {
+        "label": "Floor:",
+        "placeholder": "Floor number"
+      },
+      "flatNo": {
+        "label": "Apartment number:",
+        "placeholder": "Apartment number"
+      },
+      "additionalInfo": {
+        "label": "Additional information:",
+        "placeholder": "Any extra information to reach the location"
+      },
+      "notes": {
+        "label": "Notes:",
+        "placeholder": "Notes"
+      }
+    }
+  },
   "changePasswordDialog": {
     "title": "Change password",
     "oldPasswordLabel": "Current password:",
@@ -111,6 +194,16 @@
       "confirmRequired": "Password confirmation is required",
       "passwordsMismatch": "Passwords do not match"
     }
+  },
+  "updateLicenceDialog": {
+    "title": "License details",
+    "licenseImageLabel": "License image:",
+    "licenseExpiryDateLabel": "License expiry date:",
+    "closeButton": "Close",
+    "saveButton": "Save",
+    "savingButton": "Saving...",
+    "toastSuccess": "License details updated successfully",
+    "toastError": "An error occurred while updating data"
   }
 }
 

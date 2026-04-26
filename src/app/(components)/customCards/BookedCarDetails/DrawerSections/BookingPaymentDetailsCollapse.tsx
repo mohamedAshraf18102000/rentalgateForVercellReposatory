@@ -38,19 +38,19 @@ const BookingPaymentDetailsCollapse = ({
               variant="ghost"
               className="group px-0! text-base! hover:bg-transparent!"
             >
-              التفاصيل
+              {t("myBookingsDrawer.paymentDetails.detailsButton")}
               <ChevronDownIcon className="ml-auto group-data-[state=open]:rotate-180 w-5! h-5!" />
             </Button>
           </CollapsibleTrigger>
           <CollapsibleContent className="flex flex-col items-start gap-2 pt-0 text-sm">
             <div className="w-full">
               <ReservationFinalDetailsItem
-                itemHeader="تكلفة مدة الإيجار:"
+                itemHeader={t("myBookingsDrawer.paymentDetails.rentalDurationCostHeader")}
                 largeText
                 items={[
                   {
                     isAvailable: data?.basePrice !== 0,
-                    label: "المجموع الفرعي (غير شامل الضريبة)",
+                    label: t("myBookingsDrawer.paymentDetails.subtotalBeforeTaxLabel"),
                     value: formatPrice(data?.basePrice || 0),
                   },
                 ]}
@@ -58,32 +58,32 @@ const BookingPaymentDetailsCollapse = ({
 
               <div className="mt-3">
                 <ReservationFinalDetailsItem
-                  itemHeader="تكلفة الخدمات الإضافية:"
+                  itemHeader={t("myBookingsDrawer.paymentDetails.additionalServicesCostHeader")}
                   largeText
                   items={[
                     {
                       isAvailable: data?.servicesPrice !== 0,
-                      label: "خدمات اضافية",
+                      label: t("myBookingsDrawer.paymentDetails.additionalServicesLabel"),
                       value: formatPrice(data?.servicesPrice || 0),
                     },
                     {
                       isAvailable: (data?.driverPrice ?? 0) !== 0,
-                      label: "خدمة سائق",
+                      label: t("myBookingsDrawer.paymentDetails.driverServiceLabel"),
                       value: formatPrice(data?.driverPrice || 0),
                     },
                     {
                       isAvailable: (data?.extraKmPrice ?? 0) !== 0,
-                      label: "رسوم الكيلومترات الاضافية",
+                      label: t("myBookingsDrawer.paymentDetails.extraKilometersFeeLabel"),
                       value: formatPrice(data?.extraKmPrice || 0),
                     },
                     {
                       isAvailable: (data?.receiveFee ?? 0) !== 0,
-                      label: "رسوم استلام",
+                      label: t("myBookingsDrawer.paymentDetails.pickupFeeLabel"),
                       value: formatPrice(data?.receiveFee || 0),
                     },
                     {
                       isAvailable: (data?.deliverFee ?? 0) !== 0,
-                      label: "رسوم التسليم",
+                      label: t("myBookingsDrawer.paymentDetails.deliveryFeeLabel"),
                       value: formatPrice(data?.deliverFee || 0),
                     },
                   ]}
@@ -91,12 +91,14 @@ const BookingPaymentDetailsCollapse = ({
               </div>
 
               <ReservationFinalDetailsItem
-                itemHeader="الخصومات و العروض:"
+                itemHeader={t("myBookingsDrawer.paymentDetails.discountsAndOffersHeader")}
                 largeText
                 offer
                 items={[
                   {
-                    label: `خصم عرض ال ( ${data?.days} يوم )`,
+                    label: t("myBookingsDrawer.paymentDetails.rentalDaysOfferDiscountLabel", {
+                      days: data?.days ?? 0,
+                    }),
                     isAvailable: data.carDaysDiscount !== 0,
                     value: (
                       <span dir="ltr">
@@ -105,7 +107,7 @@ const BookingPaymentDetailsCollapse = ({
                     ),
                   },
                   {
-                    label: "كود الخصم",
+                    label: t("myBookingsDrawer.paymentDetails.promoCodeLabel"),
                     isAvailable: (data?.promoDiscount ?? 0) !== 0,
                     value: (
                       <span dir="ltr" className="p-1 rounded-lg">
@@ -115,7 +117,7 @@ const BookingPaymentDetailsCollapse = ({
                     ),
                   },
                   {
-                    label: "خصم النقاط",
+                    label: t("myBookingsDrawer.paymentDetails.pointsDiscountLabel"),
                     isAvailable: (data?.pointsDiscount ?? 0) !== 0,
                     value: (
                       <span dir="ltr" className="p-1 rounded-lg">
@@ -134,11 +136,11 @@ const BookingPaymentDetailsCollapse = ({
                 itemHeader={""}
                 items={[
                   {
-                    label: "إجمالي المبلغ (غير شامل الضريبة)",
+                    label: t("myBookingsDrawer.paymentDetails.totalBeforeTaxLabel"),
                     value: formatPrice(data?.totalBeforeTax || 0),
                   },
                   {
-                    label: "قيمة الضريبة",
+                    label: t("myBookingsDrawer.paymentDetails.taxValueLabel"),
                     value: formatPrice(data?.taxValue || 0),
                   },
                 ]}

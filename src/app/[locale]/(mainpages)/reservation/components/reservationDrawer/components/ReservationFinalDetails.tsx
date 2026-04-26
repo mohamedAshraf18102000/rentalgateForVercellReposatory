@@ -8,6 +8,7 @@ import { Skeleton } from "@/app/(components)/ui/skeleton";
 import { calculateServicePrice } from "@/lib/utils/calculateServicePrice";
 import { CalculateQuotePriceResponse } from "@/services/calculateQuotePrice/calculateQuotePrice.service";
 import { formatLocalDateTime } from "@/lib/utils/formatLocalDateTime";
+import { useTranslations } from "next-intl";
 
 type ReservationFinalDetailsProps = {
   data?: CalculateQuotePriceResponse;
@@ -18,6 +19,7 @@ const ReservationFinalDetails = ({
   data: reservationData,
   isCalculating,
 }: ReservationFinalDetailsProps) => {
+  const t = useTranslations("carDetails");
   const { formData, services: allServices } = useBookedCarDetailsStore();
 
   const rentalDays = useMemo(() => {
@@ -40,10 +42,10 @@ const ReservationFinalDetails = ({
   return (
     <div className="flex flex-col gap-6">
       <ReservationFinalDetailsItem
-        itemHeader="تكلفة مدة الإيجار:"
+        itemHeader={t("reservation.finalDetails.rentalDurationCostHeader")}
         items={[
           {
-            label: "المجموع الفرعي (غير شامل الضريبة)",
+            label: t("reservation.finalDetails.subtotalBeforeTaxLabel"),
             isCalculating: isCalculating,
             value: formatPrice(reservationData?.basePrice || 0),
           },
@@ -51,31 +53,31 @@ const ReservationFinalDetails = ({
       />
 
       <ReservationFinalDetailsItem
-        itemHeader="تكلفة الخدمات الإضافية:"
+        itemHeader={t("reservation.finalDetails.additionalServicesCostHeader")}
         items={[
           {
             isAvailable: (reservationData?.servicesPrice ?? 0) !== 0,
-            label: "خدمات اضافية",
+            label: t("reservation.finalDetails.additionalServicesLabel"),
             value: formatPrice(reservationData?.servicesPrice || 0),
           },
           {
             isAvailable: (reservationData?.driverPrice ?? 0) !== 0,
-            label: "خدمة سائق",
+            label: t("reservation.finalDetails.driverServiceLabel"),
             value: formatPrice(reservationData?.driverPrice || 0),
           },
           {
             isAvailable: (reservationData?.extraKmPrice ?? 0) !== 0,
-            label: "رسوم الكيلومترات الاضافية",
+            label: t("reservation.finalDetails.extraKilometersFeeLabel"),
             value: formatPrice(reservationData?.extraKmPrice || 0),
           },
           {
             isAvailable: (reservationData?.pickupFee ?? 0) !== 0,
-            label: "رسوم استلام",
+            label: t("reservation.finalDetails.pickupFeeLabel"),
             value: formatPrice(reservationData?.pickupFee || 0),
           },
           {
             isAvailable: (reservationData?.deliveryFee ?? 0) !== 0,
-            label: "رسوم التسليم",
+            label: t("reservation.finalDetails.deliveryFeeLabel"),
             value: formatPrice(reservationData?.deliveryFee || 0),
           },
         ]}
@@ -83,10 +85,10 @@ const ReservationFinalDetails = ({
 
       <ReservationFinalDetailsItem
         offer
-        itemHeader="الخصومات و العروض:"
+        itemHeader={t("reservation.finalDetails.discountsAndOffersHeader")}
         items={[
           {
-            label: `خصم:`,
+            label: t("reservation.finalDetails.discountLabel"),
             isAvailable:
               !!reservationData && reservationData.businessDiscount !== null,
             value: (
@@ -96,7 +98,9 @@ const ReservationFinalDetails = ({
             ),
           },
           {
-            label: `خصم عرض ال ( ${rentalDays} يوم )`,
+            label: t("reservation.finalDetails.rentalDaysOfferDiscountLabel", {
+              days: rentalDays,
+            }),
             isAvailable:
               !!reservationData && reservationData.carDaysDiscount !== 0,
             value: (
@@ -106,7 +110,7 @@ const ReservationFinalDetails = ({
             ),
           },
           {
-            label: "كود الخصم",
+            label: t("reservation.finalDetails.promoCodeLabel"),
             isAvailable: (reservationData?.promoDiscount ?? 0) !== 0,
             value: (
               <span dir="ltr" className="p-1 rounded-lg">
@@ -122,7 +126,7 @@ const ReservationFinalDetails = ({
               ) : undefined,
           },
           {
-            label: "خصم النقاط",
+            label: t("reservation.finalDetails.pointsDiscountLabel"),
             isAvailable: (reservationData?.pointsDiscount ?? 0) !== 0,
             value: (
               <span dir="ltr" className="p-1 rounded-lg">
@@ -138,11 +142,11 @@ const ReservationFinalDetails = ({
         itemHeader={""}
         items={[
           {
-            label: "إجمالي المبلغ (غير شامل الضريبة)",
+            label: t("reservation.finalDetails.totalBeforeTaxLabel"),
             value: formatPrice(reservationData?.totalBeforeTax || 0),
           },
           {
-            label: "قيمة الضريبة",
+            label: t("reservation.finalDetails.taxValueLabel"),
             value: formatPrice(reservationData?.taxValue || 0),
           },
         ]}

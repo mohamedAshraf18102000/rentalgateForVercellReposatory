@@ -34,7 +34,19 @@
     "pickupTitle": "مكان الاستلام",
     "returnTitle": "مكان التسليم",
     "close": "إغلاق",
-    "showResults": "إظهار النتائج"
+    "showResults": "إظهار النتائج",
+    "savedAddressesTitle": "العناوين المسجلة",
+    "noSavedAddresses": "لا توجد عناوين مسجلة",
+    "popularLocations": {
+      "airports": "المطارات الأكثر شهرة:",
+      "trainStations": "محطات القطار الأكثر شهرة:"
+    },
+    "tabs": {
+      "currentLocation": "موقعك الخاص",
+      "airport": "مطار",
+      "trainStation": "محطة قطار",
+      "branches": "الفروع"
+    }
   },
   "referral": {
     "title": "تحب تكسب خصومات؟!!",

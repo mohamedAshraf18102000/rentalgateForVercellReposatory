@@ -6,12 +6,22 @@ import { usePickupDialogStore } from "@/lib/stores/usePickupDialogStore";
 import UpdateUserSavedLocationDialog from "@/app/[locale]/(mainpages)/userProfile/components/userDialog/UpdateUserSavedLocationDialog";
 import { useState } from "react";
 import { useUserPreferedFiltersStore } from "@/lib/stores/useUserPreferedFiltersStore";
+import { useTranslations } from "next-intl";
 
 export function PickupDialog({ title }: { title?: string }) {
-  const { open, activeTab, setOpen, closeDialog, confirmDialog, isUnsavedMapLocation, target, setIsUnsavedMapLocation } =
-    usePickupDialogStore();
+  const {
+    open,
+    activeTab,
+    setOpen,
+    closeDialog,
+    confirmDialog,
+    isUnsavedMapLocation,
+    target,
+    setIsUnsavedMapLocation,
+  } = usePickupDialogStore();
   const { filters, setFilter } = useUserPreferedFiltersStore();
   const [showSaveDialog, setShowSaveDialog] = useState(false);
+  const t = useTranslations("home");
 
   const handleConfirm = () => {
     if (activeTab === "currentLocation" && isUnsavedMapLocation) {
@@ -21,9 +31,12 @@ export function PickupDialog({ title }: { title?: string }) {
     }
   };
 
-  const initialLat = target === "return" ? filters.carReturnLocationLat : filters.pickupLat;
-  const initialLng = target === "return" ? filters.carReturnLocationLng : filters.pickupLng;
-  const initialAddress = target === "return" ? filters.carReturnLocation : filters.pickupName;
+  const initialLat =
+    target === "return" ? filters.carReturnLocationLat : filters.pickupLat;
+  const initialLng =
+    target === "return" ? filters.carReturnLocationLng : filters.pickupLng;
+  const initialAddress =
+    target === "return" ? filters.carReturnLocation : filters.pickupName;
 
   return (
     <>
@@ -31,7 +44,12 @@ export function PickupDialog({ title }: { title?: string }) {
         open={open}
         onOpenChange={setOpen}
         size="lg"
-        header={{ mainTitle: target === "return" ? "مكان التسليم" : "مكان الأستلام" }}
+        header={{
+          mainTitle:
+            target === "return"
+              ? t("pickupDialog.returnTitle")
+              : t("pickupDialog.pickupTitle"),
+        }}
         content={<CarPickupDialogTabs customDefaultValue={activeTab} />}
         footer={
           <div className="mt-2 flex w-full flex-col-reverse gap-2 sm:flex-row sm:items-center sm:justify-end">
@@ -39,14 +57,14 @@ export function PickupDialog({ title }: { title?: string }) {
               onClick={closeDialog}
               className="w-full px-2 py-3 text-center font-normal text-primary underline underline-offset-3 sm:w-fit"
             >
-              إغلاق
+              {t("pickupDialog.close")}
             </button>
 
             <button
               onClick={handleConfirm}
               className="w-full rounded-[12px] bg-primary px-5 py-3 font-bold text-white sm:w-fit"
             >
-              {title || "أظهار النتائج"}
+              {title || t("pickupDialog.showResults")}
             </button>
           </div>
         }

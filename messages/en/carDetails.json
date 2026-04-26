@@ -1,6 +1,187 @@
 {
   "title": "Car Details",
   "bookNow": "Book Now",
+  "bookForOthers": "Book for others",
+  "providedServices": "Provided services",
+  "driverService": "Driver service",
+  "driverOutsideCity": "Outside city",
+  "driverInsideCity": "Inside city",
+  "discountPrefix": "Discount",
+  "carImageAlt": "Car for rent",
+  "priceWithTax": "Price includes tax:",
+  "priceWithoutTax": "Price excludes tax:",
+  "forRentalDays": "({days} days)",
+  "pricePerPricingType": "/ {pricingType}",
+  "specificationsTitle": "Car specifications:",
+  "freeKilometersLabel": "Free kilometers:",
+  "kmPerDay": "km / day",
+  "extraKilometerCostLabel": "Extra kilometer cost:",
+  "perDayCompact": "/day",
+  "perDayWithSpacing": " / day",
+  "unlimitedKilometersLabel": "Unlimited kilometers:",
+  "unlimitedDrivingBadge": "Unlimited driving",
+  "perDayLabel": "/ day",
+  "pricingType": {
+    "daily": "Daily",
+    "weekly": "Weekly",
+    "halfMonthly": "Half-monthly",
+    "monthly": "Monthly",
+    "yearly": "Yearly"
+  },
+  "breadcrumb": {
+    "home": "Home",
+    "carList": "Car List",
+    "currentPage": "Car Details"
+  },
+  "panner": {
+    "title": "Enjoy an unmatched premium car rental experience",
+    "description": "With the \"Rental Gate\" app, your car comes to your location with ease, now available on iPhone and Android."
+  },
+  "reservation": {
+    "stepper": {
+      "stepOneTitle": "Confirm pickup and drop-off date/time",
+      "stepTwoTitle": "Renter details",
+      "stepTwoDescription": "Complete renter information",
+      "stepThreeTitle": "Select services",
+      "stepThreeDescription": "Choose car services"
+    },
+    "totalCost": "Total cost:",
+    "durationAndPlan": "({days} day booking / {plan})",
+    "resetToDefault": "Reset to default",
+    "completeBooking": "Complete booking",
+    "next": "Next",
+    "breadcrumb": {
+      "home": "Home",
+      "carList": "Car List",
+      "carDetails": "Car Details",
+      "currentPage": "Car Booking"
+    },
+    "stepOne": {
+      "pickupLocationLabel": "Pickup location:",
+      "pickupLocationPlaceholder": "Select pickup location",
+      "pickPickupLocation": "Select pickup location",
+      "dropoffDifferentLocation": "Drop off at different location",
+      "dropoffLocationLabel": "Drop-off location:",
+      "dropoffLocationPlaceholder": "Select drop-off location",
+      "pickupWarning": "Selecting airport / train station / my location will add pickup fees",
+      "dropoffWarning": "Selecting airport / train station / my location will add drop-off fees",
+      "pickupDatePlaceholder": "Select pickup date and time",
+      "dropoffDatePlaceholder": "Select drop-off date and time",
+      "rentalPeriodLabel": "Rental period and time:",
+      "daysCount": "{count} days",
+      "offerTextPrefix": "Free because rental period is more than",
+      "offersTitle": "Rental Gate offers:"
+    },
+    "stepTwo": {
+      "residenceTypeLabel": "Residence type:",
+      "residenceTypePlaceholder": "Enter residence type",
+      "residenceTypes": {
+        "citizen": "Citizen",
+        "resident": "Resident",
+        "visitor": "Visitor",
+        "gccCitizen": "GCC citizen"
+      },
+      "nationalityLabel": "Nationality:",
+      "nationalityPlaceholder": "Enter nationality",
+      "personalIdLabel": "Personal ID",
+      "personalIdPlaceholder": "Enter personal ID",
+      "passportNumberLabel": "Passport number",
+      "passportNumberPlaceholder": "Enter passport number",
+      "borderNumberLabel": "Border number",
+      "borderNumberPlaceholder": "Enter border number",
+      "licenseImageLabel": "License image",
+      "licenseImagePlaceholder": "Upload license image",
+      "uploadingImage": "Uploading image...",
+      "uploadImageError": "An error occurred while uploading the image",
+      "licenseExpiryLabel": "License expiry date:",
+      "licenseExpiryPlaceholder": "Enter expiry date"
+    },
+    "stepThree": {
+      "title": "Additional services",
+      "description": "Choose the services that suit you for a complete and premium driving experience",
+      "noServices": "No additional services are currently available for this car",
+      "unlimitedKmTitle": "Unlimited kilometers",
+      "unlimitedKmNotes": "With unlimited kilometers, explore more and travel farther without worrying about the meter.",
+      "unlimitedKmBadge": "Unlimited driving",
+      "driverInsideCity": "Inside city",
+      "driverOutsideCity": "Outside city",
+      "driverCard": {
+        "title": "Private driver",
+        "dayHours": "(day = {hours} hours)",
+        "cityRestriction": "Driver service can only be used {type} the selected city",
+        "insideCity": "inside",
+        "outsideCity": "outside",
+        "hoursPerDayLabel": "Hours per day:",
+        "minHoursWarning": "Driver service is limited to {hours} hours, and any extra time will have an additional cost.",
+        "maxHoursWarning": "Maximum hours per day is {hours} hour",
+        "daysCountLabel": "Number of days:",
+        "bookingDuration": "Your booking duration is ({days} days)",
+        "dayUnit": "day"
+      }
+    },
+    "forOtherStepTwo": {
+      "nameRequired": "Name is required",
+      "nameLabel": "Name:",
+      "namePlaceholder": "Enter name",
+      "phoneLabel": "Mobile number",
+      "phonePlaceholder": "Enter phone number",
+      "personalIdLabel": "ID number",
+      "personalIdPlaceholder": "Enter ID number",
+      "licenseImageLabel": "License image",
+      "licenseImagePlaceholder": "Upload license image",
+      "uploadingImage": "Uploading image...",
+      "uploadImageError": "An error occurred while uploading the image"
+    },
+    "drawer": {
+      "checkoutTitle": "Complete payment",
+      "bookingDetailsTitle": "Booking details",
+      "payLabel": "Pay:"
+    },
+    "coupon": {
+      "title": "Enter promo code:",
+      "placeholder": "Enter your promo code",
+      "confirmButton": "Confirm",
+      "validation": {
+        "requiredCode": "Please enter a promo code"
+      },
+      "toast": {
+        "referralApplied": "Referral code activated successfully",
+        "discountApplied": "Promo code activated successfully",
+        "invalidCode": "Invalid promo code",
+        "validationErrorFallback": "An error occurred while validating the promo code"
+      },
+      "appliedDiscountMessage": "Promo code applied with value {value} {unit}",
+      "appliedReferralMessage": "Referral code activated successfully ({code})",
+      "percentUnit": "%",
+      "currencyUnit": "SAR"
+    },
+    "discounts": {
+      "title": "Vouchers and discounts:",
+      "clearSelection": "Clear selection",
+      "availablePoints": "You have {points} points",
+      "noOffers": "There are no offers currently"
+    },
+    "wallet": {
+      "useBalanceLabel": "Use wallet balance:"
+    },
+    "finalDetails": {
+      "rentalDurationCostHeader": "Rental duration cost:",
+      "subtotalBeforeTaxLabel": "Subtotal (excluding tax)",
+      "additionalServicesCostHeader": "Additional services cost:",
+      "additionalServicesLabel": "Additional services",
+      "driverServiceLabel": "Driver service",
+      "extraKilometersFeeLabel": "Extra kilometers fee",
+      "pickupFeeLabel": "Pickup fee",
+      "deliveryFeeLabel": "Delivery fee",
+      "discountsAndOffersHeader": "Discounts and offers:",
+      "discountLabel": "Discount:",
+      "rentalDaysOfferDiscountLabel": "Offer discount ({days} days)",
+      "promoCodeLabel": "Promo code",
+      "pointsDiscountLabel": "Points discount",
+      "totalBeforeTaxLabel": "Total amount (excluding tax)",
+      "taxValueLabel": "Tax amount"
+    }
+  },
   "rentalDuration": "Rental Duration",
   "days": "days",
   "carNameAndType": "Car Name and Type",

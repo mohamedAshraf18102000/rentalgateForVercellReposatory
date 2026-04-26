@@ -9,6 +9,7 @@ import SelectableServiceDriverCard from "@/app/(components)/customCards/Selectab
 import { Flame } from "lucide-react";
 import { useCompanyDriversPricing } from "@/hooks/api/useCompanyDriversPricing";
 import { calculateServicePrice } from "@/lib/utils/calculateServicePrice";
+import { useTranslations } from "next-intl";
 
 interface StepThreeProps {
   control: Control<ReservationFormValues>;
@@ -16,6 +17,7 @@ interface StepThreeProps {
 }
 
 const StepThree = ({ control, errors }: StepThreeProps) => {
+  const t = useTranslations("carDetails");
   const services = useBookedCarDetailsStore((s) => s.services);
   const formdata = useBookedCarDetailsStore((s) => s.formData);
   const { data: companyDriversPricing } = useCompanyDriversPricing(
@@ -103,17 +105,17 @@ const StepThree = ({ control, errors }: StepThreeProps) => {
     <div className="space-y-6">
       <div className="relative">
         <h2 className="text-lg font-semibold leading-tight text-gray-900 sm:text-xl">
-          الخدمات الإضافية
+          {t("reservation.stepThree.title")}
         </h2>
         <p className="mt-1 text-xs font-medium text-gray-500 sm:text-sm">
-          اختر ما يناسبك من الخدمات لتجربة قيادة متكاملة ومميزة
+          {t("reservation.stepThree.description")}
         </p>
       </div>
 
       {services.length === 0 ? (
         <div className="text-center py-16 bg-gray-50 rounded-3xl border-2 border-dashed border-gray-200">
           <p className="text-gray-400 font-bold">
-            لا توجد خدمات إضافية متاحة لهذه السيارة حالياً
+            {t("reservation.stepThree.noServices")}
           </p>
         </div>
       ) : (
@@ -122,9 +124,8 @@ const StepThree = ({ control, errors }: StepThreeProps) => {
             <SelectableServiceCard
               service={
                 {
-                  serviceArabicName: "عدد كيلومترات لا نهائي",
-                  notes:
-                    "مع الكيلومترات غير المحدودة، استكشف أكثر وسافر أبعد بدون قلق من العداد.",
+                  serviceArabicName: t("reservation.stepThree.unlimitedKmTitle"),
+                  notes: t("reservation.stepThree.unlimitedKmNotes"),
                   price: calculateServicePrice(
                     {
                       price: formdata.carDetails?.unlimitedKmPrice || 0,
@@ -141,7 +142,7 @@ const StepThree = ({ control, errors }: StepThreeProps) => {
               badge={
                 <p className="text-sm p-2 bg-StatusBrownBG rounded-[8px] text-StatusBrown200 font-bold flex items-center gap-1">
                   <Flame />
-                  <span>قيادة بلا نهاية</span>
+                  <span>{t("reservation.stepThree.unlimitedKmBadge")}</span>
                 </p>
               }
               onToggle={() => toggleService(0, "unlimited")}
@@ -173,7 +174,9 @@ const StepThree = ({ control, errors }: StepThreeProps) => {
                 selected={isSelected}
                 onToggle={() => toggleService(drvId, "driver")}
                 badge={
-                  driver.cdsType === "in" ? "داخل المدينة" : "خارج المدينة"
+                  driver.cdsType === "in"
+                    ? t("reservation.stepThree.driverInsideCity")
+                    : t("reservation.stepThree.driverOutsideCity")
                 }
                 hoursPerDay={driverHours[drvId] ?? selectedDriver?.hours ?? 1}
                 numberOfDays={driverDays[drvId] ?? selectedDriver?.days ?? 1}

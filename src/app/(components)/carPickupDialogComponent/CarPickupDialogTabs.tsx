@@ -5,17 +5,21 @@ import AirportLocations from "./TabsContent/AirportLocations";
 import TrainLocations from "./TabsContent/TrainLocations";
 import BranchesLocations from "./TabsContent/BranchesLocations";
 import { usePickupDialogStore } from "@/lib/stores/usePickupDialogStore";
+import { useLocale, useTranslations } from "next-intl";
 
 const CarPickupDialogTabs = ({
   customDefaultValue,
 }: {
   customDefaultValue: string;
 }) => {
-  const { target, setActiveTab } = usePickupDialogStore();
+  const { setActiveTab } = usePickupDialogStore();
+  const t = useTranslations("home");
+  const locale = useLocale();
+  const dir = locale === "ar" ? "rtl" : "ltr";
 
   return (
     <Tabs
-      dir="rtl"
+      dir={dir}
       className="w-full bg-transparent"
       defaultValue={customDefaultValue}
       onValueChange={(value) => {
@@ -25,16 +29,16 @@ const CarPickupDialogTabs = ({
       <WrapperContainer className="w-full">
         <TabsList className="flex items-start justify-center mx-auto text-sm md:text-base">
           <TabsTrigger className="text-xs md:text-sm" value="currentLocation">
-            موقعك الخاص
+            {t("pickupDialog.tabs.currentLocation")}
           </TabsTrigger>
           <TabsTrigger className="text-xs md:text-sm" value="airport">
-            مطار
+            {t("pickupDialog.tabs.airport")}
           </TabsTrigger>
           <TabsTrigger className="text-xs md:text-sm" value="trainStation">
-            محطة قطار
+            {t("pickupDialog.tabs.trainStation")}
           </TabsTrigger>
           <TabsTrigger className="text-xs md:text-sm" value="branches">
-            الفروع
+            {t("pickupDialog.tabs.branches")}
           </TabsTrigger>
         </TabsList>
 

@@ -8,8 +8,9 @@ import type {
 } from "@/services/mybookings/extendReservation.service";
 import { toast } from "sonner";
 
-import { ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useMemo, useState } from "react";
+import { useLocale, useTranslations } from "next-intl";
 
 import {
   SheetFooter,
@@ -40,6 +41,10 @@ const BookingExtending = ({
   carOfferPkId,
   pricing,
 }: BookingExtendingProps) => {
+  const t = useTranslations("common");
+  const locale = useLocale();
+  const isRTL = locale === "ar";
+  const BackIcon = isRTL ? ChevronRight : ChevronLeft;
   const { mutate: extendReservation, isPending: isExtendingReservation } =
     useExtendReservation();
 
@@ -89,19 +94,19 @@ const BookingExtending = ({
 
   const handleExtendReservation = () => {
     if (!reservationId) {
-      toast.error("تعذر تحديد الحجز الحالي");
+      toast.error(t("myBookingsDrawer.extendBooking.toast.unableToDetectReservation"));
       return;
     }
 
     if (!toDate) {
-      toast.error("يرجى اختيار وقت التسليم الجديد");
+      toast.error(t("myBookingsDrawer.extendBooking.toast.selectNewDropoffTime"));
       return;
     }
     const formattedStartDate = formatLocalDateTime(bookingStartDate);
     const formattedEndDate = formatLocalDateTime(toDate);
 
     if (!formattedEndDate) {
-      toast.error("صيغة وقت التسليم غير صالحة");
+      toast.error(t("myBookingsDrawer.extendBooking.toast.invalidDropoffTimeFormat"));
       return;
     }
 
@@ -118,11 +123,13 @@ const BookingExtending = ({
 
     extendReservation(payload, {
       onSuccess: () => {
-        toast.success("تم تمديد الحجز بنجاح");
+        toast.success(t("myBookingsDrawer.extendBooking.toast.success"));
         setShowBookingExtending(false);
       },
       onError: (error: Error) => {
-        toast.error(error.message || "حدث خطأ أثناء تمديد الحجز");
+        toast.error(
+          error.message || t("myBookingsDrawer.extendBooking.toast.error"),
+        );
       },
     });
   };
@@ -130,7 +137,7 @@ const BookingExtending = ({
   return (
     <div
       className="absolute inset-0 z-10 flex flex-col bg-background animate-in fade-in slide-in-from-right duration-300"
-      dir="rtl"
+      dir={isRTL ? "rtl" : "ltr"}
     >
       <SheetHeader className="mt-10 flex flex-row items-center gap-2 space-y-0 px-6 text-start">
         <Button
@@ -139,12 +146,12 @@ const BookingExtending = ({
           size="icon"
           className="shrink-0"
           onClick={() => setShowBookingExtending(false)}
-          aria-label="Back"
+          aria-label={t("backToBookingDetails")}
         >
-          <ChevronRight className="h-5 w-5" />
+          <BackIcon className="h-5 w-5" />
         </Button>
         <SheetTitle className="text-start text-xl">
-          <p>تمديد الحجز </p>
+          <p>{t("myBookingsDrawer.extendBooking.title")}</p>
         </SheetTitle>
       </SheetHeader>
       <div className="flex flex-1 flex-col">
@@ -152,7 +159,7 @@ const BookingExtending = ({
           <div className="w-full flex flex-col gap-4 mb-1">
             <div className="w-full space-y-2">
               <label className="text-base font-medium mb-2! block">
-                تاريخ ووقت الاستلام:
+                {t("myBookingsDrawer.extendBooking.pickupDateTimeLabel")}
               </label>
               <Input
                 readOnly
@@ -164,7 +171,7 @@ const BookingExtending = ({
             <div className="w-full">
               <DateTimePicker
                 labelClassName="text-base!"
-                label="وقت التسليم الجديد:"
+                label={t("myBookingsDrawer.extendBooking.newDropoffTimeLabel")}
                 className="w-full"
                 inputClassName="text-base!"
                 withTime
@@ -183,7 +190,7 @@ const BookingExtending = ({
             className="text-base! w-1/2 bg-transparent text-black border-2 border-Grey400 hover:bg-transparent"
             onClick={() => setShowBookingExtending(false)}
           >
-            إلغاء
+            {t("cancel")}
           </Button>
           <Button
             type="button"
@@ -191,7 +198,9 @@ const BookingExtending = ({
             onClick={handleExtendReservation}
             disabled={!toDate || isExtendingReservation}
           >
-            {isExtendingReservation ? "جاري التمديد..." : "تمديد الحجز"}
+            {isExtendingReservation
+              ? t("myBookingsDrawer.extendBooking.extending")
+              : t("myBookingsDrawer.extendBooking.submit")}
           </Button>
         </SheetFooter>
       </div>

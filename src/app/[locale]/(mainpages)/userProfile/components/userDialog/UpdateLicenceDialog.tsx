@@ -7,6 +7,7 @@ import { useState, useEffect } from "react";
 import { useUploadImageMutation } from "@/services/uploadImages/uploadImage.service";
 import { toast } from "sonner";
 import useUpdateUserProfile from "@/hooks/api/useUpdateUserProfile";
+import { useTranslations } from "next-intl";
 
 interface UpdatePasswordDialogProps {
   open: boolean;
@@ -14,6 +15,7 @@ interface UpdatePasswordDialogProps {
 }
 
 const UpdateLicenceDialog = ({ open, setOpen }: UpdatePasswordDialogProps) => {
+  const t = useTranslations("profile.updateLicenceDialog");
   const { userData } = useAuth();
   const [licenseFile, setLicenseFile] = useState<File | null>(null);
   const [licenseDate, setLicenseDate] = useState<Date | undefined>(
@@ -51,10 +53,10 @@ const UpdateLicenceDialog = ({ open, setOpen }: UpdatePasswordDialogProps) => {
         licenseImage: licenseImageName,
       });
 
-      toast.success("تم تحديث بيانات الرخصة بنجاح");
+      toast.success(t("toastSuccess"));
       setOpen(false);
     } catch (error) {
-      toast.error("حدث خطأ أثناء تحديث البيانات");
+      toast.error(t("toastError"));
       console.error(error);
     }
   };
@@ -73,7 +75,7 @@ const UpdateLicenceDialog = ({ open, setOpen }: UpdatePasswordDialogProps) => {
         mainTitle: (
           <div className="flex items-center justify-between w-full">
             <span className="text-black  flex-1 text-center font-bold text-xl">
-              بيانات الرخصة
+              {t("title")}
             </span>
           </div>
         ),
@@ -82,7 +84,7 @@ const UpdateLicenceDialog = ({ open, setOpen }: UpdatePasswordDialogProps) => {
         <div className="flex flex-col gap-5 mb-5 px-1">
           <InputFileUpload
             className="text-base!"
-            label="صورة الرخصة:"
+            label={t("licenseImageLabel")}
             labelClassName="text-base font-semibold"
             onFileChange={(file) => setLicenseFile(file)}
             initialPreviewUrl={
@@ -92,7 +94,7 @@ const UpdateLicenceDialog = ({ open, setOpen }: UpdatePasswordDialogProps) => {
             }
           />
           <DatePicker
-            label="تاريخ إنتهاء الرخصة:"
+            label={t("licenseExpiryDateLabel")}
             value={licenseDate}
             onChange={(date) => setLicenseDate(date)}
             fromYear={new Date().getFullYear()}
@@ -108,7 +110,7 @@ const UpdateLicenceDialog = ({ open, setOpen }: UpdatePasswordDialogProps) => {
             className="w-fit text-black hover:bg-gray-100 py-3 border-gray-200 px-8 text-base transition-all"
             onClick={() => setOpen(false)}
           >
-            إغلاق
+            {t("closeButton")}
           </Button>
           <Button
             size="lg"
@@ -116,7 +118,7 @@ const UpdateLicenceDialog = ({ open, setOpen }: UpdatePasswordDialogProps) => {
             onClick={handleSave}
             disabled={isUploading || isUpdating}
           >
-            {isUploading || isUpdating ? "جاري الحفظ..." : "حفظ"}
+            {isUploading || isUpdating ? t("savingButton") : t("saveButton")}
           </Button>
         </div>
       }

@@ -1,6 +1,187 @@
 {
   "title": "تفاصيل السيارة",
   "bookNow": "أحجزها الآن",
+  "bookForOthers": "حجز للغير",
+  "providedServices": "الخدمات المقدمة",
+  "driverService": "خدمة سائق",
+  "driverOutsideCity": "خارج المدينة",
+  "driverInsideCity": "داخل المدينة",
+  "discountPrefix": "خصم",
+  "carImageAlt": "سيارة للإيجار",
+  "priceWithTax": "السعر شامل الضريبة:",
+  "priceWithoutTax": "السعر غير شامل الضريبة:",
+  "forRentalDays": "( لـ {days} يوم )",
+  "pricePerPricingType": "/ {pricingType}",
+  "specificationsTitle": "مواصفات السيارة:",
+  "freeKilometersLabel": "الكيلومترات المجانية:",
+  "kmPerDay": "كم / اليوم",
+  "extraKilometerCostLabel": "تكلفة الكيلو متر الزيادة:",
+  "perDayCompact": "/اليوم",
+  "perDayWithSpacing": " / اليوم",
+  "unlimitedKilometersLabel": "عدد كيلومترات لا نهائي:",
+  "unlimitedDrivingBadge": "قيادة بلا نهاية",
+  "perDayLabel": "/ اليوم",
+  "pricingType": {
+    "daily": "يومي",
+    "weekly": "أسبوعي",
+    "halfMonthly": "نصف شهري",
+    "monthly": "شهري",
+    "yearly": "سنوي"
+  },
+  "breadcrumb": {
+    "home": "الرئيسية",
+    "carList": "قائمة السيارات",
+    "currentPage": "تفاصيل السيارة"
+  },
+  "panner": {
+    "title": "أستمتع بتجربة تأجير راقية لا تُضاهى",
+    "description": "مع تطبيق \"رينتال جيت\" سيارتك ستجدها في موقعك بكل سهوله، متوفر الأن علي ايفون و اندرويد"
+  },
+  "reservation": {
+    "stepper": {
+      "stepOneTitle": "تأكيد مكان و ميعاد الأستلام و التسليم",
+      "stepTwoTitle": "تفاصيل المستأجر",
+      "stepTwoDescription": "استكمال بيانات المستأجر",
+      "stepThreeTitle": "تحديد الخدمات",
+      "stepThreeDescription": "تحديد خدمات السيارة"
+    },
+    "totalCost": "أجمالي التكلفة:",
+    "durationAndPlan": "({days} يوم / حجز {plan})",
+    "resetToDefault": "إعاده الاعدادات للافتراضي",
+    "completeBooking": "إتمام الحجز",
+    "next": "التالي",
+    "breadcrumb": {
+      "home": "الرئيسية",
+      "carList": "قائمة السيارات",
+      "carDetails": "تفاصيل السيارة",
+      "currentPage": "حجز سيارة"
+    },
+    "stepOne": {
+      "pickupLocationLabel": "مكان الأستلام:",
+      "pickupLocationPlaceholder": "حدد مكان الاستلام",
+      "pickPickupLocation": "حدد مكان الاستلام",
+      "dropoffDifferentLocation": "التسليم في مكان اخر",
+      "dropoffLocationLabel": "مكان التسليم:",
+      "dropoffLocationPlaceholder": "حدد مكان التسليم",
+      "pickupWarning": "عند اختيار مطار / محطة قطار / استلام من موقعي يتم اضافه رسوم استلام",
+      "dropoffWarning": "عند اختيار مطار / محطة قطار / استلام من موقعي يتم اضافه رسوم تسليم",
+      "pickupDatePlaceholder": "اختر تاريخ ووقت الاستلام",
+      "dropoffDatePlaceholder": "اختر تاريخ ووقت التسليم",
+      "rentalPeriodLabel": "مدة و وقت الإيجار:",
+      "daysCount": "{count} يوم",
+      "offerTextPrefix": "مجانا لأن مدة الأيجار أكثر من",
+      "offersTitle": "عروض رينتال جيت:"
+    },
+    "stepTwo": {
+      "residenceTypeLabel": "نوع الإقامة:",
+      "residenceTypePlaceholder": "أدخل نوع الإقامة",
+      "residenceTypes": {
+        "citizen": "مواطن",
+        "resident": "مقيم",
+        "visitor": "زائر",
+        "gccCitizen": "مواطن خليجي"
+      },
+      "nationalityLabel": "الجنسية:",
+      "nationalityPlaceholder": "أدخل الجنسية",
+      "personalIdLabel": "بطاقة تحقيق الشخصية",
+      "personalIdPlaceholder": "أدخل بطاقة تحقيق الشخصية",
+      "passportNumberLabel": "رقم الباسبور",
+      "passportNumberPlaceholder": "أدخل رقم الباسبور",
+      "borderNumberLabel": "رقم الحدود",
+      "borderNumberPlaceholder": "أدخل رقم الحدود",
+      "licenseImageLabel": "صورة الرخصة",
+      "licenseImagePlaceholder": "أدخل صورة الرخصة",
+      "uploadingImage": "جاري رفع الصورة...",
+      "uploadImageError": "حدث خطأ أثناء رفع الصورة",
+      "licenseExpiryLabel": "تاريخ انتهاء الرخصة:",
+      "licenseExpiryPlaceholder": "ادخل تاريخ الأنتهاء"
+    },
+    "stepThree": {
+      "title": "الخدمات الإضافية",
+      "description": "اختر ما يناسبك من الخدمات لتجربة قيادة متكاملة ومميزة",
+      "noServices": "لا توجد خدمات إضافية متاحة لهذه السيارة حالياً",
+      "unlimitedKmTitle": "عدد كيلومترات لا نهائي",
+      "unlimitedKmNotes": "مع الكيلومترات غير المحدودة، استكشف أكثر وسافر أبعد بدون قلق من العداد.",
+      "unlimitedKmBadge": "قيادة بلا نهاية",
+      "driverInsideCity": "داخل المدينة",
+      "driverOutsideCity": "خارج المدينة",
+      "driverCard": {
+        "title": "سائق خاص",
+        "dayHours": "(اليوم = {hours} ساعات)",
+        "cityRestriction": "لا يمكن الإستفادة من خدمة السائق إلا {type} المدينة المحددة",
+        "insideCity": "داخل",
+        "outsideCity": "خارج",
+        "hoursPerDayLabel": "عدد الساعات في اليوم:",
+        "minHoursWarning": "خدمة السائق محددة ب {hours} ساعات و إن زادت تكون بتكلفة إضافية أخرى.",
+        "maxHoursWarning": "حد اقصى لعدد ساعات اليوم {hours} ساعة",
+        "daysCountLabel": "عدد الأيام:",
+        "bookingDuration": "مدة الحجز الخاصة بك هي ({days} أيام)",
+        "dayUnit": "يوم"
+      }
+    },
+    "forOtherStepTwo": {
+      "nameRequired": "يجب إدخال الاسم",
+      "nameLabel": "الاسم:",
+      "namePlaceholder": "أدخل الاسم",
+      "phoneLabel": "رقم الجوال",
+      "phonePlaceholder": "أدخل الهاتف",
+      "personalIdLabel": "رقم الهوية",
+      "personalIdPlaceholder": "أدخل رقم الهوية",
+      "licenseImageLabel": "صورة الرخصة",
+      "licenseImagePlaceholder": "أدخل صورة الرخصة",
+      "uploadingImage": "جاري رفع الصورة...",
+      "uploadImageError": "حدث خطأ أثناء رفع الصورة"
+    },
+    "drawer": {
+      "checkoutTitle": "إتمام الدفع",
+      "bookingDetailsTitle": "تفاصيل الحجز",
+      "payLabel": "دفع:"
+    },
+    "coupon": {
+      "title": "أدخل كود الخصم:",
+      "placeholder": "أدخل كود الخصم الخاص بك",
+      "confirmButton": "تأكيد",
+      "validation": {
+        "requiredCode": "يرجى إدخال كود الخصم"
+      },
+      "toast": {
+        "referralApplied": "تم تفعيل كود الإحالة بنجاح",
+        "discountApplied": "تم تفعيل كود الخصم بنجاح",
+        "invalidCode": "كود الخصم غير صحيح",
+        "validationErrorFallback": "حدث خطأ ما أثناء التحقق من كود الخصم"
+      },
+      "appliedDiscountMessage": "تم تطبيق كود الخصم بقيمة {value} {unit}",
+      "appliedReferralMessage": "تم تفعيل كود الإحالة بنجاح ({code})",
+      "percentUnit": "%",
+      "currencyUnit": "ريال"
+    },
+    "discounts": {
+      "title": "القسائم و الخصومات:",
+      "clearSelection": "إلغاء التحديد",
+      "availablePoints": "لديك {points} نقطة",
+      "noOffers": "لا توجد أي عروض حاليا"
+    },
+    "wallet": {
+      "useBalanceLabel": "أستخدم رصيد المحفظة:"
+    },
+    "finalDetails": {
+      "rentalDurationCostHeader": "تكلفة مدة الإيجار:",
+      "subtotalBeforeTaxLabel": "المجموع الفرعي (غير شامل الضريبة)",
+      "additionalServicesCostHeader": "تكلفة الخدمات الإضافية:",
+      "additionalServicesLabel": "خدمات إضافية",
+      "driverServiceLabel": "خدمة سائق",
+      "extraKilometersFeeLabel": "رسوم الكيلومترات الإضافية",
+      "pickupFeeLabel": "رسوم استلام",
+      "deliveryFeeLabel": "رسوم التسليم",
+      "discountsAndOffersHeader": "الخصومات و العروض:",
+      "discountLabel": "خصم:",
+      "rentalDaysOfferDiscountLabel": "خصم عرض ال ( {days} يوم )",
+      "promoCodeLabel": "كود الخصم",
+      "pointsDiscountLabel": "خصم النقاط",
+      "totalBeforeTaxLabel": "إجمالي المبلغ (غير شامل الضريبة)",
+      "taxValueLabel": "قيمة الضريبة"
+    }
+  },
   "rentalDuration": "مدة الإيجار",
   "days": "يوم",
   "carNameAndType": "أسم و نوع السيارة",

@@ -4,6 +4,7 @@ import { Minus, Plus, SaudiRiyal } from "lucide-react";
 import { Badge } from "../ui/badge";
 import { CompanyService } from "@/types/companyDrivers";
 import WarningMessage from "../WarningMessage";
+import { useLocale, useTranslations } from "next-intl";
 
 interface SelectableServiceDriverCardProps {
   driver?: CompanyService;
@@ -26,6 +27,9 @@ const SelectableServiceDriverCard = ({
   onHoursChange,
   onDaysChange,
 }: SelectableServiceDriverCardProps) => {
+  const locale = useLocale();
+  const t = useTranslations("carDetails");
+  const isRTL = locale === "ar";
   const checkboxId = `driver-service-${driver?.cdsId ?? Math.random()}`;
 
   const minHours = 1;
@@ -65,9 +69,10 @@ const SelectableServiceDriverCard = ({
   return (
     <label
       htmlFor={checkboxId}
-      dir="rtl"
+      dir={isRTL ? "rtl" : "ltr"}
       className={`
-        relative flex w-full cursor-pointer flex-col gap-2 overflow-hidden rounded-lg px-3 py-3 text-right transition-all duration-300 sm:px-4
+        relative flex w-full cursor-pointer flex-col gap-2 overflow-hidden rounded-lg px-3 py-3 transition-all duration-300 sm:px-4
+        ${isRTL ? "text-right" : "text-left"}
         ${
           selected
             ? "border-[0.5px] border-primary bg-white shadow-lg"
@@ -107,21 +112,28 @@ const SelectableServiceDriverCard = ({
             )}
           </div>
 
-          <div className="order-2 min-w-0 flex-1 text-right">
+          <div className={`order-2 min-w-0 flex-1 ${isRTL ? "text-right" : "text-left"}`}>
             <p className="text-sm font-bold leading-tight text-gray-900 sm:text-base">
-              سائق خاص
+              {t("reservation.stepThree.driverCard.title")}
               <span className="mx-1 text-sm font-normal sm:text-base">
-                (اليوم = {driver?.dayNumberHours} ساعات)
+                {t("reservation.stepThree.driverCard.dayHours", {
+                  hours: driver?.dayNumberHours ?? 0,
+                })}
               </span>
             </p>
             <p className="mt-1 line-clamp-2 text-xs font-medium leading-relaxed text-gray-500">
-              <span className="mx-1">لا يمكن الإستفادة من خدمة السائق إلا</span>
-              <span>{driver?.cdsType === "in" ? "داخل" : "خارج"}</span>{" "}
-              <span>المدينة المحددة</span>
+              {t("reservation.stepThree.driverCard.cityRestriction", {
+                type:
+                  driver?.cdsType === "in"
+                    ? t("reservation.stepThree.driverCard.insideCity")
+                    : t("reservation.stepThree.driverCard.outsideCity"),
+              })}
             </p>
 
             <div className="mt-3 flex w-full flex-wrap items-center gap-2 rounded-lg bg-white p-2 sm:w-fit">
-              <p className="text-sm font-bold sm:text-base">عدد الساعات في اليوم:</p>
+              <p className="text-sm font-bold sm:text-base">
+                {t("reservation.stepThree.driverCard.hoursPerDayLabel")}
+              </p>
               <div className="mx-1 flex items-center gap-2 sm:mx-2">
                 <button
                   type="button"
@@ -146,15 +158,21 @@ const SelectableServiceDriverCard = ({
             </div>
 
             <WarningMessage
-              message={`خدمة السائق محددة ب ${driver?.minHours ?? ""} ساعات و إن زادت تكون بتكلفة إضافية أخرى.`}
+              message={t("reservation.stepThree.driverCard.minHoursWarning", {
+                hours: driver?.minHours ?? 0,
+              })}
             />
 
             <WarningMessage
-              message={`حد اقصى لعدد ساعات اليوم ${driver?.dayNumberHours ?? ""} ساعة`}
+              message={t("reservation.stepThree.driverCard.maxHoursWarning", {
+                hours: driver?.dayNumberHours ?? 0,
+              })}
             />
 
             <div className="mt-3 flex w-full flex-wrap items-center gap-2 rounded-lg bg-white p-2 sm:w-fit">
-              <p className="text-sm font-bold sm:text-base">عدد الأيام:</p>
+              <p className="text-sm font-bold sm:text-base">
+                {t("reservation.stepThree.driverCard.daysCountLabel")}
+              </p>
               <div className="mx-1 flex items-center gap-2 sm:mx-2">
                 <button
                   type="button"
@@ -177,14 +195,16 @@ const SelectableServiceDriverCard = ({
               </div>
             </div>
             <WarningMessage
-              message={`مدة الحجز الخاصة بك هي (${numberOfDays} أيام)`}
+              message={t("reservation.stepThree.driverCard.bookingDuration", {
+                days: numberOfDays,
+              })}
             />
 
             <div className="mt-2 flex w-fit items-center gap-1 rounded-lg">
               <p className="text-base font-bold sm:text-lg">{driver?.dailyPrice}</p>
               <SaudiRiyal className="h-4 w-4 sm:h-5 sm:w-5" />
               <p>/</p>
-              <p>يوم</p>
+              <p>{t("reservation.stepThree.driverCard.dayUnit")}</p>
             </div>
           </div>
         </div>

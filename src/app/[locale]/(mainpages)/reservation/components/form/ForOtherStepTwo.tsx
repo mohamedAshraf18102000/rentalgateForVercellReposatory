@@ -10,6 +10,7 @@ import {
 import { IdCard, User } from "lucide-react";
 import { useMutation } from "@tanstack/react-query";
 import { uploadImage } from "@/services/uploadImages/uploadImage.service";
+import { useTranslations } from "next-intl";
 
 import { Input } from "@/app/(components)";
 import { Separator } from "@/app/(components)/ui/separator";
@@ -25,6 +26,7 @@ interface StepTwoProps {
 }
 
 const StepTwo = ({ control, errors, setValue }: StepTwoProps) => {
+  const t = useTranslations("carDetails");
   const {
     mutateAsync: doUploadImage,
     isPending,
@@ -40,14 +42,14 @@ const StepTwo = ({ control, errors, setValue }: StepTwoProps) => {
           <Controller
             name="OtherPersonName"
             control={control}
-            rules={{ required: "يجب إدخال الاسم" }}
+            rules={{ required: t("reservation.forOtherStepTwo.nameRequired") }}
             render={({ field }) => (
               <Input
                 {...field}
                 value={field.value ?? ""}
-                label="الاسم:"
+                label={t("reservation.forOtherStepTwo.nameLabel")}
                 startIcon={<User className="size-4" />}
-                placeholder="أدخل الاسم"
+                placeholder={t("reservation.forOtherStepTwo.namePlaceholder")}
                 errorMessage={errors.OtherPersonName?.message}
               />
             )}
@@ -65,10 +67,10 @@ const StepTwo = ({ control, errors, setValue }: StepTwoProps) => {
                   value={field.value}
                   onChange={field.onChange}
                   onBlur={field.onBlur}
-                  placeholder="أدخل الهاتف"
+                  placeholder={t("reservation.forOtherStepTwo.phonePlaceholder")}
                   defaultCountry="sa"
                   showValidation={true}
-                  label="رقم الجوال"
+                  label={t("reservation.forOtherStepTwo.phoneLabel")}
                   withoutValidations={true}
                 />
                 {errors.OtherPersonPhoneNumber && (
@@ -90,9 +92,9 @@ const StepTwo = ({ control, errors, setValue }: StepTwoProps) => {
                 type="number"
                 {...field}
                 value={field.value ?? ""}
-                label="رقم الهوية"
+                label={t("reservation.forOtherStepTwo.personalIdLabel")}
                 startIcon={<IdCard className="size-4" />}
-                placeholder="أدخل رقم الهوية"
+                placeholder={t("reservation.forOtherStepTwo.personalIdPlaceholder")}
                 errorMessage={errors.OtherPersonalId?.message}
               />
             )}
@@ -111,8 +113,10 @@ const StepTwo = ({ control, errors, setValue }: StepTwoProps) => {
               render={({ field }) => (
                 <InputFileUpload
                   {...field}
-                  label="صورة الرخصة"
-                  placeholder="أدخل صورة الرخصة"
+                  label={t("reservation.forOtherStepTwo.licenseImageLabel")}
+                  placeholder={t(
+                    "reservation.forOtherStepTwo.licenseImagePlaceholder",
+                  )}
                   onFileChange={async (file) => {
                     if (file) {
                       try {
@@ -134,11 +138,14 @@ const StepTwo = ({ control, errors, setValue }: StepTwoProps) => {
               )}
             />
             {isPending && (
-              <p className="mt-2 text-blue-500 text-sm">جاري رفع الصورة...</p>
+              <p className="mt-2 text-blue-500 text-sm">
+                {t("reservation.forOtherStepTwo.uploadingImage")}
+              </p>
             )}
             {uploadError && (
               <p className="mt-2 text-StatusRedBG! text-sm">
-                {(uploadError as Error).message || "حدث خطأ أثناء رفع الصورة"}
+                {(uploadError as Error).message ||
+                  t("reservation.forOtherStepTwo.uploadImageError")}
               </p>
             )}
             {errors.OtherPersonLicenseImage?.message && (

@@ -1,4 +1,5 @@
 import { Dot, MapPin, Minus } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 interface LocationFromToProps {
   receiveLocationName?: string;
@@ -13,11 +14,13 @@ const LocationFrom_To = ({
   receiveAddress,
   deliverAddress,
 }: LocationFromToProps) => {
+  const t = useTranslations("common");
+
   return (
     <div className="flex flex-col">
       <div className="flex items-center">
         <Dot className=" w-8 h-8 mx-2" />
-        <span>من:</span>
+        <span>{t("myBookingsDrawer.locationChange.fromLabel")}</span>
         <span title={receiveLocationName} className="mx-2 line-clamp-1">
           {receiveAddress ?? receiveLocationName}
         </span>
@@ -27,7 +30,7 @@ const LocationFrom_To = ({
       </div>
       <div className="flex items-center">
         <MapPin className=" w-6 h-6 mx-3" />
-        <span>إلـى:</span>
+        <span>{t("myBookingsDrawer.locationChange.toLabel")}</span>
         <span title={deliverLocationName} className="mx-2 line-clamp-1">
           {deliverAddress ?? deliverLocationName}
         </span>

@@ -27,7 +27,7 @@ const Discounts = ({ onApplied, isCalculating }: DiscountsProps) => {
   const { data: userPointsData } = useUserPoints();
   const locale = useLocale();
   const isRtl = locale === "ar";
-  const t = useTranslations();
+  const t = useTranslations("carDetails");
 
   const { formData, setFormField } = useBookedCarDetailsStore();
 
@@ -52,7 +52,7 @@ const Discounts = ({ onApplied, isCalculating }: DiscountsProps) => {
   return (
     <div className="">
       <div className="mb-2 flex flex-wrap items-center gap-3 sm:gap-4">
-        <p className="text-base font-bold"> القسائم و الخصومات:</p>
+        <p className="text-base font-bold">{t("reservation.discounts.title")}</p>
         {formData.points?.pointsPkId && (
           <button
             onClick={() => {
@@ -63,12 +63,16 @@ const Discounts = ({ onApplied, isCalculating }: DiscountsProps) => {
             className="flex items-center gap-1 text-xs text-red-500 hover:text-red-700 transition-colors font-medium disabled:opacity-50"
           >
             <X size={14} />
-            {isRtl ? "إلغاء التحديد" : "Clear selection"}
+            {t("reservation.discounts.clearSelection")}
           </button>
         )}
       </div>
       <div className="flex w-full flex-wrap items-center rounded-lg border-2 border-StatusDarkGreen bg-StatusGreen px-3 py-1 text-sm font-bold text-StatusDarkGreen sm:w-fit sm:text-base">
-        <span>لديك {userPointsData?.availablePoints} نقطة</span>
+        <span>
+          {t("reservation.discounts.availablePoints", {
+            points: userPointsData?.availablePoints ?? 0,
+          })}
+        </span>
         <LucideEqualApproximately className="mx-2" />
         <span>{userPointsData?.availablePointsValue}</span>
         <SaudiRiyal className="mx-1" />
@@ -129,7 +133,7 @@ const Discounts = ({ onApplied, isCalculating }: DiscountsProps) => {
           </Carousel>
         ) : (
           <div className="w-full py-8 text-center text-gray-500 text-sm font-medium">
-            لا توجد أي عروض حاليا
+            {t("reservation.discounts.noOffers")}
           </div>
         )}
       </RadioGroup>

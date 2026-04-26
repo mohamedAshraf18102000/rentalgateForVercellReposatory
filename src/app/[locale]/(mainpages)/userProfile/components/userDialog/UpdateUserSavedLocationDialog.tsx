@@ -33,6 +33,7 @@ import { toast } from "sonner";
 import useUserAddreses from "@/hooks/api/useUserAddreses";
 import { useLocationStore } from "@/lib/stores/useLocationStore";
 import { UserAddress } from "@/types/userProfile/userAddress";
+import { useTranslations } from "next-intl";
 
 interface UpdateUserSavedLocationDialogProps {
   open: boolean;
@@ -53,6 +54,7 @@ const UpdateUserSavedLocationDialog = ({
   initialAddress,
   onSuccess,
 }: UpdateUserSavedLocationDialogProps) => {
+  const t = useTranslations("profile.userSavedLocationDialog");
   const [showAddForm, setShowAddForm] = useState(initialShowAddForm);
   const [isPhoneValid, setIsPhoneValid] = useState(false);
   const queryClient = useQueryClient();
@@ -91,32 +93,32 @@ const UpdateUserSavedLocationDialog = ({
   const { mutate: handleAddAddress, isPending } = useMutation({
     mutationFn: (values: UserSavedLocationFormValues) => addAddress(values),
     onSuccess: (data: UserAddress) => {
-      toast.success("تم إضافة العنوان بنجاح");
+      toast.success(t("toast.addSuccess"));
       queryClient.invalidateQueries({ queryKey: ["userAddresses"] });
       onSuccess?.(data);
       setShowAddForm(false);
       reset();
     },
     onError: (error: Error) => {
-      toast.error(error.message || "حدث خطأ أثناء إضافة العنوان");
+      toast.error(error.message || t("toast.addError"));
     },
   });
 
   const deleteMutation = useMutation({
     mutationFn: (addressId: string | number) => deleteAddress(addressId),
     onSuccess: () => {
-      toast.success("تم حذف العنوان بنجاح");
+      toast.success(t("toast.deleteSuccess"));
       queryClient.invalidateQueries({ queryKey: ["userAddresses"] });
     },
     onError: (error: Error) => {
-      toast.error(error.message || "حدث خطأ أثناء حذف العنوان");
+      toast.error(error.message || t("toast.deleteError"));
     },
   });
 
   const { mutate: handleDeleteAddress, isPending: isDeleting } = deleteMutation;
 
   const handleDelete = (addressId: string | number) => {
-    if (window.confirm("هل أنت متأكد من حذف هذا العنوان؟")) {
+    if (window.confirm(t("confirmDelete"))) {
       handleDeleteAddress(addressId);
     }
   };
@@ -166,13 +168,13 @@ const UpdateUserSavedLocationDialog = ({
               <button
                 onClick={() => setShowAddForm(false)}
                 className="p-1 hover:bg-Grey100 rounded-full transition-all active:scale-95"
-                aria-label="Back"
+                aria-label={t("backAria")}
               >
                 <ChevronRight className="w-6 h-6 text-black" />
               </button>
             )}
             <span className="text-black  flex-1 text-center font-bold">
-              {showAddForm ? "إضافة عنوان جديد" : "العناوين المسجلة"}
+              {showAddForm ? t("header.addNewAddress") : t("header.savedAddresses")}
             </span>
             {showAddForm && <div className="w-8" />}
           </div>
@@ -191,17 +193,17 @@ const UpdateUserSavedLocationDialog = ({
                   startIcon={<MapPinPlusInside className="w-5! h-5!" />}
                   onClick={() => setShowAddForm(true)}
                 >
-                  أضافة عنوان جديد
+                  {t("actions.addNewAddress")}
                 </Button>
               </div>
               <div className="flex flex-col gap-3 mb-5">
                 {isLoadingAddresses ? (
                   <div className="text-center py-10">
-                    جاري تحميل العناوين...
+                    {t("states.loadingAddresses")}
                   </div>
                 ) : userAddresses?.length === 0 ? (
                   <div className="text-center py-10 text-Grey600">
-                    لا توجد عناوين مسجلة
+                    {t("states.noSavedAddresses")}
                   </div>
                 ) : (
                   userAddresses?.map((address) => {
@@ -271,8 +273,8 @@ const UpdateUserSavedLocationDialog = ({
                       defaultCountry="sa"
                       labelClassName="text-base!"
                       inputClassName="text-sm! bg-Grey100! border-1! border-red-500!"
-                      label="رقم الجوال:"
-                      placeholder="أدخل رقم الجوال"
+                      label={t("fields.mobile.label")}
+                      placeholder={t("fields.mobile.placeholder")}
                       showValidation={true}
                       onValidationChange={setIsPhoneValid}
                     />
@@ -289,12 +291,12 @@ const UpdateUserSavedLocationDialog = ({
                   {...register("addressName")}
                   labelClassName="text-base!"
                   className="text-sm! bg-Grey100!"
-                  placeholder="مثال: المنزل، العمل"
-                  label="اسم المكان:"
+                  placeholder={t("fields.addressName.placeholder")}
+                  label={t("fields.addressName.label")}
                   errorMessage={errors.addressName?.message}
                 />
                 <div className="flex flex-col gap-2">
-                  <span className="text-base font-medium">نوع العنوان:</span>
+                  <span className="text-base font-medium">{t("fields.addressType.label")}</span>
                   <Controller
                     name="addressType"
                     control={control}
@@ -304,12 +306,12 @@ const UpdateUserSavedLocationDialog = ({
                         onValueChange={field.onChange}
                       >
                         <SelectTrigger className="bg-Grey100! border-none! ">
-                          <SelectValue placeholder="اختر نوع العنوان" />
+                          <SelectValue placeholder={t("fields.addressType.placeholder")} />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="Home">منزل</SelectItem>
-                          <SelectItem value="Work">عمل</SelectItem>
-                          <SelectItem value="Other">أخرى</SelectItem>
+                          <SelectItem value="Home">{t("fields.addressType.options.home")}</SelectItem>
+                          <SelectItem value="Work">{t("fields.addressType.options.work")}</SelectItem>
+                          <SelectItem value="Other">{t("fields.addressType.options.other")}</SelectItem>
                         </SelectContent>
                       </Select>
                     )}
@@ -328,8 +330,8 @@ const UpdateUserSavedLocationDialog = ({
                 labelClassName="text-base!"
                 className="text-sm! bg-Grey100!"
                 disabled
-                placeholder="أدخل العنوان التفصيلي"
-                label="العنوان بالتفصيل:"
+                placeholder={t("fields.address.placeholder")}
+                label={t("fields.address.label")}
                 errorMessage={errors.address?.message}
               />
 
@@ -339,8 +341,8 @@ const UpdateUserSavedLocationDialog = ({
                   startIcon={<LocateFixed />}
                   labelClassName="text-base!"
                   className="text-sm! bg-Grey100!"
-                  placeholder="اسم الحي / الشارع"
-                  label="المنطقة: "
+                  placeholder={t("fields.street.placeholder")}
+                  label={t("fields.street.label")}
                   errorMessage={errors.street?.message}
                 />
                 <Input
@@ -348,8 +350,8 @@ const UpdateUserSavedLocationDialog = ({
                   startIcon={<Building2 />}
                   labelClassName="text-base!"
                   className="text-sm! bg-Grey100!"
-                  placeholder="رقم المبني"
-                  label="المبنى:"
+                  placeholder={t("fields.buildingNo.placeholder")}
+                  label={t("fields.buildingNo.label")}
                   errorMessage={errors.buildingNo?.message}
                 />
               </div>
@@ -360,16 +362,16 @@ const UpdateUserSavedLocationDialog = ({
                   type="number"
                   labelClassName="text-base!"
                   className="text-sm! bg-Grey100!"
-                  placeholder="رقم الطابق"
-                  label="الطابق:"
+                  placeholder={t("fields.floor.placeholder")}
+                  label={t("fields.floor.label")}
                   errorMessage={errors.floor?.message}
                 />
                 <Input
                   {...register("flatNo")}
                   labelClassName="text-base!"
                   className="text-sm! bg-Grey100!"
-                  placeholder="رقم الشقة"
-                  label="رقم الشقة:"
+                  placeholder={t("fields.flatNo.placeholder")}
+                  label={t("fields.flatNo.label")}
                   errorMessage={errors.flatNo?.message}
                 />
               </div>
@@ -378,8 +380,8 @@ const UpdateUserSavedLocationDialog = ({
                 {...register("additionalInfo")}
                 labelClassName="text-base!"
                 className="text-sm! bg-Grey100!"
-                placeholder="أي معلومات إضافية للوصول للموقع"
-                label="معلومات إضافية:"
+                placeholder={t("fields.additionalInfo.placeholder")}
+                label={t("fields.additionalInfo.label")}
                 errorMessage={errors.additionalInfo?.message}
               />
 
@@ -387,8 +389,8 @@ const UpdateUserSavedLocationDialog = ({
                 {...register("notes")}
                 labelClassName="text-base!"
                 className="text-sm! bg-Grey100!"
-                placeholder="ملاحظات"
-                label="ملاحظات:"
+                placeholder={t("fields.notes.placeholder")}
+                label={t("fields.notes.label")}
                 errorMessage={errors.notes?.message}
               />
             </form>
@@ -404,7 +406,7 @@ const UpdateUserSavedLocationDialog = ({
                 className="w-fit text-black hover:bg-white underline py-3 border-none px-5 bg-white text-base font-bold"
                 onClick={() => setOpen(false)}
               >
-                إغلاق
+                {t("actions.close")}
               </Button>
             </>
           ) : (
@@ -415,7 +417,7 @@ const UpdateUserSavedLocationDialog = ({
                 onClick={() => setShowAddForm(false)}
                 disabled={isPending}
               >
-                إلغاء
+                {t("actions.cancel")}
               </Button>
               <Button
                 size="lg"
@@ -424,7 +426,7 @@ const UpdateUserSavedLocationDialog = ({
                 className="w-fit text-white py-3 border-none px-10 text-base font-bold"
                 disabled={isPending}
               >
-                {isPending ? "جاري الإضافة..." : "إضافة"}
+                {isPending ? t("actions.adding") : t("actions.add")}
               </Button>
             </>
           )}

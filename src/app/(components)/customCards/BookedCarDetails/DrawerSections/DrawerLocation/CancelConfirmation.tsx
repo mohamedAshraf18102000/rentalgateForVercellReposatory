@@ -16,7 +16,8 @@ import {
 import { Textarea } from "@/app/(components)/ui/textarea";
 import TextAreaIcon from "@/constants/icons/profile/TextAreaIcon";
 import { ArrowRight } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { ArrowLeft } from "lucide-react";
+import { useLocale, useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useCancelUserReservation } from "@/hooks/api/booking/useCancelUserReservation";
 import { UseGetCancelReasons } from "@/hooks/api/booking/UseGetCancelReasons";
@@ -35,6 +36,9 @@ const CancelConfirmation = ({
   reservationId,
 }: CancelConfirmationProps) => {
   const t = useTranslations("common");
+  const locale = useLocale();
+  const isRTL = locale === "ar";
+  const BackIcon = isRTL ? ArrowRight : ArrowLeft;
   const router = useRouter();
   const [cancelReason, setCancelReason] = useState<string>("");
   const [notes, setNotes] = useState<string>("");
@@ -69,7 +73,7 @@ const CancelConfirmation = ({
   return (
     <div
       className="absolute inset-0 z-10 flex flex-col bg-background animate-in fade-in slide-in-from-right duration-300"
-      dir="rtl"
+      dir={isRTL ? "rtl" : "ltr"}
     >
       <SheetHeader className="mt-10 flex flex-row items-center gap-2 space-y-0 px-6 text-start">
         <Button
@@ -80,7 +84,7 @@ const CancelConfirmation = ({
           onClick={() => setShowCancelBooking(false)}
           aria-label={t("backToBookingDetails")}
         >
-          <ArrowRight className="h-5 w-5" />
+          <BackIcon className="h-5 w-5" />
         </Button>
         <SheetTitle className="text-start text-xl">
           {t("cancelBooking")}
@@ -91,10 +95,10 @@ const CancelConfirmation = ({
           <Separator className="my-1!" />
           <div className="text-foreground text-lg font-medium mt-3">
             <p className="font-bold text-[18px]">
-              هل انت متأكد من انك تريد الغاء الحجز؟
+              {t("myBookingsDrawer.cancelConfirmation.title")}
             </p>
             <span className="text-Grey700 mt-2 text-sm">
-              هل تريد فعلاً الغاء الحجز؟ لا يمكن التراجع عن هذه العملية.
+              {t("myBookingsDrawer.cancelConfirmation.description")}
             </span>
           </div>
 
@@ -105,6 +109,7 @@ const CancelConfirmation = ({
                   {t("cancelBookingReasonLabel")}
                 </label>
                 <Select
+                  dir={isRTL ? "ltr" : "rtl"}
                   value={cancelReason || undefined}
                   onValueChange={setCancelReason}
                 >
@@ -118,11 +123,12 @@ const CancelConfirmation = ({
                   >
                     {cancelReasons?.content.map((reason) => (
                       <SelectItem
+                        dir={isRTL ? "rtl" : "ltr"}
                         className="cursor-pointer"
                         key={reason.reasonId}
                         value={reason.reasonId.toString()}
                       >
-                        {reason.arabicReason}
+                        {reason.reason}
                       </SelectItem>
                     ))}
                     <div className="sticky bottom-0 z-10 bg-Grey100/60 rounded-b-md p-1 h-3 text-center" />
@@ -131,10 +137,12 @@ const CancelConfirmation = ({
               </div>
 
               <Textarea
-                label="ملاحظات:"
+                label={t("myBookingsDrawer.cancelConfirmation.notesLabel")}
                 labelClassName="text-base!"
                 className="text-sm!"
-                placeholder="شاركنا معلوماتك، وسيتواصل معك فريقنا في أقرب وقت."
+                placeholder={t(
+                  "myBookingsDrawer.cancelConfirmation.notesPlaceholder",
+                )}
                 startIcon={<TextAreaIcon />}
                 rows={10}
                 value={notes}
@@ -154,7 +162,7 @@ const CancelConfirmation = ({
                     href="/terms&conditions#cancelation-terms"
                     className="underline"
                   >
-                    الموافقة علي الشروط و الأحكام
+                    {t("myBookingsDrawer.cancelConfirmation.termsLinkText")}
                   </Link>
                 </label>
               </div>
@@ -167,7 +175,7 @@ const CancelConfirmation = ({
             type="button"
             className="text-base! w-full sm:w-1/2 bg-transparent text-black border-2 border-Grey400 hover:bg-transparent"
           >
-            عرض حجوزاتي
+            {t("myBookings")}
           </Button>
           <Button
             type="submit"
@@ -177,7 +185,9 @@ const CancelConfirmation = ({
               !reservationId || !cancelReason || !isTermsAccepted || isPending
             }
           >
-            {t("confirmCancelBookingWithId")}
+            {t("confirmCancelBookingWithId", {
+              reservationId: reservationId ?? "",
+            })}
           </Button>
         </SheetFooter>
       </form>

@@ -6,7 +6,7 @@ import CarsCard from "@/app/(components)/customCards/CarsCard/CarsCard";
 import StepContent, { StepContentRef } from "../components/form/StepContent";
 
 import { Button } from "@/app/(components)";
-import { ChevronLeft, HandCoins, SaudiRiyal } from "lucide-react";
+import { ChevronLeft, ChevronRight, HandCoins, SaudiRiyal } from "lucide-react";
 import { Separator } from "@/app/(components)/ui/separator";
 import ReservationBreadCrump from "../components/ReservationBreadCrump";
 import { useBookedCarDetailsStore } from "@/lib/stores/useBookedCarDetailsStore";
@@ -30,17 +30,14 @@ import GoogleMapsPolyLineLocation from "@/app/(components)/mapsLocation/GoogleMa
 import { useRouter, useSearchParams } from "next/navigation";
 import { useRentalDays } from "@/hooks/useCalculateRentalDays";
 import { resetReservationState } from "@/lib/stores/resetReservationState";
-
-const pricingTypeLabels: Record<PricingType, string> = {
-  DAILY: "يومي",
-  WEEKLY: "أسبوعي",
-  HALF_MONTHLY: "نصف شهري",
-  MONTHLY: "شهري",
-  YEARLY: "سنوي",
-};
+import { useLocale, useTranslations } from "next-intl";
 
 const page = () => {
   const router = useRouter();
+  const locale = useLocale();
+  const t = useTranslations("carDetails");
+  const isRTL = locale === "ar";
+  const ChevronIcon = isRTL ? ChevronLeft : ChevronRight;
   const [activeStep, setActiveStep] = useState<number>(1);
   const [isStepTwoSkipped, setIsStepTwoSkipped] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -175,14 +172,14 @@ const page = () => {
   );
 
   const pricingTypeLabel = pricingDetails.pricingType
-    ? pricingTypeLabels[pricingDetails.pricingType]
+    ? t(`pricingType.${pricingDetails.pricingType.toLowerCase()}`)
     : "";
 
   const discountBadge =
     discountPercentage > 0
       ? pricingTypeLabel
-        ? `خصم ${discountPercentage}% - ${pricingTypeLabel}`
-        : `خصم ${discountPercentage}%`
+        ? `${t("discountPrefix")} ${discountPercentage}% - ${pricingTypeLabel}`
+        : `${t("discountPrefix")} ${discountPercentage}%`
       : "";
 
   const handleStepNavigation = async (step: number) => {
@@ -257,7 +254,7 @@ const page = () => {
         isCalculating={isCalculating}
       />
       <WrapperContainer exceedNav>
-        <PickupDialog title="تأكيد" />
+        <PickupDialog title={t("confirm")} />
         <div className="w-full">
           <ReservationBreadCrump carId={carDetails?.ccbId} />
           <div
@@ -267,7 +264,7 @@ const page = () => {
           >
             <Stepper
               stepNum="1"
-              title="تأكيد مكان و ميعاد الأستلام و التسليم"
+              title={t("reservation.stepper.stepOneTitle")}
               description={`${formData.pickupName} - ${formData.carReturnLocation}`}
               isActive={activeStep === 1}
               onClick={() => handleStepNavigation(1)}
@@ -275,16 +272,16 @@ const page = () => {
             {!isStepTwoSkipped && (
               <Stepper
                 stepNum="2"
-                title="تفاصيل المستأجر"
-                description="استكمال بيانات المستأجر"
+                title={t("reservation.stepper.stepTwoTitle")}
+                description={t("reservation.stepper.stepTwoDescription")}
                 isActive={activeStep === 2}
                 onClick={() => handleStepNavigation(2)}
               />
             )}
             <Stepper
               stepNum={isStepTwoSkipped ? "2" : "3"}
-              title="تحديد الخدمات"
-              description="تحديد خدمات السيارة"
+              title={t("reservation.stepper.stepThreeTitle")}
+              description={t("reservation.stepper.stepThreeDescription")}
               isActive={activeStep === 3}
               onClick={() => handleStepNavigation(3)}
             />
@@ -294,7 +291,9 @@ const page = () => {
             <div className="h-fit w-full rounded-2xl bg-white p-4 lg:w-3/4">
               <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                 <div className="flex flex-wrap items-center">
-                  <span className="mx-2 text-base">أجمالي التكلفة:</span>
+                  <span className="mx-2 text-base">
+                    {t("reservation.totalCost")}
+                  </span>
                   {isCalculating ? (
                     <Skeleton className="h-6 w-36 bg-Grey200 rounded-sm" />
                   ) : (
@@ -310,11 +309,10 @@ const page = () => {
                       </span>
                       <SaudiRiyal />
                       <span className="mx-1 text-Grey500 text-xs sm:text-sm">
-                        ({pricingDetails.days}
-                        {pricingDetails.days > 1 && pricingDetails.days < 11
-                          ? " أيام"
-                          : " يوم"}
-                        / حجز {pricingTypeLabel})
+                        {t("reservation.durationAndPlan", {
+                          days: pricingDetails.days,
+                          plan: pricingTypeLabel,
+                        })}
                       </span>
                     </div>
                   )}
@@ -324,7 +322,7 @@ const page = () => {
                     onClick={handleResetForm}
                     className="text-sm text-Grey500 underline underline-offset-2 cursor-pointer"
                   >
-                    إعاده الاعدادات للافتراضي
+                    {t("reservation.resetToDefault")}
                   </button>
 
                   <Button
@@ -338,10 +336,12 @@ const page = () => {
                     onClick={handleNext}
                     className="w-full text-sm! md:w-auto md:text-base!"
                     loading={isLoading || isCalculating}
-                    icon={<ChevronLeft className="w-5! h-5!" />}
+                    icon={<ChevronIcon className="w-5! h-5!" />}
                   >
                     <span className="mx-2 text-sm md:text-base">
-                      {activeStep === 3 ? "إتمام الحجز" : "التالي"}
+                      {activeStep === 3
+                        ? t("reservation.completeBooking")
+                        : t("reservation.next")}
                     </span>
                   </Button>
                 </div>
@@ -360,9 +360,17 @@ const page = () => {
                   showTax={isShowTax}
                   freeKm={carDetails?.allowedKm}
                   carName={carDetails?.car.carName}
-                  companyName={carDetails?.company.arabicName}
+                  companyName={
+                    locale === "ar"
+                      ? carDetails?.company.arabicName
+                      : carDetails?.company.englishName
+                  }
                   companyLogo={carDetails?.company.logo}
-                  carBrand={carDetails?.car.brandNameArabic}
+                  carBrand={
+                    locale === "ar"
+                      ? carDetails?.car.brandNameArabic
+                      : carDetails?.car.brandNameEnglish
+                  }
                   carImage={`${process.env.NEXT_PUBLIC_IMAGES_PREFIX_URL}${carDetails?.car.image}`}
                   pricingType={pricingDetails.pricingType}
                   carPrice={pricingDetails.pricePerDay}

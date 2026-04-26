@@ -16,12 +16,14 @@ import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import {
   Building2,
+  ChevronLeft,
   ChevronRight,
   LocateFixed,
   MapPin,
   MapPinPlusInside,
 } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useLocale, useTranslations } from "next-intl";
 import useUserAddreses from "@/hooks/api/useUserAddreses";
 import { useLocationStore } from "@/lib/stores/useLocationStore";
 import { addAddress } from "@/services/userProfile/addAddress.service";
@@ -49,6 +51,10 @@ const DrawerLocationChange = ({
   reservationId,
   defaultLocationNames = [],
 }: DrawerLocationChangeProps) => {
+  const t = useTranslations("common");
+  const locale = useLocale();
+  const isRTL = locale === "ar";
+  const BackIcon = isRTL ? ChevronRight : ChevronLeft;
   const { mutate: changeReservationLocation, isPending: isChangingLocation } =
     useChangeReservationLocation();
 
@@ -91,14 +97,16 @@ const DrawerLocationChange = ({
   const { mutate: handleAddAddress, isPending } = useMutation({
     mutationFn: (values: UserSavedLocationFormValues) => addAddress(values),
     onSuccess: (data: UserAddress) => {
-      toast.success("تم إضافة العنوان بنجاح");
+      toast.success(t("myBookingsDrawer.locationChange.toast.addSuccess"));
       queryClient.invalidateQueries({ queryKey: ["userAddresses"] });
       setLocation(data.latitude, data.longitude, data.address);
       setShowAddForm(false);
       reset();
     },
     onError: (error: Error) => {
-      toast.error(error.message || "حدث خطأ أثناء إضافة العنوان");
+      toast.error(
+        error.message || t("myBookingsDrawer.locationChange.toast.addError"),
+      );
     },
   });
 
@@ -115,12 +123,14 @@ const DrawerLocationChange = ({
     );
 
     if (!selectedAddress) {
-      toast.error("يرجى اختيار عنوان أولاً");
+      toast.error(t("myBookingsDrawer.locationChange.toast.selectAddressFirst"));
       return;
     }
 
     if (!reservationId) {
-      toast.error("تعذر تحديد الحجز الحالي");
+      toast.error(
+        t("myBookingsDrawer.locationChange.toast.unableToDetectReservation"),
+      );
       return;
     }
 
@@ -134,11 +144,13 @@ const DrawerLocationChange = ({
       },
       {
         onSuccess: () => {
-          toast.success("تم حفظ الموقع بنجاح");
+          toast.success(t("myBookingsDrawer.locationChange.toast.saveSuccess"));
           setShowLocationDetails(false);
         },
         onError: (error: Error) => {
-          toast.error(error.message || "حدث خطأ أثناء حفظ الموقع");
+          toast.error(
+            error.message || t("myBookingsDrawer.locationChange.toast.saveError"),
+          );
         },
       },
     );
@@ -197,7 +209,7 @@ const DrawerLocationChange = ({
   return (
     <div
       className="absolute inset-0 z-10 flex flex-col bg-background animate-in fade-in slide-in-from-right duration-300"
-      dir="rtl"
+      dir={isRTL ? "rtl" : "ltr"}
     >
       <SheetHeader className="mt-10 flex flex-row items-center gap-2 space-y-0 px-6 text-start">
         <Button
@@ -212,13 +224,15 @@ const DrawerLocationChange = ({
             }
             setShowLocationDetails(false);
           }}
-          aria-label="Back"
+          aria-label={t("backToBookingDetails")}
         >
-          <ChevronRight className="h-5 w-5" />
+          <BackIcon className="h-5 w-5" />
         </Button>
         <SheetTitle className="text-start text-xl">
           <p>
-            {showAddForm ? "إضافة عنوان جديد" : "تعديل مكان الاستلام و التسليم"}
+            {showAddForm
+              ? t("myBookingsDrawer.locationChange.addNewAddress")
+              : t("myBookingsDrawer.locationChange.editPickupDropoff")}
           </p>
         </SheetTitle>
       </SheetHeader>
@@ -237,17 +251,17 @@ const DrawerLocationChange = ({
                   startIcon={<MapPinPlusInside className="w-5! h-5!" />}
                   onClick={() => setShowAddForm(true)}
                 >
-                  أضافة عنوان جديد
+                  {t("myBookingsDrawer.locationChange.addNewAddress")}
                 </Button>
               </div>
               <div className="flex flex-col gap-3 mb-5">
                 {isLoadingAddresses ? (
                   <div className="text-center py-10">
-                    جاري تحميل العناوين...
+                    {t("myBookingsDrawer.locationChange.loadingAddresses")}
                   </div>
                 ) : userAddresses?.length === 0 ? (
                   <div className="text-center py-10 text-Grey600">
-                    لا توجد عناوين مسجلة
+                    {t("myBookingsDrawer.locationChange.noSavedAddresses")}
                   </div>
                 ) : (
                   userAddresses?.map((address) => {
@@ -285,12 +299,14 @@ const DrawerLocationChange = ({
                   {...register("addressName")}
                   labelClassName="text-base!"
                   className="text-sm! bg-Grey100!"
-                  placeholder="مثال: المنزل، العمل"
-                  label="اسم المكان:"
+                  placeholder={t("myBookingsDrawer.locationChange.placePlaceholder")}
+                  label={t("myBookingsDrawer.locationChange.placeLabel")}
                   errorMessage={errors.addressName?.message}
                 />
                 <div className="flex flex-col gap-2">
-                  <span className="text-base font-medium">نوع العنوان:</span>
+                  <span className="text-base font-medium">
+                    {t("myBookingsDrawer.locationChange.addressTypeLabel")}
+                  </span>
                   <Controller
                     name="addressType"
                     control={control}
@@ -300,12 +316,22 @@ const DrawerLocationChange = ({
                         onValueChange={field.onChange}
                       >
                         <SelectTrigger className="bg-Grey100! border-none! ">
-                          <SelectValue placeholder="اختر نوع العنوان" />
+                          <SelectValue
+                            placeholder={t(
+                              "myBookingsDrawer.locationChange.selectAddressType",
+                            )}
+                          />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="Home">منزل</SelectItem>
-                          <SelectItem value="Work">عمل</SelectItem>
-                          <SelectItem value="Other">أخرى</SelectItem>
+                          <SelectItem value="Home">
+                            {t("myBookingsDrawer.locationChange.addressTypes.home")}
+                          </SelectItem>
+                          <SelectItem value="Work">
+                            {t("myBookingsDrawer.locationChange.addressTypes.work")}
+                          </SelectItem>
+                          <SelectItem value="Other">
+                            {t("myBookingsDrawer.locationChange.addressTypes.other")}
+                          </SelectItem>
                         </SelectContent>
                       </Select>
                     )}
@@ -324,8 +350,8 @@ const DrawerLocationChange = ({
                 labelClassName="text-base!"
                 className="text-sm! bg-Grey100!"
                 disabled
-                placeholder="أدخل العنوان التفصيلي"
-                label="العنوان بالتفصيل:"
+                placeholder={t("myBookingsDrawer.locationChange.addressPlaceholder")}
+                label={t("myBookingsDrawer.locationChange.addressLabel")}
                 errorMessage={errors.address?.message}
               />
 
@@ -335,8 +361,8 @@ const DrawerLocationChange = ({
                   startIcon={<LocateFixed />}
                   labelClassName="text-base!"
                   className="text-sm! bg-Grey100!"
-                  placeholder="اسم الحي / الشارع"
-                  label="المنطقة: "
+                  placeholder={t("myBookingsDrawer.locationChange.areaPlaceholder")}
+                  label={t("myBookingsDrawer.locationChange.areaLabel")}
                   errorMessage={errors.street?.message}
                 />
                 <Input
@@ -344,8 +370,8 @@ const DrawerLocationChange = ({
                   startIcon={<Building2 />}
                   labelClassName="text-base!"
                   className="text-sm! bg-Grey100!"
-                  placeholder="رقم المبني"
-                  label="المبنى:"
+                  placeholder={t("myBookingsDrawer.locationChange.buildingPlaceholder")}
+                  label={t("myBookingsDrawer.locationChange.buildingLabel")}
                   errorMessage={errors.buildingNo?.message}
                 />
               </div>
@@ -356,16 +382,16 @@ const DrawerLocationChange = ({
                   type="number"
                   labelClassName="text-base!"
                   className="text-sm! bg-Grey100!"
-                  placeholder="رقم الطابق"
-                  label="الطابق:"
+                  placeholder={t("myBookingsDrawer.locationChange.floorPlaceholder")}
+                  label={t("myBookingsDrawer.locationChange.floorLabel")}
                   errorMessage={errors.floor?.message}
                 />
                 <Input
                   {...register("flatNo")}
                   labelClassName="text-base!"
                   className="text-sm! bg-Grey100!"
-                  placeholder="رقم الشقة"
-                  label="رقم الشقة:"
+                  placeholder={t("myBookingsDrawer.locationChange.flatNoPlaceholder")}
+                  label={t("myBookingsDrawer.locationChange.flatNoLabel")}
                   errorMessage={errors.flatNo?.message}
                 />
               </div>
@@ -382,8 +408,10 @@ const DrawerLocationChange = ({
                       defaultCountry="sa"
                       labelClassName="text-base!"
                       inputClassName="text-sm! bg-Grey100!"
-                      label="رقم الجوال:"
-                      placeholder="أدخل رقم الجوال"
+                      label={t("myBookingsDrawer.locationChange.mobileLabel")}
+                      placeholder={t(
+                        "myBookingsDrawer.locationChange.mobilePlaceholder",
+                      )}
                       showValidation={true}
                       onValidationChange={setIsPhoneValid}
                     />
@@ -400,8 +428,10 @@ const DrawerLocationChange = ({
                 {...register("additionalInfo")}
                 labelClassName="text-base!"
                 className="text-sm! bg-Grey100!"
-                placeholder="أي معلومات إضافية للوصول للموقع"
-                label="معلومات إضافية:"
+                placeholder={t(
+                  "myBookingsDrawer.locationChange.additionalInfoPlaceholder",
+                )}
+                label={t("myBookingsDrawer.locationChange.additionalInfoLabel")}
                 errorMessage={errors.additionalInfo?.message}
               />
 
@@ -409,8 +439,8 @@ const DrawerLocationChange = ({
                 {...register("notes")}
                 labelClassName="text-base!"
                 className="text-sm! bg-Grey100!"
-                placeholder="ملاحظات"
-                label="ملاحظات:"
+                placeholder={t("myBookingsDrawer.locationChange.notesPlaceholder")}
+                label={t("myBookingsDrawer.locationChange.notesLabel")}
                 errorMessage={errors.notes?.message}
               />
             </div>
@@ -423,7 +453,7 @@ const DrawerLocationChange = ({
             className="text-base! w-1/2 bg-transparent text-black border-2 border-Grey400 hover:bg-transparent"
             onClick={() => setShowLocationDetails(false)}
           >
-            عرض حجوزاتي
+            {t("myBookings")}
           </Button>
           {showAddForm ? (
             <Button
@@ -432,7 +462,9 @@ const DrawerLocationChange = ({
               onClick={handleSaveLocation}
               disabled={showAddForm || !selectedAddressId || isChangingLocation}
             >
-              {isChangingLocation ? "جاري الحفظ..." : "حفظ التعديلات"}
+              {isChangingLocation
+                ? t("saving")
+                : t("myBookingsDrawer.locationChange.saveChanges")}
             </Button>
           ) : null}
 
@@ -442,7 +474,9 @@ const DrawerLocationChange = ({
               className="text-base! w-1/2 border-2 "
               disabled={isPending}
             >
-              {isPending ? "جاري الإضافة..." : "إضافة"}
+              {isPending
+                ? t("myBookingsDrawer.locationChange.adding")
+                : t("myBookingsDrawer.locationChange.add")}
             </Button>
           ) : null}
         </SheetFooter>

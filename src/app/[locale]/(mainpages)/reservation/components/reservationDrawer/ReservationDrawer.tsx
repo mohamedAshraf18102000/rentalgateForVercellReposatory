@@ -18,6 +18,7 @@ import { formatPrice } from "@/lib/utils/formatPrice";
 import { CalculateQuotePriceResponse } from "@/services/calculateQuotePrice/calculateQuotePrice.service";
 import { Skeleton } from "@/app/(components)/ui/skeleton";
 import ReservationDetailsSkeleton from "./components/ReservationDetailsSkeleton";
+import { useLocale, useTranslations } from "next-intl";
 
 type ReservationDrawerProps = {
   open?: boolean;
@@ -34,20 +35,27 @@ const ReservationDrawer = ({
   onCalculateQuote,
   isCalculating,
 }: ReservationDrawerProps) => {
+  const locale = useLocale();
+  const t = useTranslations("carDetails");
+  const isRTL = locale === "ar";
+
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent
-        dir="rtl"
+        dir={isRTL ? "rtl" : "ltr"}
+        side={isRTL ? "right" : "left"}
         className="flex w-full max-w-full flex-col p-0 sm:max-w-xl"
         onOpenAutoFocus={(e) => e.preventDefault()}
       >
         <SheetHeader className="text-start! mt-8 px-4 sm:mt-10 sm:px-6">
-          <SheetTitle>إتمام الدفع</SheetTitle>
+          <SheetTitle>{t("reservation.drawer.checkoutTitle")}</SheetTitle>
           <Separator className="my-2" />
         </SheetHeader>
         <div className="flex-1 overflow-y-auto px-3 sm:px-4">
           <div className="w-full p-1.5 sm:p-2">
-            <h1 className="text-base font-bold">تفاصيل الحجز</h1>
+            <h1 className="text-base font-bold">
+              {t("reservation.drawer.bookingDetailsTitle")}
+            </h1>
             <div className="bg-Grey100 p-3 mt-3 rounded-xl min-h-[500px]">
               {isCalculating ? (
                 <ReservationDetailsSkeleton />
@@ -87,7 +95,7 @@ const ReservationDrawer = ({
               className="w-full text-lg! flex items-center justify-center"
               type="submit"
             >
-              <span> دفع: </span>
+              <span>{t("reservation.drawer.payLabel")}</span>
               {isCalculating ? (
                 <Skeleton className="w-15 h-5" />
               ) : (

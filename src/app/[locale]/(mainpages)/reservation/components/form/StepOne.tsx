@@ -7,7 +7,7 @@ import {
   UseFormWatch,
   FieldErrors,
 } from "react-hook-form";
-import { ArrowLeft, MapPinPlus } from "lucide-react";
+import { ArrowLeft, ArrowRight, MapPinPlus } from "lucide-react";
 
 import { Input } from "@/app/(components)";
 import { DateTimePicker } from "@/app/(components)/ui/dateTime-picker";
@@ -23,6 +23,7 @@ import WarningMessage from "@/app/(components)/WarningMessage";
 import { useRentalDays } from "@/hooks/useCalculateRentalDays";
 import { getBestOffer } from "@/lib/utils/getBestOffer";
 import { formatLocalDateTime } from "@/lib/utils/formatLocalDateTime";
+import { useLocale, useTranslations } from "next-intl";
 
 interface StepOneProps {
   control: Control<ReservationFormValues>;
@@ -32,6 +33,11 @@ interface StepOneProps {
 }
 
 const StepOne = ({ control, errors, watch, setValue }: StepOneProps) => {
+  const locale = useLocale();
+  const t = useTranslations("carDetails");
+  const isRTL = locale === "ar";
+  const ArrowIcon = isRTL ? ArrowLeft : ArrowRight;
+  const currentLocationLabel = t("currentLocation");
   const MIN_RENTAL_HOURS = 2;
   const MIN_RENTAL_MS = MIN_RENTAL_HOURS * 60 * 60 * 1000;
   const formData = useBookedCarDetailsStore((state) => state.formData);
@@ -63,7 +69,16 @@ const StepOne = ({ control, errors, watch, setValue }: StepOneProps) => {
         )
       : null;
   const warnToTakeOfferDate = recommendedOfferEndDate
-    ? `${recommendedOfferEndDate.toLocaleDateString("ar-GB").replace(/\//g, "-")} ${recommendedOfferEndDate.toLocaleTimeString("ar-GB", { hour: "numeric", minute: "2-digit", hour12: true })}`
+    ? `${recommendedOfferEndDate
+        .toLocaleDateString(locale === "ar" ? "ar-GB" : "en-GB")
+        .replace(/\//g, "-")} ${recommendedOfferEndDate.toLocaleTimeString(
+        locale === "ar" ? "ar-GB" : "en-GB",
+        {
+          hour: "numeric",
+          minute: "2-digit",
+          hour12: true,
+        },
+      )}`
     : "";
 
   const handleOpenReturnLocationDialog = () => {
@@ -74,17 +89,17 @@ const StepOne = ({ control, errors, watch, setValue }: StepOneProps) => {
       const locationName =
         updatedFormData.returnType === "MY_LOCATION" &&
         (!updatedFormData.carReturnLocation ||
-          updatedFormData.carReturnLocation === "الموقع الحالي") &&
+          updatedFormData.carReturnLocation === currentLocationLabel) &&
         address
           ? address
-          : updatedFormData.carReturnLocation || "الموقع الحالي";
+          : updatedFormData.carReturnLocation || currentLocationLabel;
 
       setValue("carReturnLocation", locationName, { shouldValidate: true });
       setValue(
         "returnLat",
         updatedFormData.returnType === "MY_LOCATION" &&
           (!updatedFormData.returnLat ||
-            updatedFormData.carReturnLocation === "الموقع الحالي")
+            updatedFormData.carReturnLocation === currentLocationLabel)
           ? latitude
           : updatedFormData.returnLat || null,
       );
@@ -92,7 +107,7 @@ const StepOne = ({ control, errors, watch, setValue }: StepOneProps) => {
         "returnLong",
         updatedFormData.returnType === "MY_LOCATION" &&
           (!updatedFormData.returnLong ||
-            updatedFormData.carReturnLocation === "الموقع الحالي")
+            updatedFormData.carReturnLocation === currentLocationLabel)
           ? longitude
           : updatedFormData.returnLong || null,
       );
@@ -138,7 +153,7 @@ const StepOne = ({ control, errors, watch, setValue }: StepOneProps) => {
       const locationName =
         updatedFormData.pickupType === "MY_LOCATION" &&
         (!updatedFormData.pickupName ||
-          updatedFormData.pickupName === "الموقع الحالي") &&
+          updatedFormData.pickupName === currentLocationLabel) &&
         address
           ? address
           : updatedFormData.pickupName || "";
@@ -148,7 +163,7 @@ const StepOne = ({ control, errors, watch, setValue }: StepOneProps) => {
         "pickupLat",
         updatedFormData.pickupType === "MY_LOCATION" &&
           (!updatedFormData.pickupLat ||
-            updatedFormData.pickupName === "الموقع الحالي")
+            updatedFormData.pickupName === currentLocationLabel)
           ? latitude
           : updatedFormData.pickupLat || null,
       );
@@ -156,7 +171,7 @@ const StepOne = ({ control, errors, watch, setValue }: StepOneProps) => {
         "pickupLong",
         updatedFormData.pickupType === "MY_LOCATION" &&
           (!updatedFormData.pickupLong ||
-            updatedFormData.pickupName === "الموقع الحالي")
+            updatedFormData.pickupName === currentLocationLabel)
           ? longitude
           : updatedFormData.pickupLong || null,
       );
@@ -176,8 +191,8 @@ const StepOne = ({ control, errors, watch, setValue }: StepOneProps) => {
             render={({ field }) => (
               <Input
                 {...field}
-                label="مكان الأستلام:"
-                placeholder="حدد مكان الاستلام"
+                label={t("reservation.stepOne.pickupLocationLabel")}
+                placeholder={t("reservation.stepOne.pickupLocationPlaceholder")}
                 className="text-base!"
                 labelIcon={<CarRentIcon />}
                 labelClassName="text-base!"
@@ -189,21 +204,25 @@ const StepOne = ({ control, errors, watch, setValue }: StepOneProps) => {
           <button
             type="button"
             onClick={handleOpenPickupLocationDialog}
-            className="absolute left-2 top-0 flex items-center gap-1 text-xs underline sm:gap-2 sm:text-sm"
+            className={`absolute top-0 flex items-center gap-1 text-xs underline sm:gap-2 sm:text-sm ${
+              isRTL ? "left-2" : "right-2"
+            }`}
           >
             <MapPinPlus />
-            حدد مكان الاستلام
+            {t("reservation.stepOne.pickPickupLocation")}
           </button>
         </div>
-        <ArrowLeft className="mt-2 hidden h-12 w-12 shrink-0 lg:mt-8 lg:block" />
+        <ArrowIcon className="mt-2 hidden h-12 w-12 shrink-0 lg:mt-8 lg:block" />
         <div className="w-full relative">
           <button
             type="button"
             onClick={handleOpenReturnLocationDialog}
-            className="absolute left-2 top-0 flex items-center gap-1 text-xs underline sm:gap-2 sm:text-sm"
+            className={`absolute top-0 flex items-center gap-1 text-xs underline sm:gap-2 sm:text-sm ${
+              isRTL ? "left-2" : "right-2"
+            }`}
           >
             <MapPinPlus />
-            التسليم في مكان اخر
+            {t("reservation.stepOne.dropoffDifferentLocation")}
           </button>
           <Controller
             name="carReturnLocation"
@@ -211,8 +230,8 @@ const StepOne = ({ control, errors, watch, setValue }: StepOneProps) => {
             render={({ field }) => (
               <Input
                 {...field}
-                label="مكان التسليم:"
-                placeholder="حدد مكان التسليم"
+                label={t("reservation.stepOne.dropoffLocationLabel")}
+                placeholder={t("reservation.stepOne.dropoffLocationPlaceholder")}
                 className="text-base!"
                 labelIcon={<CarRentIcon />}
                 labelClassName="text-base!"
@@ -230,7 +249,7 @@ const StepOne = ({ control, errors, watch, setValue }: StepOneProps) => {
         formData.pickupType === "MY_LOCATION" ? (
           <WarningMessage
             className="mt-0!"
-            message={`عند اختيار مطار / محطة قطار / استلام من موقعي يتم اضافه رسوم استلام`}
+            message={t("reservation.stepOne.pickupWarning")}
           />
         ) : (
           <span></span>
@@ -240,7 +259,7 @@ const StepOne = ({ control, errors, watch, setValue }: StepOneProps) => {
         formData.returnType === "MY_LOCATION" ? (
           <WarningMessage
             className="mt-0!"
-            message={`عند اختيار مطار / محطة قطار / استلام من موقعي يتم اضافه رسوم تسليم`}
+            message={t("reservation.stepOne.dropoffWarning")}
           />
         ) : (
           <span></span>
@@ -256,9 +275,9 @@ const StepOne = ({ control, errors, watch, setValue }: StepOneProps) => {
             control={control}
             render={({ field }) => (
               <DateTimePicker
-                placeholder="اختر تاريخ ووقت الاستلام"
+                placeholder={t("reservation.stepOne.pickupDatePlaceholder")}
                 {...field}
-                label="مدة و وقت الإيجار:"
+                label={t("reservation.stepOne.rentalPeriodLabel")}
                 labelIcon={<CarRentIcon />}
                 className="w-full"
                 inputClassName="text-base!"
@@ -280,14 +299,14 @@ const StepOne = ({ control, errors, watch, setValue }: StepOneProps) => {
             </p>
           )}
         </div>
-        <ArrowLeft className="hidden h-12 w-12 shrink-0 pt-5 lg:block" />
+        <ArrowIcon className="hidden h-12 w-12 shrink-0 pt-5 lg:block" />
         <div className="w-full">
           <Controller
             name="toDate"
             control={control}
             render={({ field }) => (
               <DateTimePicker
-                placeholder="اختر تاريخ ووقت التسليم"
+                placeholder={t("reservation.stepOne.dropoffDatePlaceholder")}
                 {...field}
                 className="w-full"
                 inputClassName="text-base!"
@@ -321,11 +340,11 @@ const StepOne = ({ control, errors, watch, setValue }: StepOneProps) => {
 
           <p className="flex gap-1 items-center">
             <span className="text-sm font-extrabold">
-              {bestOffer.extraDays} يوم
+              {t("reservation.stepOne.daysCount", { count: bestOffer.extraDays })}
             </span>
-            <span>مجانا لأن مدة الأيجار أكثر من</span>
+            <span>{t("reservation.stepOne.offerTextPrefix")}</span>
             <span className="text-sm font-extrabold">
-              {bestOffer.days} أيام
+              {t("reservation.stepOne.daysCount", { count: bestOffer.days })}
             </span>
           </p>
         </div>
@@ -334,7 +353,7 @@ const StepOne = ({ control, errors, watch, setValue }: StepOneProps) => {
         <>
           <Separator className="my-2" />
           <div className="mb-6">
-            <p className="text-base">عروض رينتال جيت:</p>
+            <p className="text-base">{t("reservation.stepOne.offersTitle")}</p>
           </div>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {offerPackages.map((offer) => (

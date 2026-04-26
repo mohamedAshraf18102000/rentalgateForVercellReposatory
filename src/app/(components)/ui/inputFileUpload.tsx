@@ -3,6 +3,7 @@
 import * as React from "react";
 import { IdCard, X, Eye } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useTranslations } from "next-intl";
 
 interface InputProps extends Omit<
   React.InputHTMLAttributes<HTMLInputElement>,
@@ -51,7 +52,7 @@ function InputFileUpload({
   labelClassName,
   labelIcon,
   uploadIcon,
-  uploadText = "أضغط أو قُم بالسحب لأضافة ملف",
+  uploadText,
   onFileRemove,
   onFileChange,
   initialFile,
@@ -60,6 +61,7 @@ function InputFileUpload({
   value: _value, // file inputs can't be controlled via `value` — discard it
   ...props
 }: InputProps, forwardedRef) {
+  const t = useTranslations("common");
   const [isDragging, setIsDragging] = React.useState(false);
   const [file, setFile] = React.useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = React.useState<string | null>(null);
@@ -67,6 +69,7 @@ function InputFileUpload({
   const [showPreview, setShowPreview] = React.useState(false);
   const inputRef = React.useRef<HTMLInputElement>(null);
   const mergedRef = useMergedRef(inputRef, forwardedRef);
+  const resolvedUploadText = uploadText ?? t("inputFileUpload.uploadText");
 
   // Hydrate from initialFile or initialPreviewUrl (e.g. from a store or API)
   React.useEffect(() => {
@@ -248,7 +251,7 @@ function InputFileUpload({
         )}
         dir="rtl"
       >
-        {uploadText}
+        {resolvedUploadText}
       </p>
     </div>
   );

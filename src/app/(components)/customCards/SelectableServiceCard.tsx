@@ -2,6 +2,7 @@
 
 import { CompanyService } from "@/types/companyCars/carServices";
 import { SaudiRiyal } from "lucide-react";
+import { useLocale } from "next-intl";
 
 interface SelectableServiceCardProps {
   service: CompanyService;
@@ -16,18 +17,25 @@ const SelectableServiceCard = ({
   onToggle,
   badge,
 }: SelectableServiceCardProps) => {
+  const locale = useLocale();
+  const isRTL = locale === "ar";
   const checkboxId = `service-card-${service.csId ?? Math.random()}`;
   const hasDiscount = service.percentage > 0;
   const originalPrice = hasDiscount
     ? (service.price / (1 - service.percentage / 100)).toFixed(2)
     : null;
+  const serviceName =
+    locale === "ar"
+      ? service.serviceArabicName
+      : service.serviceEnglishName || service.name || service.serviceArabicName;
 
   return (
     <label
       htmlFor={checkboxId}
-      dir="rtl"
+      dir={isRTL ? "rtl" : "ltr"}
       className={`
-        relative flex w-full cursor-pointer flex-col gap-2 rounded-lg border-2 px-3 py-3 text-right transition-all duration-300 sm:px-4
+        relative flex w-full cursor-pointer flex-col gap-2 rounded-lg border-2 px-3 py-3 transition-all duration-300 sm:px-4
+        ${isRTL ? "text-right" : "text-left"}
         ${
           selected
             ? "bg-white border-primary border-[0.5px] shadow-lg"
@@ -68,9 +76,9 @@ const SelectableServiceCard = ({
             )}
           </div>
 
-          <div className="order-2 min-w-0 flex-1 text-right">
+          <div className={`order-2 min-w-0 flex-1 ${isRTL ? "text-right" : "text-left"}`}>
             <p className="text-sm font-bold leading-tight text-gray-900 sm:text-base">
-              {service.serviceArabicName}
+              {serviceName}
             </p>
             <p className="mt-1 line-clamp-2 text-xs font-medium leading-relaxed text-gray-500">
               {service.notes}

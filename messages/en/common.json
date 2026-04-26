@@ -120,5 +120,99 @@
     "unexpectedSituation": "Unexpected situation preventing the trip"
   },
   "confirmCancelBookingWithId": "Confirm cancellation — booking {reservationId}",
-  "outOf": "out of"
+  "outOf": "out of",
+  "inputFileUpload": {
+    "uploadText": "Click or drag to upload a file"
+  },
+  "myBookingsDrawer": {
+    "title": "Booking details",
+    "rentalDurationLabel": "Rental duration",
+    "rentalDays": "( {days} days )",
+    "locationChangedNotice": "Pickup and drop-off locations have been changed",
+    "driverDetailsTitle": "Driver details",
+    "totalCostLabel": "Total cost",
+    "carImageAlt": "Car image",
+    "cancelConfirmation": {
+      "title": "Are you sure you want to cancel the booking?",
+      "description": "Do you really want to cancel the booking? This action cannot be undone.",
+      "notesLabel": "Notes:",
+      "notesPlaceholder": "Share your information and our team will contact you soon.",
+      "termsLinkText": "Agree to terms and conditions"
+    },
+    "locationChange": {
+      "fromLabel": "From:",
+      "toLabel": "To:",
+      "addNewAddress": "Add new address",
+      "editPickupDropoff": "Edit pickup and drop-off location",
+      "loadingAddresses": "Loading addresses...",
+      "noSavedAddresses": "No saved addresses",
+      "placeLabel": "Place name:",
+      "placePlaceholder": "Example: home, work",
+      "addressTypeLabel": "Address type:",
+      "selectAddressType": "Select address type",
+      "addressTypes": {
+        "home": "Home",
+        "work": "Work",
+        "other": "Other"
+      },
+      "addressLabel": "Detailed address:",
+      "addressPlaceholder": "Enter detailed address",
+      "areaLabel": "Area:",
+      "areaPlaceholder": "District / Street name",
+      "buildingLabel": "Building:",
+      "buildingPlaceholder": "Building number",
+      "floorLabel": "Floor:",
+      "floorPlaceholder": "Floor number",
+      "flatNoLabel": "Apartment number:",
+      "flatNoPlaceholder": "Apartment number",
+      "mobileLabel": "Mobile number:",
+      "mobilePlaceholder": "Enter mobile number",
+      "additionalInfoLabel": "Additional information:",
+      "additionalInfoPlaceholder": "Any extra information to reach the location",
+      "notesLabel": "Notes:",
+      "notesPlaceholder": "Notes",
+      "saveChanges": "Save changes",
+      "add": "Add",
+      "adding": "Adding...",
+      "toast": {
+        "addSuccess": "Address added successfully",
+        "addError": "An error occurred while adding the address",
+        "selectAddressFirst": "Please select an address first",
+        "unableToDetectReservation": "Unable to detect the current reservation",
+        "saveSuccess": "Location saved successfully",
+        "saveError": "An error occurred while saving location"
+      }
+    },
+    "extendBooking": {
+      "title": "Extend booking",
+      "pickupDateTimeLabel": "Pickup date and time:",
+      "newDropoffTimeLabel": "New drop-off time:",
+      "submit": "Extend booking",
+      "extending": "Extending...",
+      "toast": {
+        "unableToDetectReservation": "Unable to detect the current reservation",
+        "selectNewDropoffTime": "Please select the new drop-off time",
+        "invalidDropoffTimeFormat": "Invalid drop-off time format",
+        "success": "Booking extended successfully",
+        "error": "An error occurred while extending the booking"
+      }
+    },
+    "paymentDetails": {
+      "detailsButton": "Details",
+      "rentalDurationCostHeader": "Rental duration cost:",
+      "subtotalBeforeTaxLabel": "Subtotal (excluding tax)",
+      "additionalServicesCostHeader": "Additional services cost:",
+      "additionalServicesLabel": "Additional services",
+      "driverServiceLabel": "Driver service",
+      "extraKilometersFeeLabel": "Extra kilometers fee",
+      "pickupFeeLabel": "Pickup fee",
+      "deliveryFeeLabel": "Delivery fee",
+      "discountsAndOffersHeader": "Discounts and offers:",
+      "rentalDaysOfferDiscountLabel": "Offer discount ({days} days)",
+      "promoCodeLabel": "Promo code",
+      "pointsDiscountLabel": "Points discount",
+      "totalBeforeTaxLabel": "Total amount (excluding tax)",
+      "taxValueLabel": "Tax amount"
+    }
+  }
 }

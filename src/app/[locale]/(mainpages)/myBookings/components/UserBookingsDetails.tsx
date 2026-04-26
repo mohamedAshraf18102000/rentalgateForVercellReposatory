@@ -10,8 +10,10 @@ import { useState } from "react";
 import { UserReservationsPaylod } from "@/types/myBookings/myBookings";
 import BookingCardSkeleton from "./BookingCardSkeleton";
 import { useAuth } from "@/app/(components)/navbar/hooks/useAuth";
+import { useTranslations } from "next-intl";
 
 const UserBookingsDetails = () => {
+  const t = useTranslations("profile");
   const {
     userData: storeUserData,
     authenticated,
@@ -34,17 +36,21 @@ const UserBookingsDetails = () => {
             </div>
             <div className="min-w-0 flex-1">
               <p className="text-base font-bold sm:text-lg">
-                أهلاً {isClient ? storeUserData?.clientName : "..."}
+                {t("profilePage.greeting", {
+                  name: isClient ? (storeUserData?.clientName ?? "...") : "...",
+                })}
               </p>
               <p className="text-sm">
-                قُم بتحديث بياناتك الشخضية و ضبط الأعدادات
+                {t("myBookingsPage.updateAndSettingsHint")}
               </p>
             </div>
           </div>
           <Separator className="my-3" />
           <div className="">
-            <p className="font-bold text-lg">حجوزاتي</p>
-            <p className="text-sm text-Grey700">عرض جميع الحجوزات </p>
+            <p className="font-bold text-lg">{t("myBookingsPage.title")}</p>
+            <p className="text-sm text-Grey700">
+              {t("myBookingsPage.showAllBookings")}
+            </p>
             <div className="mt-4">
               <BookingsStatus value={status} onValueChange={setStatus} />
             </div>
@@ -53,12 +59,12 @@ const UserBookingsDetails = () => {
         <div className="flex w-full shrink-0 flex-col items-center rounded-2xl bg-white p-4 sm:p-5 lg:w-auto lg:max-w-sm lg:flex-[0_1_280px]">
           <img
             src="/profile/actionIcons/bookings.webp"
-            alt="img"
+            alt={t("myBookingsPage.bookingsImageAlt")}
             className="h-16 w-16 sm:h-[80px] sm:w-[80px]"
           />
           <Separator className="my-4" />
           <div className="text-center">
-            <p className="font-bold">عدد الحجوزات المعروضة</p>
+            <p className="font-bold">{t("myBookingsPage.shownBookingsCount")}</p>
             <PaginationDateView
               shown={isClient ? String(reservationsData?.length) : "0"}
               total={isClient ? String(reservationsData?.length) : "0"}

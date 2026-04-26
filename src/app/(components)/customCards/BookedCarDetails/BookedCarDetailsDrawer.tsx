@@ -18,6 +18,7 @@ import { Badge } from "../../ui/badge";
 import CarRentIcon from "@/constants/icons/CarRentIcon";
 import {
   ArrowLeft,
+  ArrowRight,
   PhoneCall,
   SaudiRiyal,
   SaudiRiyalIcon,
@@ -25,7 +26,7 @@ import {
   User,
 } from "lucide-react";
 import { ReservationDetailsResponse } from "@/types/myBookings/BookingDetails";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import type { ExtendReservationDriverPayload } from "@/services/mybookings/extendReservation.service";
 
 import { format } from "date-fns";
@@ -77,10 +78,10 @@ const BookedCarDetailsDrawer = ({
   onOpen,
 }: BookedCarDetailsDrawerProps) => {
   const getStatusLabel = useStatusLabel();
-
-  console.log("data>>>>>>>", data);
-
+  const t = useTranslations("common");
   const locale = useLocale();
+  const isRTL = locale === "ar";
+  const DateArrowIcon = isRTL ? ArrowLeft : ArrowRight;
   const dateLocale = locale === "ar" ? ar : enUS;
   const [activeView, setActiveView] = useState<
     | "booking-details"
@@ -264,14 +265,15 @@ const BookedCarDetailsDrawer = ({
     >
       {trigger && <SheetTrigger asChild>{trigger}</SheetTrigger>}
       <SheetContent
-        dir="rtl"
+        dir={isRTL ? "rtl" : "ltr"}
+        side={isRTL ? "right" : "left"}
         className="flex w-full flex-col p-0 sm:max-w-[35%]"
       >
         <div className="relative flex min-h-0 flex-1 flex-col">
           {activeView === "booking-details" ? (
             <>
               <SheetHeader className="text-start! mt-10 px-6 ">
-                <SheetTitle>تفاصيل الحجز</SheetTitle>
+                <SheetTitle>{t("myBookingsDrawer.title")}</SheetTitle>
               </SheetHeader>
               <div className="mx-auto min-h-0 w-full flex-1 overflow-y-auto px-3 sm:w-[95%]">
                 <div className="">
@@ -289,7 +291,7 @@ const BookedCarDetailsDrawer = ({
                           )}
                         </Badge>
                         <br />
-                        <span className="mx-2">رقم الحجز:</span>
+                        <span className="mx-2">{t("bookingNumber")}:</span>
                         <span className="font-bold text-lg">
                           {data?.reservationId}
                         </span>
@@ -304,8 +306,12 @@ const BookedCarDetailsDrawer = ({
                   <div>
                     <div className="text-base flex items-center gap-2">
                       <CarRentIcon />
-                      <span>مدة الإيجار:</span>
-                      <span className="text-Grey700">( {data?.days} يوم )</span>
+                      <span>{t("myBookingsDrawer.rentalDurationLabel")}:</span>
+                      <span className="text-Grey700">
+                        {t("myBookingsDrawer.rentalDays", {
+                          days: data?.days ?? 0,
+                        })}
+                      </span>
                     </div>
 
                     <div className="text-base flex items-center gap-2 mt-3">
@@ -320,7 +326,7 @@ const BookedCarDetailsDrawer = ({
                           )}
                       </span>
 
-                      <ArrowLeft />
+                      <DateArrowIcon />
 
                       <span className="text-black">
                         {data?.endDate &&
@@ -363,7 +369,7 @@ const BookedCarDetailsDrawer = ({
                           <div className="">
                             <p className="text-StatusRedBG">
                               <span>*</span>
-                              تم تغير موقع الاستلام و التسليم
+                              {t("myBookingsDrawer.locationChangedNotice")}
                             </p>
                             {isChangedLocationLoading ? (
                               <LocationFromToSkeleton />
@@ -409,7 +415,7 @@ const BookedCarDetailsDrawer = ({
                             className="bg-StatusGreen border-StatusDarkGreen flex items-center rounded-xl border-2 p-2 font-bold"
                           >
                             <span className="text-StatusDarkGreen mx-1">
-                              {service.arabicName}
+                              {isRTL ? service.arabicName : service.englishName}
                             </span>
                             <span>{service.price}</span>
                             <SaudiRiyalIcon />
@@ -420,7 +426,7 @@ const BookedCarDetailsDrawer = ({
                   )}
                 {data?.driverName && data?.driverMobile && (
                   <div className="w-full flex flex-col mt-2 bg-Grey100 p-4 rounded-xl">
-                    <p>تفاصيل السائق</p>
+                    <p>{t("myBookingsDrawer.driverDetailsTitle")}</p>
                     <div className="mt-2 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                       <div className="flex items-center gap-2 break-all">
                         <User className="w-5! h-5!" />
@@ -440,7 +446,9 @@ const BookedCarDetailsDrawer = ({
                 <Separator className="my-3" />
                 <div className="flex items-center justify-between gap-3">
                   <div>
-                    <p className="font-bold text-base">أجمالي التكلفة:</p>
+                    <p className="font-bold text-base">
+                      {t("myBookingsDrawer.totalCostLabel")}:
+                    </p>
                   </div>
                   <div className="flex items-center">
                     <span className="text-xl font-bold">{data?.total}</span>
@@ -456,10 +464,10 @@ const BookedCarDetailsDrawer = ({
                   className="text-base! w-full border-2 border-StatusRed bg-transparent text-StatusRed sm:w-1/4"
                   onClick={() => setActiveView("cancel-booking")}
                 >
-                  إلغاء الحجز
+                  {t("cancelBooking")}
                 </Button>
                 <Button className="text-base! w-full sm:w-3/4">
-                  عرض حجوزاتي
+                  {t("myBookings")}
                 </Button>
               </SheetFooter>
             </>

@@ -94,6 +94,89 @@
       "copyError": "فشل نسخ الكود"
     }
   },
+  "myBookingsPage": {
+    "updateAndSettingsHint": "قُم بتحديث بياناتك الشخضية و ضبط الأعدادات",
+    "title": "حجوزاتي",
+    "showAllBookings": "عرض جميع الحجوزات",
+    "shownBookingsCount": "عدد الحجوزات المعروضة",
+    "bookingsImageAlt": "صورة الحجوزات",
+    "statusTabs": {
+      "current": "الحالية",
+      "previous": "السابقة"
+    }
+  },
+  "userSavedLocationDialog": {
+    "toast": {
+      "addSuccess": "تم إضافة العنوان بنجاح",
+      "addError": "حدث خطأ أثناء إضافة العنوان",
+      "deleteSuccess": "تم حذف العنوان بنجاح",
+      "deleteError": "حدث خطأ أثناء حذف العنوان"
+    },
+    "confirmDelete": "هل أنت متأكد من حذف هذا العنوان؟",
+    "backAria": "رجوع",
+    "header": {
+      "addNewAddress": "إضافة عنوان جديد",
+      "savedAddresses": "العناوين المسجلة"
+    },
+    "actions": {
+      "addNewAddress": "إضافة عنوان جديد",
+      "close": "إغلاق",
+      "cancel": "إلغاء",
+      "add": "إضافة",
+      "adding": "جاري الإضافة..."
+    },
+    "states": {
+      "loadingAddresses": "جاري تحميل العناوين...",
+      "noSavedAddresses": "لا توجد عناوين مسجلة"
+    },
+    "fields": {
+      "mobile": {
+        "label": "رقم الجوال:",
+        "placeholder": "أدخل رقم الجوال"
+      },
+      "addressName": {
+        "label": "اسم المكان:",
+        "placeholder": "مثال: المنزل، العمل"
+      },
+      "addressType": {
+        "label": "نوع العنوان:",
+        "placeholder": "اختر نوع العنوان",
+        "options": {
+          "home": "منزل",
+          "work": "عمل",
+          "other": "أخرى"
+        }
+      },
+      "address": {
+        "label": "العنوان بالتفصيل:",
+        "placeholder": "أدخل العنوان التفصيلي"
+      },
+      "street": {
+        "label": "المنطقة:",
+        "placeholder": "اسم الحي / الشارع"
+      },
+      "buildingNo": {
+        "label": "المبنى:",
+        "placeholder": "رقم المبنى"
+      },
+      "floor": {
+        "label": "الطابق:",
+        "placeholder": "رقم الطابق"
+      },
+      "flatNo": {
+        "label": "رقم الشقة:",
+        "placeholder": "رقم الشقة"
+      },
+      "additionalInfo": {
+        "label": "معلومات إضافية:",
+        "placeholder": "أي معلومات إضافية للوصول للموقع"
+      },
+      "notes": {
+        "label": "ملاحظات:",
+        "placeholder": "ملاحظات"
+      }
+    }
+  },
   "changePasswordDialog": {
     "title": "تغيير كلمة المرور",
     "oldPasswordLabel": "كلمة المرور الحالية:",
@@ -111,6 +194,16 @@
       "confirmRequired": "تأكيد كلمة المرور مطلوبة",
       "passwordsMismatch": "كلمات المرور غير متطابقة"
     }
+  },
+  "updateLicenceDialog": {
+    "title": "بيانات الرخصة",
+    "licenseImageLabel": "صورة الرخصة:",
+    "licenseExpiryDateLabel": "تاريخ إنتهاء الرخصة:",
+    "closeButton": "إغلاق",
+    "saveButton": "حفظ",
+    "savingButton": "جاري الحفظ...",
+    "toastSuccess": "تم تحديث بيانات الرخصة بنجاح",
+    "toastError": "حدث خطأ أثناء تحديث البيانات"
   }
 }
 

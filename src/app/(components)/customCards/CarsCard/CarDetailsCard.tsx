@@ -4,7 +4,13 @@ import { Badge } from "../../ui/badge";
 import ExeclusiveOfferIcon from "@/constants/icons/ExeclusiveOfferIcon";
 import Image from "next/image";
 import { StarIcon } from "@/constants/icons";
-import { ChevronLeft, Dot, Flame, SaudiRiyal } from "lucide-react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  Dot,
+  Flame,
+  SaudiRiyal,
+} from "lucide-react";
 import { Button } from "../../ui/button";
 import { Separator } from "../../ui/separator";
 import FreeKmIcon from "@/constants/icons/FreeKmIcon";
@@ -16,7 +22,7 @@ import DOMPurify from "dompurify";
 import { PricingType } from "@/lib/utils/calculateRentalPrice";
 import { formatPrice } from "@/lib/utils/formatPrice";
 import { getPriceWithoutTax } from "@/lib/utils/getPriceWithoutTax";
-import { dialogRegistry } from "@/app/[locale]/(dialogs)/registry/dialogRegistry";
+import { useLocale, useTranslations } from "next-intl";
 import { useMemo } from "react";
 
 interface CarDetailsCardProps {
@@ -54,14 +60,6 @@ interface CarDetailsCardProps {
   showTax?: boolean;
 }
 
-const pricingTypeLabels: Record<PricingType, string> = {
-  DAILY: "يومي",
-  WEEKLY: "أسبوعي",
-  HALF_MONTHLY: "نصف شهري",
-  MONTHLY: "شهري",
-  YEARLY: "سنوي",
-};
-
 const CarDetailsCard = ({
   car,
   company,
@@ -86,9 +84,26 @@ const CarDetailsCard = ({
   showTax,
 }: CarDetailsCardProps) => {
   const router = useRouter();
-  const otherSpecsPurified = DOMPurify.sanitize(car.otherSpecs, {
-    ALLOWED_TAGS: [],
-  });
+  const locale = useLocale();
+  const t = useTranslations("carDetails");
+  const isRTL = locale === "ar";
+  const ChevronIcon = isRTL ? ChevronLeft : ChevronRight;
+  const pricingTypeLabels: Record<PricingType, string> = useMemo(
+    () => ({
+      DAILY: t("pricingType.daily"),
+      WEEKLY: t("pricingType.weekly"),
+      HALF_MONTHLY: t("pricingType.halfMonthly"),
+      MONTHLY: t("pricingType.monthly"),
+      YEARLY: t("pricingType.yearly"),
+    }),
+    [t],
+  );
+  const otherSpecsPurified = DOMPurify.sanitize(
+    locale === "ar" ? car.otherSpecs : car.otherSpecsEnglish || car.otherSpecs,
+    {
+      ALLOWED_TAGS: [],
+    },
+  );
 
   return (
     <section className="mt-5 flex w-full flex-col overflow-hidden rounded-[18px] border-2 border-white shadow-xl lg:flex-row">
@@ -99,14 +114,16 @@ const CarDetailsCard = ({
           <div className="w-full h-full flex items-center justify-center">
             <img
               src={`${process.env.NEXT_PUBLIC_IMAGES_PREFIX_URL}/${car.image}`}
-              alt="سيارة للإيجار"
+              alt={t("carImageAlt")}
               className="relative z-20 w-full object-contain scale-85 mb-5 max-h-[400px]"
             />
 
             {typeof firstBadgeTitle === "string" &&
               firstBadgeTitle.length > 0 && (
                 <Badge
-                  className={`absolute -right-2 top-0 z-50 p-2 text-xs font-bold sm:p-4 sm:text-sm ${
+                  className={`absolute top-0 z-50 p-2 text-xs font-bold sm:p-4 sm:text-sm ${
+                    isRTL ? "-right-2" : "-left-2"
+                  } ${
                     firstBadgeColor === "red"
                       ? "bg-StatusBrownBG text-StatusBrown200"
                       : "bg-StatusGreen text-StatusDarkGreen"
@@ -118,7 +135,9 @@ const CarDetailsCard = ({
 
             {extraBadgeTitle && (
               <Badge
-                className={`absolute -right-2 top-10 z-50 p-2 text-xs font-bold sm:p-4 sm:text-sm ${
+                className={`absolute top-10 z-50 p-2 text-xs font-bold sm:p-4 sm:text-sm ${
+                  isRTL ? "-right-2" : "-left-2"
+                } ${
                   extraBadgeColor === "red"
                     ? "bg-StatusBrownBG text-StatusBrown200"
                     : "bg-StatusGreen text-StatusDarkGreen"
@@ -129,7 +148,11 @@ const CarDetailsCard = ({
             )}
           </div>
 
-          <div className="absolute top-10 z-50 flex w-fit max-w-[90%] items-center justify-between gap-2 rounded-l-[18px] bg-white p-1 sm:top-12 sm:gap-4">
+          <div
+            className={`absolute top-10 z-50 flex w-fit max-w-[90%] items-center justify-between gap-2 bg-white p-1 sm:top-12 sm:gap-4 ${
+              isRTL ? "rounded-l-[18px]" : "rounded-r-[18px]"
+            }`}
+          >
             <div className="flex items-center gap-1">
               <Image
                 src={`${process.env.NEXT_PUBLIC_IMAGES_PREFIX_URL}/${company?.logo}`}
@@ -139,7 +162,7 @@ const CarDetailsCard = ({
                 className="h-[38px] w-[38px] rounded-2xl border-2 border-Grey100 object-fill p-0.5 sm:h-[45px] sm:w-[45px]"
               />
               <span className="mx-1 line-clamp-1 text-sm sm:text-base">
-                {company?.arabicName}
+                {locale === "ar" ? company?.arabicName : company?.englishName}
               </span>
             </div>
 
@@ -158,7 +181,7 @@ const CarDetailsCard = ({
           <figcaption className="flex items-center gap-2 absolute bottom-0 left-1/2 -translate-x-1/2 z-50">
             <ExeclusiveOfferIcon />
             <span className="text-sm font-bold text-StatusDarkGreen">
-              عرض خاص
+              {t("special_offer_title")}
             </span>
           </figcaption>
         </figure>
@@ -168,9 +191,7 @@ const CarDetailsCard = ({
         <div className="flex w-full flex-col gap-3 text-sm sm:text-base xl:flex-row xl:items-center xl:justify-between">
           <div className="flex flex-col gap-1">
             <div className="flex items-center">
-              <span>
-                {showTax ? "السعر شامل الضريبة:" : "السعر غير شامل الضريبة:"}
-              </span>
+              <span>{showTax ? t("priceWithTax") : t("priceWithoutTax")}</span>
 
               {showTax ? (
                 <>
@@ -234,8 +255,10 @@ const CarDetailsCard = ({
               <SaudiRiyal className="w-5 h-5" />
               <span className="mx-1 text-sm text-Grey500">
                 {rentalDays && rentalDays > 1
-                  ? `( لـ ${rentalDays} يوم )`
-                  : `/ ${pricingTypeLabels[pricingType]}`}
+                  ? t("forRentalDays", { days: rentalDays })
+                  : t("pricePerPricingType", {
+                      pricingType: pricingTypeLabels[pricingType],
+                    })}
               </span>
             </div>
           </div>
@@ -244,17 +267,17 @@ const CarDetailsCard = ({
             <Button
               variant="outline"
               className="w-full text-sm! sm:w-auto sm:text-base!"
-              icon={<ChevronLeft className="w-8 h-8" />}
+              icon={<ChevronIcon className="w-8 h-8" />}
               onClick={() => router.push(`/reservation/${ccbId}?forOther=true`)}
             >
-              حجز للغير
+              {t("bookForOthers")}
             </Button>
             <Button
               className="w-full text-sm! sm:w-auto sm:text-base!"
-              icon={<ChevronLeft className="w-8 h-8" />}
+              icon={<ChevronIcon className="w-8 h-8" />}
               onClick={() => router.push(`/reservation/${ccbId}`)}
             >
-              أحجزها الآن
+              {t("bookNow")}
             </Button>
           </div>
         </div>
@@ -265,13 +288,15 @@ const CarDetailsCard = ({
           <div className="p-1 bg-Grey100 rounded-[12px] w-fit">
             <CarCategoryBadge
               icon={car.categoryIcon}
-              name={car.categoryNameArabic}
+              name={
+                locale === "ar" ? car.categoryNameArabic : car.categoryNameEnglish
+              }
             />
           </div>
         </div>
         <Separator className="my-3" />
         <div>
-          <p>مواصفات السيارة:</p>
+          <p>{t("specificationsTitle")}</p>
           <div className="mt-2 grid w-full grid-cols-1 gap-2 p-2 sm:grid-cols-2">
             <div className="flex items-center text-Grey700 text-base">
               <Dot />
@@ -286,9 +311,9 @@ const CarDetailsCard = ({
           <div className="flex items-center gap-1">
             <FreeKmIcon />
             <p className="text-sm">
-              الكيلومترات المجانية:
+              {t("freeKilometersLabel")}
               <strong>{freeKm ?? 350} </strong>
-              <strong>كم / اليوم</strong>
+              <strong>{t("kmPerDay")}</strong>
             </p>
           </div>
 
@@ -296,10 +321,10 @@ const CarDetailsCard = ({
             <div className="flex items-center gap-1">
               <FreeKmIcon />
               <p className="text-sm flex items-center">
-                تكلفة الكيلو متر الزيادة:
+                {t("extraKilometerCostLabel")}
                 <strong className="mx-1">{extraKmPrice}</strong>
                 <SaudiRiyal className="text-sm!" />
-                <strong>/اليوم</strong>
+                <strong>{t("perDayCompact")}</strong>
               </p>
             </div>
           )}
@@ -309,16 +334,16 @@ const CarDetailsCard = ({
             <div className="flex flex-wrap items-center gap-1">
               <UnlimitedKmIcon />
               <p className="text-sm flex items-center">
-                <span className="mx-1">عدد كيلومترات لا نهائي:</span>
+                <span className="mx-1">{t("unlimitedKilometersLabel")}</span>
                 <strong>{unlimitedKmPrice?.toString()}</strong>
                 <span>
                   <SaudiRiyal />
                 </span>
-                <strong> / اليوم</strong>
+                <strong>{t("perDayWithSpacing")}</strong>
               </p>
               <p className="mx-1 flex items-center gap-1 rounded-[8px] bg-StatusBrownBG p-2 text-sm font-bold text-StatusBrown200">
                 <Flame />
-                <span>قيادة بلا نهاية</span>
+                <span>{t("unlimitedDrivingBadge")}</span>
               </p>
             </div>
           </div>

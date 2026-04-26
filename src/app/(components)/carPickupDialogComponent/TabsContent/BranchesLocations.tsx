@@ -5,11 +5,14 @@ import { MapPinHouse } from "lucide-react";
 import { Label } from "../../ui/label";
 import { RadioGroup, RadioGroupItem } from "../../ui/radio-group";
 import { useLocationStore } from "@/lib/stores/useLocationStore";
+import { useLocale } from "next-intl";
 
 const BranchesLocations = () => {
   const { carDetails, setFormData, formData } = useBookedCarDetailsStore();
   const { target, confirmDialog } = usePickupDialogStore();
   const { latitude, longitude } = useLocationStore();
+  const locale = useLocale();
+  const dir = locale === "ar" ? "rtl" : "ltr";
 
   const handleValueChange = (value: string) => {
     if (carDetails) {
@@ -41,7 +44,7 @@ const BranchesLocations = () => {
   return (
     <div className="w-full h-full mt-4">
       <RadioGroup
-        dir="rtl"
+        dir={dir}
         className="flex flex-col gap-y-2 w-full"
         onValueChange={handleValueChange}
         value={
@@ -65,11 +68,6 @@ const BranchesLocations = () => {
               </div>
               <div className="flex flex-col gap-0.5">
                 <p className="text-sm font-bold">{carDetails.branchName}</p>
-                <p className="text-xs text-muted-foreground">
-                  {carDetails.branchStatus === "active"
-                    ? "فرع متاح"
-                    : "فرع غير متاح"}
-                </p>
               </div>
             </Label>
             <RadioGroupItem

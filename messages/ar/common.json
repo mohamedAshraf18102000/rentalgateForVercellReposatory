@@ -119,6 +119,100 @@
     "delayCommunicationOrMismatch": "تأخير، ضعف تواصل، أو عدم تطابق المركبة",
     "unexpectedSituation": "ظرف غير متوقع يمنع إتمام الرحلة"
   },
-  "confirmCancelBookingWithId": "تأكيد إلغاء الحجز",
-  "outOf": "من أصل"
+  "confirmCancelBookingWithId": "تأكيد إلغاء الحجز — رقم {reservationId}",
+  "outOf": "من أصل",
+  "inputFileUpload": {
+    "uploadText": "أضغط أو قُم بالسحب لأضافة ملف"
+  },
+  "myBookingsDrawer": {
+    "title": "تفاصيل الحجز",
+    "rentalDurationLabel": "مدة الإيجار",
+    "rentalDays": "( {days} يوم )",
+    "locationChangedNotice": "تم تغير موقع الاستلام و التسليم",
+    "driverDetailsTitle": "تفاصيل السائق",
+    "totalCostLabel": "أجمالي التكلفة",
+    "carImageAlt": "صورة السيارة",
+    "cancelConfirmation": {
+      "title": "هل انت متأكد من انك تريد الغاء الحجز؟",
+      "description": "هل تريد فعلاً الغاء الحجز؟ لا يمكن التراجع عن هذه العملية.",
+      "notesLabel": "ملاحظات:",
+      "notesPlaceholder": "شاركنا معلوماتك، وسيتواصل معك فريقنا في أقرب وقت.",
+      "termsLinkText": "الموافقة علي الشروط و الأحكام"
+    },
+    "locationChange": {
+      "fromLabel": "من:",
+      "toLabel": "إلى:",
+      "addNewAddress": "إضافة عنوان جديد",
+      "editPickupDropoff": "تعديل مكان الاستلام و التسليم",
+      "loadingAddresses": "جاري تحميل العناوين...",
+      "noSavedAddresses": "لا توجد عناوين مسجلة",
+      "placeLabel": "اسم المكان:",
+      "placePlaceholder": "مثال: المنزل، العمل",
+      "addressTypeLabel": "نوع العنوان:",
+      "selectAddressType": "اختر نوع العنوان",
+      "addressTypes": {
+        "home": "منزل",
+        "work": "عمل",
+        "other": "أخرى"
+      },
+      "addressLabel": "العنوان بالتفصيل:",
+      "addressPlaceholder": "أدخل العنوان التفصيلي",
+      "areaLabel": "المنطقة:",
+      "areaPlaceholder": "اسم الحي / الشارع",
+      "buildingLabel": "المبنى:",
+      "buildingPlaceholder": "رقم المبني",
+      "floorLabel": "الطابق:",
+      "floorPlaceholder": "رقم الطابق",
+      "flatNoLabel": "رقم الشقة:",
+      "flatNoPlaceholder": "رقم الشقة",
+      "mobileLabel": "رقم الجوال:",
+      "mobilePlaceholder": "أدخل رقم الجوال",
+      "additionalInfoLabel": "معلومات إضافية:",
+      "additionalInfoPlaceholder": "أي معلومات إضافية للوصول للموقع",
+      "notesLabel": "ملاحظات:",
+      "notesPlaceholder": "ملاحظات",
+      "saveChanges": "حفظ التعديلات",
+      "add": "إضافة",
+      "adding": "جاري الإضافة...",
+      "toast": {
+        "addSuccess": "تم إضافة العنوان بنجاح",
+        "addError": "حدث خطأ أثناء إضافة العنوان",
+        "selectAddressFirst": "يرجى اختيار عنوان أولاً",
+        "unableToDetectReservation": "تعذر تحديد الحجز الحالي",
+        "saveSuccess": "تم حفظ الموقع بنجاح",
+        "saveError": "حدث خطأ أثناء حفظ الموقع"
+      }
+    },
+    "extendBooking": {
+      "title": "تمديد الحجز",
+      "pickupDateTimeLabel": "تاريخ ووقت الاستلام:",
+      "newDropoffTimeLabel": "وقت التسليم الجديد:",
+      "submit": "تمديد الحجز",
+      "extending": "جاري التمديد...",
+      "toast": {
+        "unableToDetectReservation": "تعذر تحديد الحجز الحالي",
+        "selectNewDropoffTime": "يرجى اختيار وقت التسليم الجديد",
+        "invalidDropoffTimeFormat": "صيغة وقت التسليم غير صالحة",
+        "success": "تم تمديد الحجز بنجاح",
+        "error": "حدث خطأ أثناء تمديد الحجز"
+      }
+    },
+    "paymentDetails": {
+      "detailsButton": "التفاصيل",
+      "rentalDurationCostHeader": "تكلفة مدة الإيجار:",
+      "subtotalBeforeTaxLabel": "المجموع الفرعي (غير شامل الضريبة)",
+      "additionalServicesCostHeader": "تكلفة الخدمات الإضافية:",
+      "additionalServicesLabel": "خدمات إضافية",
+      "driverServiceLabel": "خدمة سائق",
+      "extraKilometersFeeLabel": "رسوم الكيلومترات الإضافية",
+      "pickupFeeLabel": "رسوم استلام",
+      "deliveryFeeLabel": "رسوم التسليم",
+      "discountsAndOffersHeader": "الخصومات و العروض:",
+      "rentalDaysOfferDiscountLabel": "خصم عرض ال ( {days} يوم )",
+      "promoCodeLabel": "كود الخصم",
+      "pointsDiscountLabel": "خصم النقاط",
+      "totalBeforeTaxLabel": "إجمالي المبلغ (غير شامل الضريبة)",
+      "taxValueLabel": "قيمة الضريبة"
+    }
+  }
 }

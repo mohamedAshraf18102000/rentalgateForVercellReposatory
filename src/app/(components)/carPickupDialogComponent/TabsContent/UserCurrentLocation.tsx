@@ -3,8 +3,10 @@ import useUserAddreses from "@/hooks/api/useUserAddreses";
 import { UserAddress } from "@/types/userProfile/userAddress";
 import { usePickupDialogStore } from "@/lib/stores/usePickupDialogStore";
 import { useBookedCarDetailsStore } from "@/lib/stores/useBookedCarDetailsStore";
+import { useTranslations } from "next-intl";
 
 const UserCurrentLocation = () => {
+  const t = useTranslations("home");
   const { data: userAddresses, isLoading: isLoadingAddresses } =
     useUserAddreses();
 
@@ -102,15 +104,14 @@ const UserCurrentLocation = () => {
 
       <div className="absolute px-4 py-3 bottom-2 left-1/2 -translate-x-1/2 bg-white/95 backdrop-blur-md text-primary shadow-2xl border border-Grey100 w-[94%] rounded-2xl z-20">
         <div className="flex justify-between items-center mb-3">
-          <h5 className="font-bold text-base">العناوين المسجلة</h5>
-          {/* <button className="font-bold text-sm border-2 px-3 py-1.5 rounded-lg flex items-center gap-1 hover:bg-Grey200 transition-colors">
-            عرض الكل <ChevronLeft className="w-4 h-4" />
-          </button> */}
+          <h5 className="font-bold text-base">
+            {t("pickupDialog.savedAddressesTitle")}
+          </h5>
         </div>
 
         {userAddresses?.length === 0 && (
           <p className="text-center text-Grey600 text-sm">
-            لا توجد عناوين مسجلة
+            {t("pickupDialog.noSavedAddresses")}
           </p>
         )}
         <div className="flex overflow-x-auto gap-3 pb-2 ">
