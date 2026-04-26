@@ -68,7 +68,7 @@ const SuccessPartnersMerquee = ({ partners }: { partners: Company[] }) => {
   const row2 = [...partners.slice(half), ...partners.slice(0, half)];
 
   return (
-    <section className="w-full overflow-hidden py-4 relative h-full" dir="ltr">
+    <section className="w-full overflow-hidden py-4 relative h-full select-none! pointer-events-none!" dir="ltr">
       <div
         className="absolute left-0 top-0 bottom-0 w-100 z-10 pointer-events-none"
         style={{

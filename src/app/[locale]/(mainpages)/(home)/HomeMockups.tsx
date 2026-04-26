@@ -124,7 +124,7 @@ function HomeMockups() {
 
             {/* Phone Mockup - 5 columns */}
             <div className="col-span-5 flex justify-center md:justify-center">
-              <div className="drop-shadow-2xl w-[320px] lg:w-[350px]">
+              <div className="drop-shadow-2xl w-[320px] lg:w-[350px] pointer-events-none select-none!">
                 <Image
                   src="/shared/Mockup.png"
                   alt="App Mockup"

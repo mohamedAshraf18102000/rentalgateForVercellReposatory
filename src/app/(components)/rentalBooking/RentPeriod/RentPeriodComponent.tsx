@@ -15,7 +15,7 @@ const RentPeriodComponent = () => {
 
   return (
     <div className="h-full md:h-full rounded-2xl! overflow-hidden shadow-lg border-2 border-white">
-      <div className="relative h-[200px]! md:h-[50%] overflow-hidden">
+      <div className="relative h-[200px]! md:h-[50%] overflow-hidden pointer-events-none select-none!">
         <Image
           src="/rentalSearch/img1.webp"
           alt="bgApp2"

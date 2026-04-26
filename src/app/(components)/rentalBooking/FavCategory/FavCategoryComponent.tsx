@@ -16,7 +16,7 @@ const FavCategoryComponent = () => {
   const t = useTranslations("home");
 
   return (
-    <div className="h-full md:h-full rounded-2xl! overflow-hidden shadow-lg border-2 border-white">
+    <div className="h-full md:h-full rounded-2xl! overflow-hidden shadow-lg border-2 border-white pointer-events-none select-none!">
       <div className="relative h-[200px]! md:h-[50%] overflow-hidden">
         <Image
           src="/rentalSearch/img2.webp"

@@ -8,7 +8,7 @@ const PickUpArea = () => {
 
   return (
     <>
-      <WrapperContainer className="my-14">
+      <WrapperContainer className="my-14 select-none!">
         <div className="w-full flex flex-col items-center justify-center mb-8">
           <h2 className="font-bold text-3xl">{t("pickupArea.title")}</h2>
           <p className="text-Grey700 text-base font-normal">
