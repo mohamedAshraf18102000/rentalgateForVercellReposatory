@@ -6,6 +6,7 @@ export type TargetField = "pickup" | "return";
 type PickupDialogState = {
   open: boolean;
   activeTab: PickUpCardDetails["key"];
+  isCurrentLocationTabDisabled: boolean;
   target: TargetField;
   onConfirm?: () => void;
   openDialog: (tab?: PickUpCardDetails["key"], target?: TargetField, onConfirm?: () => void) => void;
@@ -15,12 +16,14 @@ type PickupDialogState = {
   isUnsavedMapLocation: boolean;
   setIsUnsavedMapLocation: (value: boolean) => void;
   setActiveTab: (tab: PickUpCardDetails["key"]) => void;
+  setIsCurrentLocationTabDisabled: (value: boolean) => void;
   resetDialogState: () => void;
 };
 
 const initialPickupDialogState = {
   open: false,
   activeTab: "currentLocation" as PickUpCardDetails["key"],
+  isCurrentLocationTabDisabled: false,
   target: "pickup" as TargetField,
   onConfirm: undefined as (() => void) | undefined,
   isUnsavedMapLocation: true,
@@ -30,7 +33,14 @@ export const usePickupDialogStore = create<PickupDialogState>((set, get) => ({
   ...initialPickupDialogState,
 
   openDialog: (tab = "currentLocation", target = "pickup", onConfirm) =>
-    set({ open: true, activeTab: tab, target, onConfirm, isUnsavedMapLocation: true }),
+    set({
+      open: true,
+      activeTab: tab,
+      target,
+      onConfirm,
+      isUnsavedMapLocation: true,
+      isCurrentLocationTabDisabled: false,
+    }),
 
   closeDialog: () => set({ open: false, onConfirm: undefined }),
 
@@ -43,5 +53,7 @@ export const usePickupDialogStore = create<PickupDialogState>((set, get) => ({
   
   setIsUnsavedMapLocation: (value) => set({ isUnsavedMapLocation: value }),
   setActiveTab: (tab) => set({ activeTab: tab }),
+  setIsCurrentLocationTabDisabled: (value) =>
+    set({ isCurrentLocationTabDisabled: value }),
   resetDialogState: () => set(initialPickupDialogState),
 }));

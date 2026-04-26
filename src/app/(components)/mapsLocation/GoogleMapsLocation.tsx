@@ -5,7 +5,10 @@ import { Input } from "../ui/input";
 import { LocateFixed, Loader2, Search } from "lucide-react";
 import { Skeleton } from "../ui/skeleton";
 import { useLocationStore } from "@/lib/stores/useLocationStore";
-import { reverseGeocode } from "@/lib/utils/reverseGeocode";
+import {
+  ReverseGeocodeMeta,
+  reverseGeocodeWithDetails,
+} from "@/lib/utils/reverseGeocode";
 import { useDebounce } from "./hooks/useDebounce";
 import { usePlacesAutocomplete } from "./hooks/usePlacesAutocomplete";
 
@@ -30,6 +33,7 @@ const GoogleMapsLocation = ({
     lng: number,
     address: string,
     isManual?: boolean,
+    geocodeMeta?: ReverseGeocodeMeta,
   ) => void;
   initialLat?: number;
   initialLng?: number;
@@ -72,10 +76,17 @@ const GoogleMapsLocation = ({
     lng: number,
     address: string | null,
     isManual = false,
+    geocodeMeta?: ReverseGeocodeMeta,
   ) => {
     if (!storeless) setLocation(lat, lng, address);
     if (onLocationChangeRef.current)
-      onLocationChangeRef.current(lat, lng, address || "", isManual);
+      onLocationChangeRef.current(
+        lat,
+        lng,
+        address || "",
+        isManual,
+        geocodeMeta,
+      );
   };
 
   const initializeLocation = async (lat?: number, lng?: number) => {
@@ -88,8 +99,9 @@ const GoogleMapsLocation = ({
 
     if (!hasCalledInitialChange.current) {
       hasCalledInitialChange.current = true;
-      const address = storeAddress || (await reverseGeocode(pos.lat, pos.lng));
-      handleSetLocation(pos.lat, pos.lng, address, false);
+      const details = await reverseGeocodeWithDetails(pos.lat, pos.lng);
+      const address = storeAddress || details?.address || null;
+      handleSetLocation(pos.lat, pos.lng, address, false, details?.meta);
     }
   };
 
@@ -129,8 +141,14 @@ const GoogleMapsLocation = ({
         const newPos = { lat: pos.coords.latitude, lng: pos.coords.longitude };
         setCurrentLocation(newPos);
         mapRef.current?.panTo(newPos);
-        const address = await reverseGeocode(newPos.lat, newPos.lng);
-        handleSetLocation(newPos.lat, newPos.lng, address, true);
+        const details = await reverseGeocodeWithDetails(newPos.lat, newPos.lng);
+        handleSetLocation(
+          newPos.lat,
+          newPos.lng,
+          details?.address ?? null,
+          true,
+          details?.meta,
+        );
         setIsLocating(false);
       },
       (err) => {
@@ -146,16 +164,58 @@ const GoogleMapsLocation = ({
     usePlacesAutocomplete(debouncedValue, isLoaded);
 
   const geocodePlace = (placeId: string) =>
-    new Promise<{ lat: number; lng: number; address: string }>(
+    new Promise<{
+      lat: number;
+      lng: number;
+      address: string;
+      geocodeMeta: ReverseGeocodeMeta;
+    }>(
       (resolve, reject) => {
         const geocoder = new google.maps.Geocoder();
         geocoder.geocode({ placeId }, (results, status) => {
           if (status === "OK" && results && results[0]) {
             const loc = results[0].geometry.location;
+            const placeTypes = Array.isArray(results[0].types)
+              ? results[0].types
+              : [];
+            const searchableText = results[0].formatted_address.toLowerCase();
+            const isAirport =
+              placeTypes.includes("airport") ||
+              searchableText.includes("airport");
+            const isTrain =
+              placeTypes.includes("train_station") ||
+              placeTypes.includes("transit_station") ||
+              placeTypes.includes("subway_station") ||
+              searchableText.includes("train") ||
+              searchableText.includes("railway") ||
+              searchableText.includes("station") ||
+              searchableText.includes("قطار") ||
+              searchableText.includes("محطة");
+
+            console.log("[GoogleMapsLocation] Google geocode place types", {
+              placeId,
+              formattedAddress: results[0].formatted_address,
+              placeTypes,
+              detectedCategory: isAirport
+                ? "AIRPORT"
+                : isTrain
+                  ? "TRAIN_STATION"
+                  : null,
+            });
+
             resolve({
               lat: loc.lat(),
               lng: loc.lng(),
               address: results[0].formatted_address,
+              geocodeMeta: {
+                category: isAirport
+                  ? "AIRPORT"
+                  : isTrain
+                    ? "TRAIN_STATION"
+                    : null,
+                matchedName: null,
+                placeTypes,
+              },
             });
           } else reject(status);
         });
@@ -166,10 +226,12 @@ const GoogleMapsLocation = ({
     place: google.maps.places.AutocompletePrediction,
   ) => {
     try {
-      const { lat, lng, address } = await geocodePlace(place.place_id);
+      const { lat, lng, address, geocodeMeta } = await geocodePlace(
+        place.place_id,
+      );
       setCurrentLocation({ lat, lng });
       mapRef.current?.panTo({ lat, lng });
-      handleSetLocation(lat, lng, address, true);
+      handleSetLocation(lat, lng, address, true, geocodeMeta);
       clearPredictions();
       setInputValue("");
     } catch (err) {
@@ -258,8 +320,17 @@ const GoogleMapsLocation = ({
               setCurrentLocation(newPos);
               clearPredictions();
               setInputValue("");
-              const address = await reverseGeocode(newPos.lat, newPos.lng);
-              handleSetLocation(newPos.lat, newPos.lng, address, true);
+              const details = await reverseGeocodeWithDetails(
+                newPos.lat,
+                newPos.lng,
+              );
+              handleSetLocation(
+                newPos.lat,
+                newPos.lng,
+                details?.address ?? null,
+                true,
+                details?.meta,
+              );
             }}
           >
             <div className="bg-red-600! p-10!">

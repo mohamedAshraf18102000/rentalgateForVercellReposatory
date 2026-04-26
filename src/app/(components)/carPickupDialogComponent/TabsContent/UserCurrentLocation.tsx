@@ -4,16 +4,23 @@ import { UserAddress } from "@/types/userProfile/userAddress";
 import { usePickupDialogStore } from "@/lib/stores/usePickupDialogStore";
 import { useBookedCarDetailsStore } from "@/lib/stores/useBookedCarDetailsStore";
 import { useTranslations } from "next-intl";
+import { ReverseGeocodeMeta } from "@/lib/utils/reverseGeocode";
+import { detectPickupCategory } from "@/lib/utils/pickupLocationCategory";
 
 const UserCurrentLocation = () => {
   const t = useTranslations("home");
   const { data: userAddresses, isLoading: isLoadingAddresses } =
     useUserAddreses();
 
-  const { setFormField, formData } = useBookedCarDetailsStore();
-  const { target, setIsUnsavedMapLocation, confirmDialog } =
-    usePickupDialogStore();
-
+  const { setFormField, formData, airports, trainStations } =
+    useBookedCarDetailsStore();
+  const {
+    target,
+    setIsUnsavedMapLocation,
+    confirmDialog,
+    setActiveTab,
+    setIsCurrentLocationTabDisabled,
+  } = usePickupDialogStore();
   const isAirport =
     target === "return"
       ? !!formData.returnAirportId
@@ -39,6 +46,7 @@ const UserCurrentLocation = () => {
 
   const handleSelectAddress = (address: UserAddress) => {
     setIsUnsavedMapLocation(false);
+    setIsCurrentLocationTabDisabled(false);
     if (target === "return") {
       // Update BookedCarDetailsStore only
       setFormField("carReturnLocation", address.addressName);
@@ -66,9 +74,27 @@ const UserCurrentLocation = () => {
     lng: number,
     address: string,
     isManual?: boolean,
+    geocodeMeta?: ReverseGeocodeMeta,
   ) => {
+    const detectedCategory = detectPickupCategory({
+      lat,
+      lng,
+      address,
+      geocodeMeta,
+      airports: airports ?? [],
+      trainStations: trainStations ?? [],
+    });
+
+    if (detectedCategory === "airport" || detectedCategory === "trainStation") {
+      setIsUnsavedMapLocation(true);
+      setIsCurrentLocationTabDisabled(true);
+      setActiveTab(detectedCategory);
+      return;
+    }
+
     if (isManual === false) return;
     setIsUnsavedMapLocation(true);
+    setIsCurrentLocationTabDisabled(false);
     if (target === "return") {
       // Update BookedCarDetailsStore
       setFormField("carReturnLocation", address);

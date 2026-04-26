@@ -11,12 +11,14 @@ const HomePickupDialogTabs = ({
 }: {
   customDefaultValue: string;
 }) => {
-  const { setActiveTab } = usePickupDialogStore();
+  const { activeTab, setActiveTab, isCurrentLocationTabDisabled } =
+    usePickupDialogStore();
 
   return (
     <Tabs
       dir="rtl"
       className="w-full bg-transparent"
+      value={activeTab}
       defaultValue={customDefaultValue}
       onValueChange={(value) => {
         setActiveTab(value as any);
@@ -24,7 +26,17 @@ const HomePickupDialogTabs = ({
     >
       <WrapperContainer className="w-full">
         <TabsList className="text-base! flex items-start justify-center mx-auto">
-          <TabsTrigger value="currentLocation">موقعك الخاص</TabsTrigger>
+          <TabsTrigger
+            value="currentLocation"
+            disabled={isCurrentLocationTabDisabled}
+            className={
+              isCurrentLocationTabDisabled
+                ? "cursor-not-allowed opacity-60"
+                : undefined
+            }
+          >
+            موقعك الخاص
+          </TabsTrigger>
           <TabsTrigger value="airport">مطار</TabsTrigger>
           <TabsTrigger value="trainStation">محطة قطار</TabsTrigger>
           <TabsTrigger value="branches">الفروع</TabsTrigger>

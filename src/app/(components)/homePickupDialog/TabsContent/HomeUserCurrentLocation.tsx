@@ -7,15 +7,26 @@ import { useUserPreferedFiltersStore } from "@/lib/stores/useUserPreferedFilters
 import { useLocationStore } from "@/lib/stores/useLocationStore";
 import { useAuth } from "../../navbar/hooks/useAuth";
 import { useTranslations } from "next-intl";
+import { ReverseGeocodeMeta } from "@/lib/utils/reverseGeocode";
+import { useGetTrainStations } from "@/hooks/api/useGetTrainStations";
+import { useGetAirports } from "@/hooks/api/useGetAirports";
+import { detectPickupCategory } from "@/lib/utils/pickupLocationCategory";
 
 const HomeUserCurrentLocation = () => {
   const { authenticated } = useAuth();
   const t = useTranslations("home");
   const { data: userAddresses, isLoading: isLoadingAddresses } =
     useUserAddreses(authenticated);
+  const { data: trainStationsData } = useGetTrainStations();
+  const { data: airportsData } = useGetAirports();
 
   const { setFormField, formData } = useBookedCarDetailsStore();
-  const { target, setIsUnsavedMapLocation } = usePickupDialogStore();
+  const {
+    target,
+    setIsUnsavedMapLocation,
+    setActiveTab,
+    setIsCurrentLocationTabDisabled,
+  } = usePickupDialogStore();
   const { setFilter } = useUserPreferedFiltersStore();
   const setLocation = useLocationStore((state) => state.setLocation);
 
@@ -47,6 +58,7 @@ const HomeUserCurrentLocation = () => {
   const handleSelectAddress = (address: UserAddress) => {
     setLocation(address.latitude, address.longitude, address.addressName);
     setIsUnsavedMapLocation(false);
+    setIsCurrentLocationTabDisabled(false);
     if (target === "return") {
       // Update BookedCarDetailsStore only
       setFormField("carReturnLocation", address.addressName);
@@ -80,10 +92,34 @@ const HomeUserCurrentLocation = () => {
     lng: number,
     address: string,
     isManual?: boolean,
+    geocodeMeta?: ReverseGeocodeMeta,
   ) => {
-    if (isManual === false) return;
+    const detectedCategory = detectPickupCategory({
+      lat,
+      lng,
+      address,
+      geocodeMeta,
+      airports: airportsData?.content ?? [],
+      trainStations: trainStationsData?.content ?? [],
+    });
+
+    if (detectedCategory === "airport") {
+      setIsUnsavedMapLocation(true);
+      setIsCurrentLocationTabDisabled(true);
+      setActiveTab("airport");
+      return;
+    }
+
+    if (detectedCategory === "trainStation") {
+      setIsUnsavedMapLocation(true);
+      setIsCurrentLocationTabDisabled(true);
+      setActiveTab("trainStation");
+      return;
+    }
+
     setLocation(lat, lng, address);
     setIsUnsavedMapLocation(true);
+    setIsCurrentLocationTabDisabled(false);
     if (target === "return") {
       // Update BookedCarDetailsStore
       setFormField("carReturnLocation", address);

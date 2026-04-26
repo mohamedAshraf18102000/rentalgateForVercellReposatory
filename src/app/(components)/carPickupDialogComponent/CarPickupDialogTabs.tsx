@@ -12,7 +12,8 @@ const CarPickupDialogTabs = ({
 }: {
   customDefaultValue: string;
 }) => {
-  const { setActiveTab } = usePickupDialogStore();
+  const { activeTab, setActiveTab, isCurrentLocationTabDisabled } =
+    usePickupDialogStore();
   const t = useTranslations("home");
   const locale = useLocale();
   const dir = locale === "ar" ? "rtl" : "ltr";
@@ -21,6 +22,7 @@ const CarPickupDialogTabs = ({
     <Tabs
       dir={dir}
       className="w-full bg-transparent"
+      value={activeTab}
       defaultValue={customDefaultValue}
       onValueChange={(value) => {
         setActiveTab(value as any);
@@ -28,7 +30,15 @@ const CarPickupDialogTabs = ({
     >
       <WrapperContainer className="w-full">
         <TabsList className="flex items-start justify-center mx-auto text-sm md:text-base">
-          <TabsTrigger className="text-xs md:text-sm" value="currentLocation">
+          <TabsTrigger
+            className={
+              isCurrentLocationTabDisabled
+                ? "text-xs md:text-sm cursor-not-allowed opacity-60"
+                : "text-xs md:text-sm"
+            }
+            value="currentLocation"
+            disabled={isCurrentLocationTabDisabled}
+          >
             {t("pickupDialog.tabs.currentLocation")}
           </TabsTrigger>
           <TabsTrigger className="text-xs md:text-sm" value="airport">
