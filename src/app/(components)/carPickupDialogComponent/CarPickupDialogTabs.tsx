@@ -3,8 +3,9 @@ import WrapperContainer from "../wrapperContainer/WrapperContainer";
 import UserCurrentLocation from "./TabsContent/UserCurrentLocation";
 import AirportLocations from "./TabsContent/AirportLocations";
 import TrainLocations from "./TabsContent/TrainLocations";
-import BranchesLocations from "./TabsContent/BranchesLocations";
 import { usePickupDialogStore } from "@/lib/stores/usePickupDialogStore";
+import { useBookedCarDetailsStore } from "@/lib/stores/useBookedCarDetailsStore";
+import { useLocationStore } from "@/lib/stores/useLocationStore";
 import { useLocale, useTranslations } from "next-intl";
 
 const CarPickupDialogTabs = ({
@@ -12,11 +13,41 @@ const CarPickupDialogTabs = ({
 }: {
   customDefaultValue: string;
 }) => {
-  const { activeTab, setActiveTab, isCurrentLocationTabDisabled } =
+  const { activeTab, setActiveTab, isCurrentLocationTabDisabled, target, confirmDialog } =
     usePickupDialogStore();
+  const { carDetails, setFormData } = useBookedCarDetailsStore();
+  const { latitude, longitude } = useLocationStore();
   const t = useTranslations("home");
   const locale = useLocale();
   const dir = locale === "ar" ? "rtl" : "ltr";
+
+  const handleBranchSelection = () => {
+    if (!carDetails) return;
+
+    if (target === "return") {
+      setFormData({
+        carReturnLocationId: carDetails.branchId.toString(),
+        carReturnLocation: carDetails.branchName,
+        returnType: "BRANCH",
+        returnTrainId: null,
+        returnAirportId: null,
+        returnLat: latitude,
+        returnLong: longitude,
+      });
+    } else {
+      setFormData({
+        pickupId: carDetails.branchId.toString(),
+        pickupName: carDetails.branchName,
+        pickupType: "BRANCH",
+        pickupTrainId: null,
+        pickupAirportId: null,
+        pickupLat: latitude,
+        pickupLong: longitude,
+      });
+    }
+
+    confirmDialog();
+  };
 
   return (
     <Tabs
@@ -26,6 +57,9 @@ const CarPickupDialogTabs = ({
       defaultValue={customDefaultValue}
       onValueChange={(value) => {
         setActiveTab(value as any);
+        if (value === "branches") {
+          handleBranchSelection();
+        }
       }}
     >
       <WrapperContainer className="w-full">
@@ -74,12 +108,6 @@ const CarPickupDialogTabs = ({
             <TrainLocations />
           </TabsContent>
 
-          <TabsContent
-            className="w-full h-full mt-0! flex flex-col pt-2"
-            value="branches"
-          >
-            <BranchesLocations />
-          </TabsContent>
         </div>
       </WrapperContainer>
     </Tabs>
