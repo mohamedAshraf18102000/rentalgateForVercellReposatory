@@ -10,6 +10,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import { useBookedCarDetailsStore } from "@/lib/stores/useBookedCarDetailsStore";
 import { useAuth } from "@/app/(components)/navbar/hooks/useAuth";
+import { useLocationStore } from "@/lib/stores/useLocationStore";
 
 export function HomePickUpDialog({ title }: { title?: string }) {
   const {
@@ -23,6 +24,8 @@ export function HomePickUpDialog({ title }: { title?: string }) {
     setIsUnsavedMapLocation,
   } = usePickupDialogStore();
   const { filters, setFilter, applyFilters } = useUserPreferedFiltersStore();
+  const openLocationDialog = useLocationStore((state) => state.openDialog);
+
   const { setFormData } = useBookedCarDetailsStore();
   const { authenticated } = useAuth();
   const [showSaveDialog, setShowSaveDialog] = useState(false);

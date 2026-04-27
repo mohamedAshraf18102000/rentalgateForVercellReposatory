@@ -18,6 +18,9 @@ export default async function Header() {
     login: t("login"),
     home: t("home"),
     talkToUs: t("talkToUs"),
+    updateLocationPrefix: t("updateLocationPrefix"),
+    updateLocationLink: t("updateLocationLink"),
+    updateLocationSuffix: t("updateLocationSuffix"),
   };
 
   return (

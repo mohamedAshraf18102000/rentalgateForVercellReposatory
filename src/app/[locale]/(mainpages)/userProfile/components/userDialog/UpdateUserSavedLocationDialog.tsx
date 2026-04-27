@@ -39,6 +39,7 @@ interface UpdateUserSavedLocationDialogProps {
   open: boolean;
   setOpen: (open: boolean) => void;
   initialShowAddForm?: boolean;
+  addFormOnlyMode?: boolean;
   initialLat?: number;
   initialLng?: number;
   initialAddress?: string;
@@ -49,6 +50,7 @@ const UpdateUserSavedLocationDialog = ({
   open,
   setOpen,
   initialShowAddForm = false,
+  addFormOnlyMode = false,
   initialLat: propLat,
   initialLng: propLng,
   initialAddress,
@@ -96,7 +98,11 @@ const UpdateUserSavedLocationDialog = ({
       toast.success(t("toast.addSuccess"));
       queryClient.invalidateQueries({ queryKey: ["userAddresses"] });
       onSuccess?.(data);
-      setShowAddForm(false);
+      if (addFormOnlyMode) {
+        setOpen(false);
+      } else {
+        setShowAddForm(false);
+      }
       reset();
     },
     onError: (error: Error) => {
@@ -164,7 +170,7 @@ const UpdateUserSavedLocationDialog = ({
       header={{
         mainTitle: (
           <div className="flex items-center justify-between w-full">
-            {showAddForm && (
+            {showAddForm && !addFormOnlyMode && (
               <button
                 onClick={() => setShowAddForm(false)}
                 className="p-1 hover:bg-Grey100 rounded-full transition-all active:scale-95"
@@ -176,7 +182,7 @@ const UpdateUserSavedLocationDialog = ({
             <span className="text-black  flex-1 text-center font-bold">
               {showAddForm ? t("header.addNewAddress") : t("header.savedAddresses")}
             </span>
-            {showAddForm && <div className="w-8" />}
+            {showAddForm && !addFormOnlyMode && <div className="w-8" />}
           </div>
         ),
       }}
@@ -414,7 +420,13 @@ const UpdateUserSavedLocationDialog = ({
               <Button
                 size="lg"
                 className="w-fit text-black hover:bg-white underline py-3 border-none px-5 bg-white text-base font-bold"
-                onClick={() => setShowAddForm(false)}
+                onClick={() => {
+                  if (addFormOnlyMode) {
+                    setOpen(false);
+                  } else {
+                    setShowAddForm(false);
+                  }
+                }}
                 disabled={isPending}
               >
                 {t("actions.cancel")}

@@ -4,6 +4,8 @@ import PickUpCard from "@/app/(components)/customCards/PickUpCard";
 import CurrentLocationPickupCard from "@/app/(components)/customCards/CurrentLocationPickupCard";
 import { usePickupDialogStore } from "@/lib/stores/usePickupDialogStore";
 import { PickUpCardDetails } from "@/types/pickUpTypes";
+import { useLocationStore } from "@/lib/stores/useLocationStore";
+import { useRouter } from "next/navigation";
 
 interface PickupCardSectionClientProps {
   pickupCardDetails: PickUpCardDetails[];
@@ -12,10 +14,16 @@ interface PickupCardSectionClientProps {
 export default function PickupCardSectionClient({
   pickupCardDetails,
 }: PickupCardSectionClientProps) {
+  const router = useRouter();
   const { openDialog } = usePickupDialogStore();
+  const openLocationDialog = useLocationStore((state) => state.openDialog);
 
   const hadnleLocationClick = () => {
-    openDialog("currentLocation", "pickup");
+    openLocationDialog();
+  };
+
+  const handleShowResultsClick = () => {
+    router.push("/bookings");
   };
 
   return (
@@ -34,6 +42,7 @@ export default function PickupCardSectionClient({
               title={card.title}
               description={card.description}
               onClick={hadnleLocationClick}
+              onShowResultsClick={handleShowResultsClick}
             />
           ) : (
             <div className="xl:min-h-[480px]">

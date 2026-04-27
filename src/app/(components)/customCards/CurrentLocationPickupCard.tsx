@@ -8,10 +8,12 @@ const CurrentLocationPickupCard = ({
   title,
   description,
   onClick,
+  onShowResultsClick,
 }: {
   title: string;
   description: string;
   onClick: () => void;
+  onShowResultsClick: () => void;
 }) => {
   const address = useLocationStore((state) => state.address);
   const t = useTranslations("home");
@@ -54,7 +56,7 @@ const CurrentLocationPickupCard = ({
 
               <div className="flex justify-center md:justify-end">
                 <Button
-                  onClick={onClick}
+                  onClick={onShowResultsClick}
                   className="text-sm md:text-base font-normal mt-5 md:mt-6 w-full md:w-auto"
                 >
                   {t("pickupDialog.showResults")}

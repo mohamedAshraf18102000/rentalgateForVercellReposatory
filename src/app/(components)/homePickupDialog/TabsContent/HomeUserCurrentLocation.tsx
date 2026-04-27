@@ -11,6 +11,10 @@ import { ReverseGeocodeMeta } from "@/lib/utils/reverseGeocode";
 import { useGetTrainStations } from "@/hooks/api/useGetTrainStations";
 import { useGetAirports } from "@/hooks/api/useGetAirports";
 import { detectPickupCategory } from "@/lib/utils/pickupLocationCategory";
+import { ChevronLeft } from "lucide-react";
+import UpdateUserSavedLocationDialog from "@/app/[locale]/(mainpages)/userProfile/components/userDialog/UpdateUserSavedLocationDialog";
+import { useState } from "react";
+import { useDialog } from "@/app/[locale]/(dialogs)";
 
 const HomeUserCurrentLocation = () => {
   const { authenticated } = useAuth();
@@ -19,14 +23,17 @@ const HomeUserCurrentLocation = () => {
     useUserAddreses(authenticated);
   const { data: trainStationsData } = useGetTrainStations();
   const { data: airportsData } = useGetAirports();
+  const [isAddLocationDialogOpen, setIsAddLocationDialogOpen] = useState(false);
 
   const { setFormField, formData } = useBookedCarDetailsStore();
   const {
     target,
+    closeDialog,
     setIsUnsavedMapLocation,
     setActiveTab,
     setIsCurrentLocationTabDisabled,
   } = usePickupDialogStore();
+  const { openDialog } = useDialog();
   const { setFilter } = useUserPreferedFiltersStore();
   const setLocation = useLocationStore((state) => state.setLocation);
 
@@ -146,27 +153,27 @@ const HomeUserCurrentLocation = () => {
     }
   };
 
+  const handleOpenLoginDialog = () => {
+    closeDialog();
+    openDialog("Login", {});
+  };
+
   return (
     <>
       {/* CONTENT */}
-      <div className="w-full h-full">
-        <GoogleMapsLocation
-          storeless
-          onLocationChange={handleMapLocationChange}
-          initialLat={initialLat}
-          initialLng={initialLng}
-        />
-      </div>
 
-      {authenticated && (
-        <div className="absolute px-4 py-3 bottom-2 left-1/2 -translate-x-1/2 bg-white/95 backdrop-blur-md text-primary shadow-2xl border border-Grey100 w-[94%] rounded-2xl z-20">
+      {authenticated ? (
+        <div className="bg-white/95 backdrop-blur-md text-primary shadow-2xl border border-Grey100 rounded-2xl w-full p-2">
           <div className="flex justify-between items-center mb-3">
             <h5 className="font-bold text-base">
               {t("pickupDialog.savedAddressesTitle")}
             </h5>
-            {/* <button className="font-bold text-sm border-2 px-3 py-1.5 rounded-lg flex items-center gap-1 hover:bg-Grey200 transition-colors">
-              عرض الكل <ChevronLeft className="w-4 h-4" />
-            </button> */}
+            <button
+              onClick={() => setIsAddLocationDialogOpen(true)}
+              className="font-bold text-sm border-2 px-3 py-1.5 rounded-lg flex items-center gap-1 hover:bg-Grey200 transition-colors"
+            >
+              <span>اضافة عنوان جديد</span> <ChevronLeft className="w-4 h-4" />
+            </button>
           </div>
 
           {userAddresses?.length === 0 && (
@@ -174,7 +181,7 @@ const HomeUserCurrentLocation = () => {
               لا توجد عناوين مسجلة
             </p>
           )}
-          <div className="flex overflow-x-auto gap-3 pb-2 ">
+          <div className="flex flex-col overflow-x-auto gap-3 pb-2 ">
             {userAddresses?.map((address) => (
               <button
                 title={address.address}
@@ -196,7 +203,35 @@ const HomeUserCurrentLocation = () => {
             ))}
           </div>
         </div>
+      ) : (
+        <div className="w-full h-full p-2 flex items-center justify-center absolute top-0 left-0">
+          <p>
+            يرجى{" "}
+            <span
+              onClick={handleOpenLoginDialog}
+              className="font-bold underline cursor-pointer underline-offset-5"
+            >
+              تسجيل الدخول
+            </span>{" "}
+            أولًا لإمكانية الاختيار من العناوين المسجّلة.
+          </p>
+        </div>
       )}
+      <UpdateUserSavedLocationDialog
+        open={isAddLocationDialogOpen}
+        setOpen={setIsAddLocationDialogOpen}
+        initialShowAddForm={true}
+        addFormOnlyMode={true}
+        initialLat={initialLat}
+        initialLng={initialLng}
+        initialAddress={
+          target === "return" ? formData.carReturnLocation : formData.pickupName
+        }
+        onSuccess={(address) => {
+          handleSelectAddress(address);
+          setIsAddLocationDialogOpen(false);
+        }}
+      />
     </>
   );
 };

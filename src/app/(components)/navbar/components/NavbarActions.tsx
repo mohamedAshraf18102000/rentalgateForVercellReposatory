@@ -23,6 +23,9 @@ interface NavbarActionsProps {
     login: string;
     home: string;
     talkToUs: string;
+    updateLocationPrefix: string;
+    updateLocationLink: string;
+    updateLocationSuffix: string;
   };
 }
 
@@ -50,11 +53,11 @@ export const NavbarActions: React.FC<NavbarActionsProps> = ({
   const ToastError = () => {
     return (
       <span onClick={() => console.log("clicked")}>
-        يرجي التوجه{" "}
+        {translations.updateLocationPrefix}{" "}
         <Link className="underline underline-offset-3!" href="/bookings">
-          للصفحه السابقة
+          {translations.updateLocationLink}
         </Link>{" "}
-        لتحديث الموقع
+        {translations.updateLocationSuffix}
       </span>
     );
   };
