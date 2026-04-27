@@ -6,6 +6,7 @@ import { RadioGroup, RadioGroupItem } from "../../ui/radio-group";
 import { Separator } from "../../ui/separator";
 import { usePickupDialogStore } from "@/lib/stores/usePickupDialogStore";
 import { useBookedCarDetailsStore } from "@/lib/stores/useBookedCarDetailsStore";
+import { useUserPreferedFiltersStore } from "@/lib/stores/useUserPreferedFiltersStore";
 import { useLocale, useTranslations } from "next-intl";
 
 const AirportLocations = () => {
@@ -16,9 +17,20 @@ const AirportLocations = () => {
 
   const { airports, setFormData, formData } = useBookedCarDetailsStore();
   const { target, confirmDialog } = usePickupDialogStore();
+  const { filters, setFilter } = useUserPreferedFiltersStore();
   const t = useTranslations("home");
   const locale = useLocale();
   const dir = locale === "ar" ? "rtl" : "ltr";
+  const selectedAirportValue =
+    target === "return"
+      ? formData.returnType === "AIRPORT" && formData.returnAirportId != null
+        ? `airport-${formData.returnAirportId}`
+        : ""
+      : formData.pickupType === "AIRPORT" && formData.pickupAirportId != null
+        ? `airport-${formData.pickupAirportId}`
+        : filters.pickupType === "airport" && filters.pickupId
+          ? `airport-${filters.pickupId}`
+          : "";
 
   const handleValueChange = (value: string) => {
     const airportId = value.split("-")[1];
@@ -46,6 +58,9 @@ const AirportLocations = () => {
           pickupLat: null,
           pickupLong: null,
         });
+        setFilter("pickupType", "airport");
+        setFilter("pickupId", String(airport.airportId));
+        setFilter("pickupName", selectedAirportName);
       }
       confirmDialog();
     }
@@ -57,15 +72,7 @@ const AirportLocations = () => {
         dir={dir}
         className="flex flex-col gap-y-2 w-[95%] mx-auto mt-2"
         onValueChange={handleValueChange}
-        value={
-          target === "return"
-            ? formData.returnType === "AIRPORT"
-              ? `airport-${formData.returnAirportId}`
-              : ""
-            : formData.pickupType === "AIRPORT"
-              ? `airport-${formData.pickupAirportId}`
-              : ""
-        }
+        value={selectedAirportValue}
       >
         <p className="text-base font-bold">
           {t("pickupDialog.popularLocations.airports")}

@@ -6,14 +6,26 @@ import { RadioGroup, RadioGroupItem } from "../../ui/radio-group";
 import { Separator } from "../../ui/separator";
 import { usePickupDialogStore } from "@/lib/stores/usePickupDialogStore";
 import { useBookedCarDetailsStore } from "@/lib/stores/useBookedCarDetailsStore";
+import { useUserPreferedFiltersStore } from "@/lib/stores/useUserPreferedFiltersStore";
 import { useLocale, useTranslations } from "next-intl";
 
 const TrainLocations = () => {
   const { trainStations, setFormData, formData } = useBookedCarDetailsStore();
   const { target, confirmDialog } = usePickupDialogStore();
+  const { filters, setFilter } = useUserPreferedFiltersStore();
   const t = useTranslations("home");
   const locale = useLocale();
   const dir = locale === "ar" ? "rtl" : "ltr";
+  const selectedTrainValue =
+    target === "return"
+      ? formData.returnType === "TRAIN_STATION" && formData.returnTrainId != null
+        ? `station-${formData.returnTrainId}`
+        : ""
+      : formData.pickupType === "TRAIN_STATION" && formData.pickupTrainId != null
+        ? `station-${formData.pickupTrainId}`
+        : filters.pickupType === "trainStation" && filters.pickupId
+          ? `station-${filters.pickupId}`
+          : "";
 
   const handleValueChange = (value: string) => {
     const stationId = value.split("-")[1];
@@ -43,6 +55,9 @@ const TrainLocations = () => {
           pickupLat: null,
           pickupLong: null,
         });
+        setFilter("pickupType", "trainStation");
+        setFilter("pickupId", String(station.stationId));
+        setFilter("pickupName", selectedStationName);
       }
       confirmDialog();
     }
@@ -54,15 +69,7 @@ const TrainLocations = () => {
         dir={dir}
         className="flex flex-col gap-y-2 w-[95%] mx-auto mt-2"
         onValueChange={handleValueChange}
-        value={
-          target === "return"
-            ? formData.returnType === "TRAIN_STATION"
-              ? `station-${formData.returnTrainId}`
-              : ""
-            : formData.pickupType === "TRAIN_STATION"
-              ? `station-${formData.pickupTrainId}`
-              : ""
-        }
+        value={selectedTrainValue}
       >
         <p className="text-base font-bold">
           {t("pickupDialog.popularLocations.trainStations")}

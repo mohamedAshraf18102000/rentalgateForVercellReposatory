@@ -31,6 +31,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useRentalDays } from "@/hooks/useCalculateRentalDays";
 import { resetReservationState } from "@/lib/stores/resetReservationState";
 import { useLocale, useTranslations } from "next-intl";
+import UpdateUserSavedLocationDialog from "@/app/[locale]/(mainpages)/userProfile/components/userDialog/UpdateUserSavedLocationDialog";
 
 const page = () => {
   const router = useRouter();
@@ -43,6 +44,10 @@ const page = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
   const [formResetKey, setFormResetKey] = useState<number>(0);
+  const [showSaveAddressDialog, setShowSaveAddressDialog] =
+    useState<boolean>(false);
+  const [shouldContinueAfterAddressSave, setShouldContinueAfterAddressSave] =
+    useState<boolean>(false);
   const stepContentRef = useRef<StepContentRef>(null);
   const searchParams = useSearchParams();
   const isForOtherReservation = searchParams.get("forOther") === "true";
@@ -200,20 +205,37 @@ const page = () => {
     }
   };
 
+  const proceedStepOneAfterValidation = async () => {
+    try {
+      resetQuoteState();
+      const latestFormData = useBookedCarDetailsStore.getState().formData;
+      await calculateQuotePriceAsync(buildReservationPayload(latestFormData));
+    } catch {
+      return;
+    }
+
+    await handleStepOneNavigation(2);
+  };
+
   const handleNext = async () => {
     if (activeStep === 1) {
       const isValid = await stepContentRef.current?.validateStep();
       if (!isValid) return;
 
-      try {
-        resetQuoteState();
-        const latestFormData = useBookedCarDetailsStore.getState().formData;
-        await calculateQuotePriceAsync(buildReservationPayload(latestFormData));
-      } catch {
+      const latestFormData = useBookedCarDetailsStore.getState().formData;
+      const needsAddressCreation =
+        latestFormData.pickupType === "MY_LOCATION" &&
+        !latestFormData.pickupId &&
+        !!latestFormData.pickupLat &&
+        !!latestFormData.pickupLong;
+
+      if (needsAddressCreation) {
+        setShouldContinueAfterAddressSave(true);
+        setShowSaveAddressDialog(true);
         return;
       }
 
-      await handleStepOneNavigation(2);
+      await proceedStepOneAfterValidation();
       return;
     }
 
@@ -252,6 +274,68 @@ const page = () => {
         reservationData={calculatedQuotePricingData}
         onCalculateQuote={handleCalculateQuote}
         isCalculating={isCalculating}
+      />
+      <UpdateUserSavedLocationDialog
+        open={showSaveAddressDialog}
+        setOpen={(open) => {
+          setShowSaveAddressDialog(open);
+          if (!open) {
+            setShouldContinueAfterAddressSave(false);
+          }
+        }}
+        initialShowAddForm={true}
+        addFormOnlyMode={true}
+        initialLat={formData.pickupLat ?? undefined}
+        initialLng={formData.pickupLong ?? undefined}
+        initialAddress={formData.pickupName || undefined}
+        onSuccess={async (address) => {
+          const latestFormData = useBookedCarDetailsStore.getState().formData;
+          const savedPickupId = String(address.addressId);
+          const shouldSyncReturnAddress =
+            latestFormData.returnType === "MY_LOCATION" &&
+            !latestFormData.carReturnLocationId;
+
+          stepContentRef.current?.setPickupLocationFromSavedAddress({
+            pickupId: savedPickupId,
+            pickupName: address.addressName,
+            pickupLat: address.latitude,
+            pickupLong: address.longitude,
+          });
+          if (shouldSyncReturnAddress) {
+            stepContentRef.current?.setReturnLocationFromSavedAddress({
+              carReturnLocationId: savedPickupId,
+              carReturnLocation: address.addressName,
+              returnLat: address.latitude,
+              returnLong: address.longitude,
+            });
+          }
+
+          useBookedCarDetailsStore.getState().setFormData({
+            pickupName: address.addressName,
+            pickupLat: address.latitude,
+            pickupLong: address.longitude,
+            pickupType: "MY_LOCATION",
+            pickupId: savedPickupId,
+            pickupAirportId: null,
+            pickupTrainId: null,
+            ...(shouldSyncReturnAddress
+              ? {
+                  carReturnLocation: address.addressName,
+                  returnLat: address.latitude,
+                  returnLong: address.longitude,
+                  carReturnLocationId: savedPickupId,
+                  returnAirportId: null,
+                  returnTrainId: null,
+                }
+              : {}),
+          });
+          setShowSaveAddressDialog(false);
+
+          if (shouldContinueAfterAddressSave) {
+            setShouldContinueAfterAddressSave(false);
+            await proceedStepOneAfterValidation();
+          }
+        }}
       />
       <WrapperContainer exceedNav>
         <PickupDialog title={t("confirm")} />

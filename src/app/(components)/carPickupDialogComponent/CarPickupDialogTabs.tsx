@@ -52,9 +52,9 @@ const CarPickupDialogTabs = ({
           </TabsTrigger>
         </TabsList>
 
-        <div className="relative min-h-[450px] max-h-[450px] rounded-2xl overflow-hidden border border-Grey100 shadow-sm mt-3">
+        <div className="relative min-h-[450px] max-h-[450px] rounded-2xl overflow-hidden border border-Grey100 shadow-sm mt-3 flex flex-col">
           <TabsContent
-            className="w-full h-full mt-0! flex"
+            className="w-full h-full min-h-0 mt-0! flex flex-col"
             value="currentLocation"
           >
             <UserCurrentLocation />

@@ -3,7 +3,6 @@ import useUserAddreses from "@/hooks/api/useUserAddreses";
 import { UserAddress } from "@/types/userProfile/userAddress";
 import { usePickupDialogStore } from "@/lib/stores/usePickupDialogStore";
 import { useBookedCarDetailsStore } from "@/lib/stores/useBookedCarDetailsStore";
-import { useUserPreferedFiltersStore } from "@/lib/stores/useUserPreferedFiltersStore";
 import { useLocationStore } from "@/lib/stores/useLocationStore";
 import { useAuth } from "../../navbar/hooks/useAuth";
 import { useTranslations } from "next-intl";
@@ -34,7 +33,6 @@ const HomeUserCurrentLocation = () => {
     setIsCurrentLocationTabDisabled,
   } = usePickupDialogStore();
   const { openDialog } = useDialog();
-  const { setFilter } = useUserPreferedFiltersStore();
   const setLocation = useLocationStore((state) => state.setLocation);
 
   const isAirport =
@@ -84,13 +82,6 @@ const HomeUserCurrentLocation = () => {
       setFormField("pickupId", String(address.addressId));
       setFormField("pickupAirportId", null);
       setFormField("pickupTrainId", null);
-    }
-    if (target === "pickup") {
-      setFilter("pickupType", "currentLocation");
-      setFilter("pickupId", String(address.addressId));
-      setFilter("pickupName", address.addressName);
-      setFilter("pickupLat", address.latitude);
-      setFilter("pickupLng", address.longitude);
     }
   };
 
@@ -145,11 +136,6 @@ const HomeUserCurrentLocation = () => {
       setFormField("pickupId", null);
       setFormField("pickupAirportId", null);
       setFormField("pickupTrainId", null);
-      setFilter("pickupType", "currentLocation");
-      setFilter("pickupId", "");
-      setFilter("pickupName", address);
-      setFilter("pickupLat", lat);
-      setFilter("pickupLng", lng);
     }
   };
 

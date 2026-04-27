@@ -26,7 +26,7 @@ export function HomePickUpDialog({ title }: { title?: string }) {
   const { filters, setFilter, applyFilters } = useUserPreferedFiltersStore();
   const openLocationDialog = useLocationStore((state) => state.openDialog);
 
-  const { setFormData } = useBookedCarDetailsStore();
+  const { formData, setFormData } = useBookedCarDetailsStore();
   const { authenticated } = useAuth();
   const [showSaveDialog, setShowSaveDialog] = useState(false);
   const router = useRouter();
@@ -36,40 +36,92 @@ export function HomePickUpDialog({ title }: { title?: string }) {
   const bookingsPath = `/${locale}/bookings`;
   const isOnBookingsPage = pathname === bookingsPath;
 
-  const syncPickupFiltersToReservationStore = () => {
-    const mappedPickupType =
-      filters.pickupType === "airport"
-        ? "AIRPORT"
-        : filters.pickupType === "trainStation"
-          ? "TRAIN_STATION"
-          : filters.pickupType === "currentLocation"
-            ? "MY_LOCATION"
-            : null;
-    const mappedLocationId = filters.pickupId || null;
-    const mappedAirportId =
-      filters.pickupType === "airport" && filters.pickupId
-        ? Number(filters.pickupId)
-        : null;
-    const mappedTrainId =
-      filters.pickupType === "trainStation" && filters.pickupId
-        ? Number(filters.pickupId)
-        : null;
+  const applyPickupSelectionToFilters = () => {
+    if (formData.pickupType === "AIRPORT") {
+      setFilter("pickupType", "airport");
+      setFilter("pickupId", String(formData.pickupAirportId ?? ""));
+      setFilter("pickupAirportId", formData.pickupAirportId ?? undefined);
+      setFilter("pickupTrainId", undefined);
+      setFilter("pickupName", formData.pickupName || "");
+      setFilter("pickupLat", undefined);
+      setFilter("pickupLng", undefined);
+      setFilter("carReturnLocationType", "airport");
+      setFilter("carReturnAirportId", formData.pickupAirportId ?? undefined);
+      setFilter("carReturnTrainId", undefined);
+      setFilter("carReturnLocation", formData.pickupName || "");
+      setFilter("carReturnLocationId", String(formData.pickupAirportId ?? ""));
+      setFilter("carReturnLocationLat", undefined);
+      setFilter("carReturnLocationLng", undefined);
+      return;
+    }
 
+    if (formData.pickupType === "TRAIN_STATION") {
+      setFilter("pickupType", "trainStation");
+      setFilter("pickupTrainId", formData.pickupTrainId ?? undefined);
+      setFilter("pickupAirportId", undefined);
+      setFilter("pickupId", String(formData.pickupTrainId ?? ""));
+      setFilter("pickupName", formData.pickupName || "");
+      setFilter("pickupLat", undefined);
+      setFilter("pickupLng", undefined);
+      setFilter("carReturnLocationType", "trainStation");
+      setFilter("carReturnTrainId", formData.pickupTrainId ?? undefined);
+      setFilter("carReturnAirportId", undefined);
+      setFilter("carReturnLocation", formData.pickupName || "");
+      setFilter("carReturnLocationId", String(formData.pickupTrainId ?? ""));
+      setFilter("carReturnLocationLat", undefined);
+      setFilter("carReturnLocationLng", undefined);
+      return;
+    }
+
+    if (formData.pickupType === "MY_LOCATION") {
+      setFilter("pickupType", "currentLocation");
+      setFilter("pickupId", formData.pickupId || "");
+      setFilter("pickupTrainId", undefined);
+      setFilter("pickupAirportId", undefined);
+      setFilter("pickupName", formData.pickupName || "");
+      setFilter("pickupLat", formData.pickupLat ?? undefined);
+      setFilter("pickupLng", formData.pickupLong ?? undefined);
+      setFilter("carReturnLocationType", "currentLocation");
+      setFilter("carReturnTrainId", undefined);
+      setFilter("carReturnAirportId", undefined);
+      setFilter("carReturnLocation", formData.pickupName || "");
+      setFilter("carReturnLocationId", formData.pickupId || "");
+      setFilter("carReturnLocationLat", formData.pickupLat ?? undefined);
+      setFilter("carReturnLocationLng", formData.pickupLong ?? undefined);
+      return;
+    }
+
+    // branch or any other type fallback
+    setFilter("pickupType", "");
+    setFilter("pickupId", formData.pickupId || "");
+    setFilter("pickupTrainId", undefined);
+    setFilter("pickupAirportId", undefined);
+    setFilter("pickupName", formData.pickupName || "");
+    setFilter("pickupLat", formData.pickupLat ?? undefined);
+    setFilter("pickupLng", formData.pickupLong ?? undefined);
+    setFilter("carReturnLocationType", "");
+    setFilter("carReturnTrainId", undefined);
+    setFilter("carReturnAirportId", undefined);
+    setFilter("carReturnLocation", formData.pickupName || "");
+    setFilter("carReturnLocationId", formData.pickupId || "");
+    setFilter("carReturnLocationLat", formData.pickupLat ?? undefined);
+    setFilter("carReturnLocationLng", formData.pickupLong ?? undefined);
+  };
+
+  const syncReturnWithPickupInFormData = () => {
     setFormData({
-      pickupName: filters.pickupName || "",
-      pickupId: mappedLocationId,
-      pickupLat: filters.pickupLat ?? null,
-      pickupLong: filters.pickupLng ?? null,
-      pickupType: mappedPickupType,
-      pickupAirportId: mappedAirportId,
-      pickupTrainId: mappedTrainId,
-      carReturnLocation: filters.pickupName || "",
-      carReturnLocationId: mappedLocationId,
-      returnLat: filters.pickupLat ?? null,
-      returnLong: filters.pickupLng ?? null,
-      returnType: mappedPickupType,
-      returnAirportId: mappedAirportId,
-      returnTrainId: mappedTrainId,
+      carReturnLocation: formData.pickupName || "",
+      carReturnLocationId:
+        formData.pickupType === "TRAIN_STATION"
+          ? String(formData.pickupTrainId ?? "")
+          : formData.pickupType === "AIRPORT"
+            ? String(formData.pickupAirportId ?? "")
+            : formData.pickupId || null,
+      returnLat: formData.pickupLat ?? null,
+      returnLong: formData.pickupLong ?? null,
+      returnType: formData.pickupType,
+      returnTrainId: formData.pickupTrainId ?? null,
+      returnAirportId: formData.pickupAirportId ?? null,
     });
   };
 
@@ -82,7 +134,8 @@ export function HomePickUpDialog({ title }: { title?: string }) {
       setShowSaveDialog(true);
     } else {
       if (target === "pickup") {
-        syncPickupFiltersToReservationStore();
+        syncReturnWithPickupInFormData();
+        applyPickupSelectionToFilters();
         applyFilters();
       }
       confirmDialog();

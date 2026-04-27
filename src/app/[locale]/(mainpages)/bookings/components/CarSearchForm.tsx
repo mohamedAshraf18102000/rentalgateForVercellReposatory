@@ -11,6 +11,9 @@ import { useUserPreferedFiltersStore } from "@/lib/stores/useUserPreferedFilters
 import { useLocationStore } from "@/lib/stores/useLocationStore";
 import { useBookedCarDetailsStore } from "@/lib/stores/useBookedCarDetailsStore";
 import { usePickupDialogStore } from "@/lib/stores/usePickupDialogStore";
+import { useGetAirports } from "@/hooks/api/useGetAirports";
+import { useGetTrainStations } from "@/hooks/api/useGetTrainStations";
+import { detectPickupCategory } from "@/lib/utils/pickupLocationCategory";
 import { useTranslations } from "next-intl";
 import { useEffect } from "react";
 
@@ -27,14 +30,37 @@ const CarSearchForm = ({
   const fromDate = watch("fromDate");
   const toDate = watch("toDate");
   const { filters, setFilter } = useUserPreferedFiltersStore();
-  const { address } = useLocationStore();
-  const { openDialog } = usePickupDialogStore();
+  const { address, latitude, longitude } = useLocationStore();
+  const { openDialog, setIsCurrentLocationTabDisabled } =
+    usePickupDialogStore();
+  const { data: airportsData } = useGetAirports();
+  const { data: trainStationsData } = useGetTrainStations();
   const showPricesWithTax = useBookedCarDetailsStore(
     (state) => state.showPricesWithTax,
   );
   const setShowPricesWithTax = useBookedCarDetailsStore(
     (state) => state.setShowPricesWithTax,
   );
+  const detectedCurrentLocationCategory =
+    address && latitude != null && longitude != null
+      ? detectPickupCategory({
+          lat: latitude,
+          lng: longitude,
+          address,
+          airports: airportsData?.content ?? [],
+          trainStations: trainStationsData?.content ?? [],
+        })
+      : null;
+  const isAirportLocation = detectedCurrentLocationCategory === "airport";
+  const isTrainStationLocation =
+    detectedCurrentLocationCategory === "trainStation";
+  const isRestrictedCurrentLocation =
+    isAirportLocation || isTrainStationLocation;
+  const restrictedLocationMessage = isAirportLocation
+    ? "عنوانك الحالي هو مطار يرجي اختيار من المطارات المتاحة"
+    : isTrainStationLocation
+      ? "عنوانك الحالي هو محطة قطار يرجي اختيار من محطات القطار المتاحة"
+      : null;
 
   useEffect(() => {
     // Keep pickup label in sync when the global current-location changes.
@@ -48,7 +74,19 @@ const CarSearchForm = ({
   }, [address, filters.pickupName, filters.pickupType, setFilter]);
 
   const handleOpenLocationDialog = () => {
-    openDialog("currentLocation", "pickup");
+    let initialTab: "currentLocation" | "airport" | "trainStation" =
+      filters.pickupType === "airport" || filters.pickupType === "trainStation"
+        ? filters.pickupType
+        : "currentLocation";
+    let shouldDisableCurrentLocationTab = false;
+
+    if (isRestrictedCurrentLocation) {
+      initialTab = detectedCurrentLocationCategory;
+      shouldDisableCurrentLocationTab = true;
+    }
+
+    openDialog(initialTab, "pickup");
+    setIsCurrentLocationTabDisabled(shouldDisableCurrentLocationTab);
   };
 
   return (
@@ -90,13 +128,21 @@ const CarSearchForm = ({
                     ? address
                     : filters.pickupName || currentLocationLabel;
                 return (
-                  <div
-                    title={displayPickupName}
-                    onClick={handleOpenLocationDialog}
-                    className="h-[40px] rounded-lg p-2 w-full bg-[#eceef2] flex items-center gap-2 cursor-pointer"
-                  >
-                    <p className="text-sm line-clamp-1">{displayPickupName}</p>
-                  </div>
+                  <>
+                    <div
+                      title={displayPickupName}
+                      onClick={handleOpenLocationDialog}
+                      className={`h-[40px] rounded-lg p-2 w-full bg-[#eceef2] flex items-center gap-2 cursor-pointer ${
+                        isRestrictedCurrentLocation
+                          ? "border-2 border-StatusRed"
+                          : ""
+                      }`}
+                    >
+                      <p className="text-sm line-clamp-1">
+                        {displayPickupName}
+                      </p>
+                    </div>
+                  </>
                 );
               })()}
             </div>
@@ -155,6 +201,11 @@ const CarSearchForm = ({
               </Button>
             </div>
           </div>
+          {isRestrictedCurrentLocation && restrictedLocationMessage && (
+            <span className="text-xs text-StatusRed">
+              {restrictedLocationMessage}
+            </span>
+          )}
         </div>
 
         <div className="w-full rounded-2xl border bg-white p-3 sm:p-4 lg:w-[15%] lg:min-w-42">

@@ -118,7 +118,7 @@ const UserCurrentLocation = () => {
 
   return (
     <>
-      <div className="bg-white/95 backdrop-blur-md text-primary shadow-2xl border border-Grey100 rounded-2xl w-full p-2">
+      <div className="bg-white/95 backdrop-blur-md text-primary rounded-2xl w-full h-full p-2 flex flex-col">
         <div className="flex justify-between items-center mb-3">
           <h5 className="font-bold text-base">
             {t("pickupDialog.savedAddressesTitle")}
@@ -131,13 +131,13 @@ const UserCurrentLocation = () => {
           </p>
         )}
 
-        <div className="flex flex-col gap-3 overflow-y-auto">
+        <div className="flex-1 min-h-0 max-h-[400px] flex flex-col gap-3 overflow-y-auto overscroll-contain pr-1 pb-5">
           {userAddresses?.map((address) => (
             <button
               title={address.address}
               key={address.addressId}
               onClick={() => handleSelectAddress(address)}
-              className="bg-white border border-Grey100 p-3 rounded-xl hover:border-primary/30 transition-all cursor-pointer shadow-sm group text-start"
+              className="bg-white border border-Grey100 p-3 rounded-xl hover:border-primary/30 transition-all mx-2 cursor-pointer shadow-sm group text-start"
             >
               <p className="font-bold text-xs group-hover:text-primary ">
                 {address.addressName}
