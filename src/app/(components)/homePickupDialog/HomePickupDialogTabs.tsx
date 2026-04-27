@@ -5,6 +5,7 @@ import HomeUserCurrentLocation from "./TabsContent/HomeUserCurrentLocation";
 import HomeAirportLocations from "./TabsContent/HomeAirportLocations";
 import HomeTrainLocations from "./TabsContent/HomeTrainLocations";
 import HomeBranchesLocations from "./TabsContent/HomeBranchesLocations";
+import { useLocale, useTranslations } from "next-intl";
 
 const HomePickupDialogTabs = ({
   customDefaultValue,
@@ -13,10 +14,13 @@ const HomePickupDialogTabs = ({
 }) => {
   const { activeTab, setActiveTab, isCurrentLocationTabDisabled } =
     usePickupDialogStore();
+  const t = useTranslations("home");
+  const locale = useLocale();
+  const dir = locale === "ar" ? "rtl" : "ltr";
 
   return (
     <Tabs
-      dir="rtl"
+      dir={dir}
       className="w-full bg-transparent"
       value={activeTab}
       defaultValue={customDefaultValue}
@@ -25,26 +29,32 @@ const HomePickupDialogTabs = ({
       }}
     >
       <WrapperContainer className="w-full">
-        <TabsList className="text-base! flex items-start justify-center mx-auto">
+        <TabsList className="flex items-start justify-center mx-auto text-sm md:text-base">
           <TabsTrigger
             value="currentLocation"
             disabled={isCurrentLocationTabDisabled}
             className={
               isCurrentLocationTabDisabled
-                ? "cursor-not-allowed opacity-60"
-                : undefined
+                ? "text-xs md:text-sm cursor-not-allowed opacity-60"
+                : "text-xs md:text-sm"
             }
           >
-            موقعك الخاص
+            {t("pickupDialog.tabs.currentLocation")}
           </TabsTrigger>
-          <TabsTrigger value="airport">مطار</TabsTrigger>
-          <TabsTrigger value="trainStation">محطة قطار</TabsTrigger>
-          <TabsTrigger value="branches">الفروع</TabsTrigger>
+          <TabsTrigger className="text-xs md:text-sm" value="airport">
+            {t("pickupDialog.tabs.airport")}
+          </TabsTrigger>
+          <TabsTrigger className="text-xs md:text-sm" value="trainStation">
+            {t("pickupDialog.tabs.trainStation")}
+          </TabsTrigger>
+          <TabsTrigger className="text-xs md:text-sm" value="branches">
+            {t("pickupDialog.tabs.branches")}
+          </TabsTrigger>
         </TabsList>
 
-        <div className="relative min-h-[420px] max-h-[420px] rounded-2xl overflow-auto border border-Grey100 shadow-sm mt-3 3xl:max-h-[450px]!">
+        <div className="relative min-h-[420px] max-h-[420px] rounded-2xl overflow-hidden border border-Grey100 shadow-sm mt-3 flex flex-col 3xl:max-h-[450px]!">
           <TabsContent
-            className="w-full h-full mt-0! flex"
+            className="w-full h-full min-h-0 mt-0! flex flex-col"
             value="currentLocation"
           >
             <HomeUserCurrentLocation />
