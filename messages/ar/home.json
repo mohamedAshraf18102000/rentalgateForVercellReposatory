@@ -45,7 +45,9 @@
       "currentLocation": "موقعك الخاص",
       "airport": "مطار",
       "trainStation": "محطة قطار",
-      "branches": "الفروع"
+      "branches": "الفروع",
+      "airportUnavailable": "هذه السيارة غير متاحة للاستلام أو التسليم من المطار.",
+      "trainStationUnavailable": "هذه السيارة غير متاحة للاستلام أو التسليم من محطة القطار."
     }
   },
   "referral": {

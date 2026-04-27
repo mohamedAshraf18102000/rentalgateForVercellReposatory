@@ -7,6 +7,7 @@ import { usePickupDialogStore } from "@/lib/stores/usePickupDialogStore";
 import { useBookedCarDetailsStore } from "@/lib/stores/useBookedCarDetailsStore";
 import { useLocationStore } from "@/lib/stores/useLocationStore";
 import { useLocale, useTranslations } from "next-intl";
+import { useEffect } from "react";
 
 const CarPickupDialogTabs = ({
   customDefaultValue,
@@ -20,11 +21,29 @@ const CarPickupDialogTabs = ({
     target,
     confirmDialog,
   } = usePickupDialogStore();
-  const { carDetails, setFormData } = useBookedCarDetailsStore();
+  const { carDetails, setFormData, airports, trainStations } =
+    useBookedCarDetailsStore();
   const { latitude, longitude } = useLocationStore();
   const t = useTranslations("home");
   const locale = useLocale();
   const dir = locale === "ar" ? "rtl" : "ltr";
+  const isAirportTabDisabled = airports.length === 0;
+  const isTrainStationTabDisabled = trainStations.length === 0;
+
+  useEffect(() => {
+    if (activeTab === "airport" && isAirportTabDisabled) {
+      setActiveTab("currentLocation");
+    }
+
+    if (activeTab === "trainStation" && isTrainStationTabDisabled) {
+      setActiveTab("currentLocation");
+    }
+  }, [
+    activeTab,
+    isAirportTabDisabled,
+    isTrainStationTabDisabled,
+    setActiveTab,
+  ]);
 
   const handleBranchSelection = () => {
     if (!carDetails) return;
@@ -80,10 +99,36 @@ const CarPickupDialogTabs = ({
           >
             {t("pickupDialog.tabs.currentLocation")}
           </TabsTrigger>
-          <TabsTrigger className="text-xs md:text-sm" value="airport">
+          <TabsTrigger
+            title={
+              isAirportTabDisabled
+                ? t("pickupDialog.tabs.airportUnavailable")
+                : undefined
+            }
+            className={
+              isAirportTabDisabled
+                ? "text-xs md:text-sm cursor-not-allowed opacity-60"
+                : "text-xs md:text-sm"
+            }
+            value="airport"
+            disabled={isAirportTabDisabled}
+          >
             {t("pickupDialog.tabs.airport")}
           </TabsTrigger>
-          <TabsTrigger className="text-xs md:text-sm" value="trainStation">
+          <TabsTrigger
+            title={
+              isTrainStationTabDisabled
+                ? t("pickupDialog.tabs.trainStationUnavailable")
+                : undefined
+            }
+            className={
+              isTrainStationTabDisabled
+                ? "text-xs md:text-sm cursor-not-allowed opacity-60"
+                : "text-xs md:text-sm "
+            }
+            value="trainStation"
+            disabled={isTrainStationTabDisabled}
+          >
             {t("pickupDialog.tabs.trainStation")}
           </TabsTrigger>
           <TabsTrigger className="text-xs md:text-sm" value="branches">

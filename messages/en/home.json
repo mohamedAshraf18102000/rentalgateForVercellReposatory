@@ -45,7 +45,9 @@
       "currentLocation": "Your location",
       "airport": "Airport",
       "trainStation": "Train station",
-      "branches": "Branches"
+      "branches": "Branches",
+      "airportUnavailable": "This car cannot be picked up from or delivered to an airport.",
+      "trainStationUnavailable": "This car cannot be picked up from or delivered to a train station."
     }
   },
   "referral": {
