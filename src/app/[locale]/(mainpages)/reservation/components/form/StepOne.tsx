@@ -228,7 +228,7 @@ const StepOne = ({ control, errors, watch, setValue }: StepOneProps) => {
             )}
           />
         </div>
-        <ArrowIcon className="mt-2 hidden h-12 w-12 shrink-0 lg:mt-8 lg:block" />
+        <ArrowIcon className="hidden h-12 w-12 shrink-0 pt-5 lg:block" />
         <div className="w-full relative">
           <button
             type="button"
@@ -333,8 +333,13 @@ const StepOne = ({ control, errors, watch, setValue }: StepOneProps) => {
                 minDate={minToDate ?? undefined}
                 value={field.value}
                 onChange={(date: Date | null) => {
+                  if (!date) {
+                    field.onChange(null);
+                    return;
+                  }
+
                   if (isDateLessThanMinimumRental(fromDate, date)) {
-                    field.onChange(undefined);
+                    field.onChange(minToDate ?? date);
                     return;
                   }
 

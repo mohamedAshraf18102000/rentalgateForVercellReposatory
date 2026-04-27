@@ -158,7 +158,7 @@ function TimePicker({
 
         const now = new Date();
         const isToday =
-          selectedDate &&
+          !!selectedDate &&
           selectedDate.getFullYear() === now.getFullYear() &&
           selectedDate.getMonth() === now.getMonth() &&
           selectedDate.getDate() === now.getDate();
@@ -171,7 +171,13 @@ function TimePicker({
           <button
             key={label}
             ref={isActive ? activeRef : null}
-            onClick={() => onTimeSelect(slot.hours, slot.minutes)}
+            type="button"
+            disabled={isPast}
+            aria-disabled={isPast}
+            onClick={() => {
+              if (isPast) return;
+              onTimeSelect(slot.hours, slot.minutes);
+            }}
             className={cn(
               "rounded-2xl px-3 sm:px-4 py-2.5 text-xs sm:text-sm font-medium transition-all whitespace-nowrap text-left",
               isActive
