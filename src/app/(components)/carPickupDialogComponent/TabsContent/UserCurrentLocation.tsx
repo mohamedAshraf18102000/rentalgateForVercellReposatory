@@ -131,7 +131,7 @@ const UserCurrentLocation = () => {
           </p>
         )}
 
-        <div className="flex-1 min-h-0 max-h-[400px] flex flex-col gap-3 overflow-y-auto overscroll-contain pr-1 pb-5">
+        <div className="flex-1 min-h-0 max-h-[400px] overflow-y-auto flex flex-col gap-3 overscroll-contain pr-1 pb-5">
           {userAddresses?.map((address) => (
             <button
               title={address.address}

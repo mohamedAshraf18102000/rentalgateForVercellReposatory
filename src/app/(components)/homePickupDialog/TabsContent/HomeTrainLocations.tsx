@@ -45,7 +45,8 @@ const HomeTrainLocations = () => {
           className="flex flex-col gap-y-2 w-[95%] mx-auto mt-2"
           onValueChange={handleStationSelection}
           value={
-            formData.pickupType === "TRAIN_STATION" && formData.pickupTrainId != null
+            formData.pickupType === "TRAIN_STATION" &&
+            formData.pickupTrainId != null
               ? `station-${formData.pickupTrainId}`
               : ""
           }
@@ -53,7 +54,10 @@ const HomeTrainLocations = () => {
           <p className="text-base font-bold">محطات القطار الأكثر شهرة:</p>
 
           {trainStationsData?.content?.map((station) => (
-            <div key={station.stationId}>
+            <div
+              key={station.stationId}
+              className="overflow-y-auto max-h-[360px]"
+            >
               <div className="flex items-center gap-4 p-2 rounded-lg mx-auto hover:bg-Grey100">
                 <Label
                   htmlFor={`station-${station.stationId}`}

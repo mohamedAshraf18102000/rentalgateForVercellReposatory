@@ -46,42 +46,45 @@ const HomeAirportLocations = () => {
           className="flex flex-col gap-y-2 w-[95%] mx-auto mt-2"
           onValueChange={handleAirportSelection}
           value={
-            formData.pickupType === "AIRPORT" && formData.pickupAirportId != null
+            formData.pickupType === "AIRPORT" &&
+            formData.pickupAirportId != null
               ? `airport-${formData.pickupAirportId}`
               : ""
           }
         >
           <p className="text-base font-bold">المطارات الأكثر شهرة:</p>
 
-          {airportsData?.content?.map((airport) => (
-            <div key={airport.airportId}>
-              <div className="flex items-center gap-4 p-2 rounded-lg mx-auto hover:bg-Grey100">
-                <Label
-                  htmlFor={`airport-${airport.airportId}`}
-                  className="flex items-center gap-3 cursor-pointer flex-1"
-                >
-                  <PlaneTakeoff
-                    className="text-primary transition-colors"
-                    size={20}
+          <div className="overflow-y-auto max-h-[360px]">
+            {airportsData?.content?.map((airport) => (
+              <div key={airport.airportId}>
+                <div className="flex items-center gap-4 p-2 rounded-lg mx-auto hover:bg-Grey100">
+                  <Label
+                    htmlFor={`airport-${airport.airportId}`}
+                    className="flex items-center gap-3 cursor-pointer flex-1"
+                  >
+                    <PlaneTakeoff
+                      className="text-primary transition-colors"
+                      size={20}
+                    />
+                    <div className="flex flex-col gap-0.5">
+                      <p className="text-sm truncate">{airport.name}</p>
+                      {airport.name && (
+                        <p className="text-xs text-muted-foreground">
+                          {airport.name}
+                        </p>
+                      )}
+                    </div>
+                  </Label>
+                  <RadioGroupItem
+                    className="border-primary border-2 h-6 w-6"
+                    value={`airport-${airport.airportId}`}
+                    id={`airport-${airport.airportId}`}
                   />
-                  <div className="flex flex-col gap-0.5">
-                    <p className="text-sm truncate">{airport.name}</p>
-                    {airport.name && (
-                      <p className="text-xs text-muted-foreground">
-                        {airport.name}
-                      </p>
-                    )}
-                  </div>
-                </Label>
-                <RadioGroupItem
-                  className="border-primary border-2 h-6 w-6"
-                  value={`airport-${airport.airportId}`}
-                  id={`airport-${airport.airportId}`}
-                />
+                </div>
+                <Separator className="my-1" />
               </div>
-              <Separator className="my-1" />
-            </div>
-          ))}
+            ))}
+          </div>
         </RadioGroup>
       )}
     </div>

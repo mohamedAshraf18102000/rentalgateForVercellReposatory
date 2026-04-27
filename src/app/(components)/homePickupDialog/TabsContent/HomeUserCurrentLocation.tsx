@@ -167,13 +167,13 @@ const HomeUserCurrentLocation = () => {
               لا توجد عناوين مسجلة
             </p>
           )}
-          <div className="flex flex-col overflow-x-auto gap-3 pb-2 ">
+          <div className="flex flex-col overflow-y-auto max-h-[360px] gap-3 pb-2 ">
             {userAddresses?.map((address) => (
               <button
                 title={address.address}
                 key={address.addressId}
                 onClick={() => handleSelectAddress(address)}
-                className={`bg-white border p-3 rounded-xl transition-all cursor-pointer shadow-sm group text-start min-w-[calc(33.33%-8px)] ${
+                className={`bg-white border mx-2 p-3 rounded-xl transition-all cursor-pointer shadow-sm group text-start min-w-[calc(33.33%-8px)] ${
                   String(selectedAddressId) === String(address.addressId)
                     ? "border-black"
                     : "border-Grey100 hover:border-primary/30"

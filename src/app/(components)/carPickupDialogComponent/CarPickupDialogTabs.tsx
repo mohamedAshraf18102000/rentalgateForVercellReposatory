@@ -13,8 +13,13 @@ const CarPickupDialogTabs = ({
 }: {
   customDefaultValue: string;
 }) => {
-  const { activeTab, setActiveTab, isCurrentLocationTabDisabled, target, confirmDialog } =
-    usePickupDialogStore();
+  const {
+    activeTab,
+    setActiveTab,
+    isCurrentLocationTabDisabled,
+    target,
+    confirmDialog,
+  } = usePickupDialogStore();
   const { carDetails, setFormData } = useBookedCarDetailsStore();
   const { latitude, longitude } = useLocationStore();
   const t = useTranslations("home");
@@ -107,7 +112,6 @@ const CarPickupDialogTabs = ({
           >
             <TrainLocations />
           </TabsContent>
-
         </div>
       </WrapperContainer>
     </Tabs>

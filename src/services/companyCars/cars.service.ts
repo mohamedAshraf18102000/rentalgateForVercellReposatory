@@ -23,6 +23,32 @@ export const getCompanyCars = async (
   page: number = 1,
   filters?: CarFilters,
 ): Promise<CarApiResponse> => {
+  const hasAppliedFilters = Boolean(
+    filters &&
+    [
+      filters.minPrice,
+      filters.maxPrice,
+      filters.categoryId,
+      filters.locationType,
+      filters.airportId,
+      filters.trainStationId,
+      filters.brandId,
+      filters.typeId,
+      filters.searchType,
+      filters.priceType,
+      filters.sortBy,
+    ].some((value) => value !== undefined && value !== null && value !== ""),
+  );
+
+  if (!hasAppliedFilters) {
+    const latitude = filters?.latitude ?? "";
+    const longitude = filters?.longitude ?? "";
+
+    return fetcher<CarApiResponse>(
+      `/company-cars?latitude=${latitude}&longitude=${longitude}`,
+    );
+  }
+
   const query: string[] = [];
 
   // required params
