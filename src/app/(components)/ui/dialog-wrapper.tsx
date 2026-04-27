@@ -78,9 +78,59 @@ export function DialogWrapper({
 }: DialogWrapperProps) {
   const isMobile = useIsMobile();
   const shouldUseDialog = forceDialog || !isMobile;
+  const [internalOpen, setInternalOpen] = React.useState(false);
+  const isControlled = typeof open === "boolean";
+  const resolvedOpen = isControlled ? open : internalOpen;
 
   const scrollRef = React.useRef<HTMLDivElement>(null);
   const [isAtBottom, setIsAtBottom] = React.useState(false);
+  const pushedHistoryRef = React.useRef(false);
+  const ignoreNextPopRef = React.useRef(false);
+
+  const handleOpenChange = React.useCallback(
+    (nextOpen: boolean) => {
+      if (!isControlled) {
+        setInternalOpen(nextOpen);
+      }
+      onOpenChange?.(nextOpen);
+
+      // Keep browser history clean when sheet is closed explicitly.
+      if (isMobile && !forceDialog && !nextOpen && pushedHistoryRef.current) {
+        pushedHistoryRef.current = false;
+        ignoreNextPopRef.current = true;
+        window.history.back();
+      }
+    },
+    [forceDialog, isControlled, isMobile, onOpenChange],
+  );
+
+  // Mobile drawer should close first on browser back.
+  React.useEffect(() => {
+    if (shouldUseDialog) return;
+    if (!resolvedOpen) return;
+    if (pushedHistoryRef.current) return;
+
+    window.history.pushState({ dialogWrapperOpen: true }, "");
+    pushedHistoryRef.current = true;
+
+    const onPopState = () => {
+      if (ignoreNextPopRef.current) {
+        ignoreNextPopRef.current = false;
+        return;
+      }
+
+      pushedHistoryRef.current = false;
+      if (!isControlled) {
+        setInternalOpen(false);
+      }
+      onOpenChange?.(false);
+    };
+
+    window.addEventListener("popstate", onPopState);
+    return () => {
+      window.removeEventListener("popstate", onPopState);
+    };
+  }, [isControlled, onOpenChange, resolvedOpen, shouldUseDialog]);
 
   // Scroll detection
   React.useEffect(() => {
@@ -187,7 +237,7 @@ export function DialogWrapper({
   // Mobile → Drawer
   if (isMobile && !forceDialog) {
     return (
-      <Drawer open={open} onOpenChange={onOpenChange}>
+      <Drawer open={resolvedOpen} onOpenChange={handleOpenChange}>
         {trigger && <DrawerTrigger asChild>{trigger}</DrawerTrigger>}
 
         <DrawerContent
@@ -231,7 +281,7 @@ export function DialogWrapper({
 
   // Desktop → Dialog
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={resolvedOpen} onOpenChange={handleOpenChange}>
       {trigger && <DialogTrigger asChild>{trigger}</DialogTrigger>}
 
       <DialogContent
