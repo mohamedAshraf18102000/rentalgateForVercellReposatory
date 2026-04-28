@@ -8,13 +8,9 @@ import { usePickupDialogStore } from "@/lib/stores/usePickupDialogStore";
 import { useBookedCarDetailsStore } from "@/lib/stores/useBookedCarDetailsStore";
 import { useUserPreferedFiltersStore } from "@/lib/stores/useUserPreferedFiltersStore";
 import { useLocale, useTranslations } from "next-intl";
+import EmptyLocationContent from "./EmptyLocationContent/EmptyLocationContent";
 
 const AirportLocations = () => {
-  // const { data: airports, isLoading } = useQuery({
-  //   queryKey: ["airports"],
-  //   queryFn: () => getAirports(),
-  // });
-
   const { airports, setFormData, formData } = useBookedCarDetailsStore();
   const { target, confirmDialog } = usePickupDialogStore();
   const { filters, setFilter } = useUserPreferedFiltersStore();
@@ -66,50 +62,58 @@ const AirportLocations = () => {
     }
   };
 
-  return (
-    <div className="w-full h-full overflow-y-auto">
-      <RadioGroup
-        dir={dir}
-        className="flex flex-col gap-y-2 w-[95%] mx-auto mt-2"
-        onValueChange={handleValueChange}
-        value={selectedAirportValue}
-      >
-        <p className="text-base font-bold">
-          {t("pickupDialog.popularLocations.airports")}
-        </p>
+  const hasAirports = (airports?.length ?? 0) > 0;
 
-        {airports?.map((airport) => {
-          return (
-            <div key={airport.airportId}>
-              <div className="flex items-center gap-4 p-2 rounded-lg mx-auto hover:bg-Grey100">
-                <Label
-                  htmlFor={`airport-${airport.airportId}`}
-                  className="flex items-center gap-3 cursor-pointer flex-1"
-                >
-                  <PlaneTakeoff
-                    className="text-primary transition-colors"
-                    size={20}
+  return (
+    <div className="w-full h-full min-h-0 flex flex-col">
+      {hasAirports ? (
+        <RadioGroup
+          dir={dir}
+          className="flex flex-col gap-y-2 w-[95%] mx-auto mt-2"
+          onValueChange={handleValueChange}
+          value={selectedAirportValue}
+        >
+          <p className="text-base font-bold">
+            {t("pickupDialog.popularLocations.airports")}
+          </p>
+
+          {airports?.map((airport) => {
+            return (
+              <div key={airport.airportId}>
+                <div className="flex items-center gap-4 p-2 rounded-lg mx-auto hover:bg-Grey100">
+                  <Label
+                    htmlFor={`airport-${airport.airportId}`}
+                    className="flex items-center gap-3 cursor-pointer flex-1"
+                  >
+                    <PlaneTakeoff
+                      className="text-primary transition-colors"
+                      size={20}
+                    />
+                    <div className="flex flex-col gap-0.5">
+                      <p className="text-sm truncate">{airport.name}</p>
+                      {airport.name && (
+                        <p className="text-xs text-muted-foreground">
+                          {airport.name}
+                        </p>
+                      )}
+                    </div>
+                  </Label>
+                  <RadioGroupItem
+                    className="border-primary border-2 h-6 w-6"
+                    value={`airport-${airport.airportId}`}
+                    id={`airport-${airport.airportId}`}
                   />
-                  <div className="flex flex-col gap-0.5">
-                    <p className="text-sm truncate">{airport.name}</p>
-                    {airport.name && (
-                      <p className="text-xs text-muted-foreground">
-                        {airport.name}
-                      </p>
-                    )}
-                  </div>
-                </Label>
-                <RadioGroupItem
-                  className="border-primary border-2 h-6 w-6"
-                  value={`airport-${airport.airportId}`}
-                  id={`airport-${airport.airportId}`}
-                />
+                </div>
+                <Separator className="my-1" />
               </div>
-              <Separator className="my-1" />
-            </div>
-          );
-        })}
-      </RadioGroup>
+            );
+          })}
+        </RadioGroup>
+      ) : (
+        <div className="w-full flex-1 min-h-0 flex items-center justify-center">
+          <EmptyLocationContent />
+        </div>
+      )}
     </div>
   );
 };

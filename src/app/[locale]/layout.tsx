@@ -11,6 +11,7 @@ import SideToChat from "../(components)/sideToChat/SideToChat";
 import { CurrentLocationDialog } from "./(dialogs)/PickupDialog/CurrentLocationDialog";
 import ReactQueryProvider from "@/provider/ReactQueryProvider";
 import ReservationStateResetWatcher from "./(components)/ReservationStateResetWatcher";
+import { TooltipProvider } from "../(components)/ui/tooltip";
 
 // const fontZain = Zain({
 //   subsets: ["arabic", "latin"],
@@ -184,18 +185,20 @@ export default async function LocaleLayout({
         className="flex flex-col min-h-screen"
       >
         <NextIntlClientProvider messages={messages}>
-          <DialogProvider>
-            <RouteGuard />
-            <ReservationStateResetWatcher />
-            <CurrentLocationDialog />
-            <Header />
-            <SideToChat />
-            <main className="max-sm:pt-[65px] flex-1">
-              <ReactQueryProvider>{children}</ReactQueryProvider>
-            </main>
-            <Footer />
-            <Toaster />
-          </DialogProvider>
+          <TooltipProvider>
+            <DialogProvider>
+              <RouteGuard />
+              <ReservationStateResetWatcher />
+              <CurrentLocationDialog />
+              <Header />
+              <SideToChat />
+              <main className="max-sm:pt-[65px] flex-1">
+                <ReactQueryProvider>{children}</ReactQueryProvider>
+              </main>
+              <Footer />
+              <Toaster />
+            </DialogProvider>
+          </TooltipProvider>
         </NextIntlClientProvider>
       </body>
     </html>

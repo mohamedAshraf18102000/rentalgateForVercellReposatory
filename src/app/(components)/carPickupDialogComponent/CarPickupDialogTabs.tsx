@@ -21,29 +21,16 @@ const CarPickupDialogTabs = ({
     target,
     confirmDialog,
   } = usePickupDialogStore();
-  const { carDetails, setFormData, airports, trainStations } =
-    useBookedCarDetailsStore();
+  const { carDetails, setFormData } = useBookedCarDetailsStore();
   const { latitude, longitude } = useLocationStore();
   const t = useTranslations("home");
   const locale = useLocale();
   const dir = locale === "ar" ? "rtl" : "ltr";
-  const isAirportTabDisabled = airports.length === 0;
-  const isTrainStationTabDisabled = trainStations.length === 0;
-
   useEffect(() => {
-    if (activeTab === "airport" && isAirportTabDisabled) {
-      setActiveTab("currentLocation");
+    if (isCurrentLocationTabDisabled && activeTab === "currentLocation") {
+      setActiveTab("branches");
     }
-
-    if (activeTab === "trainStation" && isTrainStationTabDisabled) {
-      setActiveTab("currentLocation");
-    }
-  }, [
-    activeTab,
-    isAirportTabDisabled,
-    isTrainStationTabDisabled,
-    setActiveTab,
-  ]);
+  }, [activeTab, isCurrentLocationTabDisabled, setActiveTab]);
 
   const handleBranchSelection = () => {
     if (!carDetails) return;
@@ -76,18 +63,19 @@ const CarPickupDialogTabs = ({
   return (
     <Tabs
       dir={dir}
-      className="w-full bg-transparent"
+      className="w-full h-full bg-transparent flex flex-col"
       value={activeTab}
       defaultValue={customDefaultValue}
       onValueChange={(value) => {
+        if (value === "currentLocation" && isCurrentLocationTabDisabled) return;
         setActiveTab(value as any);
         if (value === "branches") {
           handleBranchSelection();
         }
       }}
     >
-      <WrapperContainer className="w-full">
-        <TabsList className="flex items-start justify-center mx-auto text-sm md:text-base">
+      <WrapperContainer className="w-full h-full flex flex-col">
+        <TabsList className="flex items-start justify-center mx-auto text-sm md:text-base w-full">
           <TabsTrigger
             className={
               isCurrentLocationTabDisabled
@@ -99,36 +87,11 @@ const CarPickupDialogTabs = ({
           >
             {t("pickupDialog.tabs.currentLocation")}
           </TabsTrigger>
-          <TabsTrigger
-            title={
-              isAirportTabDisabled
-                ? t("pickupDialog.tabs.airportUnavailable")
-                : undefined
-            }
-            className={
-              isAirportTabDisabled
-                ? "text-xs md:text-sm cursor-not-allowed opacity-60"
-                : "text-xs md:text-sm"
-            }
-            value="airport"
-            disabled={isAirportTabDisabled}
-          >
+
+          <TabsTrigger className={"text-xs md:text-sm"} value="airport">
             {t("pickupDialog.tabs.airport")}
           </TabsTrigger>
-          <TabsTrigger
-            title={
-              isTrainStationTabDisabled
-                ? t("pickupDialog.tabs.trainStationUnavailable")
-                : undefined
-            }
-            className={
-              isTrainStationTabDisabled
-                ? "text-xs md:text-sm cursor-not-allowed opacity-60"
-                : "text-xs md:text-sm "
-            }
-            value="trainStation"
-            disabled={isTrainStationTabDisabled}
-          >
+          <TabsTrigger className={"text-xs md:text-sm "} value="trainStation">
             {t("pickupDialog.tabs.trainStation")}
           </TabsTrigger>
           <TabsTrigger className="text-xs md:text-sm" value="branches">
@@ -136,23 +99,23 @@ const CarPickupDialogTabs = ({
           </TabsTrigger>
         </TabsList>
 
-        <div className="relative min-h-[450px] max-h-[450px] rounded-2xl overflow-hidden border border-Grey100 shadow-sm mt-3 flex flex-col">
+        <div className="relative h-[450px] rounded-2xl overflow-hidden border border-Grey100 shadow-sm mt-3 flex flex-col">
           <TabsContent
-            className="w-full h-full min-h-0 mt-0! flex flex-col"
+            className="w-full flex-1 min-h-0 mt-0! flex flex-col"
             value="currentLocation"
           >
             <UserCurrentLocation />
           </TabsContent>
 
           <TabsContent
-            className="w-full h-full mt-0! flex flex-col"
+            className="w-full flex-1 min-h-0 mt-0! flex flex-col"
             value="airport"
           >
             <AirportLocations />
           </TabsContent>
 
           <TabsContent
-            className="w-full h-full mt-0! flex flex-col"
+            className="w-full flex-1 min-h-0 mt-0! flex flex-col"
             value="trainStation"
           >
             <TrainLocations />
