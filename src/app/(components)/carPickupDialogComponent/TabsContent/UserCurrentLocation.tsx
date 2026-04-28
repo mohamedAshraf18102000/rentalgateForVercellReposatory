@@ -125,13 +125,11 @@ const UserCurrentLocation = () => {
             {t("pickupDialog.savedAddressesTitle")}
           </h5>
         </div>
-
         {userAddresses?.length === 0 && (
           <p className="text-center text-Grey600 text-sm">
             {t("pickupDialog.noSavedAddresses")}
           </p>
         )}
-
         <div className="flex-1 min-h-0 max-h-[400px] overflow-y-auto flex flex-col gap-3 overscroll-contain pr-1 pb-5">
           {userAddresses?.map((address) => (
             <button
