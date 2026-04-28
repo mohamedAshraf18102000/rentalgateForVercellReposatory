@@ -29,16 +29,17 @@ const BookCars = () => {
   const rentalDays =
     useBookedCarDetailsStore((state) => state.formData.rentalDays) ?? 0;
   const { appliedFilters, filters, setFilter } = useUserPreferedFiltersStore();
-  const longitude = useLocationStore((state) => state.longitude);
   const latitude = useLocationStore((state) => state.latitude);
+  const longitude = useLocationStore((state) => state.longitude);
   const setFormField = useBookedCarDetailsStore((state) => state.setFormField);
-  const hasPickupFilterCoordinates =
+  const hasCurrentLocationPickupFilter =
+    appliedFilters.pickupType === "currentLocation" &&
     typeof appliedFilters.pickupLat === "number" &&
     typeof appliedFilters.pickupLng === "number";
-  const effectiveLatitude = hasPickupFilterCoordinates
+  const effectiveLatitude = hasCurrentLocationPickupFilter
     ? appliedFilters.pickupLat
     : latitude ?? undefined;
-  const effectiveLongitude = hasPickupFilterCoordinates
+  const effectiveLongitude = hasCurrentLocationPickupFilter
     ? appliedFilters.pickupLng
     : longitude ?? undefined;
 
@@ -57,6 +58,7 @@ const BookCars = () => {
         ? appliedFilters.pickupId || undefined
         : undefined,
     brandId: appliedFilters.brandId || undefined,
+    searchType: hasCurrentLocationPickupFilter ? "location" : undefined,
   };
 
   const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } =

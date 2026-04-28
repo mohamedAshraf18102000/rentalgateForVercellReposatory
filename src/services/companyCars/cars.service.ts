@@ -23,6 +23,39 @@ export const getCompanyCars = async (
   page: number = 1,
   filters?: CarFilters,
 ): Promise<CarApiResponse> => {
+  const hasValue = (value?: string | number | null) =>
+    value !== undefined && value !== null && value !== "";
+
+  const hasNonCoordinateFilters = Boolean(
+    filters &&
+    [
+      filters.minPrice,
+      filters.maxPrice,
+      filters.categoryId,
+      filters.locationType,
+      filters.airportId,
+      filters.trainStationId,
+      filters.brandId,
+      filters.typeId,
+      filters.searchType,
+      filters.priceType,
+      filters.sortBy,
+    ].some((value) => hasValue(value)),
+  );
+
+  const hasCoordinatesOnly = Boolean(
+    filters &&
+    hasValue(filters.latitude) &&
+    hasValue(filters.longitude) &&
+    !hasNonCoordinateFilters,
+  );
+
+  if (hasCoordinatesOnly) {
+    return fetcher<CarApiResponse>(
+      `/company-cars/filter-and-sort?latitude=${filters!.latitude}&longitude=${filters!.longitude}`,
+    );
+  }
+
   const hasAppliedFilters = Boolean(
     filters &&
     [
@@ -37,7 +70,9 @@ export const getCompanyCars = async (
       filters.searchType,
       filters.priceType,
       filters.sortBy,
-    ].some((value) => value !== undefined && value !== null && value !== ""),
+      filters.latitude,
+      filters.longitude,
+    ].some((value) => hasValue(value)),
   );
 
   if (!hasAppliedFilters) {
@@ -57,10 +92,8 @@ export const getCompanyCars = async (
 
   // helper function
   const addParam = (key: string, value?: string | number) => {
-    if (value !== undefined && value !== null && value !== "") {
+    if (hasValue(value)) {
       query.push(`${key}=${value}`);
-    } else {
-      query.push(key);
     }
   };
 
@@ -79,7 +112,7 @@ export const getCompanyCars = async (
       ? "airport"
       : hasTrainStation
         ? "train"
-        : filters.searchType ?? "location";
+        : filters.searchType;
 
     addParam("maxPrice", filters.maxPrice);
     addParam("minPrice", filters.minPrice);
