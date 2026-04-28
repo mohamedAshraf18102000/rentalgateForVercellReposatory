@@ -5,7 +5,6 @@ import AirportLocations from "./TabsContent/AirportLocations";
 import TrainLocations from "./TabsContent/TrainLocations";
 import { usePickupDialogStore } from "@/lib/stores/usePickupDialogStore";
 import { useLocale, useTranslations } from "next-intl";
-import { useEffect } from "react";
 import BranchesLocations from "./TabsContent/BranchesLocations";
 
 const CarPickupDialogTabs = ({
@@ -13,19 +12,10 @@ const CarPickupDialogTabs = ({
 }: {
   customDefaultValue: string;
 }) => {
-  const {
-    activeTab,
-    setActiveTab,
-    isCurrentLocationTabDisabled,
-  } = usePickupDialogStore();
+  const { activeTab, setActiveTab } = usePickupDialogStore();
   const t = useTranslations("home");
   const locale = useLocale();
   const dir = locale === "ar" ? "rtl" : "ltr";
-  useEffect(() => {
-    if (isCurrentLocationTabDisabled && activeTab === "currentLocation") {
-      setActiveTab("branches");
-    }
-  }, [activeTab, isCurrentLocationTabDisabled, setActiveTab]);
 
   return (
     <Tabs
@@ -34,21 +24,12 @@ const CarPickupDialogTabs = ({
       value={activeTab}
       defaultValue={customDefaultValue}
       onValueChange={(value) => {
-        if (value === "currentLocation" && isCurrentLocationTabDisabled) return;
         setActiveTab(value as any);
       }}
     >
       <WrapperContainer className="w-full h-full flex flex-col">
         <TabsList className="flex items-start justify-center mx-auto text-sm md:text-base w-full">
-          <TabsTrigger
-            className={
-              isCurrentLocationTabDisabled
-                ? "text-xs md:text-sm cursor-not-allowed opacity-60"
-                : "text-xs md:text-sm"
-            }
-            value="currentLocation"
-            disabled={isCurrentLocationTabDisabled}
-          >
+          <TabsTrigger className={"text-xs md:text-sm"} value="currentLocation">
             {t("pickupDialog.tabs.currentLocation")}
           </TabsTrigger>
 
