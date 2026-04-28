@@ -1,6 +1,6 @@
 "use client";
 // import { getTrainstations } from "@/services/pickupLocations/trainStations.service";
-import { TrainFront } from "lucide-react";
+import { Info, TrainFront } from "lucide-react";
 import { Label } from "../../ui/label";
 import { RadioGroup, RadioGroupItem } from "../../ui/radio-group";
 import { Separator } from "../../ui/separator";
@@ -9,20 +9,24 @@ import { useBookedCarDetailsStore } from "@/lib/stores/useBookedCarDetailsStore"
 import { useUserPreferedFiltersStore } from "@/lib/stores/useUserPreferedFiltersStore";
 import { useLocale, useTranslations } from "next-intl";
 import EmptyLocationContent from "./EmptyLocationContent/EmptyLocationContent";
+import { usePickupRedirect } from "./usePickupRedirect";
 
 const TrainLocations = () => {
   const { trainStations, setFormData, formData } = useBookedCarDetailsStore();
   const { target, confirmDialog } = usePickupDialogStore();
   const { filters, setFilter } = useUserPreferedFiltersStore();
+  const { handleRedirectClick } = usePickupRedirect();
   const t = useTranslations("home");
   const locale = useLocale();
   const dir = locale === "ar" ? "rtl" : "ltr";
   const selectedTrainValue =
     target === "return"
-      ? formData.returnType === "TRAIN_STATION" && formData.returnTrainId != null
+      ? formData.returnType === "TRAIN_STATION" &&
+        formData.returnTrainId != null
         ? `station-${formData.returnTrainId}`
         : ""
-      : formData.pickupType === "TRAIN_STATION" && formData.pickupTrainId != null
+      : formData.pickupType === "TRAIN_STATION" &&
+          formData.pickupTrainId != null
         ? `station-${formData.pickupTrainId}`
         : filters.pickupType === "trainStation" && filters.pickupId
           ? `station-${filters.pickupId}`
@@ -78,6 +82,11 @@ const TrainLocations = () => {
           <p className="text-base font-bold">
             {t("pickupDialog.popularLocations.trainStations")}
           </p>
+          <p className="w-full bg-red text-[12px] text-StatusRed flex items-center gap-2">
+            <Info className="size-4" />
+            هذه المحطات متاحة للحجز مع هذه السيارة فقط ولا تنطبق على باقي
+            السيارات.
+          </p>
 
           {trainStations?.map((station) => {
             return (
@@ -113,7 +122,42 @@ const TrainLocations = () => {
         </RadioGroup>
       ) : (
         <div className="w-full flex-1 min-h-0 flex items-center justify-center">
-          <EmptyLocationContent />
+          <div className="w-full flex-1 min-h-0 flex items-center justify-center">
+            <EmptyLocationContent
+              content={
+                <div className="flex flex-col gap-2 justify-center items-center text-center text-[15px]">
+                  <p className="text-StatusRed">
+                    خدمة التسليم/ الاستلام في محطات القطار غير متوفرة لهذه
+                    السيارة حالياً.
+                  </p>
+
+                  <p>
+                    يمكنك بسهولة العثور على سيارات تدعم التسليم/ الاستلام في
+                    محطات القطار بتحديد مكان الاستلام .
+                  </p>
+
+                  <p className="flex gap-0.5">
+                    <span>من</span>
+                    <span
+                      className="underline font-bold underline-offset-4 cursor-pointer"
+                      onClick={(event) => handleRedirectClick(event, "/")}
+                    >
+                      الصفحة الرئيسية
+                    </span>
+                    <span className="px-0.5">أو</span>
+                    <span
+                      className="underline font-bold underline-offset-4 cursor-pointer"
+                      onClick={(event) =>
+                        handleRedirectClick(event, "/bookings")
+                      }
+                    >
+                      التصفية
+                    </span>
+                  </p>
+                </div>
+              }
+            />
+          </div>
         </div>
       )}
     </div>
