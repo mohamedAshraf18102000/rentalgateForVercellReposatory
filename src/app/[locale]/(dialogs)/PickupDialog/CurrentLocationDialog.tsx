@@ -11,8 +11,15 @@ import { UserAddress } from "@/types/userProfile/userAddress";
 import { UserSavedAddresses } from "./UserSavedAddresses";
 
 export function CurrentLocationDialog() {
-  const { address, isDialogOpen, openDialog, closeDialog, setLocation } =
-    useLocationStore();
+  const {
+    address,
+    isDialogOpen,
+    dialogSource,
+    openDialog,
+    closeDialog,
+    setLocation,
+    setConfirmedDialogLocation,
+  } = useLocationStore();
   const [userAddresses, setUserAddresses] = useState<UserAddress[]>([]);
   const pathname = usePathname();
   const isTermsPage = pathname.includes("/terms&conditions");
@@ -31,7 +38,7 @@ export function CurrentLocationDialog() {
     }
     const hasClosed = sessionStorage.getItem("hasClosedLocationDialog");
     if (!hasClosed) {
-      const timer = setTimeout(() => openDialog(), 3000);
+      const timer = setTimeout(() => openDialog("auto"), 3000);
       return () => clearTimeout(timer);
     }
   }, [isTermsPage, openDialog]);
@@ -73,7 +80,7 @@ export function CurrentLocationDialog() {
 
   const handleOpenChange = (isOpen: boolean) => {
     if (isOpen) {
-      openDialog();
+      openDialog(dialogSource ?? "auto");
     } else {
       handleClose();
     }
@@ -87,7 +94,15 @@ export function CurrentLocationDialog() {
 
   const handleSave = () => {
     if (tempLocation) {
-      setLocation(tempLocation.lat, tempLocation.lng, tempLocation.address);
+      if (dialogSource === "homeCard") {
+        setConfirmedDialogLocation(
+          tempLocation.address,
+          tempLocation.lat,
+          tempLocation.lng,
+        );
+      } else {
+        setLocation(tempLocation.lat, tempLocation.lng, tempLocation.address);
+      }
     }
     closeDialog();
     sessionStorage.setItem("hasClosedLocationDialog", "true");

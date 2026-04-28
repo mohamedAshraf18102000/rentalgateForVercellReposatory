@@ -11,6 +11,7 @@ import {
 import { Funnel } from "lucide-react";
 import DrawerAccordion from "./DrawerAccordion/DrawerAccordion";
 import { useUserPreferedFiltersStore } from "@/lib/stores/useUserPreferedFiltersStore";
+import { useLocationStore } from "@/lib/stores/useLocationStore";
 import { useLocale, useTranslations } from "next-intl";
 
 const FilterDrawer = () => {
@@ -18,8 +19,12 @@ const FilterDrawer = () => {
   const locale = useLocale();
   const isArabic = locale === "ar";
   const { resetFilters, filters, applyFilters } = useUserPreferedFiltersStore();
+  const { clearConfirmedDialogLocation } = useLocationStore();
 
   const hasCategoryFilter = !!filters.carCategory || filters.categoryId !== "";
+  const hasPickupFilter =
+    (filters.pickupId !== "" && filters.pickupId !== "current-location") ||
+    (filters.pickupType === "currentLocation" && filters.pickupName !== "");
 
   const activeFiltersCount = [
     hasCategoryFilter,
@@ -27,8 +32,13 @@ const FilterDrawer = () => {
     filters.priceTo !== "",
     filters.brandId !== "",
     filters.modelId !== "",
-    filters.pickupId !== "" && filters.pickupId !== "current-location",
+    hasPickupFilter,
   ].filter(Boolean).length;
+
+  const handleResetFilters = () => {
+    resetFilters();
+    clearConfirmedDialogLocation();
+  };
 
   return (
     <Sheet>
@@ -67,7 +77,7 @@ const FilterDrawer = () => {
           <Button
             className="w-full min-h-11 text-sm! sm:text-base!"
             variant="outline"
-            onClick={resetFilters}
+            onClick={handleResetFilters}
           >
             {t("bookings.filterDrawer.resetToDefault")}
           </Button>

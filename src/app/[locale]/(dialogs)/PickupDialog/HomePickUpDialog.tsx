@@ -34,110 +34,114 @@ export function HomePickUpDialog({ title }: { title?: string }) {
   const bookingsPath = `/${locale}/bookings`;
   const isOnBookingsPage = pathname === bookingsPath;
 
-  const applyPickupSelectionToFilters = () => {
-    if (formData.pickupType === "AIRPORT") {
+  const applyPickupSelectionToFilters = (
+    latestFormData: ReturnType<typeof useBookedCarDetailsStore.getState>["formData"],
+  ) => {
+    if (latestFormData.pickupType === "AIRPORT") {
       setFilter("pickupType", "airport");
-      setFilter("pickupId", String(formData.pickupAirportId ?? ""));
-      setFilter("pickupAirportId", formData.pickupAirportId ?? undefined);
+      setFilter("pickupId", String(latestFormData.pickupAirportId ?? ""));
+      setFilter("pickupAirportId", latestFormData.pickupAirportId ?? undefined);
       setFilter("pickupTrainId", undefined);
-      setFilter("pickupName", formData.pickupName || "");
+      setFilter("pickupName", latestFormData.pickupName || "");
       setFilter("pickupLat", undefined);
       setFilter("pickupLng", undefined);
       setFilter("carReturnLocationType", "airport");
-      setFilter("carReturnAirportId", formData.pickupAirportId ?? undefined);
+      setFilter("carReturnAirportId", latestFormData.pickupAirportId ?? undefined);
       setFilter("carReturnTrainId", undefined);
-      setFilter("carReturnLocation", formData.pickupName || "");
-      setFilter("carReturnLocationId", String(formData.pickupAirportId ?? ""));
+      setFilter("carReturnLocation", latestFormData.pickupName || "");
+      setFilter("carReturnLocationId", String(latestFormData.pickupAirportId ?? ""));
       setFilter("carReturnLocationLat", undefined);
       setFilter("carReturnLocationLng", undefined);
       return;
     }
 
-    if (formData.pickupType === "TRAIN_STATION") {
+    if (latestFormData.pickupType === "TRAIN_STATION") {
       setFilter("pickupType", "trainStation");
-      setFilter("pickupTrainId", formData.pickupTrainId ?? undefined);
+      setFilter("pickupTrainId", latestFormData.pickupTrainId ?? undefined);
       setFilter("pickupAirportId", undefined);
-      setFilter("pickupId", String(formData.pickupTrainId ?? ""));
-      setFilter("pickupName", formData.pickupName || "");
+      setFilter("pickupId", String(latestFormData.pickupTrainId ?? ""));
+      setFilter("pickupName", latestFormData.pickupName || "");
       setFilter("pickupLat", undefined);
       setFilter("pickupLng", undefined);
       setFilter("carReturnLocationType", "trainStation");
-      setFilter("carReturnTrainId", formData.pickupTrainId ?? undefined);
+      setFilter("carReturnTrainId", latestFormData.pickupTrainId ?? undefined);
       setFilter("carReturnAirportId", undefined);
-      setFilter("carReturnLocation", formData.pickupName || "");
-      setFilter("carReturnLocationId", String(formData.pickupTrainId ?? ""));
+      setFilter("carReturnLocation", latestFormData.pickupName || "");
+      setFilter("carReturnLocationId", String(latestFormData.pickupTrainId ?? ""));
       setFilter("carReturnLocationLat", undefined);
       setFilter("carReturnLocationLng", undefined);
       return;
     }
 
-    if (formData.pickupType === "MY_LOCATION") {
+    if (latestFormData.pickupType === "MY_LOCATION") {
       setFilter("pickupType", "currentLocation");
-      setFilter("pickupId", formData.pickupId || "");
+      setFilter("pickupId", latestFormData.pickupId || "");
       setFilter("pickupTrainId", undefined);
       setFilter("pickupAirportId", undefined);
-      setFilter("pickupName", formData.pickupName || "");
-      setFilter("pickupLat", formData.pickupLat ?? undefined);
-      setFilter("pickupLng", formData.pickupLong ?? undefined);
+      setFilter("pickupName", latestFormData.pickupName || "");
+      setFilter("pickupLat", latestFormData.pickupLat ?? undefined);
+      setFilter("pickupLng", latestFormData.pickupLong ?? undefined);
       setFilter("carReturnLocationType", "currentLocation");
       setFilter("carReturnTrainId", undefined);
       setFilter("carReturnAirportId", undefined);
-      setFilter("carReturnLocation", formData.pickupName || "");
-      setFilter("carReturnLocationId", formData.pickupId || "");
-      setFilter("carReturnLocationLat", formData.pickupLat ?? undefined);
-      setFilter("carReturnLocationLng", formData.pickupLong ?? undefined);
+      setFilter("carReturnLocation", latestFormData.pickupName || "");
+      setFilter("carReturnLocationId", latestFormData.pickupId || "");
+      setFilter("carReturnLocationLat", latestFormData.pickupLat ?? undefined);
+      setFilter("carReturnLocationLng", latestFormData.pickupLong ?? undefined);
       return;
     }
 
-    if (formData.pickupType === "BRANCH") {
+    if (latestFormData.pickupType === "BRANCH") {
       setFilter("pickupType", "branches");
       setFilter("pickupId", "");
       setFilter("pickupTrainId", undefined);
       setFilter("pickupAirportId", undefined);
-      setFilter("pickupName", formData.pickupName || "");
-      setFilter("pickupLat", formData.pickupLat ?? undefined);
-      setFilter("pickupLng", formData.pickupLong ?? undefined);
+      setFilter("pickupName", latestFormData.pickupName || "");
+      setFilter("pickupLat", latestFormData.pickupLat ?? undefined);
+      setFilter("pickupLng", latestFormData.pickupLong ?? undefined);
       setFilter("carReturnLocationType", "branches");
       setFilter("carReturnTrainId", undefined);
       setFilter("carReturnAirportId", undefined);
-      setFilter("carReturnLocation", formData.pickupName || "");
+      setFilter("carReturnLocation", latestFormData.pickupName || "");
       setFilter("carReturnLocationId", "");
-      setFilter("carReturnLocationLat", formData.pickupLat ?? undefined);
-      setFilter("carReturnLocationLng", formData.pickupLong ?? undefined);
+      setFilter("carReturnLocationLat", latestFormData.pickupLat ?? undefined);
+      setFilter("carReturnLocationLng", latestFormData.pickupLong ?? undefined);
       return;
     }
 
     // branch or any other type fallback
     setFilter("pickupType", "");
-    setFilter("pickupId", formData.pickupId || "");
+    setFilter("pickupId", latestFormData.pickupId || "");
     setFilter("pickupTrainId", undefined);
     setFilter("pickupAirportId", undefined);
-    setFilter("pickupName", formData.pickupName || "");
-    setFilter("pickupLat", formData.pickupLat ?? undefined);
-    setFilter("pickupLng", formData.pickupLong ?? undefined);
+    setFilter("pickupName", latestFormData.pickupName || "");
+    setFilter("pickupLat", latestFormData.pickupLat ?? undefined);
+    setFilter("pickupLng", latestFormData.pickupLong ?? undefined);
     setFilter("carReturnLocationType", "");
     setFilter("carReturnTrainId", undefined);
     setFilter("carReturnAirportId", undefined);
-    setFilter("carReturnLocation", formData.pickupName || "");
-    setFilter("carReturnLocationId", formData.pickupId || "");
-    setFilter("carReturnLocationLat", formData.pickupLat ?? undefined);
-    setFilter("carReturnLocationLng", formData.pickupLong ?? undefined);
+    setFilter("carReturnLocation", latestFormData.pickupName || "");
+    setFilter("carReturnLocationId", latestFormData.pickupId || "");
+    setFilter("carReturnLocationLat", latestFormData.pickupLat ?? undefined);
+    setFilter("carReturnLocationLng", latestFormData.pickupLong ?? undefined);
   };
 
-  const syncReturnWithPickupInFormData = () => {
+  const syncReturnWithPickupInFormData = (
+    latestFormData: ReturnType<typeof useBookedCarDetailsStore.getState>["formData"],
+  ) => {
     setFormData({
-      carReturnLocation: formData.pickupName || "",
+      carReturnLocation: latestFormData.pickupName || "",
       carReturnLocationId:
-        formData.pickupType === "TRAIN_STATION"
-          ? String(formData.pickupTrainId ?? "")
-          : formData.pickupType === "AIRPORT"
-            ? String(formData.pickupAirportId ?? "")
-            : formData.pickupId || null,
-      returnLat: formData.pickupLat ?? null,
-      returnLong: formData.pickupLong ?? null,
-      returnType: formData.pickupType,
-      returnTrainId: formData.pickupTrainId ?? null,
-      returnAirportId: formData.pickupAirportId ?? null,
+        latestFormData.pickupType === "TRAIN_STATION"
+          ? String(latestFormData.pickupTrainId ?? "")
+          : latestFormData.pickupType === "AIRPORT"
+            ? String(latestFormData.pickupAirportId ?? "")
+            : latestFormData.pickupId || null,
+      returnLat: latestFormData.pickupLat ?? null,
+      returnLong: latestFormData.pickupLong ?? null,
+      returnType: latestFormData.pickupType,
+      returnTrainId: latestFormData.pickupTrainId ?? null,
+      returnAirportId: latestFormData.pickupAirportId ?? null,
     });
   };
 
@@ -150,8 +154,9 @@ export function HomePickUpDialog({ title }: { title?: string }) {
       setShowSaveDialog(true);
     } else {
       if (target === "pickup") {
-        syncReturnWithPickupInFormData();
-        applyPickupSelectionToFilters();
+        const latestFormData = useBookedCarDetailsStore.getState().formData;
+        syncReturnWithPickupInFormData(latestFormData);
+        applyPickupSelectionToFilters(latestFormData);
         applyFilters();
       }
       confirmDialog();
