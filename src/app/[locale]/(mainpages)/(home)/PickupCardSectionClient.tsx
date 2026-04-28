@@ -5,6 +5,7 @@ import CurrentLocationPickupCard from "@/app/(components)/customCards/CurrentLoc
 import { usePickupDialogStore } from "@/lib/stores/usePickupDialogStore";
 import { PickUpCardDetails } from "@/types/pickUpTypes";
 import { useLocationStore } from "@/lib/stores/useLocationStore";
+import { useUserPreferedFiltersStore } from "@/lib/stores/useUserPreferedFiltersStore";
 import { useRouter } from "next/navigation";
 
 interface PickupCardSectionClientProps {
@@ -16,13 +17,25 @@ export default function PickupCardSectionClient({
 }: PickupCardSectionClientProps) {
   const router = useRouter();
   const { openDialog } = usePickupDialogStore();
-  const openLocationDialog = useLocationStore((state) => state.openDialog);
+  const { openDialog: openLocationDialog, address, latitude, longitude } =
+    useLocationStore();
+  const { setFilter, applyFilters } = useUserPreferedFiltersStore();
 
   const hadnleLocationClick = () => {
     openLocationDialog();
   };
 
   const handleShowResultsClick = () => {
+    if (address) {
+      setFilter("pickupType", "currentLocation");
+      setFilter("pickupName", address);
+      setFilter("pickupLat", latitude ?? undefined);
+      setFilter("pickupLng", longitude ?? undefined);
+      setFilter("pickupId", "");
+      setFilter("pickupAirportId", undefined);
+      setFilter("pickupTrainId", undefined);
+      applyFilters();
+    }
     router.push("/bookings");
   };
 

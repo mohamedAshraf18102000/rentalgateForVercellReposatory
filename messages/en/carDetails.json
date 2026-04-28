@@ -60,6 +60,8 @@
       "pickupLocationLabel": "Pickup location:",
       "pickupLocationPlaceholder": "Select pickup location",
       "pickPickupLocation": "Select pickup location",
+      "pickupFromBranch": "Pickup from branch",
+      "dropoffAtBranch": "Drop-off at branch",
       "dropoffDifferentLocation": "Drop off at different location",
       "dropoffLocationLabel": "Drop-off location:",
       "dropoffLocationPlaceholder": "Select drop-off location",

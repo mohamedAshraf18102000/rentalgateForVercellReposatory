@@ -60,6 +60,8 @@
       "pickupLocationLabel": "مكان الأستلام:",
       "pickupLocationPlaceholder": "حدد مكان الاستلام",
       "pickPickupLocation": "حدد مكان الاستلام",
+      "pickupFromBranch": "استلام من الفرع",
+      "dropoffAtBranch": "تسليم في الفرع",
       "dropoffDifferentLocation": "التسليم في مكان اخر",
       "dropoffLocationLabel": "مكان التسليم:",
       "dropoffLocationPlaceholder": "حدد مكان التسليم",

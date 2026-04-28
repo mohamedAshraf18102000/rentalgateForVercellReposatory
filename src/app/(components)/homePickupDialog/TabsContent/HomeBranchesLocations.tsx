@@ -9,7 +9,11 @@ const HomeBranchesLocations = () => {
   const { setFilter } = useUserPreferedFiltersStore();
   const { setIsUnsavedMapLocation } = usePickupDialogStore();
 
-  const handleBranchMapSelection = (lat: number, lng: number, address: string) => {
+  const handleBranchMapSelection = (
+    lat: number,
+    lng: number,
+    address: string,
+  ) => {
     setFormData({
       pickupType: "BRANCH",
       branchId: null,
@@ -36,7 +40,6 @@ const HomeBranchesLocations = () => {
   return (
     <GoogleMapsLocation
       storeless
-      hideSearch
       onLocationChange={(lat, lng, address) =>
         handleBranchMapSelection(lat, lng, address)
       }

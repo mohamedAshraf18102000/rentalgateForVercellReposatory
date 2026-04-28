@@ -56,6 +56,10 @@ const CarSearchForm = ({
     detectedCurrentLocationCategory === "trainStation";
   const isRestrictedCurrentLocation =
     isAirportLocation || isTrainStationLocation;
+  const shouldShowRestrictedLocationMessage =
+    isRestrictedCurrentLocation &&
+    filters.pickupType !== "airport" &&
+    filters.pickupType !== "trainStation";
   const restrictedLocationMessage = isAirportLocation
     ? "عنوانك الحالي هو مطار يرجي اختيار من المطارات المتاحة"
     : isTrainStationLocation
@@ -138,7 +142,7 @@ const CarSearchForm = ({
                       title={displayPickupName}
                       onClick={handleOpenLocationDialog}
                       className={`h-[40px] rounded-lg p-2 w-full bg-[#eceef2] flex items-center gap-2 cursor-pointer ${
-                        isRestrictedCurrentLocation
+                        shouldShowRestrictedLocationMessage
                           ? "border-2 border-StatusRed"
                           : ""
                       }`}
@@ -206,7 +210,7 @@ const CarSearchForm = ({
               </Button>
             </div>
           </div>
-          {isRestrictedCurrentLocation && restrictedLocationMessage && (
+          {shouldShowRestrictedLocationMessage && restrictedLocationMessage && (
             <span className="text-xs text-StatusRed">
               {restrictedLocationMessage}
             </span>

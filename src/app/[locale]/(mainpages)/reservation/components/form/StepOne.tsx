@@ -71,6 +71,14 @@ const StepOne = ({ control, errors, watch, setValue }: StepOneProps) => {
     carDetails?.deliveryServiceAvailable,
   );
   const shouldDisableCurrentLocationTab = !isDeliveryServiceAvailable;
+  const pickupDisplayValue =
+    formData.pickupType === "BRANCH" && watch("pickupName")
+      ? t("reservation.stepOne.pickupFromBranch")
+      : watch("pickupName");
+  const returnDisplayValue =
+    formData.returnType === "BRANCH" && watch("carReturnLocation")
+      ? t("reservation.stepOne.dropoffAtBranch")
+      : watch("carReturnLocation");
 
   const recommendedOfferEndDate =
     fromDate && offerForRecommendation
@@ -247,6 +255,7 @@ const StepOne = ({ control, errors, watch, setValue }: StepOneProps) => {
             render={({ field }) => (
               <Input
                 {...field}
+                value={pickupDisplayValue || ""}
                 label={t("reservation.stepOne.pickupLocationLabel")}
                 placeholder={t("reservation.stepOne.pickupLocationPlaceholder")}
                 className="text-base! cursor-pointer"
@@ -277,6 +286,7 @@ const StepOne = ({ control, errors, watch, setValue }: StepOneProps) => {
             render={({ field }) => (
               <Input
                 {...field}
+                value={returnDisplayValue || ""}
                 label={t("reservation.stepOne.dropoffLocationLabel")}
                 placeholder={t(
                   "reservation.stepOne.dropoffLocationPlaceholder",
