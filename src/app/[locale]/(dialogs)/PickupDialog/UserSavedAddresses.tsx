@@ -7,6 +7,7 @@ type TempLocation = {
   lat: number;
   lng: number;
   address: string;
+  addressId?: number;
 } | null;
 
 interface UserSavedAddressesProps {
@@ -79,6 +80,7 @@ export function UserSavedAddresses({
       lat: nearestAddress.address.latitude,
       lng: nearestAddress.address.longitude,
       address: nearestAddress.address.addressName,
+      addressId: nearestAddress.address.addressId,
     });
   }, [tempLocation, userAddresses, setTempLocation]);
 
@@ -102,6 +104,7 @@ export function UserSavedAddresses({
                     lat: savedAddress.latitude,
                     lng: savedAddress.longitude,
                     address: savedAddress.addressName,
+                    addressId: savedAddress.addressId,
                   })
                 }
                 className={`w-[180px] shrink-0 rounded-xl border p-2 text-start transition-all ${

@@ -25,6 +25,7 @@ export function CurrentLocationDialog() {
     lat: number;
     lng: number;
     address: string;
+    addressId?: number;
   } | null>(null);
 
   useEffect(() => {
@@ -104,8 +105,14 @@ export function CurrentLocationDialog() {
           pickupLong: tempLocation.lng,
           returnLat: tempLocation.lat,
           returnLong: tempLocation.lng,
-          pickupId: null,
-          carReturnLocationId: null,
+          pickupId:
+            tempLocation.addressId != null
+              ? String(tempLocation.addressId)
+              : null,
+          carReturnLocationId:
+            tempLocation.addressId != null
+              ? String(tempLocation.addressId)
+              : null,
           pickupAirportId: null,
           pickupTrainId: null,
           returnAirportId: null,

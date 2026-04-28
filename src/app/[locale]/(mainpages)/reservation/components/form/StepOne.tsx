@@ -24,7 +24,7 @@ import { useRentalDays } from "@/hooks/useCalculateRentalDays";
 import { getBestOffer } from "@/lib/utils/getBestOffer";
 import { formatLocalDateTime } from "@/lib/utils/formatLocalDateTime";
 import { useLocale, useTranslations } from "next-intl";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface StepOneProps {
   control: Control<ReservationFormValues>;
@@ -79,6 +79,57 @@ const StepOne = ({ control, errors, watch, setValue }: StepOneProps) => {
     formData.returnType === "BRANCH" && watch("carReturnLocation")
       ? t("reservation.stepOne.dropoffAtBranch")
       : watch("carReturnLocation");
+
+  useEffect(() => {
+    if (!shouldDisableCurrentLocationTab || !carDetails) return;
+
+    const branchId = String(carDetails.branchId);
+    const branchName = carDetails.branchName;
+    const branchLat = carDetails.latitude;
+    const branchLng = carDetails.longitude;
+
+    if (formData.pickupType !== "BRANCH") {
+      setValue("pickupName", branchName, { shouldValidate: true });
+      setValue("pickupId", branchId);
+      setValue("pickupLat", branchLat);
+      setValue("pickupLong", branchLng);
+      setValue("pickupAirportId", null);
+      setValue("pickupTrainId", null);
+    }
+
+    if (formData.returnType !== "BRANCH") {
+      setValue("carReturnLocation", branchName, { shouldValidate: true });
+      setValue("carReturnLocationId", branchId);
+      setValue("returnLat", branchLat);
+      setValue("returnLong", branchLng);
+      setValue("returnAirportId", null);
+      setValue("returnTrainId", null);
+    }
+
+    setBookedCarFormData({
+      pickupName: branchName,
+      pickupType: "BRANCH",
+      pickupId: branchId,
+      pickupLat: branchLat,
+      pickupLong: branchLng,
+      pickupAirportId: null,
+      pickupTrainId: null,
+      carReturnLocation: branchName,
+      returnType: "BRANCH",
+      carReturnLocationId: branchId,
+      returnLat: branchLat,
+      returnLong: branchLng,
+      returnAirportId: null,
+      returnTrainId: null,
+    });
+  }, [
+    shouldDisableCurrentLocationTab,
+    carDetails,
+    formData.pickupType,
+    formData.returnType,
+    setBookedCarFormData,
+    setValue,
+  ]);
 
   const recommendedOfferEndDate =
     fromDate && offerForRecommendation
