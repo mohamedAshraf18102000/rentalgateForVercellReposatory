@@ -14,6 +14,7 @@ import { ChevronLeft } from "lucide-react";
 import UpdateUserSavedLocationDialog from "@/app/[locale]/(mainpages)/userProfile/components/userDialog/UpdateUserSavedLocationDialog";
 import { useState } from "react";
 import { useDialog } from "@/app/[locale]/(dialogs)";
+import { Skeleton } from "../../ui/skeleton";
 
 const HomeUserCurrentLocation = () => {
   const { authenticated } = useAuth();
@@ -166,6 +167,16 @@ const HomeUserCurrentLocation = () => {
             <p className="text-center text-Grey600 text-sm">
               لا توجد عناوين مسجلة
             </p>
+          )}
+          {isLoadingAddresses && (
+            <>
+              {Array.from({ length: 10 }).map((_, index) => (
+                <Skeleton
+                  key={index}
+                  className="h-8 rounded-lg mt-3 w-[95%] mx-auto bg-gray-100"
+                />
+              ))}
+            </>
           )}
           <div className="flex flex-col overflow-y-auto max-h-[360px] gap-3 pb-2 ">
             {userAddresses?.map((address) => (

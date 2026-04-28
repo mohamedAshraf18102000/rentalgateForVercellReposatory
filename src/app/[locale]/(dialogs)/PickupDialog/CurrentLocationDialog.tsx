@@ -7,10 +7,14 @@ import { useLocationStore } from "@/lib/stores/useLocationStore";
 import { useBookedCarDetailsStore } from "@/lib/stores/useBookedCarDetailsStore";
 import { LocateFixed } from "lucide-react";
 import { usePathname } from "next/navigation";
+import { getUserAddress } from "@/services/userProfile/getUserAddress.service";
+import { UserAddress } from "@/types/userProfile/userAddress";
+import { UserSavedAddresses } from "./UserSavedAddresses";
 
 export function CurrentLocationDialog() {
   const { address, isDialogOpen, openDialog, closeDialog, setLocation } =
     useLocationStore();
+  const [userAddresses, setUserAddresses] = useState<UserAddress[]>([]);
   const { resetForm, clearCarDetails, clearServices, setFormData } =
     useBookedCarDetailsStore();
   const pathname = usePathname();
@@ -44,6 +48,29 @@ export function CurrentLocationDialog() {
     if (isDialogOpen) {
       setTempLocation(null);
     }
+  }, [isDialogOpen]);
+
+  useEffect(() => {
+    if (!isDialogOpen) {
+      return;
+    }
+
+    let isMounted = true;
+    getUserAddress()
+      .then((addresses) => {
+        if (isMounted) {
+          setUserAddresses(addresses ?? []);
+        }
+      })
+      .catch(() => {
+        if (isMounted) {
+          setUserAddresses([]);
+        }
+      });
+
+    return () => {
+      isMounted = false;
+    };
   }, [isDialogOpen]);
 
   const handleOpenChange = (isOpen: boolean) => {
@@ -98,16 +125,23 @@ export function CurrentLocationDialog() {
       size="xl"
       header={{ mainTitle: "موقعك الحالي" }}
       content={
-        <div className="overflow-hidden">
+        <div className="overflow-hidden relative">
           <div className="flex p-2 gap-2">
             <LocateFixed />
             {tempLocation?.address ?? address}
           </div>
           <GoogleMapsLocation
             storeless
+            selectedLat={tempLocation?.lat}
+            selectedLng={tempLocation?.lng}
             onLocationChange={(lat, lng, addr) =>
               setTempLocation({ lat, lng, address: addr })
             }
+          />
+          <UserSavedAddresses
+            userAddresses={userAddresses}
+            tempLocation={tempLocation}
+            setTempLocation={setTempLocation}
           />
         </div>
       }

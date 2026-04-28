@@ -66,6 +66,7 @@
       "showPricesWithTax": "Show prices with tax",
       "pickupLocation": "Pickup location:",
       "currentLocation": "Current location",
+      "branchPickup": "Pickup from branch",
       "rentalPeriod": "Rental period:",
       "visibleCars": "Visible cars:",
       "pickupDatePlaceholder": "Select pickup date",

@@ -21,6 +21,8 @@ const GoogleMapsLocation = ({
   onLocationChange,
   initialLat,
   initialLng,
+  selectedLat,
+  selectedLng,
   hideSearch = false,
   hideUserLocation = false,
   containerHeight = "400px",
@@ -37,6 +39,8 @@ const GoogleMapsLocation = ({
   ) => void;
   initialLat?: number;
   initialLng?: number;
+  selectedLat?: number;
+  selectedLng?: number;
   hideSearch?: boolean;
   hideUserLocation?: boolean;
   containerHeight?: string;
@@ -132,6 +136,16 @@ const GoogleMapsLocation = ({
   useEffect(() => {
     if (mapRef.current) mapRef.current.panTo(currentLocation);
   }, [currentLocation]);
+
+  useEffect(() => {
+    if (selectedLat == null || selectedLng == null) {
+      return;
+    }
+
+    const newPos = { lat: selectedLat, lng: selectedLng };
+    setCurrentLocation(newPos);
+    mapRef.current?.panTo(newPos);
+  }, [selectedLat, selectedLng]);
 
   const handleLocateUser = () => {
     if (!navigator.geolocation) return;

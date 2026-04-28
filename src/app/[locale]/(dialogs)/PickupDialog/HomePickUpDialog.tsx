@@ -10,7 +10,6 @@ import { usePathname, useRouter } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import { useBookedCarDetailsStore } from "@/lib/stores/useBookedCarDetailsStore";
 import { useAuth } from "@/app/(components)/navbar/hooks/useAuth";
-import { useLocationStore } from "@/lib/stores/useLocationStore";
 
 export function HomePickUpDialog({ title }: { title?: string }) {
   const {
@@ -24,7 +23,6 @@ export function HomePickUpDialog({ title }: { title?: string }) {
     setIsUnsavedMapLocation,
   } = usePickupDialogStore();
   const { filters, setFilter, applyFilters } = useUserPreferedFiltersStore();
-  const openLocationDialog = useLocationStore((state) => state.openDialog);
 
   const { formData, setFormData } = useBookedCarDetailsStore();
   const { authenticated } = useAuth();
@@ -86,6 +84,24 @@ export function HomePickUpDialog({ title }: { title?: string }) {
       setFilter("carReturnAirportId", undefined);
       setFilter("carReturnLocation", formData.pickupName || "");
       setFilter("carReturnLocationId", formData.pickupId || "");
+      setFilter("carReturnLocationLat", formData.pickupLat ?? undefined);
+      setFilter("carReturnLocationLng", formData.pickupLong ?? undefined);
+      return;
+    }
+
+    if (formData.pickupType === "BRANCH") {
+      setFilter("pickupType", "branches");
+      setFilter("pickupId", "");
+      setFilter("pickupTrainId", undefined);
+      setFilter("pickupAirportId", undefined);
+      setFilter("pickupName", formData.pickupName || "");
+      setFilter("pickupLat", formData.pickupLat ?? undefined);
+      setFilter("pickupLng", formData.pickupLong ?? undefined);
+      setFilter("carReturnLocationType", "branches");
+      setFilter("carReturnTrainId", undefined);
+      setFilter("carReturnAirportId", undefined);
+      setFilter("carReturnLocation", formData.pickupName || "");
+      setFilter("carReturnLocationId", "");
       setFilter("carReturnLocationLat", formData.pickupLat ?? undefined);
       setFilter("carReturnLocationLng", formData.pickupLong ?? undefined);
       return;

@@ -6,6 +6,7 @@ import { useBookedCarDetailsStore } from "@/lib/stores/useBookedCarDetailsStore"
 import { useTranslations } from "next-intl";
 import { ReverseGeocodeMeta } from "@/lib/utils/reverseGeocode";
 import { detectPickupCategory } from "@/lib/utils/pickupLocationCategory";
+import { Loader2 } from "lucide-react";
 
 const UserCurrentLocation = () => {
   const t = useTranslations("home");

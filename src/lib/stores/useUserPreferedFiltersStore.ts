@@ -11,7 +11,7 @@ export interface BookingFilters {
   priceTo: string;
   categoryId: string;
   pickupId: string;
-  pickupType: "airport" | "trainStation" | "currentLocation" | "";
+  pickupType: "airport" | "trainStation" | "currentLocation" | "branches" | "";
   categoryName: string;
   pickupName: string;
   brandId: string;

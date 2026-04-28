@@ -120,13 +120,18 @@ const CarSearchForm = ({
                 const currentLocationLabel = t(
                   "bookings.searchForm.currentLocation",
                 );
-                const displayPickupName =
+                const branchPickupLabel = t("bookings.searchForm.branchPickup");
+                const resolvedPickupName =
                   (filters.pickupName === currentLocationLabel ||
                     filters.pickupName === "الموقع الحالي" ||
                     !filters.pickupName) &&
                   address
                     ? address
                     : filters.pickupName || currentLocationLabel;
+                const displayPickupName =
+                  filters.pickupType === "branches"
+                    ? `${branchPickupLabel}${resolvedPickupName ? ` - ${resolvedPickupName}` : ""}`
+                    : resolvedPickupName;
                 return (
                   <>
                     <div

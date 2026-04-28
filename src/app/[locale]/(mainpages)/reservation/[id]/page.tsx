@@ -4,7 +4,6 @@ import WrapperContainer from "@/app/(components)/wrapperContainer/WrapperContain
 import Stepper from "../../../../(components)/rentalStepper/Stepper";
 import CarsCard from "@/app/(components)/customCards/CarsCard/CarsCard";
 import StepContent, { StepContentRef } from "../components/form/StepContent";
-
 import { Button } from "@/app/(components)";
 import { ChevronLeft, ChevronRight, HandCoins, SaudiRiyal } from "lucide-react";
 import { Separator } from "@/app/(components)/ui/separator";
@@ -15,16 +14,12 @@ import { useMemo, useRef } from "react";
 import { PickupDialog } from "@/app/[locale]/(dialogs)/PickupDialog/PickUpDialog";
 import { getUserProfileCompletnessState } from "@/services/userProfile/getUserProfileCompletnessState.service";
 import { useUserPreferedFiltersStore } from "@/lib/stores/useUserPreferedFiltersStore";
-import {
-  calculateRentalPrice,
-  PricingType,
-} from "@/lib/utils/calculateRentalPrice";
+import { calculateRentalPrice } from "@/lib/utils/calculateRentalPrice";
 import { calculateDiscount } from "@/lib/utils/calculateDiscount";
 import ReservationDrawer from "../components/reservationDrawer/ReservationDrawer";
 import { formatPrice } from "@/lib/utils/formatPrice";
 import { useCalculateQuotePrice } from "@/hooks/api/useCalculateQuotePrice";
 import { buildReservationPayload } from "../utils/buildReservationPayload";
-import { toast } from "sonner";
 import { Skeleton } from "@/app/(components)/ui/skeleton";
 import GoogleMapsPolyLineLocation from "@/app/(components)/mapsLocation/GoogleMapsPolyLinedLocation";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -52,6 +47,7 @@ const page = () => {
   const searchParams = useSearchParams();
   const isForOtherReservation = searchParams.get("forOther") === "true";
   const carDetails = useBookedCarDetailsStore((s) => s.carDetails);
+
   const formData = useBookedCarDetailsStore((s) => s.formData);
   const isShowTax = useBookedCarDetailsStore((s) => s.showPricesWithTax);
   const { filters } = useUserPreferedFiltersStore();

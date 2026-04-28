@@ -32,10 +32,19 @@ const BookCars = () => {
   const longitude = useLocationStore((state) => state.longitude);
   const latitude = useLocationStore((state) => state.latitude);
   const setFormField = useBookedCarDetailsStore((state) => state.setFormField);
+  const hasPickupFilterCoordinates =
+    typeof appliedFilters.pickupLat === "number" &&
+    typeof appliedFilters.pickupLng === "number";
+  const effectiveLatitude = hasPickupFilterCoordinates
+    ? appliedFilters.pickupLat
+    : latitude ?? undefined;
+  const effectiveLongitude = hasPickupFilterCoordinates
+    ? appliedFilters.pickupLng
+    : longitude ?? undefined;
 
   const apiFilters = {
-    longitude: longitude ?? undefined,
-    latitude: latitude ?? undefined,
+    longitude: effectiveLongitude,
+    latitude: effectiveLatitude,
     minPrice: appliedFilters.priceMin || undefined,
     maxPrice: appliedFilters.priceTo || undefined,
     categoryId: appliedFilters.categoryId || undefined,

@@ -63,6 +63,15 @@ const StepOne = ({ control, errors, watch, setValue }: StepOneProps) => {
       .sort((a, b) => b.days - a.days)[0] ?? null;
   const offerForRecommendation = bestOffer ?? matchedOfferAtSameDays;
   const { openDialog } = usePickupDialogStore();
+  const setIsCurrentLocationTabDisabled = usePickupDialogStore(
+    (state) => state.setIsCurrentLocationTabDisabled,
+  );
+  const carDetails = useBookedCarDetailsStore((state) => state.carDetails);
+  const isDeliveryServiceAvailable = Boolean(
+    carDetails?.deliveryServiceAvailable,
+  );
+  const shouldDisableCurrentLocationTab = !isDeliveryServiceAvailable;
+
   const recommendedOfferEndDate =
     fromDate && offerForRecommendation
       ? new Date(
@@ -88,7 +97,17 @@ const StepOne = ({ control, errors, watch, setValue }: StepOneProps) => {
     : "";
 
   const handleOpenReturnLocationDialog = () => {
-    openDialog("currentLocation", "return", () => {
+    const returnDialogInitialTab =
+      shouldDisableCurrentLocationTab && formData.returnType === "AIRPORT"
+        ? "airport"
+        : shouldDisableCurrentLocationTab &&
+            formData.returnType === "TRAIN_STATION"
+          ? "trainStation"
+          : shouldDisableCurrentLocationTab
+            ? "branches"
+            : "currentLocation";
+
+    openDialog(returnDialogInitialTab, "return", () => {
       setIsDropoffManuallyChanged(true);
       const { formData: updatedFormData } = useBookedCarDetailsStore.getState();
       const { latitude, longitude, address } = useLocationStore.getState();
@@ -125,6 +144,7 @@ const StepOne = ({ control, errors, watch, setValue }: StepOneProps) => {
       setValue("returnTrainId", updatedFormData.returnTrainId || null);
       setValue("returnAirportId", updatedFormData.returnAirportId || null);
     });
+    setIsCurrentLocationTabDisabled(shouldDisableCurrentLocationTab);
   };
 
   const isDateLessThanMinimumRental = (
@@ -153,7 +173,17 @@ const StepOne = ({ control, errors, watch, setValue }: StepOneProps) => {
   };
 
   const handleOpenPickupLocationDialog = () => {
-    openDialog("currentLocation", "pickup", () => {
+    const pickupDialogInitialTab =
+      shouldDisableCurrentLocationTab && formData.pickupType === "AIRPORT"
+        ? "airport"
+        : shouldDisableCurrentLocationTab &&
+            formData.pickupType === "TRAIN_STATION"
+          ? "trainStation"
+          : shouldDisableCurrentLocationTab
+            ? "branches"
+            : "currentLocation";
+
+    openDialog(pickupDialogInitialTab, "pickup", () => {
       const { formData: updatedFormData } = useBookedCarDetailsStore.getState();
       const { latitude, longitude, address } = useLocationStore.getState();
 
@@ -204,6 +234,7 @@ const StepOne = ({ control, errors, watch, setValue }: StepOneProps) => {
         });
       }
     });
+    setIsCurrentLocationTabDisabled(shouldDisableCurrentLocationTab);
   };
 
   return (

@@ -27,6 +27,7 @@ export interface CarDetailsResponse {
   ccId: number | null;
   companyCarCode: string | null;
   companyCarStatus: string | null;
+  deliveryServiceAvailable: boolean;
 
   branchId: number;
   branchEnglishName: string;

@@ -66,6 +66,7 @@
       "showPricesWithTax": "عرض الأسعار بالضريبة",
       "pickupLocation": "مكان الاستلام:",
       "currentLocation": "الموقع الحالي",
+      "branchPickup": "الاستلام من فرع",
       "rentalPeriod": "مدة الإيجار:",
       "visibleCars": "السيارات الظاهرة:",
       "pickupDatePlaceholder": "اختر تاريخ الاستلام",
