@@ -6,6 +6,7 @@ import { usePickupDialogStore } from "@/lib/stores/usePickupDialogStore";
 import UpdateUserSavedLocationDialog from "@/app/[locale]/(mainpages)/userProfile/components/userDialog/UpdateUserSavedLocationDialog";
 import { useState } from "react";
 import { useUserPreferedFiltersStore } from "@/lib/stores/useUserPreferedFiltersStore";
+import { useBookedCarDetailsStore } from "@/lib/stores/useBookedCarDetailsStore";
 import { useTranslations } from "next-intl";
 
 export function PickupDialog({ title }: { title?: string }) {
@@ -20,12 +21,43 @@ export function PickupDialog({ title }: { title?: string }) {
     setIsUnsavedMapLocation,
   } = usePickupDialogStore();
   const { filters, setFilter } = useUserPreferedFiltersStore();
+  const { carDetails, setFormData } = useBookedCarDetailsStore();
   const [showSaveDialog, setShowSaveDialog] = useState(false);
   const t = useTranslations("home");
 
   const handleConfirm = () => {
     if (activeTab === "currentLocation" && isUnsavedMapLocation) {
       setShowSaveDialog(true);
+      return;
+    }
+
+    if (activeTab === "branches" && carDetails) {
+      if (target === "return") {
+        setFormData({
+          carReturnLocationId: carDetails.branchId.toString(),
+          carReturnLocation: carDetails.branchName,
+          returnType: "BRANCH",
+          returnTrainId: null,
+          returnAirportId: null,
+          returnLat: carDetails.latitude,
+          returnLong: carDetails.longitude,
+        });
+      } else {
+        setFormData({
+          pickupId: carDetails.branchId.toString(),
+          pickupName: carDetails.branchName,
+          pickupType: "BRANCH",
+          pickupTrainId: null,
+          pickupAirportId: null,
+          pickupLat: carDetails.latitude,
+          pickupLong: carDetails.longitude,
+        });
+        setFilter("pickupType", "branches");
+        setFilter("pickupId", String(carDetails.branchId));
+        setFilter("pickupName", carDetails.branchName);
+      }
+
+      confirmDialog();
     } else {
       confirmDialog();
     }
