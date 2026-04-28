@@ -32,15 +32,30 @@ const BookCars = () => {
   const latitude = useLocationStore((state) => state.latitude);
   const longitude = useLocationStore((state) => state.longitude);
   const setFormField = useBookedCarDetailsStore((state) => state.setFormField);
-  const hasCurrentLocationPickupFilter =
-    appliedFilters.pickupType === "currentLocation" &&
+  const isCurrentLocationPickupFilter =
+    appliedFilters.pickupType === "currentLocation";
+  const isBranchesPickupFilter = appliedFilters.pickupType === "branches";
+  const hasMapBasedPickupFilter =
+    (isCurrentLocationPickupFilter || isBranchesPickupFilter) &&
     typeof appliedFilters.pickupLat === "number" &&
     typeof appliedFilters.pickupLng === "number";
-  const effectiveLatitude = hasCurrentLocationPickupFilter
-    ? appliedFilters.pickupLat
+  const effectiveLatitude = isCurrentLocationPickupFilter
+    ? hasMapBasedPickupFilter
+      ? appliedFilters.pickupLat
+      : undefined
+    : isBranchesPickupFilter
+      ? hasMapBasedPickupFilter
+        ? appliedFilters.pickupLat
+        : undefined
     : latitude ?? undefined;
-  const effectiveLongitude = hasCurrentLocationPickupFilter
-    ? appliedFilters.pickupLng
+  const effectiveLongitude = isCurrentLocationPickupFilter
+    ? hasMapBasedPickupFilter
+      ? appliedFilters.pickupLng
+      : undefined
+    : isBranchesPickupFilter
+      ? hasMapBasedPickupFilter
+        ? appliedFilters.pickupLng
+        : undefined
     : longitude ?? undefined;
 
   const apiFilters = {
@@ -58,7 +73,7 @@ const BookCars = () => {
         ? appliedFilters.pickupId || undefined
         : undefined,
     brandId: appliedFilters.brandId || undefined,
-    searchType: hasCurrentLocationPickupFilter ? "location" : undefined,
+    searchType: hasMapBasedPickupFilter ? "location" : undefined,
   };
 
   const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } =

@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import PickUpCard from "@/app/(components)/customCards/PickUpCard";
 import CurrentLocationPickupCard from "@/app/(components)/customCards/CurrentLocationPickupCard";
 import { usePickupDialogStore } from "@/lib/stores/usePickupDialogStore";
@@ -23,18 +24,66 @@ export default function PickupCardSectionClient({
     confirmedDialogLatitude,
     confirmedDialogLongitude,
   } = useLocationStore();
-  const { setFilter, applyFilters } = useUserPreferedFiltersStore();
+  const { appliedFilters, setFilter, applyFilters } = useUserPreferedFiltersStore();
+
+  const hasAppliedCurrentLocationFilter =
+    appliedFilters.pickupType === "currentLocation" &&
+    !!appliedFilters.pickupName &&
+    typeof appliedFilters.pickupLat === "number" &&
+    typeof appliedFilters.pickupLng === "number";
+
+  const selectedPickupAddress = useMemo(() => {
+    if (hasAppliedCurrentLocationFilter) {
+      return appliedFilters.pickupName;
+    }
+    return confirmedDialogAddress ?? "";
+  }, [
+    hasAppliedCurrentLocationFilter,
+    appliedFilters.pickupName,
+    confirmedDialogAddress,
+  ]);
+
+  const resolvedPickupCoordinates = useMemo(() => {
+    const lat =
+      hasAppliedCurrentLocationFilter
+        ? appliedFilters.pickupLat
+        : typeof confirmedDialogLatitude === "number"
+          ? confirmedDialogLatitude
+          : undefined;
+    const lng =
+      hasAppliedCurrentLocationFilter
+        ? appliedFilters.pickupLng
+        : typeof confirmedDialogLongitude === "number"
+          ? confirmedDialogLongitude
+          : undefined;
+
+    return { lat, lng };
+  }, [
+    hasAppliedCurrentLocationFilter,
+    appliedFilters.pickupLat,
+    appliedFilters.pickupLng,
+    confirmedDialogLatitude,
+    confirmedDialogLongitude,
+  ]);
+
+  const hasValidPickupSelection = useMemo(() => {
+    return Boolean(
+      selectedPickupAddress &&
+        typeof resolvedPickupCoordinates.lat === "number" &&
+        typeof resolvedPickupCoordinates.lng === "number",
+    );
+  }, [selectedPickupAddress, resolvedPickupCoordinates.lat, resolvedPickupCoordinates.lng]);
 
   const hadnleLocationClick = () => {
     openLocationDialog("homeCard");
   };
 
   const handleShowResultsClick = () => {
-    if (confirmedDialogAddress) {
+    if (hasValidPickupSelection) {
       setFilter("pickupType", "currentLocation");
-      setFilter("pickupName", confirmedDialogAddress);
-      setFilter("pickupLat", confirmedDialogLatitude ?? undefined);
-      setFilter("pickupLng", confirmedDialogLongitude ?? undefined);
+      setFilter("pickupName", selectedPickupAddress);
+      setFilter("pickupLat", resolvedPickupCoordinates.lat);
+      setFilter("pickupLng", resolvedPickupCoordinates.lng);
       setFilter("pickupId", "");
       setFilter("pickupAirportId", undefined);
       setFilter("pickupTrainId", undefined);
@@ -58,6 +107,7 @@ export default function PickupCardSectionClient({
             <CurrentLocationPickupCard
               title={card.title}
               description={card.description}
+              selectedAddress={selectedPickupAddress}
               onClick={hadnleLocationClick}
               onShowResultsClick={handleShowResultsClick}
             />

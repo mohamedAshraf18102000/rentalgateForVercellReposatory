@@ -1,7 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
 import GoogleMapsLocation from "../../mapsLocation/GoogleMapsLocation";
-import { useBookedCarDetailsStore } from "@/lib/stores/useBookedCarDetailsStore";
 import { useUserPreferedFiltersStore } from "@/lib/stores/useUserPreferedFiltersStore";
 import { usePickupDialogStore } from "@/lib/stores/usePickupDialogStore";
 import { UserSavedAddresses } from "@/app/[locale]/(dialogs)/PickupDialog/UserSavedAddresses";
@@ -9,7 +8,6 @@ import { getUserAddress } from "@/services/userProfile/getUserAddress.service";
 import { UserAddress } from "@/types/userProfile/userAddress";
 
 const HomeBranchesLocations = () => {
-  const { setFormData } = useBookedCarDetailsStore();
   const { setFilter } = useUserPreferedFiltersStore();
   const { setIsUnsavedMapLocation } = usePickupDialogStore();
   const [userAddresses, setUserAddresses] = useState<UserAddress[]>([]);
@@ -43,18 +41,6 @@ const HomeBranchesLocations = () => {
     lng: number,
     address: string,
   ) => {
-    setFormData({
-      pickupType: "BRANCH",
-      branchId: null,
-      pickupName: address || "",
-      pickupLat: lat,
-      pickupLong: lng,
-      pickupId: null,
-      pickupAirportId: null,
-      pickupTrainId: null,
-    });
-
-    // Keep filters draft in sync so save/location dialogs have current values.
     setFilter("pickupName", address || "");
     setFilter("pickupLat", lat);
     setFilter("pickupLng", lng);

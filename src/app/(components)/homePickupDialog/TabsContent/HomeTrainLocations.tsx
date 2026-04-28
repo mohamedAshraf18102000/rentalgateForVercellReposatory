@@ -5,11 +5,11 @@ import { RadioGroup, RadioGroupItem } from "../../ui/radio-group";
 import { Separator } from "../../ui/separator";
 import { useGetTrainStations } from "@/hooks/api/useGetTrainStations";
 import { Skeleton } from "../../ui/skeleton";
-import { useBookedCarDetailsStore } from "@/lib/stores/useBookedCarDetailsStore";
+import { useUserPreferedFiltersStore } from "@/lib/stores/useUserPreferedFiltersStore";
 
 const HomeTrainLocations = () => {
   const { data: trainStationsData, isPending } = useGetTrainStations();
-  const { setFormData, formData } = useBookedCarDetailsStore();
+  const { setFilter, filters } = useUserPreferedFiltersStore();
 
   const handleStationSelection = (value: string) => {
     const id = value.replace("station-", "");
@@ -17,15 +17,13 @@ const HomeTrainLocations = () => {
       (station) => station.stationId.toString() === id,
     );
 
-    setFormData({
-      pickupType: "TRAIN_STATION",
-      pickupTrainId: Number(id),
-      pickupAirportId: null,
-      pickupId: null,
-      pickupName: selectedStation?.arabicName || "",
-      pickupLat: null,
-      pickupLong: null,
-    });
+    setFilter("pickupType", "trainStation");
+    setFilter("pickupId", id);
+    setFilter("pickupTrainId", Number(id));
+    setFilter("pickupAirportId", undefined);
+    setFilter("pickupName", selectedStation?.arabicName || "");
+    setFilter("pickupLat", undefined);
+    setFilter("pickupLng", undefined);
   };
 
   return (
@@ -45,9 +43,9 @@ const HomeTrainLocations = () => {
           className="flex flex-col gap-y-2 w-[95%] mx-auto mt-2"
           onValueChange={handleStationSelection}
           value={
-            formData.pickupType === "TRAIN_STATION" &&
-            formData.pickupTrainId != null
-              ? `station-${formData.pickupTrainId}`
+            filters.pickupType === "trainStation" &&
+            filters.pickupTrainId != null
+              ? `station-${filters.pickupTrainId}`
               : ""
           }
         >

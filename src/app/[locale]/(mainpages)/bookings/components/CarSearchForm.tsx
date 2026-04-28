@@ -15,7 +15,6 @@ import { useGetAirports } from "@/hooks/api/useGetAirports";
 import { useGetTrainStations } from "@/hooks/api/useGetTrainStations";
 import { detectPickupCategory } from "@/lib/utils/pickupLocationCategory";
 import { useTranslations } from "next-intl";
-import { useEffect } from "react";
 
 const CarSearchForm = ({
   control,
@@ -65,17 +64,6 @@ const CarSearchForm = ({
     : isTrainStationLocation
       ? "عنوانك الحالي هو محطة قطار يرجي اختيار من محطات القطار المتاحة"
       : null;
-
-  useEffect(() => {
-    // Keep pickup label in sync when the global current-location changes.
-    if (
-      address &&
-      filters.pickupType === "currentLocation" &&
-      filters.pickupName !== address
-    ) {
-      setFilter("pickupName", address);
-    }
-  }, [address, filters.pickupName, filters.pickupType, setFilter]);
 
   const handleOpenLocationDialog = () => {
     let initialTab: "currentLocation" | "airport" | "trainStation" =
