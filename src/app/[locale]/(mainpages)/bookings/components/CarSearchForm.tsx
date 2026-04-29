@@ -30,7 +30,7 @@ const CarSearchForm = ({
   const fromDate = watch("fromDate");
   const toDate = watch("toDate");
   const { filters, setFilter } = useUserPreferedFiltersStore();
-  const { address, latitude, longitude } = useLocationStore();
+  const { userPhysical_Address, userPhysical_Latitude, userPhysical_Longitude } = useLocationStore();
   const { openDialog, setIsCurrentLocationTabDisabled } =
     usePickupDialogStore();
   const { data: airportsData } = useGetAirports();
@@ -42,11 +42,11 @@ const CarSearchForm = ({
     (state) => state.setShowPricesWithTax,
   );
   const detectedCurrentLocationCategory =
-    address && latitude != null && longitude != null
+    userPhysical_Address && userPhysical_Latitude != null && userPhysical_Longitude != null
       ? detectPickupCategory({
-          lat: latitude,
-          lng: longitude,
-          address,
+          lat: userPhysical_Latitude,
+          lng: userPhysical_Longitude,
+          address: userPhysical_Address,
           airports: airportsData?.content ?? [],
           trainStations: trainStationsData?.content ?? [],
         })
@@ -69,13 +69,13 @@ const CarSearchForm = ({
   useEffect(() => {
     // Keep pickup label in sync when the global current-location changes.
     if (
-      address &&
+      userPhysical_Address &&
       filters.pickupType === "currentLocation" &&
-      filters.pickupName !== address
+      filters.pickupName !== userPhysical_Address
     ) {
-      setFilter("pickupName", address);
+      setFilter("pickupName", userPhysical_Address);
     }
-  }, [address, filters.pickupName, filters.pickupType, setFilter]);
+  }, [userPhysical_Address, filters.pickupName, filters.pickupType, setFilter]);
 
   const handleOpenLocationDialog = () => {
     let initialTab: "currentLocation" | "airport" | "trainStation" =
@@ -129,8 +129,8 @@ const CarSearchForm = ({
                   (filters.pickupName === currentLocationLabel ||
                     filters.pickupName === "الموقع الحالي" ||
                     !filters.pickupName) &&
-                  address
-                    ? address
+                  userPhysical_Address
+                    ? userPhysical_Address
                     : filters.pickupName || currentLocationLabel;
                 const displayPickupName =
                   filters.pickupType === "branches"

@@ -36,7 +36,11 @@ const StepContent = forwardRef<StepContentRef, StepContentProps>(
   ({ activeStep, isForOtherReservation = false }, ref) => {
     const { displayStep, animationClass } = useStepAnimation(activeStep);
     const { filters, setFilter } = useUserPreferedFiltersStore();
-    const { latitude, longitude, address } = useLocationStore();
+    const {
+      userPhysical_Latitude,
+      userPhysical_Longitude,
+      userPhysical_Address,
+    } = useLocationStore();
     const { carDetails, formData, setFormData, _hasHydrated } =
       useBookedCarDetailsStore();
     const { setClientData } = useClientStore();
@@ -116,9 +120,9 @@ const StepContent = forwardRef<StepContentRef, StepContentProps>(
 
     usePrefillLocationAfterReset({
       hasHydrated: _hasHydrated,
-      address: address ?? undefined,
-      latitude,
-      longitude,
+      address: userPhysical_Address ?? undefined,
+      latitude: userPhysical_Latitude ?? undefined,
+      longitude: userPhysical_Longitude ?? undefined,
       getValues,
       setValue,
       setFormData,

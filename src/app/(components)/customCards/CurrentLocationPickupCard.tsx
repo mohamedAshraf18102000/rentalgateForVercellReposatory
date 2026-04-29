@@ -15,7 +15,9 @@ const CurrentLocationPickupCard = ({
   onClick: () => void;
   onShowResultsClick: () => void;
 }) => {
-  const address = useLocationStore((state) => state.address);
+  const userPhysical_Address = useLocationStore(
+    (state) => state.userPhysical_Address,
+  );
   const t = useTranslations("home");
 
   return (
@@ -50,7 +52,11 @@ const CurrentLocationPickupCard = ({
                   <MapPin className="w-5! h-5! md:w-6! md:h-6! text-primary" />
                 }
                 readOnly
-                value={address !== null ? address?.toString() : ""}
+                value={
+                  userPhysical_Address !== null
+                    ? userPhysical_Address?.toString()
+                    : ""
+                }
                 onClick={onClick}
               />
 

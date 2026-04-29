@@ -47,7 +47,7 @@ export const NavbarActions: React.FC<NavbarActionsProps> = ({
   const pathname = usePathname();
 
   const [contactDialogOpen, setContactDialogOpen] = React.useState(false);
-  const address = useLocationStore((state) => state.address);
+  const userPhysical_Address = useLocationStore((state) => state.userPhysical_Address);
   const openLocationDialog = useLocationStore((state) => state.openDialog);
 
   const ToastError = () => {
@@ -69,24 +69,24 @@ export const NavbarActions: React.FC<NavbarActionsProps> = ({
       });
       return;
     }
-    openLocationDialog();
+    openLocationDialog("navbarSSSS");
   };
 
   return (
     <>
       <div className={NAVBAR_STYLES.actionsWrapper}>
-        {address ? (
+        {userPhysical_Address ? (
           <button
             className="underline underline-offset-1 flex items-center gap-1 cursor-pointer hover:bg-Grey100 p-1 rounded-xl transition duration-200"
-            title={address?.toString()}
+            title={userPhysical_Address?.toString()}
             onClick={handleOpenLocationDialog}
           >
             <span className="scale-90">
               <PositioningIcon />
             </span>
-            {address && address?.length > 20
-              ? `${address?.slice(0, 20)}...`
-              : address}
+            {userPhysical_Address && userPhysical_Address?.length > 20
+              ? `${userPhysical_Address?.slice(0, 20)}...`
+              : userPhysical_Address}
 
             <ChevronDown className="w-4 h-4" />
           </button>

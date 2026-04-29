@@ -47,18 +47,18 @@ const GoogleMapsLocation = ({
   className?: string;
 }) => {
   const {
-    latitude,
-    longitude,
-    address: storeAddress,
-    setLocation,
+    userPhysical_Latitude,
+    userPhysical_Longitude,
+    userPhysical_Address,
+    setUserPhysical_Location,
   } = useLocationStore();
   const [currentLocation, setCurrentLocation] = useState({
-    lat: initialLat || latitude || defaultLocation.lat,
-    lng: initialLng || longitude || defaultLocation.lng,
+    lat: initialLat || userPhysical_Latitude || defaultLocation.lat,
+    lng: initialLng || userPhysical_Longitude || defaultLocation.lng,
   });
 
   const [locationLoading, setLocationLoading] = useState(
-    !(initialLat && initialLng) && !latitude && !longitude,
+    !(initialLat && initialLng) && !userPhysical_Latitude && !userPhysical_Longitude,
   );
   const [mapLoading, setMapLoading] = useState(true);
   const [isLocating, setIsLocating] = useState(false);
@@ -82,7 +82,7 @@ const GoogleMapsLocation = ({
     isManual = false,
     geocodeMeta?: ReverseGeocodeMeta,
   ) => {
-    if (!storeless) setLocation(lat, lng, address);
+    if (!storeless) setUserPhysical_Location(lat, lng, address);
     if (onLocationChangeRef.current)
       onLocationChangeRef.current(
         lat,
@@ -95,8 +95,8 @@ const GoogleMapsLocation = ({
 
   const initializeLocation = async (lat?: number, lng?: number) => {
     const pos = {
-      lat: lat || latitude || defaultLocation.lat,
-      lng: lng || longitude || defaultLocation.lng,
+      lat: lat || userPhysical_Latitude || defaultLocation.lat,
+      lng: lng || userPhysical_Longitude || defaultLocation.lng,
     };
     setCurrentLocation(pos);
     setLocationLoading(false);
@@ -104,7 +104,7 @@ const GoogleMapsLocation = ({
     if (!hasCalledInitialChange.current) {
       hasCalledInitialChange.current = true;
       const details = await reverseGeocodeWithDetails(pos.lat, pos.lng);
-      const address = storeAddress || details?.address || null;
+      const address = userPhysical_Address || details?.address || null;
       handleSetLocation(pos.lat, pos.lng, address, false, details?.meta);
     }
   };
@@ -113,7 +113,7 @@ const GoogleMapsLocation = ({
     const setup = async () => {
       if (initialLat && initialLng) {
         await initializeLocation(initialLat, initialLng);
-      } else if (latitude && longitude) {
+      } else if (userPhysical_Latitude && userPhysical_Longitude) {
         await initializeLocation();
       } else if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
@@ -131,7 +131,7 @@ const GoogleMapsLocation = ({
     };
 
     setup();
-  }, [latitude, longitude, initialLat, initialLng, storeAddress]);
+  }, [userPhysical_Latitude, userPhysical_Longitude, initialLat, initialLng, userPhysical_Address]);
 
   useEffect(() => {
     if (mapRef.current) mapRef.current.panTo(currentLocation);

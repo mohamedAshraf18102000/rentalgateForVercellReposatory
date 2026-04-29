@@ -34,7 +34,7 @@ const HomeUserCurrentLocation = () => {
     setIsCurrentLocationTabDisabled,
   } = usePickupDialogStore();
   const { openDialog } = useDialog();
-  const setLocation = useLocationStore((state) => state.setLocation);
+  const setUserPhysical_Location = useLocationStore((state) => state.setUserPhysical_Location);
 
   const isAirport =
     target === "return"
@@ -62,7 +62,7 @@ const HomeUserCurrentLocation = () => {
         : formData.pickupLong || undefined;
 
   const handleSelectAddress = (address: UserAddress) => {
-    setLocation(address.latitude, address.longitude, address.addressName);
+    setUserPhysical_Location(address.latitude, address.longitude, address.addressName);
     setIsUnsavedMapLocation(false);
     setIsCurrentLocationTabDisabled(false);
     if (target === "return") {
@@ -116,7 +116,7 @@ const HomeUserCurrentLocation = () => {
       return;
     }
 
-    setLocation(lat, lng, address);
+    setUserPhysical_Location(lat, lng, address);
     setIsUnsavedMapLocation(true);
     setIsCurrentLocationTabDisabled(false);
     if (target === "return") {

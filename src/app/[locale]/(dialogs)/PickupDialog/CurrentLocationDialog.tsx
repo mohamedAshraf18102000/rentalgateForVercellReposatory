@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { DialogWrapper } from "@/app/(components)";
 import GoogleMapsLocation from "@/app/(components)/mapsLocation/GoogleMapsLocation";
 import { useLocationStore } from "@/lib/stores/useLocationStore";
-import { useBookedCarDetailsStore } from "@/lib/stores/useBookedCarDetailsStore";
 import { LocateFixed } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { getUserAddress } from "@/services/userProfile/getUserAddress.service";
@@ -12,21 +11,23 @@ import { UserAddress } from "@/types/userProfile/userAddress";
 import { UserSavedAddresses } from "./UserSavedAddresses";
 
 export function CurrentLocationDialog() {
-  const { address, isDialogOpen, openDialog, closeDialog, setLocation } =
-    useLocationStore();
+  // StateManagment Stores
+
+  const {
+    userPhysical_Latitude,
+    userPhysical_Longitude,
+    userPhysical_Address,
+    userPhysical_AddressId,
+    isDialogOpen,
+    dialogOpenSource,
+    openDialog,
+    closeDialog,
+    setUserPhysical_Location,
+  } = useLocationStore();
+
   const [userAddresses, setUserAddresses] = useState<UserAddress[]>([]);
-  const { resetForm, clearCarDetails, clearServices, setFormData } =
-    useBookedCarDetailsStore();
   const pathname = usePathname();
   const isTermsPage = pathname.includes("/terms&conditions");
-
-  // Temporary state — only committed to the store on save
-  const [tempLocation, setTempLocation] = useState<{
-    lat: number;
-    lng: number;
-    address: string;
-    addressId?: number;
-  } | null>(null);
 
   useEffect(() => {
     if (isTermsPage) {
@@ -44,12 +45,6 @@ export function CurrentLocationDialog() {
       closeDialog();
     }
   }, [closeDialog, isDialogOpen, isTermsPage]);
-
-  useEffect(() => {
-    if (isDialogOpen) {
-      setTempLocation(null);
-    }
-  }, [isDialogOpen]);
 
   useEffect(() => {
     if (!isDialogOpen) {
@@ -84,42 +79,10 @@ export function CurrentLocationDialog() {
 
   const handleClose = () => {
     closeDialog();
-    setTempLocation(null);
     sessionStorage.setItem("hasClosedLocationDialog", "true");
   };
 
   const handleSave = () => {
-    if (tempLocation) {
-      setLocation(tempLocation.lat, tempLocation.lng, tempLocation.address);
-      setTimeout(() => {
-        resetForm();
-        clearCarDetails();
-        clearServices();
-        localStorage.removeItem("booked-car-details-storage");
-        setFormData({
-          pickupName: tempLocation.address,
-          carReturnLocation: tempLocation.address,
-          pickupType: "MY_LOCATION",
-          returnType: "MY_LOCATION",
-          pickupLat: tempLocation.lat,
-          pickupLong: tempLocation.lng,
-          returnLat: tempLocation.lat,
-          returnLong: tempLocation.lng,
-          pickupId:
-            tempLocation.addressId != null
-              ? String(tempLocation.addressId)
-              : null,
-          carReturnLocationId:
-            tempLocation.addressId != null
-              ? String(tempLocation.addressId)
-              : null,
-          pickupAirportId: null,
-          pickupTrainId: null,
-          returnAirportId: null,
-          returnTrainId: null,
-        });
-      }, 1000);
-    }
     closeDialog();
     sessionStorage.setItem("hasClosedLocationDialog", "true");
   };
@@ -130,25 +93,46 @@ export function CurrentLocationDialog() {
       onOpenChange={handleOpenChange}
       closeOnOutsideClick={false}
       size="xl"
-      header={{ mainTitle: "موقعك الحالي" }}
+      header={{ mainTitle: `موقعك الحالي ${dialogOpenSource}` }}
       content={
-        <div className="overflow-hidden relative">
+        <div
+          className="overflow-hidden relative"
+          data-open-source={dialogOpenSource ?? undefined}
+        >
           <div className="flex p-2 gap-2">
             <LocateFixed />
-            {tempLocation?.address ?? address}
+            {userPhysical_Address}
           </div>
           <GoogleMapsLocation
             storeless
-            selectedLat={tempLocation?.lat}
-            selectedLng={tempLocation?.lng}
+            selectedLat={userPhysical_Latitude ?? undefined}
+            selectedLng={userPhysical_Longitude ?? undefined}
             onLocationChange={(lat, lng, addr) =>
-              setTempLocation({ lat, lng, address: addr })
+              setUserPhysical_Location(lat, lng, addr, null)
             }
           />
           <UserSavedAddresses
             userAddresses={userAddresses}
-            tempLocation={tempLocation}
-            setTempLocation={setTempLocation}
+            tempLocation={
+              userPhysical_Latitude !== null &&
+              userPhysical_Longitude !== null &&
+              userPhysical_Address
+                ? {
+                    lat: userPhysical_Latitude,
+                    lng: userPhysical_Longitude,
+                    address: userPhysical_Address,
+                    addressId: userPhysical_AddressId ?? undefined,
+                  }
+                : null
+            }
+            setTempLocation={(location) =>
+              setUserPhysical_Location(
+                location.lat,
+                location.lng,
+                location.address,
+                location.addressId ?? null,
+              )
+            }
           />
         </div>
       }

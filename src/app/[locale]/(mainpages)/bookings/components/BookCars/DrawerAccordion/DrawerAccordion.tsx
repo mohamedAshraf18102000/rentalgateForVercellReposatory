@@ -23,7 +23,7 @@ const DrawerAccordion = () => {
   const isArabic = locale === "ar";
   const contentDirection = isArabic ? "rtl" : "ltr";
 
-  const address = useLocationStore((state) => state.address);
+  const userPhysical_Address = useLocationStore((state) => state.userPhysical_Address);
   const { filters, setFilter } = useUserPreferedFiltersStore();
 
   const { data, isLoading } = useQuery({
@@ -244,7 +244,7 @@ const DrawerAccordion = () => {
                   setFilter("pickupId", val);
                   setFilter(
                     "pickupName",
-                    address ||
+                    userPhysical_Address ||
                       t("bookings.drawerAccordion.pickupTypes.currentLocation"),
                   );
                 }}
@@ -258,7 +258,7 @@ const DrawerAccordion = () => {
                     htmlFor="current-location"
                     className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
                   >
-                    {address ||
+                    {userPhysical_Address ||
                       t("bookings.drawerAccordion.pickupTypes.currentLocation")}
                   </Label>
                 </div>
