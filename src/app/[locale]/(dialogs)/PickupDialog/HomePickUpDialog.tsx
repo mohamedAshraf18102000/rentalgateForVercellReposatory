@@ -14,11 +14,11 @@ import { useAuth } from "@/app/(components)/navbar/hooks/useAuth";
 export function HomePickUpDialog({ title }: { title?: string }) {
   const {
     open,
-    activeTab,
     setOpen,
     closeDialog,
     confirmDialog,
     isUnsavedMapLocation,
+    activeTab,
     target,
     setIsUnsavedMapLocation,
   } = usePickupDialogStore();
@@ -33,7 +33,6 @@ export function HomePickUpDialog({ title }: { title?: string }) {
   const t = useTranslations("home");
   const bookingsPath = `/${locale}/bookings`;
   const isOnBookingsPage = pathname === bookingsPath;
-
   const applyPickupSelectionToFilters = () => {
     if (formData.pickupType === "AIRPORT") {
       setFilter("pickupType", "airport");

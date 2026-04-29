@@ -17,6 +17,8 @@ export interface CarFilters {
   searchType?: string;
   priceType?: string;
   sortBy?: string;
+  userPhysicalLongitudeFilter?: number;
+  userPhysicalLatitudeFilter?: number;
 }
 
 export const getCompanyCars = async (
@@ -37,12 +39,14 @@ export const getCompanyCars = async (
       filters.searchType,
       filters.priceType,
       filters.sortBy,
+      filters.longitude,
+      filters.latitude,
     ].some((value) => value !== undefined && value !== null && value !== ""),
   );
 
   if (!hasAppliedFilters) {
-    const latitude = filters?.latitude ?? "";
-    const longitude = filters?.longitude ?? "";
+    const latitude = filters?.userPhysicalLatitudeFilter ?? "";
+    const longitude = filters?.userPhysicalLongitudeFilter ?? "";
 
     return fetcher<CarApiResponse>(
       `/company-cars?latitude=${latitude}&longitude=${longitude}`,
@@ -59,8 +63,6 @@ export const getCompanyCars = async (
   const addParam = (key: string, value?: string | number) => {
     if (value !== undefined && value !== null && value !== "") {
       query.push(`${key}=${value}`);
-    } else {
-      query.push(key);
     }
   };
 

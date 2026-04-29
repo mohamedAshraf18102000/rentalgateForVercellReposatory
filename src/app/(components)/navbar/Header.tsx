@@ -5,6 +5,7 @@ import { MobileBottomNav } from "./components/MobileBottomNav";
 import { MobileHeader } from "./components/MobileHeader";
 import { NAVBAR_STYLES, BUTTON_STYLES } from "./constants";
 import { NavbarActions } from "./components/NavbarActions";
+import ClearData from "./ClearData";
 
 export default async function Header() {
   const t = await getTranslations("common");
@@ -63,6 +64,8 @@ export default async function Header() {
                 className={BUTTON_STYLES.navLink}
               />
             </div>
+
+            <ClearData />
 
             {/* Right Section */}
             <div className={NAVBAR_STYLES.rightSection}>

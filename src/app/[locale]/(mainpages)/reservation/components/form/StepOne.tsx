@@ -169,14 +169,18 @@ const StepOne = ({ control, errors, watch, setValue }: StepOneProps) => {
     openDialog(returnDialogInitialTab, "return", () => {
       setIsDropoffManuallyChanged(true);
       const { formData: updatedFormData } = useBookedCarDetailsStore.getState();
-      const { latitude, longitude, address } = useLocationStore.getState();
+      const {
+        userPhysical_Latitude,
+        userPhysical_Longitude,
+        userPhysical_Address,
+      } = useLocationStore.getState();
 
       const locationName =
         updatedFormData.returnType === "MY_LOCATION" &&
         (!updatedFormData.carReturnLocation ||
           updatedFormData.carReturnLocation === currentLocationLabel) &&
-        address
-          ? address
+        userPhysical_Address
+          ? userPhysical_Address
           : updatedFormData.carReturnLocation || currentLocationLabel;
 
       setValue("carReturnLocation", locationName, { shouldValidate: true });
@@ -185,7 +189,7 @@ const StepOne = ({ control, errors, watch, setValue }: StepOneProps) => {
         updatedFormData.returnType === "MY_LOCATION" &&
           (!updatedFormData.returnLat ||
             updatedFormData.carReturnLocation === currentLocationLabel)
-          ? latitude
+          ? userPhysical_Latitude
           : updatedFormData.returnLat || null,
       );
       setValue(
@@ -193,7 +197,7 @@ const StepOne = ({ control, errors, watch, setValue }: StepOneProps) => {
         updatedFormData.returnType === "MY_LOCATION" &&
           (!updatedFormData.returnLong ||
             updatedFormData.carReturnLocation === currentLocationLabel)
-          ? longitude
+          ? userPhysical_Longitude
           : updatedFormData.returnLong || null,
       );
       setValue(
@@ -244,26 +248,30 @@ const StepOne = ({ control, errors, watch, setValue }: StepOneProps) => {
 
     openDialog(pickupDialogInitialTab, "pickup", () => {
       const { formData: updatedFormData } = useBookedCarDetailsStore.getState();
-      const { latitude, longitude, address } = useLocationStore.getState();
+      const {
+        userPhysical_Latitude,
+        userPhysical_Longitude,
+        userPhysical_Address,
+      } = useLocationStore.getState();
 
       const locationName =
         updatedFormData.pickupType === "MY_LOCATION" &&
         (!updatedFormData.pickupName ||
           updatedFormData.pickupName === currentLocationLabel) &&
-        address
-          ? address
+        userPhysical_Address
+          ? userPhysical_Address
           : updatedFormData.pickupName || "";
       const pickupLatValue =
         updatedFormData.pickupType === "MY_LOCATION" &&
         (!updatedFormData.pickupLat ||
           updatedFormData.pickupName === currentLocationLabel)
-          ? latitude
+          ? userPhysical_Latitude
           : updatedFormData.pickupLat || null;
       const pickupLongValue =
         updatedFormData.pickupType === "MY_LOCATION" &&
         (!updatedFormData.pickupLong ||
           updatedFormData.pickupName === currentLocationLabel)
-          ? longitude
+          ? userPhysical_Longitude
           : updatedFormData.pickupLong || null;
 
       setValue("pickupName", locationName, { shouldValidate: true });

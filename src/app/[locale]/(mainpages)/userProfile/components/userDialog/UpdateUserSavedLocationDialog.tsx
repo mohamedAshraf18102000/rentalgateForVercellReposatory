@@ -61,7 +61,7 @@ const UpdateUserSavedLocationDialog = ({
   const [isPhoneValid, setIsPhoneValid] = useState(false);
   const queryClient = useQueryClient();
 
-  const { setLocation, latitude, longitude } = useLocationStore();
+  const { setUserPhysical_Location, userPhysical_Latitude, userPhysical_Longitude } = useLocationStore();
 
   const { data: userAddresses, isLoading: isLoadingAddresses } =
     useUserAddreses(open);
@@ -228,17 +228,14 @@ const UpdateUserSavedLocationDialog = ({
                         trash
                         onIconClick={() => handleDelete(address.addressId)}
                         onClick={() => {
-                          setLocation(
+                          setUserPhysical_Location(
                             address.latitude,
                             address.longitude,
-                            address.address,
+                            address.address
                           );
                         }}
                         bg_gray
-                        active={
-                          address.latitude === latitude &&
-                          address.longitude === longitude
-                        }
+                        active={address.latitude === userPhysical_Latitude && address.longitude === userPhysical_Longitude}
                         key={address.addressId}
                         title={address.addressName}
                         description={address.address}

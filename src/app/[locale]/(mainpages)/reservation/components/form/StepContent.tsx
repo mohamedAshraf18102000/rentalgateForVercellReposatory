@@ -4,7 +4,6 @@ import { useUserPreferedFiltersStore } from "@/lib/stores/useUserPreferedFilters
 import { useBookedCarDetailsStore } from "@/lib/stores/useBookedCarDetailsStore";
 import { forwardRef, useImperativeHandle } from "react";
 
-import { useLocationStore } from "@/lib/stores/useLocationStore";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -25,7 +24,6 @@ import {
 import { validateCurrentStep } from "./stepContentValidation";
 import {
   useHydratedFormReset,
-  usePrefillLocationAfterReset,
   useSyncFormToStores,
   useSyncStoreToForm,
 } from "./useStepContentEffects";
@@ -36,7 +34,6 @@ const StepContent = forwardRef<StepContentRef, StepContentProps>(
   ({ activeStep, isForOtherReservation = false }, ref) => {
     const { displayStep, animationClass } = useStepAnimation(activeStep);
     const { filters, setFilter } = useUserPreferedFiltersStore();
-    const { latitude, longitude, address } = useLocationStore();
     const { carDetails, formData, setFormData, _hasHydrated } =
       useBookedCarDetailsStore();
     const { setClientData } = useClientStore();
@@ -113,16 +110,6 @@ const StepContent = forwardRef<StepContentRef, StepContentProps>(
         setValue("returnLong", returnLong);
       },
     }));
-
-    usePrefillLocationAfterReset({
-      hasHydrated: _hasHydrated,
-      address: address ?? undefined,
-      latitude,
-      longitude,
-      getValues,
-      setValue,
-      setFormData,
-    });
 
     useSyncFormToStores({
       hasHydrated: _hasHydrated,

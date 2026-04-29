@@ -64,7 +64,7 @@ const DrawerLocationChange = ({
     null,
   );
   const queryClient = useQueryClient();
-  const { setLocation, latitude, longitude } = useLocationStore();
+  const { setUserPhysical_Location, userPhysical_Latitude, userPhysical_Longitude } = useLocationStore();
   const { data: userAddresses, isLoading: isLoadingAddresses } =
     useUserAddreses(true);
 
@@ -99,7 +99,7 @@ const DrawerLocationChange = ({
     onSuccess: (data: UserAddress) => {
       toast.success(t("myBookingsDrawer.locationChange.toast.addSuccess"));
       queryClient.invalidateQueries({ queryKey: ["userAddresses"] });
-      setLocation(data.latitude, data.longitude, data.address);
+      setUserPhysical_Location(data.latitude, data.longitude, data.address);
       setShowAddForm(false);
       reset();
     },

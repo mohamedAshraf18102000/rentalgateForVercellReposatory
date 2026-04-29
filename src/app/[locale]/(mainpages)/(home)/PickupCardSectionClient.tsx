@@ -17,25 +17,13 @@ export default function PickupCardSectionClient({
 }: PickupCardSectionClientProps) {
   const router = useRouter();
   const { openDialog } = usePickupDialogStore();
-  const { openDialog: openLocationDialog, address, latitude, longitude } =
-    useLocationStore();
-  const { setFilter, applyFilters } = useUserPreferedFiltersStore();
+  const { openDialog: openLocationDialog } = useLocationStore();
 
-  const hadnleLocationClick = () => {
-    openLocationDialog();
+  const handleLocationClick = () => {
+    openLocationDialog("filterComponent");
   };
 
   const handleShowResultsClick = () => {
-    if (address) {
-      setFilter("pickupType", "currentLocation");
-      setFilter("pickupName", address);
-      setFilter("pickupLat", latitude ?? undefined);
-      setFilter("pickupLng", longitude ?? undefined);
-      setFilter("pickupId", "");
-      setFilter("pickupAirportId", undefined);
-      setFilter("pickupTrainId", undefined);
-      applyFilters();
-    }
     router.push("/bookings");
   };
 
@@ -54,7 +42,7 @@ export default function PickupCardSectionClient({
             <CurrentLocationPickupCard
               title={card.title}
               description={card.description}
-              onClick={hadnleLocationClick}
+              onClick={handleLocationClick}
               onShowResultsClick={handleShowResultsClick}
             />
           ) : (

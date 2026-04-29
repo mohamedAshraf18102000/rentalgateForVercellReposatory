@@ -414,19 +414,19 @@ const GoogleMapsPolyLinedLocation = ({
   disableMapClickToChangeLocation?: boolean;
 }) => {
   const {
-    latitude,
-    longitude,
-    address: storeAddress,
-    setLocation,
+    userPhysical_Latitude,
+    userPhysical_Longitude,
+    userPhysical_Address,
+    setUserPhysical_Location,
   } = useLocationStore();
 
   const [currentLocation, setCurrentLocation] = useState<LatLng>({
-    lat: initialLat || latitude || defaultLocation.lat,
-    lng: initialLng || longitude || defaultLocation.lng,
+    lat: initialLat || userPhysical_Latitude || defaultLocation.lat,
+    lng: initialLng || userPhysical_Longitude || defaultLocation.lng,
   });
 
   const [locationLoading, setLocationLoading] = useState(
-    !(initialLat && initialLng) && !latitude && !longitude,
+    !(initialLat && initialLng) && !userPhysical_Latitude && !userPhysical_Longitude,
   );
   const [isLocating, setIsLocating] = useState(false);
 
@@ -501,22 +501,22 @@ const GoogleMapsPolyLinedLocation = ({
     address: string | null,
     isManual = false,
   ) => {
-    if (!storeless) setLocation(lat, lng, address);
+    if (!storeless) setUserPhysical_Location(lat, lng, address);
     if (onLocationChangeRef.current)
       onLocationChangeRef.current(lat, lng, address || "", isManual);
   };
 
   const initializeLocation = async (lat?: number, lng?: number) => {
     const pos: LatLng = {
-      lat: lat || latitude || defaultLocation.lat,
-      lng: lng || longitude || defaultLocation.lng,
+      lat: lat || userPhysical_Latitude || defaultLocation.lat,
+      lng: lng || userPhysical_Longitude || defaultLocation.lng,
     };
     setCurrentLocation(pos);
     setLocationLoading(false);
 
     if (!hasCalledInitialChange.current) {
       hasCalledInitialChange.current = true;
-      const address = storeAddress || (await reverseGeocode(pos.lat, pos.lng));
+      const address = userPhysical_Address || (await reverseGeocode(pos.lat, pos.lng));
       handleSetLocation(pos.lat, pos.lng, address, false);
     }
 
@@ -528,7 +528,7 @@ const GoogleMapsPolyLinedLocation = ({
     const setup = async () => {
       if (initialLat && initialLng) {
         await initializeLocation(initialLat, initialLng);
-      } else if (latitude && longitude) {
+      } else if (userPhysical_Latitude && userPhysical_Longitude) {
         await initializeLocation();
       } else if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
@@ -546,7 +546,7 @@ const GoogleMapsPolyLinedLocation = ({
     };
     setup();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [latitude, longitude, initialLat, initialLng, storeAddress]);
+  }, [userPhysical_Latitude, userPhysical_Longitude, initialLat, initialLng, userPhysical_Address]);
 
   useEffect(() => {
     if (mapRef.current) mapRef.current.panTo(currentLocation);

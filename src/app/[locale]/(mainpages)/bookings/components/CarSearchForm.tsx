@@ -30,7 +30,11 @@ const CarSearchForm = ({
   const fromDate = watch("fromDate");
   const toDate = watch("toDate");
   const { filters, setFilter } = useUserPreferedFiltersStore();
-  const { address, latitude, longitude } = useLocationStore();
+  const {
+    userPhysical_Address,
+    userPhysical_Latitude,
+    userPhysical_Longitude,
+  } = useLocationStore();
   const { openDialog, setIsCurrentLocationTabDisabled } =
     usePickupDialogStore();
   const { data: airportsData } = useGetAirports();
@@ -41,12 +45,25 @@ const CarSearchForm = ({
   const setShowPricesWithTax = useBookedCarDetailsStore(
     (state) => state.setShowPricesWithTax,
   );
+  const hasStorePickupCoordinates =
+    filters.pickupLat != null && filters.pickupLng != null;
+  const effectivePickupAddress = hasStorePickupCoordinates
+    ? filters.pickupName || userPhysical_Address
+    : userPhysical_Address;
+  const effectivePickupLatitude = hasStorePickupCoordinates
+    ? filters.pickupLat
+    : userPhysical_Latitude;
+  const effectivePickupLongitude = hasStorePickupCoordinates
+    ? filters.pickupLng
+    : userPhysical_Longitude;
   const detectedCurrentLocationCategory =
-    address && latitude != null && longitude != null
+    effectivePickupAddress &&
+    effectivePickupLatitude != null &&
+    effectivePickupLongitude != null
       ? detectPickupCategory({
-          lat: latitude,
-          lng: longitude,
-          address,
+          lat: effectivePickupLatitude,
+          lng: effectivePickupLongitude,
+          address: effectivePickupAddress,
           airports: airportsData?.content ?? [],
           trainStations: trainStationsData?.content ?? [],
         })
@@ -69,13 +86,20 @@ const CarSearchForm = ({
   useEffect(() => {
     // Keep pickup label in sync when the global current-location changes.
     if (
-      address &&
+      userPhysical_Address &&
       filters.pickupType === "currentLocation" &&
-      filters.pickupName !== address
+      !hasStorePickupCoordinates &&
+      filters.pickupName !== userPhysical_Address
     ) {
-      setFilter("pickupName", address);
+      setFilter("pickupName", userPhysical_Address);
     }
-  }, [address, filters.pickupName, filters.pickupType, setFilter]);
+  }, [
+    userPhysical_Address,
+    filters.pickupName,
+    filters.pickupType,
+    hasStorePickupCoordinates,
+    setFilter,
+  ]);
 
   const handleOpenLocationDialog = () => {
     let initialTab: "currentLocation" | "airport" | "trainStation" =
@@ -124,22 +148,16 @@ const CarSearchForm = ({
                 const currentLocationLabel = t(
                   "bookings.searchForm.currentLocation",
                 );
-                const branchPickupLabel = t("bookings.searchForm.branchPickup");
-                const resolvedPickupName =
-                  (filters.pickupName === currentLocationLabel ||
-                    filters.pickupName === "الموقع الحالي" ||
-                    !filters.pickupName) &&
-                  address
-                    ? address
-                    : filters.pickupName || currentLocationLabel;
-                const displayPickupName =
-                  filters.pickupType === "branches"
-                    ? `${branchPickupLabel}${resolvedPickupName ? ` - ${resolvedPickupName}` : ""}`
-                    : resolvedPickupName;
+                (filters.pickupName === currentLocationLabel ||
+                  filters.pickupName === "الموقع الحالي" ||
+                  !filters.pickupName) &&
+                userPhysical_Address
+                  ? userPhysical_Address
+                  : filters.pickupName || currentLocationLabel;
                 return (
                   <>
                     <div
-                      title={displayPickupName}
+                      title={filters.pickupName}
                       onClick={handleOpenLocationDialog}
                       className={`h-[40px] rounded-lg p-2 w-full bg-[#eceef2] flex items-center gap-2 cursor-pointer ${
                         shouldShowRestrictedLocationMessage
@@ -148,7 +166,13 @@ const CarSearchForm = ({
                       }`}
                     >
                       <p className="text-sm line-clamp-1">
-                        {displayPickupName}
+                        {filters.pickupName ? (
+                          <span>{filters.pickupName}</span>
+                        ) : (
+                          <span className="text-gray-500">
+                            اختر مكان الاستلام
+                          </span>
+                        )}
                       </p>
                     </div>
                   </>

@@ -4,29 +4,44 @@ import { useEffect, useState } from "react";
 import { DialogWrapper } from "@/app/(components)";
 import GoogleMapsLocation from "@/app/(components)/mapsLocation/GoogleMapsLocation";
 import { useLocationStore } from "@/lib/stores/useLocationStore";
-import { useBookedCarDetailsStore } from "@/lib/stores/useBookedCarDetailsStore";
 import { LocateFixed } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { getUserAddress } from "@/services/userProfile/getUserAddress.service";
 import { UserAddress } from "@/types/userProfile/userAddress";
 import { UserSavedAddresses } from "./UserSavedAddresses";
+import { useUserPreferedFiltersStore } from "@/lib/stores/useUserPreferedFiltersStore";
+
+type TempLocation = {
+  lat: number;
+  lng: number;
+  address: string;
+  addressId?: number;
+};
 
 export function CurrentLocationDialog() {
-  const { address, isDialogOpen, openDialog, closeDialog, setLocation } =
-    useLocationStore();
+  // StateManagment Stores
+
+  const {
+    userPhysical_Latitude,
+    userPhysical_Longitude,
+    userPhysical_Address,
+    userPhysical_AddressId,
+    isDialogOpen,
+    dialogOpenSource,
+    openDialog,
+    closeDialog,
+    setUserPhysical_Location,
+  } = useLocationStore();
+
   const [userAddresses, setUserAddresses] = useState<UserAddress[]>([]);
-  const { resetForm, clearCarDetails, clearServices, setFormData } =
-    useBookedCarDetailsStore();
+  const [filterTempLocation, setFilterTempLocation] = useState<TempLocation | null>(
+    null,
+  );
   const pathname = usePathname();
   const isTermsPage = pathname.includes("/terms&conditions");
-
-  // Temporary state — only committed to the store on save
-  const [tempLocation, setTempLocation] = useState<{
-    lat: number;
-    lng: number;
-    address: string;
-    addressId?: number;
-  } | null>(null);
+  const setFilter = useUserPreferedFiltersStore((state) => state.setFilter);
+  const applyFilters = useUserPreferedFiltersStore((state) => state.applyFilters);
+  const filters = useUserPreferedFiltersStore((state) => state.filters);
 
   useEffect(() => {
     if (isTermsPage) {
@@ -34,7 +49,7 @@ export function CurrentLocationDialog() {
     }
     const hasClosed = sessionStorage.getItem("hasClosedLocationDialog");
     if (!hasClosed) {
-      const timer = setTimeout(() => openDialog(), 3000);
+      const timer = setTimeout(() => openDialog("auto"), 3000);
       return () => clearTimeout(timer);
     }
   }, [isTermsPage, openDialog]);
@@ -44,12 +59,6 @@ export function CurrentLocationDialog() {
       closeDialog();
     }
   }, [closeDialog, isDialogOpen, isTermsPage]);
-
-  useEffect(() => {
-    if (isDialogOpen) {
-      setTempLocation(null);
-    }
-  }, [isDialogOpen]);
 
   useEffect(() => {
     if (!isDialogOpen) {
@@ -74,6 +83,32 @@ export function CurrentLocationDialog() {
     };
   }, [isDialogOpen]);
 
+  useEffect(() => {
+    if (!isDialogOpen || dialogOpenSource !== "filterComponent") {
+      return;
+    }
+
+    if (
+      typeof filters.pickupLat === "number" &&
+      typeof filters.pickupLng === "number"
+    ) {
+      setFilterTempLocation({
+        lat: filters.pickupLat,
+        lng: filters.pickupLng,
+        address: filters.pickupName ?? "",
+      });
+      return;
+    }
+
+    setFilterTempLocation(null);
+  }, [
+    dialogOpenSource,
+    filters.pickupLat,
+    filters.pickupLng,
+    filters.pickupName,
+    isDialogOpen,
+  ]);
+
   const handleOpenChange = (isOpen: boolean) => {
     if (isOpen) {
       openDialog();
@@ -84,45 +119,62 @@ export function CurrentLocationDialog() {
 
   const handleClose = () => {
     closeDialog();
-    setTempLocation(null);
     sessionStorage.setItem("hasClosedLocationDialog", "true");
   };
 
   const handleSave = () => {
-    if (tempLocation) {
-      setLocation(tempLocation.lat, tempLocation.lng, tempLocation.address);
-      setTimeout(() => {
-        resetForm();
-        clearCarDetails();
-        clearServices();
-        localStorage.removeItem("booked-car-details-storage");
-        setFormData({
-          pickupName: tempLocation.address,
-          carReturnLocation: tempLocation.address,
-          pickupType: "MY_LOCATION",
-          returnType: "MY_LOCATION",
-          pickupLat: tempLocation.lat,
-          pickupLong: tempLocation.lng,
-          returnLat: tempLocation.lat,
-          returnLong: tempLocation.lng,
-          pickupId:
-            tempLocation.addressId != null
-              ? String(tempLocation.addressId)
-              : null,
-          carReturnLocationId:
-            tempLocation.addressId != null
-              ? String(tempLocation.addressId)
-              : null,
-          pickupAirportId: null,
-          pickupTrainId: null,
-          returnAirportId: null,
-          returnTrainId: null,
-        });
-      }, 1000);
+    if (dialogOpenSource === "filterComponent") {
+      const selectedSavedAddressId =
+        typeof filterTempLocation?.addressId === "number"
+          ? String(filterTempLocation.addressId)
+          : "";
+
+      setFilter("pickupLat", filterTempLocation?.lat);
+      setFilter("pickupLng", filterTempLocation?.lng);
+      setFilter("pickupName", filterTempLocation?.address ?? "");
+      setFilter("pickupType", "currentLocation");
+      setFilter("pickupId", selectedSavedAddressId);
+      setFilter("pickupAirportId", undefined);
+      setFilter("pickupTrainId", undefined);
+
+      setFilter("carReturnLocationLat", filterTempLocation?.lat);
+      setFilter("carReturnLocationLng", filterTempLocation?.lng);
+      setFilter("carReturnLocation", filterTempLocation?.address ?? "");
+      setFilter("carReturnLocationType", "currentLocation");
+      setFilter("carReturnLocationId", selectedSavedAddressId);
+      setFilter("carReturnAirportId", undefined);
+      setFilter("carReturnTrainId", undefined);
+      applyFilters();
+      closeDialog();
+      sessionStorage.setItem("hasClosedLocationDialog", "true");
+    } else {
+      closeDialog();
+      sessionStorage.setItem("hasClosedLocationDialog", "true");
     }
-    closeDialog();
-    sessionStorage.setItem("hasClosedLocationDialog", "true");
   };
+
+  const isFilterDialog = dialogOpenSource === "filterComponent";
+  const displayedAddress = isFilterDialog
+    ? filterTempLocation?.address
+    : userPhysical_Address;
+  const selectedLat = isFilterDialog
+    ? filterTempLocation?.lat
+    : userPhysical_Latitude ?? undefined;
+  const selectedLng = isFilterDialog
+    ? filterTempLocation?.lng
+    : userPhysical_Longitude ?? undefined;
+  const tempLocationForSavedAddresses = isFilterDialog
+    ? filterTempLocation
+    : userPhysical_Latitude !== null &&
+        userPhysical_Longitude !== null &&
+        userPhysical_Address
+      ? {
+          lat: userPhysical_Latitude,
+          lng: userPhysical_Longitude,
+          address: userPhysical_Address,
+          addressId: userPhysical_AddressId ?? undefined,
+        }
+      : null;
 
   return (
     <DialogWrapper
@@ -130,25 +182,43 @@ export function CurrentLocationDialog() {
       onOpenChange={handleOpenChange}
       closeOnOutsideClick={false}
       size="xl"
-      header={{ mainTitle: "موقعك الحالي" }}
+      header={{ mainTitle: `موقعك الحالي ${dialogOpenSource}` }}
       content={
-        <div className="overflow-hidden relative">
+        <div
+          className="overflow-hidden relative"
+          data-open-source={dialogOpenSource ?? undefined}
+        >
           <div className="flex p-2 gap-2">
             <LocateFixed />
-            {tempLocation?.address ?? address}
+            {displayedAddress}
           </div>
           <GoogleMapsLocation
             storeless
-            selectedLat={tempLocation?.lat}
-            selectedLng={tempLocation?.lng}
-            onLocationChange={(lat, lng, addr) =>
-              setTempLocation({ lat, lng, address: addr })
-            }
+            selectedLat={selectedLat}
+            selectedLng={selectedLng}
+            onLocationChange={(lat, lng, addr) => {
+              if (isFilterDialog) {
+                setFilterTempLocation({ lat, lng, address: addr });
+                return;
+              }
+              setUserPhysical_Location(lat, lng, addr, null);
+            }}
           />
           <UserSavedAddresses
             userAddresses={userAddresses}
-            tempLocation={tempLocation}
-            setTempLocation={setTempLocation}
+            tempLocation={tempLocationForSavedAddresses}
+            setTempLocation={(location) => {
+              if (isFilterDialog) {
+                setFilterTempLocation(location);
+                return;
+              }
+              setUserPhysical_Location(
+                location.lat,
+                location.lng,
+                location.address,
+                location.addressId ?? null,
+              );
+            }}
           />
         </div>
       }
