@@ -67,6 +67,13 @@ const BookCars = () => {
       appliedFilters.pickupType === "trainStation"
         ? appliedFilters.pickupId || undefined
         : undefined,
+    searchType:
+      appliedFilters.pickupType === "branches"
+        ? "branch"
+        : appliedFilters.pickupType === "currentLocation"
+          ? "location"
+          : undefined,
+    locationType: appliedFilters.pickupType === "branches" ? "1" : undefined,
     brandId: appliedFilters.brandId || undefined,
   };
 

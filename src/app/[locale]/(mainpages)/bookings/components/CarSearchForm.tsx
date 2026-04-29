@@ -102,15 +102,23 @@ const CarSearchForm = ({
   ]);
 
   const handleOpenLocationDialog = () => {
-    let initialTab: "currentLocation" | "airport" | "trainStation" =
-      filters.pickupType === "airport" || filters.pickupType === "trainStation"
-        ? filters.pickupType
-        : "currentLocation";
-    let shouldDisableCurrentLocationTab = false;
+    const appliedTabMap: Record<
+      typeof filters.pickupType,
+      "currentLocation" | "airport" | "trainStation" | "branches"
+    > = {
+      airport: "airport",
+      trainStation: "trainStation",
+      currentLocation: "currentLocation",
+      branches: "branches",
+      "": "currentLocation",
+    };
 
-    if (isRestrictedCurrentLocation) {
+    let initialTab = appliedTabMap[filters.pickupType];
+    const shouldDisableCurrentLocationTab = isRestrictedCurrentLocation;
+
+    // If no explicit pickup type is applied, default to the restricted tab.
+    if (!filters.pickupType && isRestrictedCurrentLocation) {
       initialTab = detectedCurrentLocationCategory;
-      shouldDisableCurrentLocationTab = true;
     }
 
     openDialog(initialTab, "pickup");
