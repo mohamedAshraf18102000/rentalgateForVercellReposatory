@@ -11,7 +11,8 @@ import { useLocationStore } from "@/lib/stores/useLocationStore";
 import { usePathname } from "next/navigation";
 import { toast } from "sonner";
 import Link from "next/link";
-import { ChevronDown } from "lucide-react";
+import { useBookedCarDetailsStore } from "@/lib/stores/useBookedCarDetailsStore";
+import { ChevronDown, MapPinPlus } from "lucide-react";
 import PositioningIcon from "@/constants/icons/PositioningIcon";
 
 interface NavbarActionsProps {
@@ -68,7 +69,7 @@ export const NavbarActions: React.FC<NavbarActionsProps> = ({
       });
       return;
     }
-    openLocationDialog("navbar");
+    openLocationDialog();
   };
 
   return (

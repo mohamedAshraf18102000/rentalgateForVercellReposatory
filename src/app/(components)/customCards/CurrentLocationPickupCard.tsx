@@ -1,21 +1,21 @@
 import Image from "next/image";
 import { Button, Input } from "@/app/(components)";
 import { MapPin } from "lucide-react";
+import { useLocationStore } from "@/lib/stores/useLocationStore";
 import { useTranslations } from "next-intl";
 
 const CurrentLocationPickupCard = ({
   title,
   description,
-  selectedAddress,
   onClick,
   onShowResultsClick,
 }: {
   title: string;
   description: string;
-  selectedAddress?: string;
   onClick: () => void;
   onShowResultsClick: () => void;
 }) => {
+  const address = useLocationStore((state) => state.address);
   const t = useTranslations("home");
 
   return (
@@ -50,7 +50,7 @@ const CurrentLocationPickupCard = ({
                   <MapPin className="w-5! h-5! md:w-6! md:h-6! text-primary" />
                 }
                 readOnly
-                value={selectedAddress ?? ""}
+                value={address !== null ? address?.toString() : ""}
                 onClick={onClick}
               />
 

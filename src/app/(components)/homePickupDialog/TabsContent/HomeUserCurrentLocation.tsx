@@ -4,7 +4,6 @@ import { UserAddress } from "@/types/userProfile/userAddress";
 import { usePickupDialogStore } from "@/lib/stores/usePickupDialogStore";
 import { useBookedCarDetailsStore } from "@/lib/stores/useBookedCarDetailsStore";
 import { useLocationStore } from "@/lib/stores/useLocationStore";
-import { useUserPreferedFiltersStore } from "@/lib/stores/useUserPreferedFiltersStore";
 import { useAuth } from "../../navbar/hooks/useAuth";
 import { useTranslations } from "next-intl";
 import { ReverseGeocodeMeta } from "@/lib/utils/reverseGeocode";
@@ -27,7 +26,6 @@ const HomeUserCurrentLocation = () => {
   const [isAddLocationDialogOpen, setIsAddLocationDialogOpen] = useState(false);
 
   const { setFormField, formData } = useBookedCarDetailsStore();
-  const { setFilter, filters } = useUserPreferedFiltersStore();
   const {
     target,
     closeDialog,
@@ -45,7 +43,7 @@ const HomeUserCurrentLocation = () => {
   const isTrain =
     target === "return" ? !!formData.returnTrainId : !!formData.pickupTrainId;
   const selectedAddressId =
-    target === "return" ? formData.carReturnLocationId : filters.pickupId;
+    target === "return" ? formData.carReturnLocationId : formData.pickupId;
 
   // If the stored location is an airport or train station, we ignore it and use undefined
   // to let GoogleMapsLocation default to the user's real location.
@@ -77,14 +75,14 @@ const HomeUserCurrentLocation = () => {
       setFormField("returnAirportId", null);
       setFormField("returnTrainId", null);
     } else {
-      // Home pickup uses filter state only (same behavior as drawer filters).
-      setFilter("pickupName", address.addressName);
-      setFilter("pickupLat", address.latitude);
-      setFilter("pickupLng", address.longitude);
-      setFilter("pickupType", "currentLocation");
-      setFilter("pickupId", String(address.addressId));
-      setFilter("pickupAirportId", undefined);
-      setFilter("pickupTrainId", undefined);
+      // Update BookedCarDetailsStore only
+      setFormField("pickupName", address.addressName);
+      setFormField("pickupLat", address.latitude);
+      setFormField("pickupLong", address.longitude);
+      setFormField("pickupType", "MY_LOCATION");
+      setFormField("pickupId", String(address.addressId));
+      setFormField("pickupAirportId", null);
+      setFormField("pickupTrainId", null);
     }
   };
 
@@ -131,14 +129,14 @@ const HomeUserCurrentLocation = () => {
       setFormField("returnAirportId", null);
       setFormField("returnTrainId", null);
     } else {
-      // Home pickup uses filter state only (same behavior as drawer filters).
-      setFilter("pickupName", address);
-      setFilter("pickupLat", lat);
-      setFilter("pickupLng", lng);
-      setFilter("pickupType", "currentLocation");
-      setFilter("pickupId", "");
-      setFilter("pickupAirportId", undefined);
-      setFilter("pickupTrainId", undefined);
+      // Update BookedCarDetailsStore
+      setFormField("pickupName", address);
+      setFormField("pickupLat", lat);
+      setFormField("pickupLong", lng);
+      setFormField("pickupType", "MY_LOCATION");
+      setFormField("pickupId", null);
+      setFormField("pickupAirportId", null);
+      setFormField("pickupTrainId", null);
     }
   };
 
@@ -224,7 +222,7 @@ const HomeUserCurrentLocation = () => {
         initialLat={initialLat}
         initialLng={initialLng}
         initialAddress={
-          target === "return" ? formData.carReturnLocation : filters.pickupName
+          target === "return" ? formData.carReturnLocation : formData.pickupName
         }
         onSuccess={(address) => {
           handleSelectAddress(address);

@@ -29,33 +29,17 @@ const BookCars = () => {
   const rentalDays =
     useBookedCarDetailsStore((state) => state.formData.rentalDays) ?? 0;
   const { appliedFilters, filters, setFilter } = useUserPreferedFiltersStore();
-  const latitude = useLocationStore((state) => state.latitude);
   const longitude = useLocationStore((state) => state.longitude);
+  const latitude = useLocationStore((state) => state.latitude);
   const setFormField = useBookedCarDetailsStore((state) => state.setFormField);
-  const isCurrentLocationPickupFilter =
-    appliedFilters.pickupType === "currentLocation";
-  const isBranchesPickupFilter = appliedFilters.pickupType === "branches";
-  const hasMapBasedPickupFilter =
-    (isCurrentLocationPickupFilter || isBranchesPickupFilter) &&
+  const hasPickupFilterCoordinates =
     typeof appliedFilters.pickupLat === "number" &&
     typeof appliedFilters.pickupLng === "number";
-  const effectiveLatitude = isCurrentLocationPickupFilter
-    ? hasMapBasedPickupFilter
-      ? appliedFilters.pickupLat
-      : undefined
-    : isBranchesPickupFilter
-      ? hasMapBasedPickupFilter
-        ? appliedFilters.pickupLat
-        : undefined
+  const effectiveLatitude = hasPickupFilterCoordinates
+    ? appliedFilters.pickupLat
     : latitude ?? undefined;
-  const effectiveLongitude = isCurrentLocationPickupFilter
-    ? hasMapBasedPickupFilter
-      ? appliedFilters.pickupLng
-      : undefined
-    : isBranchesPickupFilter
-      ? hasMapBasedPickupFilter
-        ? appliedFilters.pickupLng
-        : undefined
+  const effectiveLongitude = hasPickupFilterCoordinates
+    ? appliedFilters.pickupLng
     : longitude ?? undefined;
 
   const apiFilters = {
@@ -73,7 +57,6 @@ const BookCars = () => {
         ? appliedFilters.pickupId || undefined
         : undefined,
     brandId: appliedFilters.brandId || undefined,
-    searchType: hasMapBasedPickupFilter ? "location" : undefined,
   };
 
   const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } =

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { DialogWrapper } from "@/app/(components)";
 import GoogleMapsLocation from "@/app/(components)/mapsLocation/GoogleMapsLocation";
 import { useLocationStore } from "@/lib/stores/useLocationStore";
+import { useBookedCarDetailsStore } from "@/lib/stores/useBookedCarDetailsStore";
 import { LocateFixed } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { getUserAddress } from "@/services/userProfile/getUserAddress.service";
@@ -11,16 +12,11 @@ import { UserAddress } from "@/types/userProfile/userAddress";
 import { UserSavedAddresses } from "./UserSavedAddresses";
 
 export function CurrentLocationDialog() {
-  const {
-    address,
-    isDialogOpen,
-    dialogSource,
-    openDialog,
-    closeDialog,
-    setLocation,
-    setConfirmedDialogLocation,
-  } = useLocationStore();
+  const { address, isDialogOpen, openDialog, closeDialog, setLocation } =
+    useLocationStore();
   const [userAddresses, setUserAddresses] = useState<UserAddress[]>([]);
+  const { resetForm, clearCarDetails, clearServices, setFormData } =
+    useBookedCarDetailsStore();
   const pathname = usePathname();
   const isTermsPage = pathname.includes("/terms&conditions");
 
@@ -38,7 +34,7 @@ export function CurrentLocationDialog() {
     }
     const hasClosed = sessionStorage.getItem("hasClosedLocationDialog");
     if (!hasClosed) {
-      const timer = setTimeout(() => openDialog("auto"), 3000);
+      const timer = setTimeout(() => openDialog(), 3000);
       return () => clearTimeout(timer);
     }
   }, [isTermsPage, openDialog]);
@@ -80,7 +76,7 @@ export function CurrentLocationDialog() {
 
   const handleOpenChange = (isOpen: boolean) => {
     if (isOpen) {
-      openDialog(dialogSource ?? "auto");
+      openDialog();
     } else {
       handleClose();
     }
@@ -94,15 +90,35 @@ export function CurrentLocationDialog() {
 
   const handleSave = () => {
     if (tempLocation) {
-      if (dialogSource === "homeCard") {
-        setConfirmedDialogLocation(
-          tempLocation.address,
-          tempLocation.lat,
-          tempLocation.lng,
-        );
-      } else {
-        setLocation(tempLocation.lat, tempLocation.lng, tempLocation.address);
-      }
+      setLocation(tempLocation.lat, tempLocation.lng, tempLocation.address);
+      setTimeout(() => {
+        resetForm();
+        clearCarDetails();
+        clearServices();
+        localStorage.removeItem("booked-car-details-storage");
+        setFormData({
+          pickupName: tempLocation.address,
+          carReturnLocation: tempLocation.address,
+          pickupType: "MY_LOCATION",
+          returnType: "MY_LOCATION",
+          pickupLat: tempLocation.lat,
+          pickupLong: tempLocation.lng,
+          returnLat: tempLocation.lat,
+          returnLong: tempLocation.lng,
+          pickupId:
+            tempLocation.addressId != null
+              ? String(tempLocation.addressId)
+              : null,
+          carReturnLocationId:
+            tempLocation.addressId != null
+              ? String(tempLocation.addressId)
+              : null,
+          pickupAirportId: null,
+          pickupTrainId: null,
+          returnAirportId: null,
+          returnTrainId: null,
+        });
+      }, 1000);
     }
     closeDialog();
     sessionStorage.setItem("hasClosedLocationDialog", "true");
