@@ -48,7 +48,7 @@ const CarSearchForm = ({
   const hasStorePickupCoordinates =
     filters.pickupLat != null && filters.pickupLng != null;
   const effectivePickupAddress = hasStorePickupCoordinates
-    ? (filters.pickupName || userPhysical_Address)
+    ? filters.pickupName || userPhysical_Address
     : userPhysical_Address;
   const effectivePickupLatitude = hasStorePickupCoordinates
     ? filters.pickupLat
@@ -148,18 +148,12 @@ const CarSearchForm = ({
                 const currentLocationLabel = t(
                   "bookings.searchForm.currentLocation",
                 );
-                const branchPickupLabel = t("bookings.searchForm.branchPickup");
-                const resolvedPickupName =
-                  (filters.pickupName === currentLocationLabel ||
-                    filters.pickupName === "الموقع الحالي" ||
-                    !filters.pickupName) &&
-                  userPhysical_Address
-                    ? userPhysical_Address
-                    : filters.pickupName || currentLocationLabel;
-                const displayPickupName =
-                  filters.pickupType === "branches"
-                    ? `${branchPickupLabel}${resolvedPickupName ? ` - ${resolvedPickupName}` : ""}`
-                    : resolvedPickupName;
+                (filters.pickupName === currentLocationLabel ||
+                  filters.pickupName === "الموقع الحالي" ||
+                  !filters.pickupName) &&
+                userPhysical_Address
+                  ? userPhysical_Address
+                  : filters.pickupName || currentLocationLabel;
                 return (
                   <>
                     <div
@@ -172,7 +166,13 @@ const CarSearchForm = ({
                       }`}
                     >
                       <p className="text-sm line-clamp-1">
-                        {filters.pickupName || displayPickupName}
+                        {filters.pickupName ? (
+                          <span>{filters.pickupName}</span>
+                        ) : (
+                          <span className="text-gray-500">
+                            اختر مكان الاستلام
+                          </span>
+                        )}
                       </p>
                     </div>
                   </>

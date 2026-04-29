@@ -8,6 +8,23 @@ import {
   mapValuesToFormData,
 } from "./stepContentFormValues";
 
+const mapFilterLocationTypeToReservationType = (
+  type?: BookingFilters["pickupType"] | BookingFilters["carReturnLocationType"],
+): ReservationFormData["pickupType"] => {
+  switch (type) {
+    case "branches":
+      return "BRANCH";
+    case "currentLocation":
+      return "MY_LOCATION";
+    case "airport":
+      return "AIRPORT";
+    case "trainStation":
+      return "TRAIN_STATION";
+    default:
+      return null;
+  }
+};
+
 interface SyncStoreToFormParams {
   filters: BookingFilters;
   setValue: (name: keyof ReservationFormValues, value: unknown) => void;
@@ -186,7 +203,13 @@ export const useSyncFormToStores = ({
 }) => {
   useEffect(() => {
     if (!hasHydrated) return;
-    setFormData(mapValuesToFormData(getValues()));
+    setFormData({
+      ...mapValuesToFormData(getValues()),
+      pickupType: mapFilterLocationTypeToReservationType(filters.pickupType),
+      returnType: mapFilterLocationTypeToReservationType(
+        filters.carReturnLocationType,
+      ),
+    });
 
     const subscription = watch((value) => {
       setFormData(mapValuesToFormData(value));

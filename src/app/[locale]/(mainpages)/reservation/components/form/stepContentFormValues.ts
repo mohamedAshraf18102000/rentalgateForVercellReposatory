@@ -35,15 +35,10 @@ export const buildInitialReservationValues = ({
   filters: BookingFilters;
   isForOtherReservation: boolean;
 }): ReservationFormValues => {
-  const pickupName = normalizeLocationValue(formData.pickupName)
-    ? normalizeLocationValue(formData.pickupName)
-    : normalizeLocationValue(filters.pickupName);
+  const pickupName = normalizeLocationValue(filters.pickupName);
 
   const returnName =
-    normalizeLocationValue(formData.carReturnLocation) ||
-    normalizeLocationValue(filters.carReturnLocation) ||
-    pickupName ||
-    "";
+    normalizeLocationValue(filters.carReturnLocation) || pickupName || "";
 
   return {
     pickupName: pickupName || "",
@@ -58,18 +53,16 @@ export const buildInitialReservationValues = ({
       : filters.toDate
         ? new Date(filters.toDate)
         : undefined,
-    pickupLat: formData.pickupLat ?? null,
-    pickupLong: formData.pickupLong ?? null,
-    pickupId: formData.pickupId || filters.pickupId || null,
-    returnLat: formData.returnLat ?? null,
-    returnLong: formData.returnLong ?? null,
-    carReturnLocationId:
-      formData.carReturnLocationId || filters.carReturnLocationId || null,
-    pickupTrainId: formData.pickupTrainId || filters.pickupTrainId || null,
-    pickupAirportId: formData.pickupAirportId || filters.pickupAirportId || null,
-    returnTrainId: formData.returnTrainId || filters.carReturnTrainId || null,
-    returnAirportId:
-      formData.returnAirportId || filters.carReturnAirportId || null,
+    pickupLat: filters.pickupLat ?? null,
+    pickupLong: filters.pickupLng ?? null,
+    pickupId: filters.pickupId || null,
+    returnLat: filters.carReturnLocationLat ?? null,
+    returnLong: filters.carReturnLocationLng ?? null,
+    carReturnLocationId: filters.carReturnLocationId || null,
+    pickupTrainId: filters.pickupTrainId || null,
+    pickupAirportId: filters.pickupAirportId || null,
+    returnTrainId: filters.carReturnTrainId || null,
+    returnAirportId: filters.carReturnAirportId || null,
     isForOtherReservation,
     idNumber: formData.idNumber || "0",
     nationality: formData.nationality || "",

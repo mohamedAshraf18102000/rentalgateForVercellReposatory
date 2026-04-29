@@ -38,6 +38,8 @@ const page = () => {
     queryFn: () => getCompanyCarsByID(Number(id)),
   });
 
+  console.log("data?.deliveryServiceAvailable", data?.deliveryServiceAvailable);
+
   useEffect(() => {
     if (data) {
       setCarDetails(data);

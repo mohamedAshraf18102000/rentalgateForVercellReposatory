@@ -19,7 +19,7 @@ export default function PickupCardSectionClient({
   const { openDialog } = usePickupDialogStore();
   const { openDialog: openLocationDialog } = useLocationStore();
 
-  const hadnleLocationClick = () => {
+  const handleLocationClick = () => {
     openLocationDialog("filterComponent");
   };
 
@@ -42,7 +42,7 @@ export default function PickupCardSectionClient({
             <CurrentLocationPickupCard
               title={card.title}
               description={card.description}
-              onClick={hadnleLocationClick}
+              onClick={handleLocationClick}
               onShowResultsClick={handleShowResultsClick}
             />
           ) : (

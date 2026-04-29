@@ -124,13 +124,26 @@ export function CurrentLocationDialog() {
 
   const handleSave = () => {
     if (dialogOpenSource === "filterComponent") {
+      const selectedSavedAddressId =
+        typeof filterTempLocation?.addressId === "number"
+          ? String(filterTempLocation.addressId)
+          : "";
+
       setFilter("pickupLat", filterTempLocation?.lat);
       setFilter("pickupLng", filterTempLocation?.lng);
       setFilter("pickupName", filterTempLocation?.address ?? "");
       setFilter("pickupType", "currentLocation");
-      setFilter("pickupId", "");
+      setFilter("pickupId", selectedSavedAddressId);
       setFilter("pickupAirportId", undefined);
       setFilter("pickupTrainId", undefined);
+
+      setFilter("carReturnLocationLat", filterTempLocation?.lat);
+      setFilter("carReturnLocationLng", filterTempLocation?.lng);
+      setFilter("carReturnLocation", filterTempLocation?.address ?? "");
+      setFilter("carReturnLocationType", "currentLocation");
+      setFilter("carReturnLocationId", selectedSavedAddressId);
+      setFilter("carReturnAirportId", undefined);
+      setFilter("carReturnTrainId", undefined);
       applyFilters();
       closeDialog();
       sessionStorage.setItem("hasClosedLocationDialog", "true");
