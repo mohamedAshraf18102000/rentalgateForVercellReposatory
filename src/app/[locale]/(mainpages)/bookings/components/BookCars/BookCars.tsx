@@ -25,26 +25,37 @@ interface FormValues {
 const BookCars = () => {
   const t = useTranslations("home");
   const { openDialog } = usePickupDialogStore();
-  const userPhysical_Address = useLocationStore((state) => state.userPhysical_Address);
+  const userPhysical_Address = useLocationStore(
+    (state) => state.userPhysical_Address,
+  );
   const rentalDays =
     useBookedCarDetailsStore((state) => state.formData.rentalDays) ?? 0;
   const { appliedFilters, filters, setFilter } = useUserPreferedFiltersStore();
-  const userPhysical_Longitude = useLocationStore((state) => state.userPhysical_Longitude);
-  const userPhysical_Latitude = useLocationStore((state) => state.userPhysical_Latitude);
+  const userPhysical_Longitude = useLocationStore(
+    (state) => state.userPhysical_Longitude,
+  );
+  const userPhysical_Latitude = useLocationStore(
+    (state) => state.userPhysical_Latitude,
+  );
+
   const setFormField = useBookedCarDetailsStore((state) => state.setFormField);
-  const hasPickupFilterCoordinates =
-    typeof appliedFilters.pickupLat === "number" &&
-    typeof appliedFilters.pickupLng === "number";
-  const effectiveLatitude = hasPickupFilterCoordinates
-    ? appliedFilters.pickupLat
-    : userPhysical_Latitude ?? undefined;
-  const effectiveLongitude = hasPickupFilterCoordinates
-    ? appliedFilters.pickupLng
-    : userPhysical_Longitude ?? undefined;
+  const hasAppliedPickupFilter = Boolean(
+    appliedFilters.pickupType ||
+      appliedFilters.pickupId ||
+      appliedFilters.pickupLat != null ||
+      appliedFilters.pickupLng != null,
+  );
 
   const apiFilters = {
-    longitude: effectiveLongitude,
-    latitude: effectiveLatitude,
+    userPhysicalLongitudeFilter: hasAppliedPickupFilter
+      ? undefined
+      : (userPhysical_Longitude ?? undefined),
+    userPhysicalLatitudeFilter: hasAppliedPickupFilter
+      ? undefined
+      : (userPhysical_Latitude ?? undefined),
+
+    longitude: appliedFilters.pickupLng ?? undefined,
+    latitude: appliedFilters.pickupLat ?? undefined,
     minPrice: appliedFilters.priceMin || undefined,
     maxPrice: appliedFilters.priceTo || undefined,
     categoryId: appliedFilters.categoryId || undefined,

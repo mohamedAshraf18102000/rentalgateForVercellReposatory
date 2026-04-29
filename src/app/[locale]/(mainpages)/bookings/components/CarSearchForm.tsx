@@ -30,7 +30,11 @@ const CarSearchForm = ({
   const fromDate = watch("fromDate");
   const toDate = watch("toDate");
   const { filters, setFilter } = useUserPreferedFiltersStore();
-  const { userPhysical_Address, userPhysical_Latitude, userPhysical_Longitude } = useLocationStore();
+  const {
+    userPhysical_Address,
+    userPhysical_Latitude,
+    userPhysical_Longitude,
+  } = useLocationStore();
   const { openDialog, setIsCurrentLocationTabDisabled } =
     usePickupDialogStore();
   const { data: airportsData } = useGetAirports();
@@ -41,12 +45,25 @@ const CarSearchForm = ({
   const setShowPricesWithTax = useBookedCarDetailsStore(
     (state) => state.setShowPricesWithTax,
   );
+  const hasStorePickupCoordinates =
+    filters.pickupLat != null && filters.pickupLng != null;
+  const effectivePickupAddress = hasStorePickupCoordinates
+    ? (filters.pickupName || userPhysical_Address)
+    : userPhysical_Address;
+  const effectivePickupLatitude = hasStorePickupCoordinates
+    ? filters.pickupLat
+    : userPhysical_Latitude;
+  const effectivePickupLongitude = hasStorePickupCoordinates
+    ? filters.pickupLng
+    : userPhysical_Longitude;
   const detectedCurrentLocationCategory =
-    userPhysical_Address && userPhysical_Latitude != null && userPhysical_Longitude != null
+    effectivePickupAddress &&
+    effectivePickupLatitude != null &&
+    effectivePickupLongitude != null
       ? detectPickupCategory({
-          lat: userPhysical_Latitude,
-          lng: userPhysical_Longitude,
-          address: userPhysical_Address,
+          lat: effectivePickupLatitude,
+          lng: effectivePickupLongitude,
+          address: effectivePickupAddress,
           airports: airportsData?.content ?? [],
           trainStations: trainStationsData?.content ?? [],
         })
@@ -71,11 +88,18 @@ const CarSearchForm = ({
     if (
       userPhysical_Address &&
       filters.pickupType === "currentLocation" &&
+      !hasStorePickupCoordinates &&
       filters.pickupName !== userPhysical_Address
     ) {
       setFilter("pickupName", userPhysical_Address);
     }
-  }, [userPhysical_Address, filters.pickupName, filters.pickupType, setFilter]);
+  }, [
+    userPhysical_Address,
+    filters.pickupName,
+    filters.pickupType,
+    hasStorePickupCoordinates,
+    setFilter,
+  ]);
 
   const handleOpenLocationDialog = () => {
     let initialTab: "currentLocation" | "airport" | "trainStation" =
@@ -139,7 +163,7 @@ const CarSearchForm = ({
                 return (
                   <>
                     <div
-                      title={displayPickupName}
+                      title={filters.pickupName}
                       onClick={handleOpenLocationDialog}
                       className={`h-[40px] rounded-lg p-2 w-full bg-[#eceef2] flex items-center gap-2 cursor-pointer ${
                         shouldShowRestrictedLocationMessage
@@ -148,7 +172,7 @@ const CarSearchForm = ({
                       }`}
                     >
                       <p className="text-sm line-clamp-1">
-                        {displayPickupName}
+                        {filters.pickupName || displayPickupName}
                       </p>
                     </div>
                   </>

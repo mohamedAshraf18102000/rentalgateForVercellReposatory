@@ -17,29 +17,13 @@ export default function PickupCardSectionClient({
 }: PickupCardSectionClientProps) {
   const router = useRouter();
   const { openDialog } = usePickupDialogStore();
-  const {
-    openDialog: openLocationDialog,
-    userPhysical_Address,
-    userPhysical_Latitude,
-    userPhysical_Longitude,
-  } = useLocationStore();
-  const { setFilter, applyFilters } = useUserPreferedFiltersStore();
+  const { openDialog: openLocationDialog } = useLocationStore();
 
   const hadnleLocationClick = () => {
     openLocationDialog("filterComponent");
   };
 
   const handleShowResultsClick = () => {
-    if (userPhysical_Address) {
-      setFilter("pickupType", "currentLocation");
-      setFilter("pickupName", userPhysical_Address);
-      setFilter("pickupLat", userPhysical_Latitude ?? undefined);
-      setFilter("pickupLng", userPhysical_Longitude ?? undefined);
-      setFilter("pickupId", "");
-      setFilter("pickupAirportId", undefined);
-      setFilter("pickupTrainId", undefined);
-      applyFilters();
-    }
     router.push("/bookings");
   };
 

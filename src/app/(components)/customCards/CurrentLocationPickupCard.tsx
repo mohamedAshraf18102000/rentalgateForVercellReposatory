@@ -1,8 +1,8 @@
 import Image from "next/image";
 import { Button, Input } from "@/app/(components)";
 import { MapPin } from "lucide-react";
-import { useLocationStore } from "@/lib/stores/useLocationStore";
 import { useTranslations } from "next-intl";
+import { useUserPreferedFiltersStore } from "@/lib/stores/useUserPreferedFiltersStore";
 
 const CurrentLocationPickupCard = ({
   title,
@@ -15,10 +15,10 @@ const CurrentLocationPickupCard = ({
   onClick: () => void;
   onShowResultsClick: () => void;
 }) => {
-  const userPhysical_Address = useLocationStore(
-    (state) => state.userPhysical_Address,
-  );
   const t = useTranslations("home");
+  const filterPickupName = useUserPreferedFiltersStore(
+    (s) => s.filters.pickupName,
+  );
 
   return (
     <div className="w-full px-4 md:px-0">
@@ -52,11 +52,7 @@ const CurrentLocationPickupCard = ({
                   <MapPin className="w-5! h-5! md:w-6! md:h-6! text-primary" />
                 }
                 readOnly
-                value={
-                  userPhysical_Address !== null
-                    ? userPhysical_Address?.toString()
-                    : ""
-                }
+                value={filterPickupName}
                 onClick={onClick}
               />
 
