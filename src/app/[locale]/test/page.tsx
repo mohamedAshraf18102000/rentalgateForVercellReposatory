@@ -1,22 +1,25 @@
-import WrapperContainer from "@/app/(components)/wrapperContainer/WrapperContainer";
+"use client";
 
-const page = () => {
+import { useState } from "react";
+import { useParams } from "next/navigation";
+import WrapperContainer from "@/app/(components)/wrapperContainer/WrapperContainer";
+import { WelcomePointsDialog } from "@/app/(components)/WelcomePointsDialog";
+
+const Page = () => {
+  const [open, setOpen] = useState(true);
+  const params = useParams();
+  const locale = (params.locale as string) || "ar";
+
   return (
     <WrapperContainer exceedNav>
-      <div className="bg-red-400 w-full min-h-[300px] grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
-        <div className="border-2 border-black h-fit p-2 flex flex-col gap-2 items-center">
-          <div className="w-full p-1 bg-[url(/cars/carCateforyBG.png)] bg-cover bg-center bg-no-repeat rounded-2xl">
-            <img
-              src="https://viganium.co/uploads/1762342853778.png"
-              alt="test"
-              className="w-full h-full object-contain"
-            />
-          </div>
-          <span className="login-tab-text text-base">سيدان</span>
-        </div>
-      </div>
+      <WelcomePointsDialog
+        open={open}
+        onOpenChange={setOpen}
+        points={10}
+        locale={locale}
+      />
     </WrapperContainer>
   );
 };
 
-export default page;
+export default Page;

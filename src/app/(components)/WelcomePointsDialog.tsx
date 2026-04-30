@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 /**
  * Welcome Points Dialog Component
@@ -6,11 +6,11 @@
  * Uses DialogWrapper structure for consistency
  */
 
-import React from 'react';
-import { DialogWrapper } from '@/app/(components)/ui/dialog-wrapper';
-import { Button } from '@/app/(components)/ui/button';
-import { useTranslations } from 'next-intl';
-import Image from 'next/image';
+import React from "react";
+import { DialogWrapper } from "@/app/(components)/ui/dialog-wrapper";
+import { Button } from "@/app/(components)/ui/button";
+import { useTranslations } from "next-intl";
+import Image from "next/image";
 
 interface WelcomePointsDialogProps {
   open: boolean;
@@ -29,8 +29,8 @@ function useIsMobile() {
     };
 
     checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
   return isMobile;
@@ -42,9 +42,8 @@ export function WelcomePointsDialog({
   points,
   locale,
 }: WelcomePointsDialogProps) {
-  const isArabic = locale === 'ar';
-  const t = useTranslations('common');
-  const isMobile = useIsMobile();
+  const isArabic = locale === "ar";
+  const t = useTranslations("common");
 
   const handleGetPoints = () => {
     onOpenChange(false);
@@ -56,24 +55,30 @@ export function WelcomePointsDialog({
       onOpenChange={onOpenChange}
       size="md"
       forceDialog={true}
-      className="bg-[#1A1A1A] border-none max-w-[90%] md:max-w-[500px] [&_*]:text-white [&_*]:border-white/20 [&_header]:text-white [&_header_*]:text-white [&_header_*]:border-white/20 [&_div]:text-white [&_div]:border-white/20 [&_div.border-b]:border-white/20"
+      className="  border-none max-w-[90%] md:max-w-[500px] [&_*]:text-black [&_*]:border-black/20 [&_header]:text-white [&_header_*]:text-black [&_header_*]:border-black/20 [&_div]:text-black [&_div]:border-black/20 [&_div.border-b]:border-black/20"
       contentClassName="b] text-white"
       closeOnOutsideClick={true}
       header={{
         mainTitle: (
           <div className="flex items-center justify-between w-full">
             <span className="text-white  flex-1 text-center">
-              {isArabic ? 'نقاط ترحيبية' : 'Welcome Points'}
+              {isArabic ? "نقاط ترحيبية" : "Welcome Points"}
             </span>
           </div>
         ),
       }}
       content={
-        <div className="text-center" dir={isArabic ? 'rtl' : 'ltr'}>
+        <div className="text-center" dir={isArabic ? "rtl" : "ltr"}>
           {/* Graphic */}
           <div className="flex justify-center items-center mb-6 mt-4 S">
-            <div className="w-[148px] h-[147px] "> 
-              <Image src="/points.png" alt="Welcome Points" width={100} height={100} className="w-full h-full  mx-auto" />
+            <div className="w-[148px] h-[147px] ">
+              <Image
+                src="/points.png"
+                alt="Welcome Points"
+                width={100}
+                height={100}
+                className="w-full h-full  mx-auto"
+              />
             </div>
           </div>
 
@@ -86,8 +91,8 @@ export function WelcomePointsDialog({
             </p>
             <p className="text-xs text-gray-300 leading-relaxed px-2 text-center">
               {isArabic
-                ? 'استخدم نقاطك في الحجوزات القادمة واحصل على خصومات حصرية. كل نقطة تساوي قيمة حقيقية في رحلتك معنا'
-                : 'Use your points in upcoming bookings and get exclusive discounts. Every point has real value in your journey with us'}
+                ? "استخدم نقاطك في الحجوزات القادمة واحصل على خصومات حصرية. كل نقطة تساوي قيمة حقيقية في رحلتك معنا"
+                : "Use your points in upcoming bookings and get exclusive discounts. Every point has real value in your journey with us"}
             </p>
           </div>
         </div>
@@ -96,9 +101,11 @@ export function WelcomePointsDialog({
         <Button
           onClick={handleGetPoints}
           size="lg"
-          className="w-full   text-white  py-3 border-none"
+          className="w-full bg-black! py-3 border-none"
         >
-          {isArabic ? 'الحصول على النقاط' : 'Get Points'}
+          <span className="text-white!">
+            {isArabic ? "الحصول على النقاط" : "Get Points"}
+          </span>
         </Button>
       }
     />

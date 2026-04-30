@@ -11,6 +11,7 @@ import { getCookie, setCookie } from "@/util/cookies";
 import { isAuthenticated } from "@/util/auth";
 
 const SHOW_WELCOME_POINTS = "show_welcome_points";
+const WELCOME_POINTS_VALUE = "welcomePointsValue";
 
 export function useWelcomePoints(locale: string) {
   const { clientData } = useClientStore();
@@ -49,7 +50,12 @@ export function useWelcomePoints(locale: string) {
     const shouldShow = getCookie(SHOW_WELCOME_POINTS) === "true";
 
     if (shouldShow) {
-      setWelcomePoints(10);
+      const pointsFromCookie = Number(getCookie(WELCOME_POINTS_VALUE));
+      const resolvedPoints = Number.isFinite(pointsFromCookie)
+        ? pointsFromCookie
+        : 10;
+
+      setWelcomePoints(resolvedPoints);
       setShowWelcomePoints(true);
 
       // Set to false after showing

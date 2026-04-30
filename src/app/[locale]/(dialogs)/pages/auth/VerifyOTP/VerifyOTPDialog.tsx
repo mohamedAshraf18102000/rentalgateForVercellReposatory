@@ -14,6 +14,7 @@ import {
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
 import { useDialog } from "../../..";
+import { setCookie } from "@/util/cookies";
 
 export function VerifyOTPDialog({
   email,
@@ -101,6 +102,11 @@ export function VerifyOTPDialog({
           (response as any).data === true);
 
       if (isVerified) {
+        const responseWelcomePoints = (response as any)?.welcomePoints;
+        if (typeof responseWelcomePoints === "number") {
+          setCookie("welcomePointsValue", String(responseWelcomePoints), 365);
+        }
+
         toast.success("تم التحقق من الرمز بنجاح");
         onSuccess?.();
 

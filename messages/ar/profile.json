@@ -100,6 +100,8 @@
     "showAllBookings": "عرض جميع الحجوزات",
     "shownBookingsCount": "عدد الحجوزات المعروضة",
     "bookingsImageAlt": "صورة الحجوزات",
+    "noReservationsFoundAlt": "لا توجد نتائج",
+    "noReservationsFound": "لا توجد حجوزات.",
     "statusTabs": {
       "current": "الحالية",
       "previous": "السابقة"
