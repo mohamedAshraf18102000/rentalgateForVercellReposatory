@@ -107,6 +107,11 @@
       "previous": "Previous"
     }
   },
+  "walletPage": {
+    "transactionsLoadError": "An error occurred while loading transactions.",
+    "emptyTransactionsTitle": "No transactions to display",
+    "emptyTransactionsDescription": "No transactions to display"
+  },
   "userSavedLocationDialog": {
     "toast": {
       "addSuccess": "Address added successfully",

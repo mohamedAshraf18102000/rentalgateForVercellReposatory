@@ -11,6 +11,7 @@ import { UserReservationsPaylod } from "@/types/myBookings/myBookings";
 import BookingCardSkeleton from "./BookingCardSkeleton";
 import { useAuth } from "@/app/(components)/navbar/hooks/useAuth";
 import { useTranslations } from "next-intl";
+import EmptyState from "@/app/(components)/EmptyState";
 
 const UserBookingsDetails = () => {
   const t = useTranslations("profile");
@@ -82,16 +83,10 @@ const UserBookingsDetails = () => {
           ))
         ) : (
           <>
-            <div className="col-span-full flex h-[350px] flex-col items-center justify-center rounded-2xl bg-white p-6 text-center text-sm text-Grey700 sm:text-base">
-              <img
-                src="/notFound/notFound.webp"
-                alt={t("myBookingsPage.noReservationsFoundAlt")}
-                className="w-[250px] h-[250px] "
-              />
-              <span className="text-base mt-3">
-                {t("myBookingsPage.noReservationsFound")}
-              </span>
-            </div>
+            <EmptyState
+              title={t("myBookingsPage.noReservationsFoundAlt")}
+              description={t("myBookingsPage.noReservationsFound")}
+            />
           </>
         )}
       </div>

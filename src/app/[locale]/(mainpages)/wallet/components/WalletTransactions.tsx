@@ -4,8 +4,11 @@ import { Transaction } from "@/types/wallet/wallet";
 import VoucherCard from "./VoucherCard";
 import { useWalletTransactions } from "@/hooks/api/useWalletTransactions";
 import { Skeleton } from "@/app/(components)/ui/skeleton";
+import EmptyState from "@/app/(components)/EmptyState";
+import { useTranslations } from "next-intl";
 
 const WalletTransactions = () => {
+  const t = useTranslations("profile.walletPage");
   const { data: response, isLoading, isError } = useWalletTransactions();
   const transactions: Transaction[] = response?.content || [];
 
@@ -26,7 +29,7 @@ const WalletTransactions = () => {
     return (
       <section className="w-full mt-8 flex justify-center">
         <p className="my-2 font-bold text-red-500">
-          حدث خطأ أثناء تحميل العمليات.
+          {t("transactionsLoadError")}
         </p>
       </section>
     );
@@ -34,11 +37,11 @@ const WalletTransactions = () => {
 
   if (transactions.length === 0) {
     return (
-      <section className="w-full mt-8">
-        <p className="my-2 font-bold text-center text-Grey500">
-          لا يوجد عمليات لعرضها
-        </p>
-      </section>
+      <EmptyState
+        className="mt-8"
+        title={t("emptyTransactionsTitle")}
+        description={t("emptyTransactionsDescription")}
+      />
     );
   }
 

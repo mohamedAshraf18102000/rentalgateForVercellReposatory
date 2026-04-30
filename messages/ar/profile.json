@@ -107,6 +107,11 @@
       "previous": "السابقة"
     }
   },
+  "walletPage": {
+    "transactionsLoadError": "حدث خطأ أثناء تحميل العمليات.",
+    "emptyTransactionsTitle": "لا يوجد عمليات لعرضها",
+    "emptyTransactionsDescription": "لا يوجد عمليات لعرضها"
+  },
   "userSavedLocationDialog": {
     "toast": {
       "addSuccess": "تم إضافة العنوان بنجاح",
