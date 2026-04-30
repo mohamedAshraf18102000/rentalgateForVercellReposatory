@@ -66,7 +66,7 @@ const StepTwo = ({ control, errors, setValue }: StepTwoProps) => {
                     onValueChange={field.onChange}
                     defaultValue={field.value}
                   >
-                    <SelectTrigger className="w-full h-10 px-3 py-2 bg-[#eceef2] border-input rounded-[8px] text-sm text-gray-500">
+                    <SelectTrigger className="w-full h-10 px-3 py-2 bg-[#eceef2] border-input rounded-[8px] text-sm">
                       <SelectValue
                         placeholder={t(
                           "reservation.stepTwo.residenceTypePlaceholder",
@@ -105,9 +105,9 @@ const StepTwo = ({ control, errors, setValue }: StepTwoProps) => {
             render={({ field }) => (
               <Input
                 {...field}
-                  label={t("reservation.stepTwo.nationalityLabel")}
+                label={t("reservation.stepTwo.nationalityLabel")}
                 startIcon={<Globe className="size-4" />}
-                  placeholder={t("reservation.stepTwo.nationalityPlaceholder")}
+                placeholder={t("reservation.stepTwo.nationalityPlaceholder")}
                 errorMessage={errors.nationality?.message}
               />
             )}
@@ -143,7 +143,9 @@ const StepTwo = ({ control, errors, setValue }: StepTwoProps) => {
                   {...field}
                   label={t("reservation.stepTwo.passportNumberLabel")}
                   startIcon={<IdCard className="size-4" />}
-                  placeholder={t("reservation.stepTwo.passportNumberPlaceholder")}
+                  placeholder={t(
+                    "reservation.stepTwo.passportNumberPlaceholder",
+                  )}
                   errorMessage={errors.passportNumber?.message}
                 />
               )}
@@ -234,7 +236,9 @@ const StepTwo = ({ control, errors, setValue }: StepTwoProps) => {
               render={({ field }) => (
                 <DateTimePicker
                   {...field}
-                  placeholder={t("reservation.stepTwo.licenseExpiryPlaceholder")}
+                  placeholder={t(
+                    "reservation.stepTwo.licenseExpiryPlaceholder",
+                  )}
                   label={t("reservation.stepTwo.licenseExpiryLabel")}
                 />
               )}

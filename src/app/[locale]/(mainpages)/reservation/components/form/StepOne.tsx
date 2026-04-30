@@ -33,6 +33,35 @@ interface StepOneProps {
   setValue: UseFormSetValue<ReservationFormValues>;
 }
 
+const inferLocationType = ({
+  explicitType,
+  airportId,
+  trainId,
+  branchId,
+  lat,
+  long,
+}: {
+  explicitType:
+    | "BRANCH"
+    | "MY_LOCATION"
+    | "TRAIN_STATION"
+    | "AIRPORT"
+    | null
+    | undefined;
+  airportId?: number | null;
+  trainId?: number | null;
+  branchId?: string | null;
+  lat?: number | null;
+  long?: number | null;
+}) => {
+  if (explicitType) return explicitType;
+  if (airportId != null) return "AIRPORT" as const;
+  if (trainId != null) return "TRAIN_STATION" as const;
+  if (branchId) return "BRANCH" as const;
+  if (lat != null && long != null) return "MY_LOCATION" as const;
+  return null;
+};
+
 const StepOne = ({ control, errors, watch, setValue }: StepOneProps) => {
   const locale = useLocale();
   const t = useTranslations("carDetails");
@@ -282,6 +311,15 @@ const StepOne = ({ control, errors, watch, setValue }: StepOneProps) => {
       setValue("pickupAirportId", updatedFormData.pickupAirportId || null);
 
       if (!isDropoffManuallyChanged) {
+        const syncedReturnType = inferLocationType({
+          explicitType: updatedFormData.pickupType,
+          airportId: updatedFormData.pickupAirportId,
+          trainId: updatedFormData.pickupTrainId,
+          branchId: updatedFormData.pickupId,
+          lat: pickupLatValue,
+          long: pickupLongValue,
+        });
+
         setValue("carReturnLocation", locationName, { shouldValidate: true });
         setValue("returnLat", pickupLatValue);
         setValue("returnLong", pickupLongValue);
@@ -297,7 +335,7 @@ const StepOne = ({ control, errors, watch, setValue }: StepOneProps) => {
           carReturnLocationId: updatedFormData.pickupId || null,
           returnTrainId: updatedFormData.pickupTrainId || null,
           returnAirportId: updatedFormData.pickupAirportId || null,
-          returnType: updatedFormData.pickupType || null,
+          returnType: syncedReturnType,
         });
       }
     });

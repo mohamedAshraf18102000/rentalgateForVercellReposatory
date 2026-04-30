@@ -24,6 +24,8 @@
   "pricingType": {
     "daily": "يومي",
     "weekly": "أسبوعي",
+    "half_month": "نصف شهري",
+    "half_monthly": "نصف شهري",
     "halfMonthly": "نصف شهري",
     "monthly": "شهري",
     "yearly": "سنوي"

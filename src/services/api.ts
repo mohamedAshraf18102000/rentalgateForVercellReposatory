@@ -48,6 +48,13 @@ const getCurrentLocale = async (): Promise<AppLocale> => {
   return "ar";
 };
 
+const showApiErrorToast = async (message: string) => {
+  if (typeof window === "undefined") return;
+
+  const { toast } = await import("sonner");
+  toast.error(message, { position: "top-center" });
+};
+
 export async function fetcher<T>(
   url: string,
   options?: RequestInit,
@@ -75,8 +82,8 @@ export async function fetcher<T>(
     } catch (e) {
       // Not a JSON error or empty body
       console.log("Error fetching data:", e);
-
     }
+    await showApiErrorToast(errorMessage);
     throw new Error(errorMessage);
   }
 

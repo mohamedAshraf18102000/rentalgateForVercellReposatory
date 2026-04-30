@@ -12,7 +12,6 @@ import { useBookedCarDetailsStore } from "@/lib/stores/useBookedCarDetailsStore"
 
 import { useMemo, useRef } from "react";
 import { PickupDialog } from "@/app/[locale]/(dialogs)/PickupDialog/PickUpDialog";
-import { getUserProfileCompletnessState } from "@/services/userProfile/getUserProfileCompletnessState.service";
 import { useUserPreferedFiltersStore } from "@/lib/stores/useUserPreferedFiltersStore";
 import { calculateRentalPrice } from "@/lib/utils/calculateRentalPrice";
 import { calculateDiscount } from "@/lib/utils/calculateDiscount";
@@ -26,7 +25,9 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useRentalDays } from "@/hooks/useCalculateRentalDays";
 import { resetReservationState } from "@/lib/stores/resetReservationState";
 import { useLocale, useTranslations } from "next-intl";
+import { useCalculateUserProfileComplete } from "@/hooks/api/useCalculateUserProfileComplete";
 import UpdateUserSavedLocationDialog from "@/app/[locale]/(mainpages)/userProfile/components/userDialog/UpdateUserSavedLocationDialog";
+import { toast } from "sonner";
 
 const page = () => {
   const router = useRouter();
@@ -64,6 +65,10 @@ const page = () => {
     isError: isQuoteError,
     error,
   } = useCalculateQuotePrice();
+  const {
+    mutateAsync: calculateUserProfileComplete,
+    isPending: isCalculatingUserProfileComplete,
+  } = useCalculateUserProfileComplete();
 
   // sync plan into store whenever pricingType changes
 
@@ -142,7 +147,8 @@ const page = () => {
 
     setIsLoading(true);
     try {
-      const { completeness } = await getUserProfileCompletnessState();
+      const { completeness } = await calculateUserProfileComplete();
+
       if (completeness) {
         setIsStepTwoSkipped(true);
         setActiveStep(3);
@@ -152,6 +158,10 @@ const page = () => {
       }
     } catch (error) {
       console.error("Error checking profile completeness:", error);
+      const errorMessage =
+        (error as { response?: { data?: { message?: string } } })?.response
+          ?.data?.message || "حدث خطأ أثناء التحقق من اكتمال الملف الشخصي";
+      toast.error(errorMessage);
     } finally {
       setIsLoading(false);
     }
@@ -193,6 +203,16 @@ const page = () => {
 
     const isValid = await stepContentRef.current?.validateStep();
     if (isValid) {
+      if (
+        activeStep === 2 &&
+        step === 3 &&
+        !isForOtherReservation &&
+        !isStepTwoSkipped
+      ) {
+        setIsStepTwoSkipped(true);
+        setActiveStep(1);
+        return;
+      }
       if (activeStep === 1 && step >= 2) {
         await handleStepOneNavigation(step);
         return;
@@ -202,6 +222,27 @@ const page = () => {
   };
 
   const proceedStepOneAfterValidation = async () => {
+    if (!isForOtherReservation) {
+      setIsLoading(true);
+      try {
+        const { completeness } = await calculateUserProfileComplete();
+        if (!completeness) {
+          setIsStepTwoSkipped(false);
+          setActiveStep(2);
+          return;
+        }
+        setIsStepTwoSkipped(true);
+      } catch (error) {
+        console.error("Error checking profile completeness:", error);
+        const errorMessage =
+          (error as { response?: { data?: { message?: string } } })?.response
+            ?.data?.message || "حدث خطأ أثناء التحقق من اكتمال الملف الشخصي";
+        toast.error(errorMessage);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
     try {
       resetQuoteState();
       const latestFormData = useBookedCarDetailsStore.getState().formData;
@@ -210,7 +251,13 @@ const page = () => {
       return;
     }
 
-    await handleStepOneNavigation(2);
+    if (isForOtherReservation) {
+      setIsStepTwoSkipped(false);
+      setActiveStep(2);
+      return;
+    }
+
+    setActiveStep(3);
   };
 
   const handleNext = async () => {
@@ -236,7 +283,12 @@ const page = () => {
     }
 
     if (activeStep < 3) {
-      handleStepNavigation(activeStep + 1);
+      setIsLoading(true);
+      try {
+        await handleStepNavigation(activeStep + 1);
+      } finally {
+        setIsLoading(false);
+      }
     } else {
       const isValid = await stepContentRef.current?.validateStep();
       if (!isValid) return;
@@ -415,7 +467,11 @@ const page = () => {
                     }
                     onClick={handleNext}
                     className="w-full text-sm! md:w-auto md:text-base!"
-                    loading={isLoading || isCalculating}
+                    loading={
+                      isLoading ||
+                      isCalculating ||
+                      isCalculatingUserProfileComplete
+                    }
                     icon={<ChevronIcon className="w-5! h-5!" />}
                   >
                     <span className="mx-2 text-sm md:text-base">

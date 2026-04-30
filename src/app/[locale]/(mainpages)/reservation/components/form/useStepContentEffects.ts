@@ -203,12 +203,18 @@ export const useSyncFormToStores = ({
 }) => {
   useEffect(() => {
     if (!hasHydrated) return;
+    const mappedPickupType = mapFilterLocationTypeToReservationType(
+      filters.pickupType,
+    );
+    const mappedReturnType = mapFilterLocationTypeToReservationType(
+      filters.carReturnLocationType,
+    );
+
     setFormData({
       ...mapValuesToFormData(getValues()),
-      pickupType: mapFilterLocationTypeToReservationType(filters.pickupType),
-      returnType: mapFilterLocationTypeToReservationType(
-        filters.carReturnLocationType,
-      ),
+      // Do not reset store type to null when filter type is unset.
+      pickupType: mappedPickupType || undefined,
+      returnType: mappedReturnType || undefined,
     });
 
     const subscription = watch((value) => {
