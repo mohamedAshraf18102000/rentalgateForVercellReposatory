@@ -1,14 +1,31 @@
 "use client";
 import { SaudiRiyal } from "lucide-react";
 import Image from "next/image";
-import { useUserPoints } from "@/hooks/api/useUserPoints";
 import { useTranslations } from "next-intl";
+import { cn } from "@/lib/utils";
 
-const Points = () => {
+interface Points_WalletCardProps {
+  icon: string;
+  pointsTitle?: string;
+  numberOfPoints?: number;
+  valueINRial?: number;
+  containerClassName?: string;
+  loading?: boolean;
+  onClick?: () => void;
+}
+
+const Points_WalletCard = ({
+  icon,
+  pointsTitle,
+  numberOfPoints,
+  valueINRial,
+  containerClassName,
+  loading,
+  onClick,
+}: Points_WalletCardProps) => {
   const t = useTranslations("profile.profilePage");
-  const { data: pointsData, isLoading } = useUserPoints();
 
-  if (isLoading) {
+  if (loading) {
     return (
       <div className="flex w-full min-w-0 max-w-full items-center justify-between rounded-2xl bg-[linear-gradient(180deg,#BE2326_0%,#581012_100%)] p-3 text-white animate-pulse">
         <div className="flex items-center gap-2">
@@ -21,32 +38,32 @@ const Points = () => {
   }
 
   return (
-    <div className="flex w-full min-w-0 max-w-full items-center justify-between rounded-2xl bg-[linear-gradient(180deg,#BE2326_0%,#581012_100%)] p-3 text-white">
+    <div
+      onClick={onClick}
+      className={cn(
+        "flex w-full min-w-0 max-w-full items-center justify-between rounded-2xl bg-[linear-gradient(180deg,#BE2326_0%,#581012_100%)] p-3 text-white",
+        containerClassName,
+      )}
+    >
       <div className="flex items-center gap-2">
         <div className="w-[40px] h-[40px] sm:w-[50px] sm:h-[50px] relative rounded-2xl overflow-hidden">
-          <Image
-            className="object-contain"
-            src="/profile/coin.png"
-            alt="coin icon"
-            fill
-          />
+          <Image className="object-contain" src={icon} alt="coin icon" fill />
         </div>
 
         <div className="">
           <p className="text-base">
-            {pointsData?.availablePoints ?? null} {t("pointsLabel")}
+            {numberOfPoints && <span>{numberOfPoints ?? null}</span>}
+            <span className="text-sm">{pointsTitle ?? t("pointsLabel")}</span>
           </p>
         </div>
       </div>
 
       <div className="flex shrink-0 items-center gap-1 text-base sm:text-lg">
-        <p className="tabular-nums">
-          {pointsData?.availablePointsValue?.toFixed(2) ?? null}
-        </p>
+        <p className="tabular-nums">{valueINRial}</p>
         <SaudiRiyal className="w-5 h-5 sm:w-6 sm:h-6" />
       </div>
     </div>
   );
 };
 
-export default Points;
+export default Points_WalletCard;

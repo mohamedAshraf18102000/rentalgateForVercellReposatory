@@ -10,10 +10,15 @@ import OtherDetailsAction from "./components/otherDetails/OtherDetailsAction";
 import { useAuth } from "@/app/(components)/navbar/hooks/useAuth";
 import { useRouter } from "@/i18n/routing";
 import { useEffect } from "react";
-import Points from "./components/Points";
 import { useTranslations } from "next-intl";
+import Points_WalletCard from "./components/Points_WalletCard";
+import { useUserPoints } from "@/hooks/api/useUserPoints";
+import { useWalletInfo } from "@/hooks/api/useWalletInfo";
 
 const page = () => {
+  const { data: wallet, isLoading: walletLoading } = useWalletInfo();
+
+  const { data: pointsData, isLoading: userPointsLoading } = useUserPoints();
   const t = useTranslations("profile.profilePage");
   const {
     userData: storeUserData,
@@ -72,7 +77,7 @@ const page = () => {
 
       <div className="mt-4 sm:mt-6 flex w-full min-w-0 flex-col gap-4 p-2 sm:p-3 lg:flex-row lg:justify-between lg:items-start">
         <div className="w-full min-w-0 rounded-2xl bg-white p-3 shadow-lg sm:p-4 lg:w-[60%]">
-          <div className="grid grid-cols-1 items-stretch gap-4 lg:grid-cols-2 lg:items-center">
+          <div className="flex justify-between items-stretch gap-4 lg:grid-cols-2 lg:items-center">
             <div className="flex min-w-0 flex-row h-full items-center gap-3 sm:flex-row md:items-center sm:justify-items-start">
               <div className="relative h-[72px] w-[72px] shrink-0 overflow-hidden rounded-2xl bg-[#BE2326] sm:h-[100px] sm:w-[100px]">
                 <Image
@@ -88,8 +93,26 @@ const page = () => {
                 })}
               </h2>
             </div>
-            <div className="min-w-0 w-full lg:justify-self-end">
-              <Points />
+            <div className="flex gap-2 w-[65%]">
+              {/* <Points /> */}
+              <Points_WalletCard
+                loading={userPointsLoading}
+                containerClassName="bg-[linear-gradient(180deg,#BE2326_0%,#581012_100%)]"
+                icon="/profile/coin.png"
+                pointsTitle={t("pointsLabel")}
+                numberOfPoints={pointsData?.availablePoints ?? 0}
+                valueINRial={Number(
+                  pointsData?.availablePointsValue?.toFixed(2) ?? 0,
+                )}
+              />
+              <Points_WalletCard
+                loading={walletLoading}
+                containerClassName="bg-[linear-gradient(180deg,#626060_0%,#050101_100%)] cursor-pointer"
+                icon="/profile/actionIcons/wallet.webp"
+                valueINRial={Number(wallet?.balance?.toFixed(2) ?? 0)}
+                pointsTitle="رصيد المحفظة"
+                onClick={() => router.push("/wallet")}
+              />
             </div>
           </div>
           <Separator className="my-2" />
