@@ -43,6 +43,7 @@ interface UpdateUserSavedLocationDialogProps {
   initialLat?: number;
   initialLng?: number;
   initialAddress?: string;
+  initialMobile?: string;
   onSuccess?: (address: UserAddress) => void;
 }
 
@@ -54,6 +55,7 @@ const UpdateUserSavedLocationDialog = ({
   initialLat: propLat,
   initialLng: propLng,
   initialAddress,
+  initialMobile,
   onSuccess,
 }: UpdateUserSavedLocationDialogProps) => {
   const t = useTranslations("profile.userSavedLocationDialog");
@@ -87,7 +89,7 @@ const UpdateUserSavedLocationDialog = ({
       latitude: propLat || 0,
       longitude: propLng || 0,
       additionalInfo: "",
-      mobile: initialAddress ? "" : "+966",
+      mobile: initialMobile || "+966",
       notes: "",
     },
   });
@@ -144,6 +146,9 @@ const UpdateUserSavedLocationDialog = ({
         if (initialAddress) {
           setValue("address", initialAddress);
         }
+        if (initialMobile) {
+          setValue("mobile", initialMobile);
+        }
       }
     } else {
       setShowAddForm(false);
@@ -156,6 +161,7 @@ const UpdateUserSavedLocationDialog = ({
     propLat,
     propLng,
     initialAddress,
+    initialMobile,
     setValue,
   ]);
 

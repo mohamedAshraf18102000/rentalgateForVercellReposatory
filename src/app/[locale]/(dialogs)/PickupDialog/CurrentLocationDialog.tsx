@@ -34,13 +34,14 @@ export function CurrentLocationDialog() {
   } = useLocationStore();
 
   const [userAddresses, setUserAddresses] = useState<UserAddress[]>([]);
-  const [filterTempLocation, setFilterTempLocation] = useState<TempLocation | null>(
-    null,
-  );
+  const [filterTempLocation, setFilterTempLocation] =
+    useState<TempLocation | null>(null);
   const pathname = usePathname();
   const isTermsPage = pathname.includes("/terms&conditions");
   const setFilter = useUserPreferedFiltersStore((state) => state.setFilter);
-  const applyFilters = useUserPreferedFiltersStore((state) => state.applyFilters);
+  const applyFilters = useUserPreferedFiltersStore(
+    (state) => state.applyFilters,
+  );
   const filters = useUserPreferedFiltersStore((state) => state.filters);
 
   useEffect(() => {
@@ -159,10 +160,10 @@ export function CurrentLocationDialog() {
     : userPhysical_Address;
   const selectedLat = isFilterDialog
     ? filterTempLocation?.lat
-    : userPhysical_Latitude ?? undefined;
+    : (userPhysical_Latitude ?? undefined);
   const selectedLng = isFilterDialog
     ? filterTempLocation?.lng
-    : userPhysical_Longitude ?? undefined;
+    : (userPhysical_Longitude ?? undefined);
   const tempLocationForSavedAddresses = isFilterDialog
     ? filterTempLocation
     : userPhysical_Latitude !== null &&
@@ -207,6 +208,17 @@ export function CurrentLocationDialog() {
           <UserSavedAddresses
             userAddresses={userAddresses}
             tempLocation={tempLocationForSavedAddresses}
+            onAddressAdded={(newAddress) => {
+              setUserAddresses((previousAddresses) => {
+                const isAlreadyAdded = previousAddresses.some(
+                  (address) => address.addressId === newAddress.addressId,
+                );
+                if (isAlreadyAdded) {
+                  return previousAddresses;
+                }
+                return [newAddress, ...previousAddresses];
+              });
+            }}
             setTempLocation={(location) => {
               if (isFilterDialog) {
                 setFilterTempLocation(location);
