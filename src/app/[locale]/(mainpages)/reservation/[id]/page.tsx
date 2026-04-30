@@ -301,6 +301,15 @@ const page = () => {
     }
   };
 
+  const handleStepperClick = async (step: number) => {
+    if (step <= activeStep) {
+      await handleStepNavigation(step);
+      return;
+    }
+
+    await handleNext();
+  };
+
   const handleCalculateQuote = () => {
     const latestFormData = useBookedCarDetailsStore.getState().formData;
     calculateQuotePrice(buildReservationPayload(latestFormData));
@@ -399,7 +408,7 @@ const page = () => {
               title={t("reservation.stepper.stepOneTitle")}
               description={`${formData.pickupName} - ${formData.carReturnLocation}`}
               isActive={activeStep === 1}
-              onClick={() => handleStepNavigation(1)}
+              onClick={() => handleStepperClick(1)}
             />
             {!isStepTwoSkipped && (
               <Stepper
@@ -407,7 +416,7 @@ const page = () => {
                 title={t("reservation.stepper.stepTwoTitle")}
                 description={t("reservation.stepper.stepTwoDescription")}
                 isActive={activeStep === 2}
-                onClick={() => handleStepNavigation(2)}
+                onClick={() => handleStepperClick(2)}
               />
             )}
             <Stepper
@@ -415,7 +424,7 @@ const page = () => {
               title={t("reservation.stepper.stepThreeTitle")}
               description={t("reservation.stepper.stepThreeDescription")}
               isActive={activeStep === 3}
-              onClick={() => handleStepNavigation(3)}
+              onClick={() => handleStepperClick(3)}
             />
           </div>
 
