@@ -341,14 +341,16 @@ const BookedCarDetailsDrawer = ({
                     </div>
                   </div>
 
-                  <div className="self-end sm:self-auto">
-                    <Button
-                      className="p-3"
-                      onClick={() => setActiveView("booking-extending")}
-                    >
-                      <SquarePen className="text-white w-5! h-5!" />
-                    </Button>
-                  </div>
+                  {data?.reservationStatus === "STARTED" && (
+                    <div className="self-end sm:self-auto">
+                      <Button
+                        className="p-3"
+                        onClick={() => setActiveView("booking-extending")}
+                      >
+                        <SquarePen className="text-white w-5! h-5!" />
+                      </Button>
+                    </div>
+                  )}
                 </div>
                 <Separator className="my-3" />
                 <div className="bg-Grey100 flex flex-col gap-3 rounded-2xl p-3 sm:flex-row sm:items-center sm:justify-between">

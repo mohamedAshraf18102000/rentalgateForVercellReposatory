@@ -94,19 +94,25 @@ const BookingExtending = ({
 
   const handleExtendReservation = () => {
     if (!reservationId) {
-      toast.error(t("myBookingsDrawer.extendBooking.toast.unableToDetectReservation"));
+      toast.error(
+        t("myBookingsDrawer.extendBooking.toast.unableToDetectReservation"),
+      );
       return;
     }
 
     if (!toDate) {
-      toast.error(t("myBookingsDrawer.extendBooking.toast.selectNewDropoffTime"));
+      toast.error(
+        t("myBookingsDrawer.extendBooking.toast.selectNewDropoffTime"),
+      );
       return;
     }
     const formattedStartDate = formatLocalDateTime(bookingStartDate);
     const formattedEndDate = formatLocalDateTime(toDate);
 
     if (!formattedEndDate) {
-      toast.error(t("myBookingsDrawer.extendBooking.toast.invalidDropoffTimeFormat"));
+      toast.error(
+        t("myBookingsDrawer.extendBooking.toast.invalidDropoffTimeFormat"),
+      );
       return;
     }
 
@@ -125,11 +131,6 @@ const BookingExtending = ({
       onSuccess: () => {
         toast.success(t("myBookingsDrawer.extendBooking.toast.success"));
         setShowBookingExtending(false);
-      },
-      onError: (error: Error) => {
-        toast.error(
-          error.message || t("myBookingsDrawer.extendBooking.toast.error"),
-        );
       },
     });
   };

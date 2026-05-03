@@ -32,7 +32,7 @@ const BookedCarsDetails = ({ data }: { data: Reservation }) => {
       dir={isRTL ? "rtl" : "ltr"}
       className="flex min-h-0 flex-col overflow-hidden rounded-2xl border-2 sm:min-h-[240px] sm:flex-row"
     >
-      <div className="relative h-[200px] w-full shrink-0 sm:h-auto sm:w-[40%]">
+      <div className="relative h-[200px] w-full shrink-0 sm:h-auto sm:w-[40%] overflow-hidden">
         <Image
           src={`${process.env.NEXT_PUBLIC_IMAGES_PREFIX_URL}${data.carImage}`}
           alt="img"
