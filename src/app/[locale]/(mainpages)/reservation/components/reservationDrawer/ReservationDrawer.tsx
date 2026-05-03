@@ -9,19 +9,20 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/app/(components)/ui/sheet";
-import { Loader2, SaudiRiyal } from "lucide-react";
+import { SaudiRiyal } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import ReservationFinalDetails from "./components/ReservationFinalDetails";
 import Coupon from "./components/Coupon";
 import Discounts from "./components/Discounts";
-import WalletBalance from "./components/WalletBalance";
-import PaymentGateway from "./components/PaymentGateway";
 import { formatPrice } from "@/lib/utils/formatPrice";
 import { CalculateQuotePriceResponse } from "@/services/calculateQuotePrice/calculateQuotePrice.service";
 import { Skeleton } from "@/app/(components)/ui/skeleton";
 import ReservationDetailsSkeleton from "./components/ReservationDetailsSkeleton";
 import { useLocale, useTranslations } from "next-intl";
 import PaymentMethods from "./components/paymentMethods/PaymentMethods";
+import { useCreateReservation } from "@/hooks/api/reservation/useCreateReservation";
+import { buildReservationPayload } from "../../utils/buildReservationPayload";
+import { useBookedCarDetailsStore } from "@/lib/stores/useBookedCarDetailsStore";
 
 type ReservationDrawerProps = {
   open?: boolean;
@@ -41,14 +42,18 @@ const ReservationDrawer = ({
   const locale = useLocale();
   const t = useTranslations("carDetails");
   const isRTL = locale === "ar";
-  const [isPaymentLoading, setIsPaymentLoading] = useState(false);
   const [showPaymentPage, setShowPaymentPage] = useState(false);
+  const [createdReservationId, setCreatedReservationId] = useState<
+    number | null
+  >(null);
   const paymentTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const { mutate: createReservation, isPending: isCreatingReservation } =
+    useCreateReservation();
 
   useEffect(() => {
     if (!open) {
       setShowPaymentPage(false);
-      setIsPaymentLoading(false);
+      setCreatedReservationId(null);
       if (paymentTimerRef.current) {
         clearTimeout(paymentTimerRef.current);
         paymentTimerRef.current = null;
@@ -56,20 +61,16 @@ const ReservationDrawer = ({
     }
   }, [open]);
 
-  useEffect(() => {
-    return () => {
-      if (paymentTimerRef.current) clearTimeout(paymentTimerRef.current);
-    };
-  }, []);
-
   const handlePayClick = () => {
-    if (isPaymentLoading || showPaymentPage) return;
-    setIsPaymentLoading(true);
-    paymentTimerRef.current = setTimeout(() => {
-      setIsPaymentLoading(false);
-      setShowPaymentPage(true);
-      paymentTimerRef.current = null;
-    }, 2000);
+    const latestFormData = useBookedCarDetailsStore.getState().formData;
+    const payload = buildReservationPayload(latestFormData);
+    createReservation(payload, {
+      onSuccess: (response) => {
+        console.log(response);
+        setCreatedReservationId(response.reservationId);
+        setShowPaymentPage(true);
+      },
+    });
   };
 
   return (
@@ -81,11 +82,20 @@ const ReservationDrawer = ({
         onOpenAutoFocus={(e) => e.preventDefault()}
       >
         <SheetHeader className="text-start! mt-8 px-4 sm:mt-10 sm:px-6">
-          <SheetTitle>{t("reservation.drawer.checkoutTitle")}</SheetTitle>
+          <SheetTitle>
+            {showPaymentPage
+              ? t("reservation.drawer.checkoutTitle")
+              : t("reservation.drawer.invoiceTitle")}
+          </SheetTitle>
           <Separator className="" />
         </SheetHeader>
         {showPaymentPage ? (
-          <PaymentMethods isRTL={isRTL} />
+          <div className="flex min-h-0 flex-1 flex-col">
+            <PaymentMethods
+              isRTL={isRTL}
+              reservationId={createdReservationId}
+            />
+          </div>
         ) : (
           <>
             <div className="flex-1 overflow-y-auto px-3 sm:px-4">
@@ -118,24 +128,15 @@ const ReservationDrawer = ({
               <Button
                 className="w-full text-lg! flex items-center justify-center"
                 type="button"
-                disabled={isCalculating || isPaymentLoading}
+                loading={isCalculating || isCreatingReservation}
+                disabled={isCalculating || isCreatingReservation}
                 onClick={handlePayClick}
               >
                 <span>{t("reservation.drawer.payLabel")}</span>
-                {isCalculating || isPaymentLoading ? (
-                  isPaymentLoading ? (
-                    <Loader2 className="mx-1 h-6 w-6 animate-spin" />
-                  ) : (
-                    <Skeleton className="w-15 h-5" />
-                  )
-                ) : (
-                  <>
-                    <span className="mx-1">
-                      {formatPrice(reservationData?.total || 0)}
-                    </span>
-                    <SaudiRiyal className="h-6! w-6!" />
-                  </>
-                )}
+                <span className="mx-1">
+                  {formatPrice(reservationData?.total || 0)}
+                </span>
+                <SaudiRiyal className="h-6! w-6!" />
               </Button>
             </SheetFooter>
           </>

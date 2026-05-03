@@ -50,7 +50,7 @@
     "totalCost": "أجمالي التكلفة:",
     "durationAndPlan": "({days} يوم / حجز {plan})",
     "resetToDefault": "إعاده الاعدادات للافتراضي",
-    "completeBooking": "إتمام الحجز",
+    "completeBooking": "عرض الفاتورة",
     "next": "التالي",
     "breadcrumb": {
       "home": "الرئيسية",
@@ -137,7 +137,8 @@
       "uploadImageError": "حدث خطأ أثناء رفع الصورة"
     },
     "drawer": {
-      "checkoutTitle": "إتمام الدفع",
+      "invoiceTitle": "الفاتورة",
+      "checkoutTitle": "أستكمال الدفع",
       "bookingDetailsTitle": "تفاصيل الحجز",
       "payLabel": "دفع:"
     },

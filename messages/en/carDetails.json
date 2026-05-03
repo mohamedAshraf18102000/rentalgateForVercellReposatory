@@ -48,7 +48,7 @@
     "totalCost": "Total cost:",
     "durationAndPlan": "({days} day booking / {plan})",
     "resetToDefault": "Reset to default",
-    "completeBooking": "Complete booking",
+    "completeBooking": "View invoice",
     "next": "Next",
     "breadcrumb": {
       "home": "Home",
@@ -135,7 +135,8 @@
       "uploadImageError": "An error occurred while uploading the image"
     },
     "drawer": {
-      "checkoutTitle": "Complete payment",
+      "invoiceTitle": "Invoice",
+      "checkoutTitle": "Complete checkout",
       "bookingDetailsTitle": "Booking details",
       "payLabel": "Pay:"
     },
