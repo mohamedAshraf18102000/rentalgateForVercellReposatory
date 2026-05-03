@@ -182,6 +182,7 @@
       "rentalDaysOfferDiscountLabel": "خصم عرض ال ( {days} يوم )",
       "promoCodeLabel": "كود الخصم",
       "pointsDiscountLabel": "خصم النقاط",
+      "amountDetailsHeader": "تفاصيل المبلغ:",
       "totalBeforeTaxLabel": "إجمالي المبلغ (غير شامل الضريبة)",
       "taxValueLabel": "قيمة الضريبة"
     }

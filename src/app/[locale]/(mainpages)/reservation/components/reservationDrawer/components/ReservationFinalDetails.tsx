@@ -94,7 +94,7 @@ const ReservationFinalDetails = ({
           {
             label: t("reservation.finalDetails.discountLabel"),
             isAvailable:
-              !!reservationData && reservationData.businessDiscount !== null,
+              !!reservationData && reservationData.businessDiscount !== 0,
             value: (
               <span dir="ltr">
                 -{formatPrice(reservationData?.businessDiscount || 0)}
@@ -143,7 +143,7 @@ const ReservationFinalDetails = ({
 
       <ReservationFinalDetailsItem
         showSeparator
-        itemHeader={""}
+        itemHeader={t("reservation.finalDetails.amountDetailsHeader")}
         items={[
           {
             label: t("reservation.finalDetails.totalBeforeTaxLabel"),

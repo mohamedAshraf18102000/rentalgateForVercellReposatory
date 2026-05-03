@@ -180,6 +180,7 @@
       "rentalDaysOfferDiscountLabel": "Offer discount ({days} days)",
       "promoCodeLabel": "Promo code",
       "pointsDiscountLabel": "Points discount",
+      "amountDetailsHeader": "Amount details:",
       "totalBeforeTaxLabel": "Total amount (excluding tax)",
       "taxValueLabel": "Tax amount"
     }

@@ -5,7 +5,13 @@ import { Input } from "@/app/(components)";
 import { validatePromoCode } from "@/services/promotion/promotion.service";
 import { useBookedCarDetailsStore } from "@/lib/stores/useBookedCarDetailsStore";
 import { Button } from "@base-ui/react";
-import { ChevronLeft, ChevronRight, TicketPercent, Loader2, X } from "lucide-react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  TicketPercent,
+  Loader2,
+  X,
+} from "lucide-react";
 import { toast } from "sonner";
 import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
@@ -127,7 +133,7 @@ const Coupon = ({ onApplied, isCalculating }: CouponProps) => {
         </div>
         <Button
           type="submit"
-          className="mt-0 flex shrink-0 items-center self-end underline underline-offset-2 disabled:opacity-50 sm:mt-3"
+          className="mt-0 flex shrink-0 items-center underline underline-offset-2 disabled:opacity-50 sm:mt-3"
           disabled={isPending || isCalculating}
         >
           {isPending || isCalculating ? (

@@ -1,8 +1,13 @@
+import WalletBalance from "./WalletBalance";
 
 const PaymentGateway = () => {
   return (
-    <div>PaymentGateways</div>
-  )
-}
+    <>
+      <div className="bg-Grey100 rounded-xl">
+        <WalletBalance />
+      </div>
+    </>
+  );
+};
 
-export default PaymentGateway
+export default PaymentGateway;
