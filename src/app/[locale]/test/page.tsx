@@ -1,23 +1,26 @@
 "use client";
 
-import { useState } from "react";
-import { useParams } from "next/navigation";
+import { Button } from "@/app/(components)";
 import WrapperContainer from "@/app/(components)/wrapperContainer/WrapperContainer";
-import { WelcomePointsDialog } from "@/app/(components)/WelcomePointsDialog";
+import { resetAllStores } from "@/lib/stores/resetAllStores";
+import { useRouter } from "next/navigation";
 
 const Page = () => {
-  const [open, setOpen] = useState(true);
-  const params = useParams();
-  const locale = (params.locale as string) || "ar";
-
+  const router = useRouter();
+  const handleResetAllStores = () => {
+    resetAllStores();
+    router.push("/bookings");
+  };
   return (
     <WrapperContainer exceedNav>
-      <WelcomePointsDialog
-        open={open}
-        onOpenChange={setOpen}
-        points={10}
-        locale={locale}
-      />
+      <p>Mohamed</p>
+      <Button
+        type="button"
+        onClick={handleResetAllStores}
+        style={{ marginTop: 16 }}
+      >
+        Reset all stores
+      </Button>
     </WrapperContainer>
   );
 };

@@ -167,7 +167,13 @@
       "noOffers": "لا توجد أي عروض حاليا"
     },
     "wallet": {
-      "useBalanceLabel": "أستخدم رصيد المحفظة:"
+      "useBalanceLabel": "أستخدم رصيد المحفظة:",
+      "paySuccess": "تم إتمام الدفع من المحفظة بنجاح",
+      "redirectCountdown": "جاري التوجيه إلى حجوزاتك خلال {seconds} ثانية",
+      "redirectGoNow": "انتقل الآن",
+      "balanceNotEnough": "رصيد المحفظة غير كافي",
+      "paymentErrorTitle": "خطأ في الدفع",
+      "paymentErrorDismiss": "حسناً"
     },
     "finalDetails": {
       "rentalDurationCostHeader": "تكلفة مدة الإيجار:",

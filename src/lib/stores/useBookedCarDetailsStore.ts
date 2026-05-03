@@ -159,6 +159,8 @@ export interface BookedCarDetailsState {
 
   setFormData: (data: Partial<ReservationFormData>) => void;
   resetForm: () => void;
+  /** Clears car context, lists, and form; keeps hydration flag. */
+  resetStore: () => void;
 }
 
 export const useBookedCarDetailsStore = create<BookedCarDetailsState>()(
@@ -200,6 +202,16 @@ export const useBookedCarDetailsStore = create<BookedCarDetailsState>()(
         })),
 
       resetForm: () => set({ formData: createInitialFormData() }),
+
+      resetStore: () =>
+        set({
+          carDetails: null,
+          services: [],
+          airports: [],
+          trainStations: [],
+          formData: createInitialFormData(),
+          showPricesWithTax: true,
+        }),
 
     }),
     {

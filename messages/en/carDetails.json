@@ -165,7 +165,13 @@
       "noOffers": "There are no offers currently"
     },
     "wallet": {
-      "useBalanceLabel": "Use wallet balance:"
+      "useBalanceLabel": "Use wallet balance:",
+      "paySuccess": "Wallet payment completed successfully",
+      "redirectCountdown": "Redirecting to your bookings in {seconds} s",
+      "redirectGoNow": "Go now",
+      "balanceNotEnough": "Insufficient wallet balance",
+      "paymentErrorTitle": "Payment error",
+      "paymentErrorDismiss": "OK"
     },
     "finalDetails": {
       "rentalDurationCostHeader": "Rental duration cost:",

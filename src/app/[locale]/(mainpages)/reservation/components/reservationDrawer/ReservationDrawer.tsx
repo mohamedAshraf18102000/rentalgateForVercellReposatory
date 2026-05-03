@@ -43,17 +43,17 @@ const ReservationDrawer = ({
   const t = useTranslations("carDetails");
   const isRTL = locale === "ar";
   const [showPaymentPage, setShowPaymentPage] = useState(false);
-  const [createdReservationId, setCreatedReservationId] = useState<
-    number | null
-  >(null);
+
   const paymentTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const { mutate: createReservation, isPending: isCreatingReservation } =
-    useCreateReservation();
+  const {
+    mutate: createReservation,
+    isPending: isCreatingReservation,
+    data: createdReservationData,
+  } = useCreateReservation();
 
   useEffect(() => {
     if (!open) {
       setShowPaymentPage(false);
-      setCreatedReservationId(null);
       if (paymentTimerRef.current) {
         clearTimeout(paymentTimerRef.current);
         paymentTimerRef.current = null;
@@ -65,9 +65,7 @@ const ReservationDrawer = ({
     const latestFormData = useBookedCarDetailsStore.getState().formData;
     const payload = buildReservationPayload(latestFormData);
     createReservation(payload, {
-      onSuccess: (response) => {
-        console.log(response);
-        setCreatedReservationId(response.reservationId);
+      onSuccess: () => {
         setShowPaymentPage(true);
       },
     });
@@ -93,7 +91,9 @@ const ReservationDrawer = ({
           <div className="flex min-h-0 flex-1 flex-col">
             <PaymentMethods
               isRTL={isRTL}
-              reservationId={createdReservationId}
+              reservationId={createdReservationData?.reservationId}
+              amount={reservationData?.total ?? 0}
+              onPaySuccess={() => onOpenChange?.(false)}
             />
           </div>
         ) : (
@@ -128,8 +128,8 @@ const ReservationDrawer = ({
               <Button
                 className="w-full text-lg! flex items-center justify-center"
                 type="button"
-                loading={isCalculating || isCreatingReservation}
-                disabled={isCalculating || isCreatingReservation}
+                loading={isCreatingReservation || isCalculating}
+                disabled={isCreatingReservation || isCalculating}
                 onClick={handlePayClick}
               >
                 <span>{t("reservation.drawer.payLabel")}</span>

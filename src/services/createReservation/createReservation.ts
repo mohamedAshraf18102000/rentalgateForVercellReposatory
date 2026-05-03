@@ -21,6 +21,7 @@ export interface DataForReservation {
 
 export interface CreateReservationResponse {
   reservationId: number;
+  total: number;
 }
 
 export const createReservation = (payload: any) => {
