@@ -16,7 +16,7 @@ import { Separator } from "../../ui/separator";
 import FreeKmIcon from "@/constants/icons/FreeKmIcon";
 import UnlimitedKmIcon from "@/constants/icons/UnlimitedKmIcon";
 import { useRouter } from "next/navigation";
-import { Car, Company } from "@/types/companyCars/carDetails";
+import { Car, Company, Specification } from "@/types/companyCars/carDetails";
 import CarCategoryBadge from "../../carCategoryBadge/CarCategoryBadge";
 import DOMPurify from "dompurify";
 import { PricingType } from "@/lib/utils/calculateRentalPrice";
@@ -58,6 +58,7 @@ interface CarDetailsCardProps {
   rate?: number;
   dailyPrice?: number;
   showTax?: boolean;
+  specifications?: Specification[];
 }
 
 const CarDetailsCard = ({
@@ -82,6 +83,7 @@ const CarDetailsCard = ({
   showRating,
   rate,
   showTax,
+  specifications = [],
 }: CarDetailsCardProps) => {
   const router = useRouter();
   const locale = useLocale();
@@ -98,12 +100,18 @@ const CarDetailsCard = ({
     }),
     [t],
   );
-  const otherSpecsPurified = DOMPurify.sanitize(
-    locale === "ar" ? car.otherSpecs : car.otherSpecsEnglish || car.otherSpecs,
-    {
-      ALLOWED_TAGS: [],
-    },
+  const legacySpecsText = useMemo(
+    () =>
+      DOMPurify.sanitize(
+        locale === "ar"
+          ? car.otherSpecs ?? ""
+          : car.otherSpecsEnglish || car.otherSpecs || "",
+        { ALLOWED_TAGS: [] },
+      ).trim(),
+    [locale, car.otherSpecs, car.otherSpecsEnglish],
   );
+
+  const useStructuredSpecs = specifications.length > 0;
 
   return (
     <section className="mt-5 flex w-full flex-col overflow-hidden rounded-[18px] border-2 border-white shadow-xl lg:flex-row">
@@ -298,10 +306,38 @@ const CarDetailsCard = ({
         <div>
           <p>{t("specificationsTitle")}</p>
           <div className="mt-2 grid w-full grid-cols-1 gap-2 p-2 sm:grid-cols-2">
-            <div className="flex items-center text-Grey700 text-base">
-              <Dot />
-              <p>{otherSpecsPurified}</p>
-            </div>
+            {useStructuredSpecs
+              ? specifications.map((spec) => {
+                  const label =
+                    locale === "ar"
+                      ? spec.arabicName || spec.englishName || spec.name
+                      : spec.englishName || spec.arabicName || spec.name;
+                  return (
+                    <div
+                      key={spec.specificationId}
+                      className="flex items-center gap-2 text-Grey700 text-base"
+                    >
+                      {spec.icon ? (
+                        <Image
+                          src={`${process.env.NEXT_PUBLIC_IMAGES_PREFIX_URL}/${spec.icon}`}
+                          alt={label}
+                          width={24}
+                          height={24}
+                          className="h-6 w-6 shrink-0 object-contain"
+                        />
+                      ) : (
+                        <Dot className="shrink-0" />
+                      )}
+                      <p>{label}</p>
+                    </div>
+                  );
+                })
+              : legacySpecsText.length > 0 && (
+                  <div className="flex items-center text-Grey700 text-base">
+                    <Dot />
+                    <p>{legacySpecsText}</p>
+                  </div>
+                )}
           </div>
         </div>
 

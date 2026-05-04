@@ -2,31 +2,48 @@ export interface CarDetailsResponse {
   ccbId: number;
   car: Car;
   company: Company;
+
   updateDate: string;
+
   numberOfCars: number;
+
   allowedLateHours: number;
   allowedKm: number;
+
   extraLateHourPrice: number;
   extraKmPrice: number;
+
   unlimitedKm: number;
-  unlimitedKmPrice: number;
+  unlimitedKmPrice: number | null;
+
   daysForFreeDelivery: number | null;
+
   dailyPrice: number;
   offerDailyPrice: number;
+
   weeklyPrice: number;
   offerWeeklyPrice: number;
+
   halfMonthPrice: number;
   offerHalfMonthPrice: number;
+
   monthlyPrice: number;
   offerMonthlyPrice: number;
+
   yearlyPrice: number;
   offerYearlyPrice: number;
+
   showRating: boolean;
-  rate: number;
+
+  // NEW: rate can be missing from response
+  rate?: number;
+
   notes: string | null;
+
   ccId: number | null;
   companyCarCode: string | null;
   companyCarStatus: string | null;
+
   deliveryServiceAvailable: boolean;
 
   branchId: number;
@@ -38,6 +55,7 @@ export interface CarDetailsResponse {
   mobile: string;
   address: string;
   mapLink: string;
+
   latitude: number;
   longitude: number;
 
@@ -57,7 +75,12 @@ export interface CarDetailsResponse {
 
   airports: Airport[];
   trainStations: TrainStation[];
+
+  // UPDATED
   ratings: Rating[];
+
+  // NEW
+  specifications: Specification[];
 
   branchTypeDisplay: string;
   countryName: string;
@@ -69,32 +92,48 @@ export interface Car {
   carId: number;
   carCode: string;
   carName: string;
+
   brandName: string;
   typeName: string;
+
   categoryNameEnglish: string;
   categoryNameArabic: string;
   categoryIcon: string;
+
   brandNameEnglish: string;
   brandNameArabic: string;
+
   typeNameEnglish: string;
   typeNameArabic: string;
+
   year: number;
+
   image: string;
-  otherSpecs: string;
+
+  // UPDATED: now can be null
+  otherSpecs: string | null;
   otherSpecsEnglish: string | null;
+
   categoryName: string;
 }
 
 export interface Company {
   companyId: number;
+
   englishName: string;
   arabicName: string;
+
   logo: string;
+
   companyStatus: string;
+
   driverService: string;
   driverServiceOutside: string;
-  dayNumberHoursForDriverServiceInside: number;
-  dayNumberHoursForDriverServiceOutside: number;
+
+  // UPDATED: now can be null
+  dayNumberHoursForDriverServiceInside: number | null;
+  dayNumberHoursForDriverServiceOutside: number | null;
+
   name: string;
 }
 
@@ -107,40 +146,82 @@ export interface KilometerPackage {
 
 export interface OfferPackage {
   ccoId: number;
-  days: number,
+
+  days: number;
   extraDays: number;
+
   startDate: string | null;
   endDate: string | null;
+
   applyOnFullCost: boolean;
+
   notes: string | null;
 }
 
 export interface Airport {
   caId: number;
   airportId: number;
+
   englishName: string;
   arabicName: string;
+
   cityId: number;
+
   latitude: number;
   longitude: number;
+
   contract: string;
+
   price: number;
+
   notes: string | null;
+
   name: string;
 }
 
 export interface TrainStation {
   ctId: number;
   stationId: number;
+
   englishName: string;
   arabicName: string;
+
   cityId: number;
+
   latitude: number;
   longitude: number;
+
   contract: string;
+
   price: number;
+
   notes: string | null;
+
   name: string;
 }
 
-export interface Rating { }
+export interface Rating {
+  rateId: number;
+  rateDate: string;
+
+  rate: number;
+  companyRate: number;
+
+  comments: string | null;
+
+  clientName: string;
+  clientMobile: string;
+
+  reservationId: number;
+}
+
+export interface Specification {
+  specificationId: number;
+
+  englishName: string;
+  arabicName: string;
+
+  icon: string | null;
+
+  name: string;
+}

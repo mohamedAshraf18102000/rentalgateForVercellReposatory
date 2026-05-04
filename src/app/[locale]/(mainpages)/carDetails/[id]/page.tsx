@@ -50,7 +50,7 @@ const page = () => {
         branchId: data.branchId,
         carDetails: {
           unlimitedKm: data.unlimitedKm,
-          unlimitedKmPrice: data.unlimitedKmPrice,
+          unlimitedKmPrice: data.unlimitedKmPrice ?? 0,
           ccbId: data.ccbId,
         },
       });
@@ -182,9 +182,10 @@ const page = () => {
           freeKm={data.allowedKm}
           car={data?.car}
           company={data?.company}
+          specifications={data.specifications ?? []}
           extraKmPrice={data?.extraKmPrice}
           unlimitedKm={data?.unlimitedKm}
-          unlimitedKmPrice={data?.unlimitedKmPrice}
+          unlimitedKmPrice={data?.unlimitedKmPrice ?? 0}
           ccbId={data.ccbId}
           carPrice={pricing.pricePerDay}
           priceBeforeOffer={originalPricing.pricePerDay}

@@ -488,6 +488,7 @@ const BookedCarDetailsDrawer = ({
             />
           ) : activeView === "booking-extending" ? (
             <BookingExtending
+              amount={data?.total ?? 0}
               reservationId={data?.reservationId}
               bookingStartDate={data?.startDate}
               bookingEndDate={data?.endDate}

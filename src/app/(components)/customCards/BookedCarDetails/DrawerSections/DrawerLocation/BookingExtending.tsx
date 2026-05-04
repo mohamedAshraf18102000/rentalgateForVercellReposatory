@@ -28,6 +28,7 @@ interface BookingExtendingProps {
   promoCode?: string | null;
   carOfferPkId?: number | null;
   pricing?: boolean;
+  amount?: number;
 }
 
 const BookingExtending = ({
@@ -40,6 +41,7 @@ const BookingExtending = ({
   promoCode,
   carOfferPkId,
   pricing,
+  amount,
 }: BookingExtendingProps) => {
   const t = useTranslations("common");
   const locale = useLocale();
@@ -184,6 +186,7 @@ const BookingExtending = ({
             </div>
           </div>
         </div>
+        <div className="bg-red-400 p-2 rounde-xl">{amount}</div>
 
         <SheetFooter className="p-6 border-t mt-auto">
           <Button
