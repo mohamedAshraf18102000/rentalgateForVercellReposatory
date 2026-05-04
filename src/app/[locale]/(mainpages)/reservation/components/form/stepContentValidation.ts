@@ -3,6 +3,8 @@ import { completeUserProfile } from "@/services/userProfile/completeUserProfile.
 import { ReservationFormValues } from "@/lib/validations/reservationSchema";
 import { ReservationFormData } from "@/lib/stores/useBookedCarDetailsStore";
 import { getRentalDays } from "./stepContentFormValues";
+import { formatDateAsLocalDay } from "@/lib/utils/formatLocalDateTime";
+
 
 interface ValidateStepParams {
   displayStep: number;
@@ -44,7 +46,7 @@ const STEP_TWO_OTHER_FIELDS: (keyof ReservationFormValues)[] = [
 const STEP_TWO_SELF_FIELDS: (keyof ReservationFormValues)[] = [
   "idNumber",
   "nationality",
-  "identity_expiry_date",
+  "identityExpiryDate",
   "licenseImage",
   "licenceExpiryDate",
   "personalId",
@@ -130,9 +132,12 @@ export const validateCurrentStep = async ({
     const residenceType = values.idNumber;
     try {
       const updatedData = await completeUserProfile({
-        licenseExpirationDate: values.licenceExpiryDate
-          ? (values.licenceExpiryDate as Date).toISOString().split("T")[0]
-          : "",
+        identityExpiryDate: formatDateAsLocalDay(
+          values.identityExpiryDate as Date | string | undefined,
+        ),
+        licenseExpirationDate: formatDateAsLocalDay(
+          values.licenceExpiryDate as Date | string | undefined,
+        ),
         licenseImage: values.licenseImage,
         nationality: values.nationality,
         residenceType: Number(residenceType),

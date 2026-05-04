@@ -12,9 +12,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/app/(components)";
+import { formatDateAsLocalDay } from "@/lib/utils/formatLocalDateTime";
 import { UpdateUserReservationProfileFormValues } from "@/lib/validations/updateUserReservationProfileSchema";
 import { Globe, IdCard } from "lucide-react";
-import { Controller, Control, FieldErrors, UseFormSetValue } from "react-hook-form";
+import {
+  Controller,
+  Control,
+  FieldErrors,
+  UseFormSetValue,
+} from "react-hook-form";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 
@@ -160,7 +166,7 @@ const ProfileForm = ({
 
         <div className="col-span-1">
           <Controller
-            name="identity_expiry_date"
+            name="identityExpiryDate"
             control={control}
             render={({ field }) => (
               <DateTimePicker
@@ -170,9 +176,9 @@ const ProfileForm = ({
               />
             )}
           />
-          {errors.identity_expiry_date?.message && (
+          {errors.identityExpiryDate?.message && (
             <p className="text-red-500 text-sm">
-              {getErrorMessage(String(errors.identity_expiry_date?.message))}
+              {getErrorMessage(String(errors.identityExpiryDate?.message))}
             </p>
           )}
         </div>
@@ -204,7 +210,9 @@ const ProfileForm = ({
                     });
                   } catch (error) {
                     const message =
-                      error instanceof Error ? error.message : t("toast.uploadError");
+                      error instanceof Error
+                        ? error.message
+                        : t("toast.uploadError");
                     toast.error(message);
                   }
                 }}
@@ -212,7 +220,9 @@ const ProfileForm = ({
             )}
           />
           {isUploading && (
-            <p className="mt-2 text-blue-500 text-sm">{t("states.uploadingImage")}</p>
+            <p className="mt-2 text-blue-500 text-sm">
+              {t("states.uploadingImage")}
+            </p>
           )}
           {errors.licenseImage?.message && (
             <p className="text-red-500 text-sm">
@@ -228,6 +238,16 @@ const ProfileForm = ({
             render={({ field }) => (
               <DateTimePicker
                 {...field}
+                value={
+                  field.value
+                    ? field.value instanceof Date
+                      ? field.value
+                      : new Date(field.value)
+                    : undefined
+                }
+                onChange={(date) =>
+                  field.onChange(formatDateAsLocalDay(date ?? undefined))
+                }
                 placeholder={t("fields.licenseExpiryDate.placeholder")}
                 label={t("fields.licenseExpiryDate.label")}
               />

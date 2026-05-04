@@ -180,7 +180,7 @@ const StepTwo = ({ control, errors, setValue }: StepTwoProps) => {
 
         <div>
           <Controller
-            name="identity_expiry_date"
+            name="identityExpiryDate"
             control={control}
             render={({ field }) => (
               <DateTimePicker
@@ -190,9 +190,9 @@ const StepTwo = ({ control, errors, setValue }: StepTwoProps) => {
               />
             )}
           />
-          {errors.identity_expiry_date?.message && (
+          {errors.identityExpiryDate?.message && (
             <p className="text-red-500 text-sm">
-              {String(errors.identity_expiry_date?.message)}
+              {String(errors.identityExpiryDate?.message)}
             </p>
           )}
         </div>

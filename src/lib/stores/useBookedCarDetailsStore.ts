@@ -34,7 +34,7 @@ export interface ReservationFormData {
   phoneNumber: string;
   idNumber: string;
   nationality: string;
-  identity_expiry_date: string | null;
+  identityExpiryDate: string | null;
   email: string;
   licenseImage: string;
   licenseImageFile: File | null;
@@ -100,7 +100,7 @@ const createInitialFormData = (): ReservationFormData => ({
   phoneNumber: "",
   idNumber: "",
   nationality: "",
-  identity_expiry_date: null,
+  identityExpiryDate: null,
   email: "",
   licenseImage: "",
   licenseImageFile: null,

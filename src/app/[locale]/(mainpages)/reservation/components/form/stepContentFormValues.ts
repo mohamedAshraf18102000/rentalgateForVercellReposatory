@@ -73,8 +73,8 @@ export const buildInitialReservationValues = ({
     isForOtherReservation,
     idNumber: formData.idNumber || "0",
     nationality: formData.nationality || "",
-    identity_expiry_date: formData.identity_expiry_date
-      ? new Date(formData.identity_expiry_date)
+    identityExpiryDate: formData.identityExpiryDate
+      ? new Date(formData.identityExpiryDate)
       : undefined,
     licenseImage: formData.licenseImage || "",
     licenceExpiryDate: formData.licenceExpiryDate
@@ -107,7 +107,7 @@ export const buildResetReservationValues = (): ReservationFormValues => ({
   returnAirportId: null,
   idNumber: "0",
   nationality: "",
-  identity_expiry_date: undefined,
+  identityExpiryDate: undefined,
   licenseImage: "",
   licenceExpiryDate: undefined,
   personalId: "",
@@ -138,9 +138,9 @@ export const mapValuesToFormData = (
   if (values.idNumber !== undefined) update.idNumber = values.idNumber as string;
   if (values.nationality !== undefined)
     update.nationality = values.nationality as string;
-  if (values.identity_expiry_date !== undefined)
-    update.identity_expiry_date = formatLocalDateTime(
-      values.identity_expiry_date as Date | string | null | undefined,
+  if (values.identityExpiryDate !== undefined)
+    update.identityExpiryDate = formatLocalDateTime(
+      values.identityExpiryDate as Date | string | null | undefined,
     );
   if (values.licenseImage !== undefined)
     update.licenseImage = values.licenseImage as string;

@@ -50,7 +50,7 @@ export const reservationSchema = z
     personalId: z.string().optional(),
     passportNumber: z.string().optional(),
     borderNumber: z.string().optional(),
-    identity_expiry_date: z
+    identityExpiryDate: z
       .any()
       .refine((val) => val instanceof Date && !isNaN(val.getTime()), {
         message: "يجب تحديد تاريخ انتهاء الهوية",

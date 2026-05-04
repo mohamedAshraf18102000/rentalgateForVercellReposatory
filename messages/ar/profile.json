@@ -85,7 +85,7 @@
       "myBookingsDescription": "عرض الحجوزات السابقة",
       "walletTitle": "المحفظة",
       "walletDescription": "أستبدل النقاط المكتسبة",
-      "completeProfileTitle": "استكمال بيانات الملف الشخصي",
+      "completeProfileTitle": "بيانات الملف الشخصي",
       "completeProfileDescription": "أكمل معلومات ملفك الشخصي"
     },
     "userReferral": {
@@ -296,4 +296,3 @@
     }
   }
 }
-

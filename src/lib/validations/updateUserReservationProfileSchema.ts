@@ -1,5 +1,13 @@
 import { z } from "zod";
 
+const isValidDateInput = (val: unknown) => {
+  if (val instanceof Date) return !Number.isNaN(val.getTime());
+  if (typeof val === "string" && val.trim()) {
+    return !Number.isNaN(new Date(val).getTime());
+  }
+  return false;
+};
+
 export const updateUserReservationProfileSchema = z
   .object({
     idNumber: z.string().min(1, "validation.residenceTypeRequired"),
@@ -7,15 +15,15 @@ export const updateUserReservationProfileSchema = z
     personalId: z.string().optional(),
     passportNumber: z.string().optional(),
     borderNumber: z.string().optional(),
-    identity_expiry_date: z
+    identityExpiryDate: z
       .any()
-      .refine((val) => val instanceof Date && !Number.isNaN(val.getTime()), {
+      .refine((val) => isValidDateInput(val), {
         message: "validation.identityExpiryDateRequired",
       }),
     licenseImage: z.string().min(1, "validation.licenseImageRequired"),
     licenceExpiryDate: z
       .any()
-      .refine((val) => val instanceof Date && !Number.isNaN(val.getTime()), {
+      .refine((val) => isValidDateInput(val), {
         message: "validation.licenseExpiryDateRequired",
       }),
   })

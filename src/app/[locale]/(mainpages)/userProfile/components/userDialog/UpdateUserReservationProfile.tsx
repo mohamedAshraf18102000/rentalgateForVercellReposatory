@@ -5,6 +5,7 @@ import { Button, DialogWrapper } from "@/app/(components)";
 import { useClientStore } from "@/lib/api/stores/client.store";
 import { updateUserProfile } from "@/services/userProfile/updateUserProfile.service";
 import { UpdateUserProfilePayload } from "@/types/userProfile/updateUserProfile";
+import { formatDateAsLocalDay } from "@/lib/utils/formatLocalDateTime";
 import {
   updateUserReservationProfileSchema,
   UpdateUserReservationProfileFormValues,
@@ -53,7 +54,7 @@ const UpdateUserReservationProfile = ({
       personalId: "",
       passportNumber: "",
       borderNumber: "",
-      identity_expiry_date: undefined,
+      identityExpiryDate: undefined,
       licenseImage: "",
       licenceExpiryDate: undefined,
     },
@@ -82,10 +83,10 @@ const UpdateUserReservationProfile = ({
         mobile: clientData?.mobile || undefined,
         nationality: values.nationality,
         residenceType: Number(values.idNumber),
+        identityExpiryDate:
+          formatDateAsLocalDay(values.identityExpiryDate) || undefined,
         licenseExpirationDate:
-          values.licenceExpiryDate instanceof Date
-            ? values.licenceExpiryDate.toISOString()
-            : undefined,
+          formatDateAsLocalDay(values.licenceExpiryDate) || undefined,
         licenseImage: values.licenseImage,
       };
 
@@ -136,7 +137,7 @@ const UpdateUserReservationProfile = ({
     setValue("passportNumber", String(clientData.passportNumber ?? ""));
     setValue("borderNumber", String(clientData.borderNumber ?? ""));
     setValue(
-      "identity_expiry_date",
+      "identityExpiryDate",
       clientData.licenseExpirationDate
         ? new Date(clientData.licenseExpirationDate)
         : undefined,

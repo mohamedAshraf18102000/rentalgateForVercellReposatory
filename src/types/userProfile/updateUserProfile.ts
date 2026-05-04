@@ -1,4 +1,5 @@
 export interface CompleteUserProfilePayload {
+  identityExpiryDate: string;
   email?: string;
   fullName?: string;
   mobile?: string;
@@ -22,6 +23,7 @@ export interface UpdateUserProfilePayload {
   mobile?: string;
   countryId?: number;
   cityId?: number;
+  identityExpiryDate?: string;
   residenceType?: number;
   nationality?: string;
   licenseExpirationDate?: string;
