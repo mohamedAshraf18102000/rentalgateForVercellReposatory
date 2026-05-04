@@ -12,19 +12,19 @@
   },
   "pickupCards": {
     "airport": {
-      "title": "من المطار",
+      "title": "استلام من المطار",
       "description": ""
     },
     "trainStation": {
-      "title": "من محطة القطار",
+      "title": "استلام من محطة القطار",
       "description": ""
     },
     "branches": {
-      "title": "من المعرض",
+      "title": "استلام من الفرع",
       "description": ""
     },
     "currentLocation": {
-      "title": "أو من أي موقع أينما كان",
+      "title": "استلام من أي موقع أينما كنت",
       "description": "أينما تكن، سياراتك ستكون في انتظارك",
       "formLabel": "موقع استلام السيارة:",
       "placeholder": "أدخل العنوان..."

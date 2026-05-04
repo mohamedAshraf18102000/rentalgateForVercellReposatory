@@ -1,28 +1,56 @@
 "use client";
 
-import { Button } from "@/app/(components)";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  reservationSchema,
+  ReservationFormValues,
+} from "@/lib/validations/reservationSchema";
+import { useBookedCarDetailsStore } from "@/lib/stores/useBookedCarDetailsStore";
+import { useUserPreferedFiltersStore } from "@/lib/stores/useUserPreferedFiltersStore";
+import { buildInitialReservationValues } from "@/app/[locale]/(mainpages)/reservation/components/form/stepContentFormValues";
+import StepTwo from "@/app/[locale]/(mainpages)/reservation/components/form/StepTwo";
 import WrapperContainer from "@/app/(components)/wrapperContainer/WrapperContainer";
-import { resetAllStores } from "@/lib/stores/resetAllStores";
-import { useRouter } from "next/navigation";
 
-const Page = () => {
-  const router = useRouter();
-  const handleResetAllStores = () => {
-    resetAllStores();
-    router.push("/bookings");
-  };
+export default function TestPage() {
+  const { formData } = useBookedCarDetailsStore();
+  const { filters } = useUserPreferedFiltersStore();
+
+  const {
+    control,
+    setValue,
+    formState: { errors },
+    trigger,
+  } = useForm<ReservationFormValues>({
+    resolver: zodResolver(reservationSchema),
+    mode: "onChange",
+    reValidateMode: "onChange",
+    defaultValues: buildInitialReservationValues({
+      formData,
+      filters,
+      isForOtherReservation: false,
+    }),
+  });
+
   return (
-    <WrapperContainer exceedNav>
-      <p>Mohamed</p>
-      <Button
-        type="button"
-        onClick={handleResetAllStores}
-        style={{ marginTop: 16 }}
-      >
-        Reset all stores
-      </Button>
+    <WrapperContainer exceedNav className="container max-w-3xl p-8 bg-white">
+      <StepTwo
+        control={control}
+        errors={errors}
+        setValue={setValue}
+        trigger={trigger}
+      />
     </WrapperContainer>
   );
-};
+}
 
-export default Page;
+// <div>
+// <DatePicker
+//   className="bg-[#eceef2]! rounded-lg"
+//   label={"تاريخ انتهاء "}
+//   value={new Date()}
+//   onChange={() => {}}
+//   fromYear={new Date().getFullYear()}
+//   toYear={new Date().getFullYear() + 20}
+// />
+// </div>

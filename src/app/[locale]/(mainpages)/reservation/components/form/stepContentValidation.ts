@@ -44,6 +44,7 @@ const STEP_TWO_OTHER_FIELDS: (keyof ReservationFormValues)[] = [
 const STEP_TWO_SELF_FIELDS: (keyof ReservationFormValues)[] = [
   "idNumber",
   "nationality",
+  "identity_expiry_date",
   "licenseImage",
   "licenceExpiryDate",
   "personalId",

@@ -13,6 +13,9 @@
   "forRentalDays": "({days} days)",
   "pricePerPricingType": "/ {pricingType}",
   "specificationsTitle": "Car specifications:",
+  "viewSpecifications": "View specifications",
+  "specificationsCount": "{count} Specifications",
+  "closeDialog": "Close",
   "freeKilometersLabel": "Free kilometers:",
   "kmPerDay": "km / day",
   "extraKilometerCostLabel": "Extra kilometer cost:",
@@ -91,6 +94,11 @@
       "passportNumberPlaceholder": "Enter passport number",
       "borderNumberLabel": "Border number",
       "borderNumberPlaceholder": "Enter border number",
+      "identityExpiryDateLabels": {
+        "personalId": "Personal ID expiry date",
+        "passport": "Passport expiry date",
+        "borderNumber": "Border number expiry date"
+      },
       "licenseImageLabel": "License image",
       "licenseImagePlaceholder": "Upload license image",
       "uploadingImage": "Uploading image...",

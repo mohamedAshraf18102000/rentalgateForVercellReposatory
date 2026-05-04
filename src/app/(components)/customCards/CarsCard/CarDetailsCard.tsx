@@ -4,13 +4,7 @@ import { Badge } from "../../ui/badge";
 import ExeclusiveOfferIcon from "@/constants/icons/ExeclusiveOfferIcon";
 import Image from "next/image";
 import { StarIcon } from "@/constants/icons";
-import {
-  ChevronLeft,
-  ChevronRight,
-  Dot,
-  Flame,
-  SaudiRiyal,
-} from "lucide-react";
+import { ChevronLeft, ChevronRight, Flame, SaudiRiyal } from "lucide-react";
 import { Button } from "../../ui/button";
 import { Separator } from "../../ui/separator";
 import FreeKmIcon from "@/constants/icons/FreeKmIcon";
@@ -24,6 +18,7 @@ import { formatPrice } from "@/lib/utils/formatPrice";
 import { getPriceWithoutTax } from "@/lib/utils/getPriceWithoutTax";
 import { useLocale, useTranslations } from "next-intl";
 import { useMemo } from "react";
+import SpecificationsDialog from "./SpecificationsDialog";
 
 interface CarDetailsCardProps {
   car: Car;
@@ -104,14 +99,15 @@ const CarDetailsCard = ({
     () =>
       DOMPurify.sanitize(
         locale === "ar"
-          ? car.otherSpecs ?? ""
+          ? (car.otherSpecs ?? "")
           : car.otherSpecsEnglish || car.otherSpecs || "",
         { ALLOWED_TAGS: [] },
       ).trim(),
     [locale, car.otherSpecs, car.otherSpecsEnglish],
   );
 
-  const useStructuredSpecs = specifications.length > 0;
+  const hasSpecifications =
+    specifications.length > 0 || legacySpecsText.length > 0;
 
   return (
     <section className="mt-5 flex w-full flex-col overflow-hidden rounded-[18px] border-2 border-white shadow-xl lg:flex-row">
@@ -291,53 +287,26 @@ const CarDetailsCard = ({
         </div>
 
         <Separator className="my-3" />
+        <div className="flex items-center gap-3">
+          <p>{t("specificationsTitle")}</p>
+          <SpecificationsDialog
+            specifications={specifications}
+            legacySpecsText={legacySpecsText}
+          />
+        </div>
+
+        <Separator className="my-3" />
         <div className="flex flex-col gap-2 font-bold sm:flex-row sm:items-center sm:justify-between">
           <p>{car.carName}</p>
           <div className="p-1 bg-Grey100 rounded-[12px] w-fit">
             <CarCategoryBadge
               icon={car.categoryIcon}
               name={
-                locale === "ar" ? car.categoryNameArabic : car.categoryNameEnglish
+                locale === "ar"
+                  ? car.categoryNameArabic
+                  : car.categoryNameEnglish
               }
             />
-          </div>
-        </div>
-        <Separator className="my-3" />
-        <div>
-          <p>{t("specificationsTitle")}</p>
-          <div className="mt-2 grid w-full grid-cols-1 gap-2 p-2 sm:grid-cols-2">
-            {useStructuredSpecs
-              ? specifications.map((spec) => {
-                  const label =
-                    locale === "ar"
-                      ? spec.arabicName || spec.englishName || spec.name
-                      : spec.englishName || spec.arabicName || spec.name;
-                  return (
-                    <div
-                      key={spec.specificationId}
-                      className="flex items-center gap-2 text-Grey700 text-base"
-                    >
-                      {spec.icon ? (
-                        <Image
-                          src={`${process.env.NEXT_PUBLIC_IMAGES_PREFIX_URL}/${spec.icon}`}
-                          alt={label}
-                          width={24}
-                          height={24}
-                          className="h-6 w-6 shrink-0 object-contain"
-                        />
-                      ) : (
-                        <Dot className="shrink-0" />
-                      )}
-                      <p>{label}</p>
-                    </div>
-                  );
-                })
-              : legacySpecsText.length > 0 && (
-                  <div className="flex items-center text-Grey700 text-base">
-                    <Dot />
-                    <p>{legacySpecsText}</p>
-                  </div>
-                )}
           </div>
         </div>
 
@@ -388,6 +357,19 @@ const CarDetailsCard = ({
         {/* Extra content slot */}
         {extraContent && (
           <div className="w-full h-full mt-3">{extraContent}</div>
+        )}
+
+        {hasSpecifications && (
+          <>
+            <Separator className="my-3" />
+            <div className="flex items-center gap-3">
+              <p>{t("specificationsTitle")}</p>
+              <SpecificationsDialog
+                specifications={specifications}
+                legacySpecsText={legacySpecsText}
+              />
+            </div>
+          </>
         )}
       </div>
     </section>

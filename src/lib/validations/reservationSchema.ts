@@ -50,6 +50,11 @@ export const reservationSchema = z
     personalId: z.string().optional(),
     passportNumber: z.string().optional(),
     borderNumber: z.string().optional(),
+    identity_expiry_date: z
+      .any()
+      .refine((val) => val instanceof Date && !isNaN(val.getTime()), {
+        message: "يجب تحديد تاريخ انتهاء الهوية",
+      }),
     licenseImage: z.string().min(1, "يجب إرفاق صورة الرخصة"),
     licenceExpiryDate: z
       .any()
@@ -143,8 +148,8 @@ export const reservationSchema = z
 
     // 0: Citizen, 1: Resident, 2: Visitor, 3: Gulf Citizen
 
-    // Personal ID is required for 0, 1, and 3
-    if (data.idNumber !== "2") {
+    // Personal ID is required for 0 and 1 only
+    if (data.idNumber === "0" || data.idNumber === "1") {
       if (!data.personalId || data.personalId.trim() === "") {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
@@ -154,8 +159,8 @@ export const reservationSchema = z
       }
     }
 
-    // Passport number is required for 2 and 3
-    if (data.idNumber === "2" || data.idNumber === "3") {
+    // Passport number is required for 2 only
+    if (data.idNumber === "2") {
       if (!data.passportNumber || data.passportNumber.trim() === "") {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,

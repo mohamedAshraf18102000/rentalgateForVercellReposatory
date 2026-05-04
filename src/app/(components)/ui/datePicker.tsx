@@ -10,6 +10,8 @@ import {
   PopoverTrigger,
 } from "@/app/(components)/ui/popover";
 import { format } from "date-fns";
+import { cn } from "@/lib/utils";
+import { CalendarIcon } from "lucide-react";
 
 export function DatePicker({
   label,
@@ -17,12 +19,14 @@ export function DatePicker({
   onChange,
   fromYear,
   toYear,
+  className,
 }: {
   label: string;
   value?: Date;
   onChange?: (date: Date | undefined) => void;
   fromYear?: number;
   toYear?: number;
+  className?: string;
 }) {
   const [open, setOpen] = React.useState(false);
   const [date, setDate] = React.useState<Date | undefined>(value);
@@ -44,11 +48,21 @@ export function DatePicker({
         <Popover open={open} onOpenChange={setOpen}>
           <PopoverTrigger asChild>
             <Button
+              startIcon={
+                <CalendarIcon className="size-4 absolute right-2 top-1/2 -translate-y-1/2 text-Grey600" />
+              }
               variant="outline"
               id="date-picker-optional"
-              className="justify-between font-normal text-sm bg-Grey100"
+              className={cn(
+                "font-normal text-sm bg-Grey100 flex justify-baseline relative px-7",
+                className,
+              )}
             >
-              {date ? format(date, "PPP") : "أختر تاريخ"}
+              {date ? (
+                format(date, "PPP")
+              ) : (
+                <span className="text-Grey600">أختر تاريخ</span>
+              )}
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-auto overflow-hidden p-0" align="start">

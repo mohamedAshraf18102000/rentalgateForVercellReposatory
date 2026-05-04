@@ -40,6 +40,12 @@ const StepTwo = ({ control, errors, setValue }: StepTwoProps) => {
   const t = useTranslations("carDetails");
 
   const residenceTypeStr = useWatch({ control, name: "idNumber" });
+  const identityExpiryLabel =
+    residenceTypeStr === "2"
+      ? t("reservation.stepTwo.identityExpiryDateLabels.passport")
+      : residenceTypeStr === "3"
+        ? t("reservation.stepTwo.identityExpiryDateLabels.borderNumber")
+        : t("reservation.stepTwo.identityExpiryDateLabels.personalId");
 
   const {
     mutateAsync: doUploadImage,
@@ -113,7 +119,7 @@ const StepTwo = ({ control, errors, setValue }: StepTwoProps) => {
             )}
           />
         </div>
-        {residenceTypeStr !== "2" && (
+        {residenceTypeStr !== "2" && residenceTypeStr !== "3" && (
           <div className="col-span-1">
             <Controller
               name="personalId"
@@ -132,7 +138,7 @@ const StepTwo = ({ control, errors, setValue }: StepTwoProps) => {
           </div>
         )}
 
-        {(residenceTypeStr === "2" || residenceTypeStr === "3") && (
+        {residenceTypeStr === "2" && (
           <div className="col-span-1">
             <Controller
               name="passportNumber"
@@ -154,7 +160,7 @@ const StepTwo = ({ control, errors, setValue }: StepTwoProps) => {
         )}
 
         {residenceTypeStr === "3" && (
-          <div className="col-span-1">
+          <div className="">
             <Controller
               name="borderNumber"
               control={control}
@@ -171,6 +177,25 @@ const StepTwo = ({ control, errors, setValue }: StepTwoProps) => {
             />
           </div>
         )}
+
+        <div>
+          <Controller
+            name="identity_expiry_date"
+            control={control}
+            render={({ field }) => (
+              <DateTimePicker
+                {...field}
+                placeholder={identityExpiryLabel}
+                label={identityExpiryLabel}
+              />
+            )}
+          />
+          {errors.identity_expiry_date?.message && (
+            <p className="text-red-500 text-sm">
+              {String(errors.identity_expiry_date?.message)}
+            </p>
+          )}
+        </div>
       </div>
 
       <Separator className="my-4" />

@@ -12,19 +12,19 @@
   },
   "pickupCards": {
     "airport": {
-      "title": "From the airport",
+      "title": "Pickup from the airport",
       "description": "Lorem Ipsum has been and remains the standard placeholder text"
     },
     "trainStation": {
-      "title": "From the train station",
+      "title": "Pickup from the train station",
       "description": "Lorem Ipsum has been and remains the standard placeholder text"
     },
     "branches": {
-      "title": "From the showroom",
+      "title": "Pickup from the showroom",
       "description": "Lorem Ipsum has been and remains the standard placeholder text"
     },
     "currentLocation": {
-      "title": "Or from any location",
+      "title": "Pickup from any location",
       "description": "Wherever you are, your car will be waiting for you",
       "formLabel": "Car pickup location:",
       "placeholder": "Enter address..."
@@ -181,4 +181,3 @@
     "title": "Rental Gate Offers"
   }
 }
-
