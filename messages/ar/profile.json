@@ -110,7 +110,20 @@
   "walletPage": {
     "transactionsLoadError": "حدث خطأ أثناء تحميل العمليات.",
     "emptyTransactionsTitle": "لا يوجد عمليات لعرضها",
-    "emptyTransactionsDescription": "لا يوجد عمليات لعرضها"
+    "emptyTransactionsDescription": "لا يوجد عمليات لعرضها",
+    "transactionTypes": {
+      "refund": "استرداد عند إلغاء حجز",
+      "compensation": "تعويض للعميل",
+      "deduction": "خصم من المحفظة",
+      "deposit": "إيداع رصيد",
+      "payment": "دفع حجز من المحفظة",
+      "transfer": "تحويل رصيد السائق لمحفظته الإلكترونية",
+      "driver_early_reward": "مكافأة السائق للوصول المبكر",
+      "withdrawal": "السحب",
+      "recharge": "الشحن",
+      "charge": "الفرق",
+      "other": "أخرى"
+    }
   },
   "userSavedLocationDialog": {
     "toast": {

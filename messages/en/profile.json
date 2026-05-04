@@ -110,7 +110,20 @@
   "walletPage": {
     "transactionsLoadError": "An error occurred while loading transactions.",
     "emptyTransactionsTitle": "No transactions to display",
-    "emptyTransactionsDescription": "No transactions to display"
+    "emptyTransactionsDescription": "No transactions to display",
+    "transactionTypes": {
+      "refund": "Refund for canceled booking",
+      "compensation": "Customer compensation",
+      "deduction": "Wallet deduction",
+      "deposit": "Balance deposit",
+      "payment": "Booking payment from wallet",
+      "transfer": "Driver balance transfer to e-wallet",
+      "driver_early_reward": "Driver early arrival reward",
+      "withdrawal": "Withdrawal",
+      "recharge": "Recharge",
+      "charge": "Adjustment",
+      "other": "Other"
+    }
   },
   "userSavedLocationDialog": {
     "toast": {

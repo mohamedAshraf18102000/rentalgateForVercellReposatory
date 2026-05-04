@@ -5,16 +5,28 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-/**
- * تنسيق السعر بفواصل الآلاف مع إزالة .00 من الأرقام الصحيحة
- * @param price - السعر المراد تنسيقه
- * @returns السعر المنسق (مثال: 1,000 أو 150,454.50)
- */
-export function formatPrice(price: number): string {
-  const formatted = price.toLocaleString('en-US', {
+
+export function formatPrice(
+  price: number,
+  options?: {
+    maxFractionDigits?: number;
+    truncate?: boolean;
+  }
+): string {
+  const { maxFractionDigits = 2, truncate = false } = options || {};
+
+  let value = price;
+
+  // Prevent rounding up
+  if (truncate) {
+    const factor = 10 ** maxFractionDigits;
+    value = Math.trunc(price * factor) / factor;
+  }
+
+  const formatted = value.toLocaleString("en-US", {
     minimumFractionDigits: 0,
-    maximumFractionDigits: 2
+    maximumFractionDigits: maxFractionDigits,
   });
-  // إزالة .00 من نهاية الأرقام الصحيحة
-  return formatted.replace(/\.00$/, '');
+
+  return formatted.replace(/\.00$/, "");
 }

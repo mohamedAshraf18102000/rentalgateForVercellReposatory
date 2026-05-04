@@ -1,11 +1,14 @@
 import { SaudiRiyalIcon } from "lucide-react";
 import { Transaction } from "@/types/wallet/wallet";
+import { useTranslations } from "next-intl";
+import { getWalletTransactionTypeLabel } from "@/lib/wallet/transactionTypeLabel";
 
 type Props = {
   transaction: Transaction;
 };
 
 const VoucherCard = ({ transaction }: Props) => {
+  const t = useTranslations("profile.walletPage");
   const isPositive = transaction.amount >= 0;
 
   // Format the date/time string, e.g., 10:30 AM
@@ -14,7 +17,7 @@ const VoucherCard = ({ transaction }: Props) => {
     {
       hour: "2-digit",
       minute: "2-digit",
-    }
+    },
   );
 
   return (
@@ -26,20 +29,30 @@ const VoucherCard = ({ transaction }: Props) => {
       </div>
       <div className="w-[70%] p-3 ">
         <div className="flex justify-between items-center">
-          <p className="text-sm text-Grey700 truncate w-1/2">{transaction.transactionType}</p>
-          <p className={`border-2 px-3 py-1 rounded-xl flex items-center justify-center min-w-[30%] ${isPositive ? 'bg-StatusGreen border-StatusDarkGreen text-StatusDarkGreen' : 'bg-red-50 border-red-500 text-red-600'}`}>
+          <p className="text-sm text-Grey700 truncate w-1/2">
+            {getWalletTransactionTypeLabel(transaction.transactionType, t)}
+          </p>
+          <p
+            className={`border-2 px-3 py-1 rounded-xl flex items-center justify-center min-w-[30%] ${isPositive ? "bg-StatusGreen border-StatusDarkGreen text-StatusDarkGreen" : "bg-red-50 border-red-500 text-red-600"}`}
+          >
             <span className="text-sm font-extrabold" dir="ltr">
-              {isPositive ? "+" : ""}{transaction.amount.toFixed(2)}
+              {isPositive ? "+" : ""}
+              {transaction.amount.toFixed(2)}
             </span>
             <SaudiRiyalIcon className="w-3 h-3 mr-1" />
           </p>
         </div>
-        <p className="text-base! font-bold truncate mt-2" title={transaction.description || "معاملة محفظة"}>
+        <p
+          className="text-base! font-bold truncate mt-2"
+          title={transaction.description || "معاملة محفظة"}
+        >
           {transaction.description || "معاملة محفظة"}
         </p>
         <div className="flex items-center mt-3">
           <span className="text-Grey600">الرصيد المتبقي:</span>
-          <span className="font-bold mx-2">{transaction.balanceAfter.toFixed(2)}</span>
+          <span className="font-bold mx-2">
+            {transaction.balanceAfter.toFixed(2)}
+          </span>
           <SaudiRiyalIcon className="w-4 h-4" />
         </div>
       </div>

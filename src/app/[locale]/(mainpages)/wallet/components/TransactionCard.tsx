@@ -1,11 +1,16 @@
+"use client";
+
 import { Transaction } from "@/types/wallet/wallet";
 import { SaudiRiyalIcon } from "lucide-react";
+import { useTranslations } from "next-intl";
+import { getWalletTransactionTypeLabel } from "@/lib/wallet/transactionTypeLabel";
 
 type Props = {
   transaction: Transaction;
 };
 
 const TransactionCard = ({ transaction }: Props) => {
+  const t = useTranslations("profile.walletPage");
   // Try to parse the date, or just show it if not parsing correctly
   const formattedTime = new Date(transaction.createdAt).toLocaleTimeString(
     "ar-EG",
@@ -19,7 +24,7 @@ const TransactionCard = ({ transaction }: Props) => {
     <div className="border-2 w-full bg-white p-4 flex flex-col gap-3 rounded-2xl relative overflow-hidden">
       <div className="flex justify-between items-center pb-2 border-b border-gray-100">
         <p className="text-sm font-semibold text-Grey700">
-          {transaction.transactionType}
+          {getWalletTransactionTypeLabel(transaction.transactionType, t)}
         </p>
         <p className="text-sm text-Grey500">{formattedTime}</p>
       </div>

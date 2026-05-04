@@ -58,7 +58,9 @@ const GoogleMapsLocation = ({
   });
 
   const [locationLoading, setLocationLoading] = useState(
-    !(initialLat && initialLng) && !userPhysical_Latitude && !userPhysical_Longitude,
+    !(initialLat && initialLng) &&
+      !userPhysical_Latitude &&
+      !userPhysical_Longitude,
   );
   const [mapLoading, setMapLoading] = useState(true);
   const [isLocating, setIsLocating] = useState(false);
@@ -131,7 +133,13 @@ const GoogleMapsLocation = ({
     };
 
     setup();
-  }, [userPhysical_Latitude, userPhysical_Longitude, initialLat, initialLng, userPhysical_Address]);
+  }, [
+    userPhysical_Latitude,
+    userPhysical_Longitude,
+    initialLat,
+    initialLng,
+    userPhysical_Address,
+  ]);
 
   useEffect(() => {
     if (mapRef.current) mapRef.current.panTo(currentLocation);
@@ -183,58 +191,56 @@ const GoogleMapsLocation = ({
       lng: number;
       address: string;
       geocodeMeta: ReverseGeocodeMeta;
-    }>(
-      (resolve, reject) => {
-        const geocoder = new google.maps.Geocoder();
-        geocoder.geocode({ placeId }, (results, status) => {
-          if (status === "OK" && results && results[0]) {
-            const loc = results[0].geometry.location;
-            const placeTypes = Array.isArray(results[0].types)
-              ? results[0].types
-              : [];
-            const searchableText = results[0].formatted_address.toLowerCase();
-            const isAirport =
-              placeTypes.includes("airport") ||
-              searchableText.includes("airport");
-            const isTrain =
-              placeTypes.includes("train_station") ||
-              placeTypes.includes("transit_station") ||
-              placeTypes.includes("subway_station") ||
-              searchableText.includes("train") ||
-              searchableText.includes("railway") ||
-              searchableText.includes("station") ||
-              searchableText.includes("قطار") ||
-              searchableText.includes("محطة");
+    }>((resolve, reject) => {
+      const geocoder = new google.maps.Geocoder();
+      geocoder.geocode({ placeId }, (results, status) => {
+        if (status === "OK" && results && results[0]) {
+          const loc = results[0].geometry.location;
+          const placeTypes = Array.isArray(results[0].types)
+            ? results[0].types
+            : [];
+          const searchableText = results[0].formatted_address.toLowerCase();
+          const isAirport =
+            placeTypes.includes("airport") ||
+            searchableText.includes("airport");
+          const isTrain =
+            placeTypes.includes("train_station") ||
+            placeTypes.includes("transit_station") ||
+            placeTypes.includes("subway_station") ||
+            searchableText.includes("train") ||
+            searchableText.includes("railway") ||
+            searchableText.includes("station") ||
+            searchableText.includes("قطار") ||
+            searchableText.includes("محطة");
 
-            console.log("[GoogleMapsLocation] Google geocode place types", {
-              placeId,
-              formattedAddress: results[0].formatted_address,
-              placeTypes,
-              detectedCategory: isAirport
+          console.log("[GoogleMapsLocation] Google geocode place types", {
+            placeId,
+            formattedAddress: results[0].formatted_address,
+            placeTypes,
+            detectedCategory: isAirport
+              ? "AIRPORT"
+              : isTrain
+                ? "TRAIN_STATION"
+                : null,
+          });
+
+          resolve({
+            lat: loc.lat(),
+            lng: loc.lng(),
+            address: results[0].formatted_address,
+            geocodeMeta: {
+              category: isAirport
                 ? "AIRPORT"
                 : isTrain
                   ? "TRAIN_STATION"
                   : null,
-            });
-
-            resolve({
-              lat: loc.lat(),
-              lng: loc.lng(),
-              address: results[0].formatted_address,
-              geocodeMeta: {
-                category: isAirport
-                  ? "AIRPORT"
-                  : isTrain
-                    ? "TRAIN_STATION"
-                    : null,
-                matchedName: null,
-                placeTypes,
-              },
-            });
-          } else reject(status);
-        });
-      },
-    );
+              matchedName: null,
+              placeTypes,
+            },
+          });
+        } else reject(status);
+      });
+    });
 
   const handleSelectPlace = async (
     place: google.maps.places.AutocompletePrediction,
