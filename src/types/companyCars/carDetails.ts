@@ -35,6 +35,8 @@ export interface CarDetailsResponse {
 
   showRating: boolean;
 
+  workingHours: WorkingHours;
+
   // NEW: rate can be missing from response
   rate?: number;
 
@@ -224,4 +226,43 @@ export interface Specification {
   icon: string | null;
 
   name: string;
+}
+
+export interface WorkingHourBreak {
+  id: number;
+  dayOfWeek:
+  | "SUNDAY"
+  | "MONDAY"
+  | "TUESDAY"
+  | "WEDNESDAY"
+  | "THURSDAY"
+  | "FRIDAY"
+  | "SATURDAY";
+  startTime: string;
+  endTime: string;
+}
+
+export interface WorkingHours {
+  hourId: number;
+  branchId: number;
+  branchEnName: string;
+  branchArName: string;
+
+  sunOpenTime: string;
+  monOpenTime: string;
+  tueOpenTime: string;
+  wedOpenTime: string;
+  thuOpenTime: string;
+  friOpenTime: string;
+  satOpenTime: string;
+
+  sunCloseTime: string;
+  monCloseTime: string;
+  tueCloseTime: string;
+  wedCloseTime: string;
+  thuCloseTime: string;
+  friCloseTime: string;
+  satCloseTime: string;
+
+  breaks: WorkingHourBreak[];
 }

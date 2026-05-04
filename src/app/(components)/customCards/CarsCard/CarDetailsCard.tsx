@@ -10,7 +10,12 @@ import { Separator } from "../../ui/separator";
 import FreeKmIcon from "@/constants/icons/FreeKmIcon";
 import UnlimitedKmIcon from "@/constants/icons/UnlimitedKmIcon";
 import { useRouter } from "next/navigation";
-import { Car, Company, Specification } from "@/types/companyCars/carDetails";
+import {
+  Car,
+  Company,
+  Specification,
+  WorkingHours,
+} from "@/types/companyCars/carDetails";
 import CarCategoryBadge from "../../carCategoryBadge/CarCategoryBadge";
 import DOMPurify from "dompurify";
 import { PricingType } from "@/lib/utils/calculateRentalPrice";
@@ -19,6 +24,7 @@ import { getPriceWithoutTax } from "@/lib/utils/getPriceWithoutTax";
 import { useLocale, useTranslations } from "next-intl";
 import { useMemo } from "react";
 import SpecificationsDialog from "./SpecificationsDialog";
+import WorkingTimes from "./WorkingTimes";
 
 interface CarDetailsCardProps {
   car: Car;
@@ -54,6 +60,7 @@ interface CarDetailsCardProps {
   dailyPrice?: number;
   showTax?: boolean;
   specifications?: Specification[];
+  workingTime?: WorkingHours;
 }
 
 const CarDetailsCard = ({
@@ -79,6 +86,7 @@ const CarDetailsCard = ({
   rate,
   showTax,
   specifications = [],
+  workingTime,
 }: CarDetailsCardProps) => {
   const router = useRouter();
   const locale = useLocale();
@@ -287,12 +295,8 @@ const CarDetailsCard = ({
         </div>
 
         <Separator className="my-3" />
-        <div className="flex items-center gap-3">
-          <p>{t("specificationsTitle")}</p>
-          <SpecificationsDialog
-            specifications={specifications}
-            legacySpecsText={legacySpecsText}
-          />
+        <div className="">
+          {workingTime && <WorkingTimes workingHours={workingTime} />}
         </div>
 
         <Separator className="my-3" />

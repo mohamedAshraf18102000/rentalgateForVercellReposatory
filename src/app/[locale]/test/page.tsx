@@ -11,6 +11,7 @@ import { useUserPreferedFiltersStore } from "@/lib/stores/useUserPreferedFilters
 import { buildInitialReservationValues } from "@/app/[locale]/(mainpages)/reservation/components/form/stepContentFormValues";
 import StepTwo from "@/app/[locale]/(mainpages)/reservation/components/form/StepTwo";
 import WrapperContainer from "@/app/(components)/wrapperContainer/WrapperContainer";
+import { useClientStore } from "@/lib/api/stores";
 
 export default function TestPage() {
   const { formData } = useBookedCarDetailsStore();
@@ -31,6 +32,10 @@ export default function TestPage() {
       isForOtherReservation: false,
     }),
   });
+
+  const { clientData } = useClientStore();
+
+  console.log("client Data", clientData);
 
   return (
     <WrapperContainer exceedNav className="container max-w-3xl p-8 bg-white">

@@ -186,6 +186,7 @@ const page = () => {
       <CarsDetailsBreadCrump />
       <div className="mt-10">
         <CarDetailsCard
+          workingTime={data?.workingHours}
           dailyPrice={data?.dailyPrice}
           freeKm={data.allowedKm}
           car={data?.car}

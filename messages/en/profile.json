@@ -84,7 +84,9 @@
       "myBookingsTitle": "My bookings",
       "myBookingsDescription": "View previous bookings",
       "walletTitle": "Wallet",
-      "walletDescription": "Redeem earned points"
+      "walletDescription": "Redeem earned points",
+      "completeProfileTitle": "Complete profile details",
+      "completeProfileDescription": "Finish your profile information"
     },
     "userReferral": {
       "title": "Want to earn discounts?!!",
@@ -224,6 +226,74 @@
     "savingButton": "Saving...",
     "toastSuccess": "License details updated successfully",
     "toastError": "An error occurred while updating data"
+  },
+  "updateReservationProfileDialog": {
+    "title": "Update Reservation Profile",
+    "actions": {
+      "cancel": "Cancel",
+      "fillFromProfile": "Fill from profile",
+      "save": "Save"
+    },
+    "states": {
+      "uploadingImage": "Uploading image..."
+    },
+    "toast": {
+      "updateSuccess": "Profile updated successfully",
+      "updateError": "Failed to update profile",
+      "noProfileData": "No profile data found",
+      "profileLoaded": "Profile data loaded",
+      "uploadError": "License image upload failed"
+    },
+    "fields": {
+      "residenceType": {
+        "label": "Residence type",
+        "placeholder": "Select residence type",
+        "options": {
+          "citizen": "Citizen",
+          "resident": "Resident",
+          "visitor": "Visitor",
+          "gccCitizen": "GCC Citizen"
+        }
+      },
+      "nationality": {
+        "label": "Nationality",
+        "placeholder": "Enter nationality"
+      },
+      "personalId": {
+        "label": "Personal ID",
+        "placeholder": "Enter personal ID"
+      },
+      "passportNumber": {
+        "label": "Passport Number",
+        "placeholder": "Enter passport number"
+      },
+      "borderNumber": {
+        "label": "Border Number",
+        "placeholder": "Enter border number"
+      },
+      "identityExpiryDate": {
+        "label": "Identity Expiry Date",
+        "placeholder": "Identity Expiry Date"
+      },
+      "licenseImage": {
+        "label": "License image",
+        "placeholder": "Upload your license image"
+      },
+      "licenseExpiryDate": {
+        "label": "License expiry date",
+        "placeholder": "License expiry date"
+      }
+    },
+    "validation": {
+      "residenceTypeRequired": "Residence type is required",
+      "nationalityRequired": "Nationality is required",
+      "identityExpiryDateRequired": "Identity expiry date is required",
+      "licenseImageRequired": "License image is required",
+      "licenseExpiryDateRequired": "License expiry date is required",
+      "personalIdRequired": "Personal ID is required",
+      "passportNumberRequired": "Passport number is required",
+      "borderNumberRequired": "Border number is required"
+    }
   }
 }
 

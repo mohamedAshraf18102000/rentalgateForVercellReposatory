@@ -310,6 +310,8 @@
   "locationValid": "الموقع صالح للتوصيل",
   "nearestBranch": "أقرب فرع",
   "workingHours": "ساعات العمل",
+  "today": "اليوم",
+  "breakLabel": "استراحة",
   "branchClosed": "الفرع مغلق حالياً",
   "branchOpen": "الفرع مفتوح",
   "confirm": "تأكيد",

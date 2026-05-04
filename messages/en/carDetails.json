@@ -307,6 +307,8 @@
   "locationValid": "Location is valid for delivery",
   "nearestBranch": "Nearest Branch",
   "workingHours": "Working Hours",
+  "today": "Today",
+  "breakLabel": "Break",
   "branchClosed": "Branch is currently closed",
   "branchOpen": "Branch is open",
   "confirm": "Confirm",

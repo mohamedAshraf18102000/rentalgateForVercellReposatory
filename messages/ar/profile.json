@@ -84,7 +84,9 @@
       "myBookingsTitle": "حجوزاتي",
       "myBookingsDescription": "عرض الحجوزات السابقة",
       "walletTitle": "المحفظة",
-      "walletDescription": "أستبدل النقاط المكتسبة"
+      "walletDescription": "أستبدل النقاط المكتسبة",
+      "completeProfileTitle": "استكمال بيانات الملف الشخصي",
+      "completeProfileDescription": "أكمل معلومات ملفك الشخصي"
     },
     "userReferral": {
       "title": "تحب تكسب خصومات؟!!",
@@ -224,6 +226,74 @@
     "savingButton": "جاري الحفظ...",
     "toastSuccess": "تم تحديث بيانات الرخصة بنجاح",
     "toastError": "حدث خطأ أثناء تحديث البيانات"
+  },
+  "updateReservationProfileDialog": {
+    "title": "تحديث بيانات الحجز",
+    "actions": {
+      "cancel": "إلغاء",
+      "fillFromProfile": "تعبئة من الملف الشخصي",
+      "save": "حفظ"
+    },
+    "states": {
+      "uploadingImage": "جاري رفع الصورة..."
+    },
+    "toast": {
+      "updateSuccess": "تم تحديث البيانات بنجاح",
+      "updateError": "فشل تحديث البيانات",
+      "noProfileData": "لا توجد بيانات ملف شخصي",
+      "profileLoaded": "تم تحميل بيانات الملف الشخصي",
+      "uploadError": "فشل رفع صورة الرخصة"
+    },
+    "fields": {
+      "residenceType": {
+        "label": "نوع الإقامة",
+        "placeholder": "اختر نوع الإقامة",
+        "options": {
+          "citizen": "مواطن",
+          "resident": "مقيم",
+          "visitor": "زائر",
+          "gccCitizen": "مواطن خليجي"
+        }
+      },
+      "nationality": {
+        "label": "الجنسية",
+        "placeholder": "أدخل الجنسية"
+      },
+      "personalId": {
+        "label": "رقم الهوية",
+        "placeholder": "أدخل رقم الهوية"
+      },
+      "passportNumber": {
+        "label": "رقم جواز السفر",
+        "placeholder": "أدخل رقم جواز السفر"
+      },
+      "borderNumber": {
+        "label": "رقم الحدود",
+        "placeholder": "أدخل رقم الحدود"
+      },
+      "identityExpiryDate": {
+        "label": "تاريخ انتهاء الهوية",
+        "placeholder": "تاريخ انتهاء الهوية"
+      },
+      "licenseImage": {
+        "label": "صورة الرخصة",
+        "placeholder": "ارفع صورة الرخصة"
+      },
+      "licenseExpiryDate": {
+        "label": "تاريخ انتهاء الرخصة",
+        "placeholder": "تاريخ انتهاء الرخصة"
+      }
+    },
+    "validation": {
+      "residenceTypeRequired": "نوع الإقامة مطلوب",
+      "nationalityRequired": "الجنسية مطلوبة",
+      "identityExpiryDateRequired": "تاريخ انتهاء الهوية مطلوب",
+      "licenseImageRequired": "صورة الرخصة مطلوبة",
+      "licenseExpiryDateRequired": "تاريخ انتهاء الرخصة مطلوب",
+      "personalIdRequired": "رقم الهوية مطلوب",
+      "passportNumberRequired": "رقم جواز السفر مطلوب",
+      "borderNumberRequired": "رقم الحدود مطلوب"
+    }
   }
 }
 
