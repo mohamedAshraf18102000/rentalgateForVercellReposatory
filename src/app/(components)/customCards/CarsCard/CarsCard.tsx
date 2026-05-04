@@ -40,6 +40,7 @@ interface carsCard {
   totalPrice?: number;
   rentalDays?: number;
   showTax?: boolean;
+  onClick?: () => void;
 }
 
 const CarsCard = ({
@@ -59,6 +60,7 @@ const CarsCard = ({
   priceBeforeOffer,
   showTax,
   pricingType = "DAILY",
+  onClick,
 }: carsCard) => {
   const t = useTranslations("carDetails");
   const pricingTypeLabels: Record<PricingType, string> = {
@@ -72,6 +74,7 @@ const CarsCard = ({
   return (
     <article>
       <Card
+        onClick={onClick}
         className={`group select-none! relative mx-auto w-full max-w-sm pt-0 rounded-[18px] hover:shadow-lg transition-all duration-300 border-0! ring-0 hover:ring-1 cursor-pointer ${advancedCard ? "bg-transparent hover:bg-white" : "bg-white"}`}
       >
         {/* Car Image */}

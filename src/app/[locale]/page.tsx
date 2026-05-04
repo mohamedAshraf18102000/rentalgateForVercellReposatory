@@ -12,7 +12,7 @@ import BussinessAccountsContent from "./(mainpages)/bussinessAccounts/components
 import WrapperContainer from "../(components)/wrapperContainer/WrapperContainer";
 import { HomeResponse } from "@/types/home/home";
 
-import { getHomePageDetailsCached } from "@/services/home/home.service";
+import { getHomePageDetailsWithAuth } from "@/services/home/home.service";
 import { HomeStoreHydrator } from "@/lib/stores/HomeStoreHydrator";
 
 type Props = {
@@ -26,7 +26,8 @@ export default async function HomePage({ params }: Props) {
   let homeData: HomeResponse | null = null;
 
   try {
-    homeData = await getHomePageDetailsCached();
+    homeData = await getHomePageDetailsWithAuth();
+    console.log(homeData);
   } catch (error) {
     console.error("Error fetching home data:", error);
   }

@@ -14,3 +14,28 @@ export const getHomePageDetailsCached = unstable_cache(
     tags: ["home-page-details"],
   },
 );
+
+const hasAuthToken = async (): Promise<boolean> => {
+  if (typeof window !== "undefined") {
+    return document.cookie
+      .split(";")
+      .some((cookie) => cookie.trim().startsWith("authToken="));
+  }
+
+  try {
+    const { cookies } = await import("next/headers");
+    const cookieStore = await cookies();
+    return Boolean(cookieStore.get("authToken")?.value);
+  } catch {
+    return false;
+  }
+};
+
+export const getHomePageDetailsWithAuth = async (): Promise<HomeResponse> => {
+  // Do not use shared cache for authenticated users.
+  if (await hasAuthToken()) {
+    return getHomePageDetails();
+  }
+
+  return getHomePageDetailsCached();
+};

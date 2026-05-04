@@ -5,6 +5,7 @@ import ServiceCard from "@/app/(components)/customCards/ServiceCard";
 import Panner from "../components/panner/Panner";
 import { useQuery } from "@tanstack/react-query";
 import { getCompanyCarsByID } from "@/services/companyCars/carById.service";
+import { addCarToHistory } from "@/services/companyCars/addCarToHistory.service";
 import { useParams } from "next/navigation";
 import { getCarServices } from "@/services/companyCars/carServices.service";
 import { Skeleton } from "@/app/(components)/ui/skeleton";
@@ -37,6 +38,13 @@ const page = () => {
     queryKey: ["company-cars-id", id],
     queryFn: () => getCompanyCarsByID(Number(id)),
   });
+
+  useEffect(() => {
+    if (id == null || id === "") return;
+    const ccbId = Number(id);
+    if (Number.isNaN(ccbId)) return;
+    void addCarToHistory({ ccbId }).catch(() => {});
+  }, [id]);
 
   console.log("data?.deliveryServiceAvailable", data?.deliveryServiceAvailable);
 
