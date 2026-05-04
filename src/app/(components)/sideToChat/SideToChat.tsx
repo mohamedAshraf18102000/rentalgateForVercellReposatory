@@ -1,3 +1,4 @@
+"use client";
 import { MessageCircle } from "lucide-react";
 
 const SideToChat = () => {
@@ -7,12 +8,23 @@ const SideToChat = () => {
       role="button"
       tabIndex={0}
       aria-label="تحويل إلى محادثة"
+      onClick={() => {
+        window.open("https://wa.me/+0201115893336", "_blank");
+      }}
     >
       <p className="flex flex-col items-center justify-center gap-1 font-bold text-white md:hidden">
-        <MessageCircle className="size-7 shrink-0" strokeWidth={2} aria-hidden />
+        <MessageCircle
+          className="size-7 shrink-0"
+          strokeWidth={2}
+          aria-hidden
+        />
       </p>
       <p className="hidden font-bold text-white md:flex md:-rotate-90 md:items-center md:gap-2 md:whitespace-nowrap">
-        <MessageCircle className="size-6 shrink-0" strokeWidth={2} aria-hidden />
+        <MessageCircle
+          className="size-6 shrink-0"
+          strokeWidth={2}
+          aria-hidden
+        />
         <span className="text-sm lg:text-base">تحويل إلى محادثة</span>
       </p>
     </div>
