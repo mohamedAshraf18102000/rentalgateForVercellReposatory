@@ -190,6 +190,7 @@
       "extraKilometersFeeLabel": "Extra kilometers fee",
       "pickupFeeLabel": "Pickup fee",
       "deliveryFeeLabel": "Delivery fee",
+      "rentalAgreementFeeLabel": "Rental agreement fee",
       "discountsAndOffersHeader": "Discounts and offers:",
       "discountLabel": "Discount:",
       "rentalDaysOfferDiscountLabel": "Offer discount ({days} days)",

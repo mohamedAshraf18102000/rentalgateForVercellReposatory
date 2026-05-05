@@ -104,7 +104,9 @@ const BookingPaymentDetailsCollapse = ({
                     },
                     {
                       isAvailable: (data?.invoiceFee ?? 0) !== 0,
-                      label: "رسوم عقد الإيجار",
+                      label: t(
+                        "myBookingsDrawer.paymentDetails.rentalAgreementFeeLabel",
+                      ),
                       value: formatPrice(data?.invoiceFee || 0),
                     },
                   ]}

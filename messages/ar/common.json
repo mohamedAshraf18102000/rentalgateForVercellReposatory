@@ -210,6 +210,7 @@
       "extraKilometersFeeLabel": "رسوم الكيلومترات الإضافية",
       "pickupFeeLabel": "رسوم استلام",
       "deliveryFeeLabel": "رسوم التسليم",
+      "rentalAgreementFeeLabel": "رسوم عقد الإيجار",
       "discountsAndOffersHeader": "الخصومات و العروض:",
       "rentalDaysOfferDiscountLabel": "خصم عرض ال ( {days} يوم )",
       "promoCodeLabel": "كود الخصم",

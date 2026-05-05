@@ -56,7 +56,7 @@ const ReservationFinalDetails = ({
         items={[
           {
             isAvailable: (reservationData?.invoiceFee ?? 0) !== 0,
-            label: "رسوم عقد الإيجار",
+            label: t("reservation.finalDetails.rentalAgreementFeeLabel"),
             value: formatPrice(reservationData?.invoiceFee || 0),
           },
           {
