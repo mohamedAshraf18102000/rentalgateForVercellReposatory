@@ -38,6 +38,9 @@ export function CurrentLocationDialog() {
   const [userAddresses, setUserAddresses] = useState<UserAddress[]>([]);
   const [filterTempLocation, setFilterTempLocation] =
     useState<TempLocation | null>(null);
+  const [dialogTempLocation, setDialogTempLocation] = useState<TempLocation | null>(
+    null,
+  );
   const pathname = usePathname();
   const isTermsPage = pathname.includes("/terms&conditions");
   const setFilter = useUserPreferedFiltersStore((state) => state.setFilter);
@@ -117,6 +120,35 @@ export function CurrentLocationDialog() {
     isDialogOpen,
   ]);
 
+  useEffect(() => {
+    if (!isDialogOpen || dialogOpenSource === "filterComponent") {
+      return;
+    }
+
+    if (
+      userPhysical_Latitude !== null &&
+      userPhysical_Longitude !== null &&
+      userPhysical_Address
+    ) {
+      setDialogTempLocation({
+        lat: userPhysical_Latitude,
+        lng: userPhysical_Longitude,
+        address: userPhysical_Address,
+        addressId: userPhysical_AddressId ?? undefined,
+      });
+      return;
+    }
+
+    setDialogTempLocation(null);
+  }, [
+    dialogOpenSource,
+    isDialogOpen,
+    userPhysical_Address,
+    userPhysical_AddressId,
+    userPhysical_Latitude,
+    userPhysical_Longitude,
+  ]);
+
   const handleOpenChange = (isOpen: boolean) => {
     if (isOpen) {
       openDialog();
@@ -126,6 +158,8 @@ export function CurrentLocationDialog() {
   };
 
   const handleClose = () => {
+    setFilterTempLocation(null);
+    setDialogTempLocation(null);
     closeDialog();
     sessionStorage.setItem("hasClosedLocationDialog", "true");
   };
@@ -156,6 +190,12 @@ export function CurrentLocationDialog() {
       closeDialog();
       sessionStorage.setItem("hasClosedLocationDialog", "true");
     } else {
+      setUserPhysical_Location(
+        dialogTempLocation?.lat ?? null,
+        dialogTempLocation?.lng ?? null,
+        dialogTempLocation?.address ?? null,
+        dialogTempLocation?.addressId ?? null,
+      );
       closeDialog();
       sessionStorage.setItem("hasClosedLocationDialog", "true");
     }
@@ -164,25 +204,16 @@ export function CurrentLocationDialog() {
   const isFilterDialog = dialogOpenSource === "filterComponent";
   const displayedAddress = isFilterDialog
     ? filterTempLocation?.address
-    : userPhysical_Address;
+    : dialogTempLocation?.address;
   const selectedLat = isFilterDialog
     ? filterTempLocation?.lat
-    : (userPhysical_Latitude ?? undefined);
+    : (dialogTempLocation?.lat ?? undefined);
   const selectedLng = isFilterDialog
     ? filterTempLocation?.lng
-    : (userPhysical_Longitude ?? undefined);
+    : (dialogTempLocation?.lng ?? undefined);
   const tempLocationForSavedAddresses = isFilterDialog
     ? filterTempLocation
-    : userPhysical_Latitude !== null &&
-        userPhysical_Longitude !== null &&
-        userPhysical_Address
-      ? {
-          lat: userPhysical_Latitude,
-          lng: userPhysical_Longitude,
-          address: userPhysical_Address,
-          addressId: userPhysical_AddressId ?? undefined,
-        }
-      : null;
+    : dialogTempLocation;
 
   return (
     <DialogWrapper
@@ -209,7 +240,7 @@ export function CurrentLocationDialog() {
                 setFilterTempLocation({ lat, lng, address: addr });
                 return;
               }
-              setUserPhysical_Location(lat, lng, addr, null);
+              setDialogTempLocation({ lat, lng, address: addr });
             }}
           />
           {isAuthenticated ? (
@@ -232,12 +263,7 @@ export function CurrentLocationDialog() {
                   setFilterTempLocation(location);
                   return;
                 }
-                setUserPhysical_Location(
-                  location.lat,
-                  location.lng,
-                  location.address,
-                  location.addressId ?? null,
-                );
+                setDialogTempLocation(location);
               }}
             />
           ) : null}

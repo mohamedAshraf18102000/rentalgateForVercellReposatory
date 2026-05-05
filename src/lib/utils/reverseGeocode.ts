@@ -13,6 +13,16 @@ type GoogleGeocodeResult = {
   address_components?: GoogleAddressComponent[];
 };
 
+type GoogleNearbyPlace = {
+  name?: string;
+  types?: string[];
+};
+
+type GoogleNearbySearchResponse = {
+  status?: string;
+  results?: GoogleNearbyPlace[];
+};
+
 export type GeocodedLocationCategory = "AIRPORT" | "TRAIN_STATION" | null;
 
 export type ReverseGeocodeMeta = {
@@ -54,6 +64,10 @@ function getLocalAddress(components: GoogleAddressComponent[]): string | null {
 }
 
 const normalizeText = (value: string) => value.trim().toLowerCase();
+
+const CATEGORY_SEARCH_RADIUS_METERS = 500;
+
+const AIRPORT_KEYWORDS = ["airport", "مطار"];
 
 const TRAIN_KEYWORDS = [
   "train",
@@ -101,7 +115,8 @@ function classifyGeocodeResult(result: GoogleGeocodeResult): ReverseGeocodeMeta 
   );
 
   const isAirport =
-    normalizedTypes.includes("airport") || searchableText.includes("airport");
+    normalizedTypes.includes("airport") ||
+    AIRPORT_KEYWORDS.some((keyword) => searchableText.includes(keyword));
   if (isAirport) {
     return {
       category: "AIRPORT",
@@ -133,6 +148,38 @@ function classifyGeocodeResult(result: GoogleGeocodeResult): ReverseGeocodeMeta 
   };
 }
 
+async function detectNearbyCategory(
+  lat: number,
+  lng: number,
+  apiKey: string,
+): Promise<ReverseGeocodeMeta | null> {
+  const nearbyTypes: Array<{
+    type: "airport" | "train_station";
+    category: Exclude<GeocodedLocationCategory, null>;
+  }> = [
+    { type: "airport", category: "AIRPORT" },
+    { type: "train_station", category: "TRAIN_STATION" },
+  ];
+
+  for (const nearbyType of nearbyTypes) {
+    const response = await fetch(
+      `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${lat},${lng}&radius=${CATEGORY_SEARCH_RADIUS_METERS}&type=${nearbyType.type}&language=ar&key=${apiKey}`,
+    );
+    const data = (await response.json()) as GoogleNearbySearchResponse;
+
+    if (data.status === "OK" && Array.isArray(data.results) && data.results[0]) {
+      const firstMatch = data.results[0];
+      return {
+        category: nearbyType.category,
+        matchedName: firstMatch.name ?? null,
+        placeTypes: Array.isArray(firstMatch.types) ? firstMatch.types : [],
+      };
+    }
+  }
+
+  return null;
+}
+
 export async function reverseGeocodeWithDetails(
   lat: number,
   lng: number,
@@ -159,11 +206,27 @@ export async function reverseGeocodeWithDetails(
       }
 
       const address = parsedAddress || primaryResult.formatted_address || null;
-      const meta =
+      const detectedFromGeocode =
         data.results
           .map((result: GoogleGeocodeResult) => classifyGeocodeResult(result))
           .find((candidate: ReverseGeocodeMeta) => candidate.category !== null) ||
         classifyGeocodeResult(primaryResult);
+      let nearbyMeta: ReverseGeocodeMeta | null = null;
+      const canUseNearbyFallback = typeof window === "undefined";
+
+      if (detectedFromGeocode.category === null && canUseNearbyFallback) {
+        try {
+          nearbyMeta = await detectNearbyCategory(lat, lng, apiKey);
+        } catch (error) {
+          // Nearby Places REST endpoint is not CORS-enabled for browser calls.
+          // Keep reverse geocode working for all locations even if fallback fails.
+          console.warn(
+            "[reverseGeocodeWithDetails] Nearby category fallback failed:",
+            error,
+          );
+        }
+      }
+      const meta = nearbyMeta ?? detectedFromGeocode;
 
       console.log("[reverseGeocodeWithDetails] Google place types", {
         lat,
@@ -174,6 +237,7 @@ export async function reverseGeocodeWithDetails(
         ),
         detectedCategory: meta.category,
         matchedName: meta.matchedName,
+        nearbyFallbackUsed: nearbyMeta !== null,
       });
 
       return { address, meta };

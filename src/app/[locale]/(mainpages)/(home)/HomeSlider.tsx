@@ -6,21 +6,14 @@ import Autoplay from "embla-carousel-autoplay";
 import {
   Carousel,
   CarouselContent,
-  CarouselDots,
   CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
   CustomCarouselDots,
 } from "@/app/(components)/ui/carousel";
 import { Banner } from "@/types/home/home";
 
 const sliderHeightClass =
   "h-[min(42svh,22rem)] min-h-[12.5rem] " +
-  "sm:h-[min(48svh,26rem)] sm:min-h-[14rem] " +
-  "md:h-[min(56svh,32rem)] md:min-h-[16rem] " +
-  "lg:h-[min(68svh,40rem)] " +
-  "xl:h-[min(82svh,48rem)] " +
-  "2xl:h-dvh 2xl:max-h-dvh";
+  "sm:h-screen md:h-screen lg:h-screen xl:h-screen 2xl:h-screen";
 
 const HomeSlider = ({ bannersData }: { bannersData: Banner[] }) => {
   const autoplayPlugin = useRef(

@@ -26,14 +26,18 @@ export default async function HomePage({ params }: Props) {
   let homeData: HomeResponse | null = null;
 
   try {
+    console.log("----------------------------------------------");
+
+    console.log("fetching home data");
+
     homeData = await getHomePageDetailsWithAuth();
-    console.log(homeData);
   } catch (error) {
     console.error("Error fetching home data:", error);
   }
 
   return (
     <main>
+      {/* <Teest /> */}
       {homeData && <HomeStoreHydrator data={homeData} />}
       <HomeSlider bannersData={homeData?.banners ?? []} />
       <PickUpArea />

@@ -459,7 +459,7 @@ const page = () => {
                     </div>
                   )}
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="grid grid-cols-2 items-center gap-2">
                   <button
                     onClick={handleResetForm}
                     className="text-sm text-Grey500 underline underline-offset-2 cursor-pointer"

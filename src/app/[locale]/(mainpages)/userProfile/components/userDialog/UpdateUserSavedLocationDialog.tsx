@@ -34,6 +34,9 @@ import useUserAddreses from "@/hooks/api/useUserAddreses";
 import { useLocationStore } from "@/lib/stores/useLocationStore";
 import { UserAddress } from "@/types/userProfile/userAddress";
 import { useTranslations } from "next-intl";
+import { useDialog } from "@/app/[locale]/(dialogs)";
+import { ReverseGeocodeMeta } from "@/lib/utils/reverseGeocode";
+import { useRouter } from "next/navigation";
 
 interface UpdateUserSavedLocationDialogProps {
   open: boolean;
@@ -61,9 +64,17 @@ const UpdateUserSavedLocationDialog = ({
   const t = useTranslations("profile.userSavedLocationDialog");
   const [showAddForm, setShowAddForm] = useState(initialShowAddForm);
   const [isPhoneValid, setIsPhoneValid] = useState(false);
+  const [hasRestrictedLocationType, setHasRestrictedLocationType] =
+    useState(false);
   const queryClient = useQueryClient();
+  const { openDialog } = useDialog();
+  const router = useRouter();
 
-  const { setUserPhysical_Location, userPhysical_Latitude, userPhysical_Longitude } = useLocationStore();
+  const {
+    setUserPhysical_Location,
+    userPhysical_Latitude,
+    userPhysical_Longitude,
+  } = useLocationStore();
 
   const { data: userAddresses, isLoading: isLoadingAddresses } =
     useUserAddreses(open);
@@ -132,6 +143,14 @@ const UpdateUserSavedLocationDialog = ({
   };
 
   const onSubmit = (values: UserSavedLocationFormValues) => {
+    if (hasRestrictedLocationType) {
+      openDialog("ApiError", {
+        message:
+          "انت في مطار او محطة قطار برجاء التوجه للرئيسية او اختيار مكان اخر لحفظة",
+        onClick: () => router.push("/"),
+      });
+      return;
+    }
     handleAddAddress(values);
   };
 
@@ -152,6 +171,7 @@ const UpdateUserSavedLocationDialog = ({
       }
     } else {
       setShowAddForm(false);
+      setHasRestrictedLocationType(false);
       reset();
     }
   }, [
@@ -186,7 +206,9 @@ const UpdateUserSavedLocationDialog = ({
               </button>
             )}
             <span className="text-black  flex-1 text-center font-bold">
-              {showAddForm ? t("header.addNewAddress") : t("header.savedAddresses")}
+              {showAddForm
+                ? t("header.addNewAddress")
+                : t("header.savedAddresses")}
             </span>
             {showAddForm && !addFormOnlyMode && <div className="w-8" />}
           </div>
@@ -237,11 +259,14 @@ const UpdateUserSavedLocationDialog = ({
                           setUserPhysical_Location(
                             address.latitude,
                             address.longitude,
-                            address.address
+                            address.address,
                           );
                         }}
                         bg_gray
-                        active={address.latitude === userPhysical_Latitude && address.longitude === userPhysical_Longitude}
+                        active={
+                          address.latitude === userPhysical_Latitude &&
+                          address.longitude === userPhysical_Longitude
+                        }
                         key={address.addressId}
                         title={address.addressName}
                         description={address.address}
@@ -261,9 +286,19 @@ const UpdateUserSavedLocationDialog = ({
                 <GoogleMapsLocation
                   initialLat={propLat || undefined}
                   initialLng={propLng || undefined}
-                  onLocationChange={(lat, lng, address, isManual) => {
+                  onLocationChange={(
+                    lat,
+                    lng,
+                    address,
+                    isManual,
+                    geocodeMeta?: ReverseGeocodeMeta,
+                  ) => {
                     setValue("latitude", lat);
                     setValue("longitude", lng);
+                    const category = geocodeMeta?.category;
+                    setHasRestrictedLocationType(
+                      category === "AIRPORT" || category === "TRAIN_STATION",
+                    );
                     if (address && (isManual || !getValues("address"))) {
                       setValue("address", address);
                     }
@@ -305,7 +340,9 @@ const UpdateUserSavedLocationDialog = ({
                   errorMessage={errors.addressName?.message}
                 />
                 <div className="flex flex-col gap-2">
-                  <span className="text-base font-medium">{t("fields.addressType.label")}</span>
+                  <span className="text-base font-medium">
+                    {t("fields.addressType.label")}
+                  </span>
                   <Controller
                     name="addressType"
                     control={control}
@@ -315,12 +352,20 @@ const UpdateUserSavedLocationDialog = ({
                         onValueChange={field.onChange}
                       >
                         <SelectTrigger className="bg-Grey100! border-none! ">
-                          <SelectValue placeholder={t("fields.addressType.placeholder")} />
+                          <SelectValue
+                            placeholder={t("fields.addressType.placeholder")}
+                          />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="Home">{t("fields.addressType.options.home")}</SelectItem>
-                          <SelectItem value="Work">{t("fields.addressType.options.work")}</SelectItem>
-                          <SelectItem value="Other">{t("fields.addressType.options.other")}</SelectItem>
+                          <SelectItem value="Home">
+                            {t("fields.addressType.options.home")}
+                          </SelectItem>
+                          <SelectItem value="Work">
+                            {t("fields.addressType.options.work")}
+                          </SelectItem>
+                          <SelectItem value="Other">
+                            {t("fields.addressType.options.other")}
+                          </SelectItem>
                         </SelectContent>
                       </Select>
                     )}
