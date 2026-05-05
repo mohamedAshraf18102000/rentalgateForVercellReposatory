@@ -10,13 +10,12 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from "./popover";
 import { Input } from "./input";
 import { cn } from "@/lib/utils";
-import { ChevronLeft, ChevronRight, X } from "lucide-react";
+import { X } from "lucide-react";
 import { EditIcon } from "@/constants/icons";
 import { DayPicker } from "react-day-picker";
 import { ar, enUS } from "date-fns/locale";
 import "react-day-picker/dist/style.css";
 import "./style.css";
-import { buttonVariants } from "./button";
 import { DialogWrapper } from "./dialog-wrapper"; // adjust path
 
 // ─── Hook ─────────────────────────────────────────────────────────────────────
@@ -212,32 +211,23 @@ function CalendarPanel({
 }) {
   const dayPickerLocale = locale === "ar" ? ar : enUS;
   const defaultMonth = selected ?? minAllowedDate;
-
-  const chevronComponents = {
-    Chevron: ({ orientation }: { orientation?: string }) =>
-      orientation === "left" ? (
-        <div
-          className={cn(buttonVariants({ variant: "outline", size: "icon" }))}
-        >
-          <ChevronRight className="h-4 w-4" />
-        </div>
-      ) : (
-        <div
-          className={cn(buttonVariants({ variant: "outline", size: "icon" }))}
-        >
-          <ChevronLeft className="h-4 w-4" />
-        </div>
-      ),
-  };
+  const fromYear = minAllowedDate.getFullYear();
+  const toYear =
+    maxAllowedDate?.getFullYear() ??
+    Math.max(fromYear, new Date().getFullYear() + 10);
 
   return (
     <DayPicker
-      className="bg-Grey100 p-2 rounded-2xl w-full max-w-full overflow-hidden"
+      className="cal-root bg-Grey100 p-2 rounded-2xl w-full max-w-full overflow-hidden"
       mode="single"
       selected={selected ?? undefined}
       defaultMonth={defaultMonth ?? undefined}
       onSelect={onSelect}
       locale={dayPickerLocale}
+      captionLayout="dropdown"
+      fromYear={fromYear}
+      toYear={toYear}
+      hideNavigation
       disabled={(date) => {
         const d = new Date(date);
         d.setHours(0, 0, 0, 0);
@@ -245,7 +235,6 @@ function CalendarPanel({
         if (maxAllowedDate && d > maxAllowedDate) return true;
         return false;
       }}
-      components={chevronComponents}
     />
   );
 }
@@ -286,7 +275,11 @@ function DateTimeContent({
 
   return (
     <div className="p-3 sm:p-4 rounded-2xl">
-      {title && <div className="text-[15px] sm:text-[16px] font-semibold mb-2">{title}</div>}
+      {title && (
+        <div className="text-[15px] sm:text-[16px] font-semibold mb-2">
+          {title}
+        </div>
+      )}
       {title && <hr className="my-3" />}
       <div
         className={cn(
@@ -295,7 +288,9 @@ function DateTimeContent({
         )}
       >
         <div className="w-full lg:w-auto">
-          <p className="text-sm sm:text-base! mb-2 sm:mb-3">{displayDateLabel}</p>
+          <p className="text-sm sm:text-base! mb-2 sm:mb-3">
+            {displayDateLabel}
+          </p>
           <CalendarPanel
             selected={selectedDate}
             onSelect={onDateChange}
@@ -306,7 +301,9 @@ function DateTimeContent({
         </div>
         {withTime && (
           <div className="w-full lg:w-auto">
-            <p className="text-sm sm:text-base! mb-2 sm:mb-3">{displayTimeLabel}</p>
+            <p className="text-sm sm:text-base! mb-2 sm:mb-3">
+              {displayTimeLabel}
+            </p>
             <TimePicker
               selectedDate={selectedDate}
               onTimeSelect={handleTimeSelect}

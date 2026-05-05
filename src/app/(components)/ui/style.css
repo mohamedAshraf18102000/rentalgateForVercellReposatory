@@ -85,3 +85,103 @@
   border-radius: 8px !important;
   cursor: pointer !important;
 }
+
+.cal-root .rdp-month_caption {
+  margin-bottom: 0.75rem;
+}
+
+.cal-root .rdp-dropdowns {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.cal-root .rdp-dropdown_root {
+  position: relative;
+  background-color: #ffffff;
+  border: 1px solid #d9dee8;
+  border-radius: 10px !important;
+  padding: 0 !important;
+  min-width: 110px;
+  height: 36px;
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.cal-root .rdp-dropdown_root:hover {
+  border-color: #9aa4b2;
+  background-color: #f9fafb;
+}
+
+.cal-root .rdp-dropdown {
+  width: 100%;
+  height: 100%;
+  border: none;
+  background: transparent;
+  cursor: pointer !important;
+  outline: none;
+  padding: 0 2rem 0 0.75rem !important;
+  font-size: 14px;
+  font-weight: 500;
+  color: #1f2937;
+  appearance: none;
+}
+
+.cal-root .rdp-dropdown:focus,
+.cal-root .rdp-dropdown:focus-visible,
+.cal-root .rdp-dropdown_root:focus,
+.cal-root .rdp-dropdown_root:focus-visible,
+.cal-root .rdp-dropdown_root:focus-within {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.cal-root .rdp-caption_label,
+.cal-root .rdp-caption_label:focus,
+.cal-root .rdp-caption_label:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.cal-root .rdp-chevron {
+  display: none;
+}
+
+[dir="rtl"] .cal-root .rdp-dropdown {
+  padding: 0 0.75rem 0 2rem !important;
+}
+
+.cal-root .rdp-dropdown_root::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: 0.75rem;
+  width: 0.45rem;
+  height: 0.45rem;
+  border-right: 1.5px solid #6b7280;
+  border-bottom: 1.5px solid #6b7280;
+  transform: translateY(-62%) rotate(45deg);
+  pointer-events: none;
+}
+
+[dir="rtl"] .cal-root .rdp-dropdown_root::after {
+  right: auto;
+  left: 0.75rem;
+}
+
+@media (max-width: 420px) {
+  .cal-root .rdp-dropdowns {
+    gap: 0.35rem;
+  }
+
+  .cal-root .rdp-dropdown_root {
+    min-width: 98px;
+    height: 34px;
+  }
+
+  .cal-root .rdp-dropdown {
+    font-size: 13px;
+    padding: 0 1.75rem 0 0.65rem !important;
+  }
+}

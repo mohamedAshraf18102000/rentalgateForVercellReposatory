@@ -230,7 +230,6 @@ const ProfileForm = ({
             </p>
           )}
         </div>
-        <div className="hidden md:block" />
         <div>
           <Controller
             name="licenceExpiryDate"

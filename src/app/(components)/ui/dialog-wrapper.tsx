@@ -285,7 +285,7 @@ export function DialogWrapper({
       {trigger && <DialogTrigger asChild>{trigger}</DialogTrigger>}
 
       <DialogContent
-        className={cn(sizeClasses[size], className)}
+        className={cn(sizeClasses[size], "mt-7", className)}
         hideCloseButton={!!header?.mainTitle}
         onInteractOutside={(e) => {
           if (!closeOnOutsideClick) e.preventDefault();
