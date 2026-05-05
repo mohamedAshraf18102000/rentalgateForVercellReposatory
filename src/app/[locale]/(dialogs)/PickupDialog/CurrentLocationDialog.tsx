@@ -10,6 +10,7 @@ import { getUserAddress } from "@/services/userProfile/getUserAddress.service";
 import { UserAddress } from "@/types/userProfile/userAddress";
 import { UserSavedAddresses } from "./UserSavedAddresses";
 import { useUserPreferedFiltersStore } from "@/lib/stores/useUserPreferedFiltersStore";
+import { getAuthToken } from "@/util/auth";
 
 type TempLocation = {
   lat: number;
@@ -20,6 +21,7 @@ type TempLocation = {
 
 export function CurrentLocationDialog() {
   // StateManagment Stores
+  const isAuthenticated = !!getAuthToken();
 
   const {
     userPhysical_Latitude,
@@ -63,6 +65,11 @@ export function CurrentLocationDialog() {
 
   useEffect(() => {
     if (!isDialogOpen) {
+      return;
+    }
+
+    if (!getAuthToken()) {
+      setUserAddresses([]);
       return;
     }
 
@@ -205,33 +212,35 @@ export function CurrentLocationDialog() {
               setUserPhysical_Location(lat, lng, addr, null);
             }}
           />
-          <UserSavedAddresses
-            userAddresses={userAddresses}
-            tempLocation={tempLocationForSavedAddresses}
-            onAddressAdded={(newAddress) => {
-              setUserAddresses((previousAddresses) => {
-                const isAlreadyAdded = previousAddresses.some(
-                  (address) => address.addressId === newAddress.addressId,
-                );
-                if (isAlreadyAdded) {
-                  return previousAddresses;
+          {isAuthenticated ? (
+            <UserSavedAddresses
+              userAddresses={userAddresses}
+              tempLocation={tempLocationForSavedAddresses}
+              onAddressAdded={(newAddress) => {
+                setUserAddresses((previousAddresses) => {
+                  const isAlreadyAdded = previousAddresses.some(
+                    (address) => address.addressId === newAddress.addressId,
+                  );
+                  if (isAlreadyAdded) {
+                    return previousAddresses;
+                  }
+                  return [newAddress, ...previousAddresses];
+                });
+              }}
+              setTempLocation={(location) => {
+                if (isFilterDialog) {
+                  setFilterTempLocation(location);
+                  return;
                 }
-                return [newAddress, ...previousAddresses];
-              });
-            }}
-            setTempLocation={(location) => {
-              if (isFilterDialog) {
-                setFilterTempLocation(location);
-                return;
-              }
-              setUserPhysical_Location(
-                location.lat,
-                location.lng,
-                location.address,
-                location.addressId ?? null,
-              );
-            }}
-          />
+                setUserPhysical_Location(
+                  location.lat,
+                  location.lng,
+                  location.address,
+                  location.addressId ?? null,
+                );
+              }}
+            />
+          ) : null}
         </div>
       }
       footer={

@@ -34,7 +34,9 @@ const HomeUserCurrentLocation = () => {
     setIsCurrentLocationTabDisabled,
   } = usePickupDialogStore();
   const { openDialog } = useDialog();
-  const setUserPhysical_Location = useLocationStore((state) => state.setUserPhysical_Location);
+  const setUserPhysical_Location = useLocationStore(
+    (state) => state.setUserPhysical_Location,
+  );
 
   const isAirport =
     target === "return"
@@ -62,7 +64,11 @@ const HomeUserCurrentLocation = () => {
         : formData.pickupLong || undefined;
 
   const handleSelectAddress = (address: UserAddress) => {
-    setUserPhysical_Location(address.latitude, address.longitude, address.addressName);
+    setUserPhysical_Location(
+      address.latitude,
+      address.longitude,
+      address.addressName,
+    );
     setIsUnsavedMapLocation(false);
     setIsCurrentLocationTabDisabled(false);
     if (target === "return") {
@@ -81,60 +87,6 @@ const HomeUserCurrentLocation = () => {
       setFormField("pickupLong", address.longitude);
       setFormField("pickupType", "MY_LOCATION");
       setFormField("pickupId", String(address.addressId));
-      setFormField("pickupAirportId", null);
-      setFormField("pickupTrainId", null);
-    }
-  };
-
-  const handleMapLocationChange = (
-    lat: number,
-    lng: number,
-    address: string,
-    isManual?: boolean,
-    geocodeMeta?: ReverseGeocodeMeta,
-  ) => {
-    const detectedCategory = detectPickupCategory({
-      lat,
-      lng,
-      address,
-      geocodeMeta,
-      airports: airportsData?.content ?? [],
-      trainStations: trainStationsData?.content ?? [],
-    });
-
-    if (detectedCategory === "airport") {
-      setIsUnsavedMapLocation(true);
-      setIsCurrentLocationTabDisabled(true);
-      setActiveTab("airport");
-      return;
-    }
-
-    if (detectedCategory === "trainStation") {
-      setIsUnsavedMapLocation(true);
-      setIsCurrentLocationTabDisabled(true);
-      setActiveTab("trainStation");
-      return;
-    }
-
-    setUserPhysical_Location(lat, lng, address);
-    setIsUnsavedMapLocation(true);
-    setIsCurrentLocationTabDisabled(false);
-    if (target === "return") {
-      // Update BookedCarDetailsStore
-      setFormField("carReturnLocation", address);
-      setFormField("returnLat", lat);
-      setFormField("returnLong", lng);
-      setFormField("returnType", "MY_LOCATION");
-      setFormField("carReturnLocationId", null);
-      setFormField("returnAirportId", null);
-      setFormField("returnTrainId", null);
-    } else {
-      // Update BookedCarDetailsStore
-      setFormField("pickupName", address);
-      setFormField("pickupLat", lat);
-      setFormField("pickupLong", lng);
-      setFormField("pickupType", "MY_LOCATION");
-      setFormField("pickupId", null);
       setFormField("pickupAirportId", null);
       setFormField("pickupTrainId", null);
     }
