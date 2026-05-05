@@ -13,7 +13,7 @@ import WrapperContainer from "../(components)/wrapperContainer/WrapperContainer"
 import { HomeResponse } from "@/types/home/home";
 
 import { getHomePageDetailsWithAuth } from "@/services/home/home.service";
-import { HomeStoreHydrator } from "@/lib/stores/HomeStoreHydrator";
+import RemoveCacheWhenUserRefresh from "./RemoveCacheWhenUserRefresh";
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -26,10 +26,6 @@ export default async function HomePage({ params }: Props) {
   let homeData: HomeResponse | null = null;
 
   try {
-    console.log("----------------------------------------------");
-
-    console.log("fetching home data");
-
     homeData = await getHomePageDetailsWithAuth();
   } catch (error) {
     console.error("Error fetching home data:", error);
@@ -37,8 +33,7 @@ export default async function HomePage({ params }: Props) {
 
   return (
     <main>
-      {/* <Teest /> */}
-      {homeData && <HomeStoreHydrator data={homeData} />}
+      <RemoveCacheWhenUserRefresh />
       <HomeSlider bannersData={homeData?.banners ?? []} />
       <PickUpArea />
       <RentalGateInfo />
