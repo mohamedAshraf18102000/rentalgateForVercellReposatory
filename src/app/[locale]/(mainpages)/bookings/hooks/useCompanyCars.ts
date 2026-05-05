@@ -15,6 +15,8 @@ export const useCompanyCars = (filters: CarFilters) => {
 
   return useInfiniteQuery<CarApiResponse>({
     queryKey: ["company-cars", filters],
+    retry: false,
+    refetchOnWindowFocus: false,
     queryFn: ({ pageParam = 0 }) =>
       getCompanyCars(pageParam as number, filters),
     initialPageParam: 0,
