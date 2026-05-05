@@ -99,12 +99,17 @@ export const getCompanyCars = async (
 
     // When searching by airport/train station, backend does not accept lat/lng.
     if (!(hasAirport || hasTrainStation)) {
-      if (filters.latitude != null) {
-        query.push(`latitude=${filters.latitude}`);
+      const latitudeToUse =
+        filters.latitude ?? filters.userPhysicalLatitudeFilter;
+      const longitudeToUse =
+        filters.longitude ?? filters.userPhysicalLongitudeFilter;
+
+      if (latitudeToUse != null) {
+        query.push(`latitude=${latitudeToUse}`);
       }
 
-      if (filters.longitude != null) {
-        query.push(`longitude=${filters.longitude}`);
+      if (longitudeToUse != null) {
+        query.push(`longitude=${longitudeToUse}`);
       }
     }
   }
