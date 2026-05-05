@@ -1,9 +1,15 @@
 "use client";
 
 import * as React from "react";
+import { useRouter } from "next/navigation";
 import type { DialogName, DialogPropsMap, DialogState } from "../types/dialog.types";
 import { DialogContext } from "../context/DialogContext";
 import { DialogRenderer } from "./DialogRenderer";
+import {
+  onApiErrorDialog,
+  onAppNavigate,
+  onCloseDialog,
+} from "@/lib/utils/errorDialogEvents";
 
 /**
  * DialogProvider
@@ -14,6 +20,7 @@ import { DialogRenderer } from "./DialogRenderer";
  * @param {React.ReactNode} children - Child components
  */
 export function DialogProvider({ children }: { children: React.ReactNode }) {
+  const router = useRouter();
   const [dialogState, setDialogState] = React.useState<DialogState>(null);
 
   const openDialog = React.useCallback(
@@ -38,6 +45,29 @@ export function DialogProvider({ children }: { children: React.ReactNode }) {
 
   const closeDialog = React.useCallback(() => {
     setDialogState(null);
+  }, []);
+
+  React.useEffect(() => {
+    return onApiErrorDialog(({ message }) => {
+      openDialog("ApiError", { message });
+    });
+  }, [openDialog]);
+
+  React.useEffect(() => {
+    return onAppNavigate(({ href, replace }) => {
+      setDialogState(null);
+      if (replace) {
+        router.replace(href);
+        return;
+      }
+      router.push(href);
+    });
+  }, [router]);
+
+  React.useEffect(() => {
+    return onCloseDialog(() => {
+      setDialogState(null);
+    });
   }, []);
 
   const value = React.useMemo(

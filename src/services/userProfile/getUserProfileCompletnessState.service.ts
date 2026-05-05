@@ -5,5 +5,7 @@ export interface UserProfileCompletnessState {
 }
 
 export const getUserProfileCompletnessState = async (): Promise<UserProfileCompletnessState> => {
-    return fetcher<UserProfileCompletnessState>("/clients/profile/completeness");
+    return fetcher<UserProfileCompletnessState>("/clients/profile/completeness", {
+        skipErrorToast: true,
+    });
 };

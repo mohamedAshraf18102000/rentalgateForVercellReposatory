@@ -9,11 +9,13 @@ import { BUTTON_STYLES, NAVBAR_STYLES } from "../constants";
 import { useHeaderLogic } from "../hooks/useHeaderLogic";
 import { useLocationStore } from "@/lib/stores/useLocationStore";
 import { usePathname } from "next/navigation";
-import { toast } from "sonner";
 import Link from "next/link";
-import { useBookedCarDetailsStore } from "@/lib/stores/useBookedCarDetailsStore";
-import { ChevronDown, MapPinPlus } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import PositioningIcon from "@/constants/icons/PositioningIcon";
+import {
+  emitApiErrorDialog,
+  emitCloseDialog,
+} from "@/lib/utils/errorDialogEvents";
 
 interface NavbarActionsProps {
   translations: {
@@ -47,14 +49,20 @@ export const NavbarActions: React.FC<NavbarActionsProps> = ({
   const pathname = usePathname();
 
   const [contactDialogOpen, setContactDialogOpen] = React.useState(false);
-  const userPhysical_Address = useLocationStore((state) => state.userPhysical_Address);
+  const userPhysical_Address = useLocationStore(
+    (state) => state.userPhysical_Address,
+  );
   const openLocationDialog = useLocationStore((state) => state.openDialog);
 
-  const ToastError = () => {
+  const DialogError = () => {
     return (
-      <span onClick={() => console.log("clicked")}>
+      <span>
         {translations.updateLocationPrefix}{" "}
-        <Link className="underline underline-offset-3!" href="/bookings">
+        <Link
+          className="underline underline-offset-3!"
+          href="/bookings"
+          onClick={() => emitCloseDialog()}
+        >
           {translations.updateLocationLink}
         </Link>{" "}
         {translations.updateLocationSuffix}
@@ -64,9 +72,7 @@ export const NavbarActions: React.FC<NavbarActionsProps> = ({
 
   const handleOpenLocationDialog = () => {
     if (pathname.includes("/reservation") || pathname.includes("/carDetails")) {
-      toast.error((<ToastError />) as React.ReactNode, {
-        position: "top-center",
-      });
+      emitApiErrorDialog(<DialogError />);
       return;
     }
     openLocationDialog("navbarSSSS");

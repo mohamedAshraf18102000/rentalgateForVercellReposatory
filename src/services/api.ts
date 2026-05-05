@@ -1,3 +1,7 @@
+import {
+  getDialogMessage,
+} from "@/lib/utils/errorMessagesHandler";
+import { emitApiErrorDialog } from "@/lib/utils/errorDialogEvents";
 import { getCookie } from "@/util/cookies";
 
 type AppLocale = "ar" | "en";
@@ -48,16 +52,9 @@ const getCurrentLocale = async (): Promise<AppLocale> => {
   return "ar";
 };
 
-const showApiErrorToast = async (message: string) => {
-  if (typeof window === "undefined") return;
-
-  const { toast } = await import("sonner");
-  toast.error(message, { position: "top-center" });
-};
-
 export async function fetcher<T>(
   url: string,
-  options?: RequestInit,
+  options?: (RequestInit & { skipErrorToast?: boolean }),
 ): Promise<T> {
   const token = await getAuthToken();
   const currentLocale = await getCurrentLocale();
@@ -83,7 +80,9 @@ export async function fetcher<T>(
       // Not a JSON error or empty body
       console.log("Error fetching data:", e);
     }
-    await showApiErrorToast(errorMessage);
+    if (!options?.skipErrorToast) {
+      emitApiErrorDialog(getDialogMessage(errorMessage));
+    }
     throw new Error(errorMessage);
   }
 

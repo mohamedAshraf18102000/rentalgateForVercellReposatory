@@ -124,6 +124,10 @@
   },
   "confirmCancelBookingWithId": "تأكيد إلغاء الحجز — رقم {reservationId}",
   "outOf": "من أصل",
+  "apiErrorDialog": {
+    "title": "خطأ",
+    "confirmButton": "حسنا"
+  },
   "inputFileUpload": {
     "uploadText": "أضغط أو قُم بالسحب لأضافة ملف"
   },

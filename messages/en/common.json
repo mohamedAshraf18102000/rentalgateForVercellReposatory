@@ -124,6 +124,10 @@
   },
   "confirmCancelBookingWithId": "Confirm cancellation — booking {reservationId}",
   "outOf": "out of",
+  "apiErrorDialog": {
+    "title": "Error",
+    "confirmButton": "OK"
+  },
   "inputFileUpload": {
     "uploadText": "Click or drag to upload a file"
   },

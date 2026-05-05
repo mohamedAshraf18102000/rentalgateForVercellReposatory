@@ -21,6 +21,7 @@ import type { EditLicenseImageProps } from "../pages/(profile)/EditLicenseImage/
 import type { AccountRecoveryProps } from "../pages/auth/recovery/Recovery.types";
 import type { AccountDeactivatedProps } from "../pages/auth/AccountDeactivated/AccountDeactivated.types";
 import type { UserSuggestionProps } from "../pages/(profile)/UserSuggestion/UserSuggestion.types";
+import type { ApiErrorProps } from "../pages/ApiError/ApiError.types";
 
 /**
  * Union type of all dialog names
@@ -40,7 +41,8 @@ export type DialogName =
   | "EditLicenseImage"
   | "AccountRecovery"
   | "AccountDeactivated"
-  | "UserSuggestion";
+  | "UserSuggestion"
+  | "ApiError";
 
 /**
  * Base props that all dialogs receive automatically
@@ -75,6 +77,7 @@ export interface DialogPropsMap {
   AccountRecovery: Omit<AccountRecoveryProps, "onClose">;
   AccountDeactivated: Omit<AccountDeactivatedProps, "onClose">;
   UserSuggestion: Omit<UserSuggestionProps, "onClose">;
+  ApiError: Omit<ApiErrorProps, "onClose">;
 }
 
 /**
@@ -97,5 +100,6 @@ export type DialogState =
   | { name: "AccountRecovery"; props: AccountRecoveryProps }
   | { name: "AccountDeactivated"; props: AccountDeactivatedProps }
   | { name: "UserSuggestion"; props: UserSuggestionProps }
+  | { name: "ApiError"; props: ApiErrorProps }
   | null;
 

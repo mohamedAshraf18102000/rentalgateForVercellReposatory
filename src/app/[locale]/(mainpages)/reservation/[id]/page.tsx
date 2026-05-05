@@ -313,6 +313,7 @@ const page = () => {
   const handleCalculateQuote = () => {
     const latestFormData = useBookedCarDetailsStore.getState().formData;
     calculateQuotePrice(buildReservationPayload(latestFormData));
+    console.log("okkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk");
   };
 
   const handleResetForm = () => {
