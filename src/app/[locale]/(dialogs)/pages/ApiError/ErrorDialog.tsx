@@ -10,7 +10,7 @@ export function ErrorDialog({ message, onClose, onClick }: ApiErrorProps) {
 
   return (
     <DialogWrapper
-      className="overflow-x-hidden!"
+      className="overflow-x-hidden! max-w-lg!"
       open={true}
       onOpenChange={(open) => !open && onClose()}
       closeOnOutsideClick={false}
@@ -18,7 +18,7 @@ export function ErrorDialog({ message, onClose, onClick }: ApiErrorProps) {
         mainTitle: t("apiErrorDialog.title"),
       }}
       content={
-        <div className="flex flex-col items-center justify-center">
+        <div className="flex flex-col items-center justify-center max-h-[500px] overflow-y-auto">
           <CircleX className="w-10 h-10 text-red-500" />
           <div className="text-sm my-2">
             <span>{message}</span>
@@ -27,7 +27,7 @@ export function ErrorDialog({ message, onClose, onClick }: ApiErrorProps) {
       }
       footer={
         <Button
-          className="w-full mt-5"
+          className="w-full mt-5 "
           onClick={() => {
             onClick?.();
             onClose();
