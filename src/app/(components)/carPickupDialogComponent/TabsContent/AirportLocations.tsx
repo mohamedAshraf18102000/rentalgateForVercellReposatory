@@ -79,7 +79,7 @@ const AirportLocations = () => {
             <p className="text-base font-bold">
               {t("pickupDialog.popularLocations.airports")}
             </p>
-            <p className="w-full bg-red text-[12px] text-StatusRed flex items-center gap-2">
+            <p className="w-full text-[12px] text-StatusRed flex items-center gap-2">
               <Info className="size-4" />
               هذه المطارات متاحة للحجز مع هذه السيارة فقط ولا تنطبق على باقي
               السيارات.

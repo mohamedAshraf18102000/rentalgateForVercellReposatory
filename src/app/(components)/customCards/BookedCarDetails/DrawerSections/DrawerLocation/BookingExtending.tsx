@@ -130,9 +130,10 @@ const BookingExtending = ({
     };
 
     extendReservation(payload, {
-      onSuccess: () => {
+      onSuccess: (data) => {
+        console.log("PRICENEEDED", data.total - data.basePrice);
         toast.success(t("myBookingsDrawer.extendBooking.toast.success"));
-        setShowBookingExtending(false);
+        // setShowBookingExtending(false);
       },
     });
   };
@@ -186,7 +187,10 @@ const BookingExtending = ({
             </div>
           </div>
         </div>
-        <div className="bg-red-400 p-2 rounde-xl">{amount}</div>
+        <div className="bg-red-400 p-2 rounde-xl">
+          {" "}
+          booking Amount: {amount}
+        </div>
 
         <SheetFooter className="p-6 border-t mt-auto">
           <Button

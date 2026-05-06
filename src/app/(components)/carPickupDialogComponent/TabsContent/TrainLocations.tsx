@@ -82,7 +82,7 @@ const TrainLocations = () => {
           <p className="text-base font-bold">
             {t("pickupDialog.popularLocations.trainStations")}
           </p>
-          <p className="w-full bg-red text-[12px] text-StatusRed flex items-center gap-2">
+          <p className="w-full text-[12px] text-StatusRed flex items-center gap-2">
             <Info className="size-4" />
             هذه المحطات متاحة للحجز مع هذه السيارة فقط ولا تنطبق على باقي
             السيارات.

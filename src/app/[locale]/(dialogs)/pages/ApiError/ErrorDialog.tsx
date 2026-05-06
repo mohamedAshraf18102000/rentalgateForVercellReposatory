@@ -10,7 +10,7 @@ export function ErrorDialog({ message, onClose, onClick }: ApiErrorProps) {
 
   return (
     <DialogWrapper
-      className="overflow-x-hidden! max-w-lg!"
+      className="overflow-x-hidden! max-w-lg! z-999999!"
       open={true}
       onOpenChange={(open) => !open && onClose()}
       closeOnOutsideClick={false}
