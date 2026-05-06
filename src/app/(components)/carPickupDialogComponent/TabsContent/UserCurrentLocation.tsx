@@ -9,8 +9,9 @@ import { usePickupRedirect } from "./usePickupRedirect";
 const UserCurrentLocation = () => {
   const t = useTranslations("home");
   const { handleRedirectClick } = usePickupRedirect();
+  const open = usePickupDialogStore((state) => state.open);
   const { data: userAddresses, isLoading: isLoadingAddresses } =
-    useUserAddreses();
+    useUserAddreses(open);
 
   const { setFormField, formData, carDetails } = useBookedCarDetailsStore();
   const isDeliveryServiceUnavailable =
@@ -22,28 +23,6 @@ const UserCurrentLocation = () => {
     confirmDialog,
     setIsCurrentLocationTabDisabled,
   } = usePickupDialogStore();
-  const isAirport =
-    target === "return"
-      ? !!formData.returnAirportId
-      : !!formData.pickupAirportId;
-  const isTrain =
-    target === "return" ? !!formData.returnTrainId : !!formData.pickupTrainId;
-
-  // If the stored location is an airport or train station, we ignore it and use undefined
-  // to let GoogleMapsLocation default to the user's real location.
-  // We use formData from useBookedCarDetailsStore for initial coordinates.
-  const initialLat =
-    isAirport || isTrain
-      ? undefined
-      : target === "return"
-        ? formData.returnLat || undefined
-        : formData.pickupLat || undefined;
-  const initialLng =
-    isAirport || isTrain
-      ? undefined
-      : target === "return"
-        ? formData.returnLong || undefined
-        : formData.pickupLong || undefined;
 
   const handleSelectAddress = (address: UserAddress) => {
     setIsUnsavedMapLocation(false);
@@ -118,6 +97,11 @@ const UserCurrentLocation = () => {
                 {t("pickupDialog.savedAddressesTitle")}
               </h5>
             </div>
+            {isLoadingAddresses && (
+              <p className="text-center text-Grey600 text-sm">
+                {t("bookings.drawerAccordion.model.loading")}
+              </p>
+            )}
             {userAddresses?.length === 0 && (
               <p className="text-center text-Grey600 text-sm">
                 {t("pickupDialog.noSavedAddresses")}
