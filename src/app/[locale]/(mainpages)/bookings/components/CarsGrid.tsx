@@ -94,7 +94,8 @@ const getCarPricing = (car: CarContent, rentalDays: number) => {
     totalPrice: priceResult.totalPrice,
     pricingType: priceResult.pricingType,
     discountPercentage: discountResult.discountPercentage,
-    originalPrice: originalPriceResult.pricePerDay,
+    originalPrice:
+      rentalDays > 0 ? originalPriceResult.totalPrice : originalPriceResult.pricePerDay,
   };
 };
 

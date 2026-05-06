@@ -11,6 +11,7 @@
   "priceWithTax": "السعر شامل الضريبة:",
   "priceWithoutTax": "السعر غير شامل الضريبة:",
   "forRentalDays": "( لـ {days} يوم )",
+  "totalForDays": "اجمالي السعر لعدد {days} يوم",
   "pricePerPricingType": "/ {pricingType}",
   "specificationsTitle": "مواصفات السيارة:",
   "viewSpecifications": "عرض المواصفات",

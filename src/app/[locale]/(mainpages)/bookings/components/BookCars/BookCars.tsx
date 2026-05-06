@@ -41,9 +41,9 @@ const BookCars = () => {
   const setFormField = useBookedCarDetailsStore((state) => state.setFormField);
   const hasAppliedPickupFilter = Boolean(
     appliedFilters.pickupType ||
-      appliedFilters.pickupId ||
-      appliedFilters.pickupLat != null ||
-      appliedFilters.pickupLng != null,
+    appliedFilters.pickupId ||
+    appliedFilters.pickupLat != null ||
+    appliedFilters.pickupLng != null,
   );
 
   const apiFilters = {
@@ -94,6 +94,15 @@ const BookCars = () => {
 
   const fromDate = watch("fromDate");
   const toDate = watch("toDate");
+
+  // Keep the form dates in sync with the global filters store
+  useEffect(() => {
+    const storeFromDate = filters.fromDate ? new Date(filters.fromDate) : null;
+    const storeToDate = filters.toDate ? new Date(filters.toDate) : null;
+
+    setValue("fromDate", storeFromDate);
+    setValue("toDate", storeToDate);
+  }, [filters.fromDate, filters.toDate, setValue]);
 
   useEffect(() => {
     if (fromDate) setFilter("fromDate", fromDate.toISOString());
@@ -166,11 +175,13 @@ const BookCars = () => {
           ))}
         </div>
       ) : allCars.length > 0 ? (
-        <CarsGrid
-          cars={allCars}
-          isLoading={isLoading}
-          rentalDays={rentalDays}
-        />
+        <>
+          <CarsGrid
+            cars={allCars}
+            isLoading={isLoading}
+            rentalDays={rentalDays}
+          />
+        </>
       ) : (
         <div className="mt-6 flex h-[min(50vh,24rem)] w-full items-center justify-center rounded-2xl bg-white shadow sm:mt-8 sm:h-[22rem] md:mt-10 md:h-[25rem]">
           <div className="flex flex-col items-center gap-4 px-4 text-center sm:px-8">

@@ -60,6 +60,8 @@ const CarsCard = ({
   priceBeforeOffer,
   showTax,
   pricingType = "DAILY",
+  totalPrice,
+  rentalDays,
   onClick,
 }: carsCard) => {
   const t = useTranslations("carDetails");
@@ -70,6 +72,17 @@ const CarsCard = ({
     MONTHLY: t("pricingType.monthly"),
     YEARLY: t("pricingType.yearly"),
   };
+  const hasSelectedRentalDays =
+    typeof rentalDays === "number" && rentalDays > 0;
+  const shouldUseTotalPrice =
+    hasSelectedRentalDays && typeof totalPrice === "number" && totalPrice > 0;
+  const displayedPrice = shouldUseTotalPrice ? totalPrice : carPrice;
+  const hasDisplayedPrice =
+    typeof displayedPrice === "number" && displayedPrice > 0;
+  const hasOffer =
+    hasDisplayedPrice &&
+    typeof priceBeforeOffer === "number" &&
+    priceBeforeOffer > displayedPrice;
 
   return (
     <article>
@@ -103,14 +116,17 @@ const CarsCard = ({
             </Badge>
           )}
 
-          <RoundedRec className="absolute bottom-0 left-1/2 -translate-x-1/2 z-50" />
-
-          <figcaption className="flex items-center gap-2 absolute bottom-0 left-1/2 -translate-x-1/2 z-50">
-            <ExeclusiveOfferIcon />
-            <span className="text-xs font-bold text-StatusDarkGreen sm:text-sm">
-              {t("special_offer_title")}
-            </span>
-          </figcaption>
+          {hasOffer && (
+            <>
+              <RoundedRec className="absolute bottom-0 left-1/2 -translate-x-1/2 z-50" />
+              <figcaption className="flex items-center gap-2 absolute bottom-0 left-1/2 -translate-x-1/2 z-50">
+                <ExeclusiveOfferIcon />
+                <span className="text-xs font-bold text-StatusDarkGreen sm:text-sm">
+                  {t("special_offer_title")}
+                </span>
+              </figcaption>
+            </>
+          )}
         </figure>
 
         <CardHeader className="mt-5">
@@ -160,53 +176,61 @@ const CarsCard = ({
             {/* Price */}
             <div className="flex flex-col mt-3">
               <div className="flex items-center">
-                {showTax ? (
-                  <>
-                    {priceBeforeOffer && priceBeforeOffer > (carPrice || 0) && (
-                      <span className="text-xs text-Grey500 line-through sm:text-sm">
-                        {formatPrice(priceBeforeOffer)}
-                      </span>
-                    )}
-                    <data
-                      value="10.56"
-                      className="mx-2 text-sm font-bold sm:text-base"
-                    >
-                      {formatPrice(carPrice!)}
-                    </data>
-                  </>
-                ) : (
-                  <>
-                    {priceBeforeOffer && priceBeforeOffer > (carPrice || 0) && (
-                      <span className="text-xs text-Grey500 line-through sm:text-sm">
-                        {formatPrice(getPriceWithoutTax(priceBeforeOffer))}
-                      </span>
-                    )}
-                    <data
-                      value="10.56"
-                      className="mx-2 text-sm font-bold sm:text-base"
-                    >
-                      {formatPrice(getPriceWithoutTax(carPrice!))}
-                    </data>
-                  </>
-                )}
+                {hasDisplayedPrice &&
+                  (showTax ? (
+                    <>
+                      {priceBeforeOffer &&
+                        priceBeforeOffer > displayedPrice && (
+                          <span className="text-xs text-Grey500 line-through sm:text-sm">
+                            {formatPrice(priceBeforeOffer)}
+                          </span>
+                        )}
+                      <data
+                        value="10.56"
+                        className="mx-2 text-sm font-bold sm:text-base"
+                      >
+                        {formatPrice(displayedPrice)}
+                      </data>
+                    </>
+                  ) : (
+                    <>
+                      {priceBeforeOffer &&
+                        priceBeforeOffer > displayedPrice && (
+                          <span className="text-xs text-Grey500 line-through sm:text-sm">
+                            {formatPrice(getPriceWithoutTax(priceBeforeOffer))}
+                          </span>
+                        )}
+                      <data
+                        value="10.56"
+                        className="mx-2 text-sm font-bold sm:text-base"
+                      >
+                        {formatPrice(getPriceWithoutTax(displayedPrice))}
+                      </data>
+                    </>
+                  ))}
 
                 <p className="flex items-center text-sm sm:text-base">
                   <SaudiRiyal className="h-4 w-4 sm:h-5 sm:w-5" />
                   <span className="mx-1">
-                    {t("pricePerPricingType", {
-                      pricingType: pricingTypeLabels[pricingType],
-                    })}
+                    {shouldUseTotalPrice
+                      ? t("totalForDays", { days: rentalDays })
+                      : t("pricePerPricingType", {
+                          pricingType: pricingTypeLabels[pricingType],
+                        })}
                   </span>
                 </p>
               </div>
-              {/* {rentalDays && rentalDays > 0 && totalPrice && (
-                <div className="text-xs font-medium text-Grey600 mt-1">
-                  <span>إجمالي السعر لـ {rentalDays} أيام: </span>
+              {shouldUseTotalPrice && (
+                <div className="mt-1 text-xs font-medium text-Grey600">
+                  <span>{`${t("totalForDays", { days: rentalDays })}: `}</span>
                   <span className="font-bold text-foreground">
-                    {totalPrice} <SaudiRiyal className="inline w-3 h-3" />
+                    {showTax
+                      ? formatPrice(totalPrice)
+                      : formatPrice(getPriceWithoutTax(totalPrice))}
+                    <SaudiRiyal className="inline h-3 w-3" />
                   </span>
                 </div>
-              )} */}
+              )}
             </div>
             {extraContent && (
               <div className="w-full h-full">{extraContent}</div>

@@ -12,12 +12,16 @@ import { Funnel } from "lucide-react";
 import DrawerAccordion from "./DrawerAccordion/DrawerAccordion";
 import { useUserPreferedFiltersStore } from "@/lib/stores/useUserPreferedFiltersStore";
 import { useLocale, useTranslations } from "next-intl";
+import { useBookedCarDetailsStore } from "@/lib/stores/useBookedCarDetailsStore";
+import { usePickupDialogStore } from "@/lib/stores/usePickupDialogStore";
 
 const FilterDrawer = () => {
   const t = useTranslations("home");
   const locale = useLocale();
   const isArabic = locale === "ar";
   const { resetFilters, filters, applyFilters } = useUserPreferedFiltersStore();
+  const setFormData = useBookedCarDetailsStore((state) => state.setFormData);
+  const resetDialogState = usePickupDialogStore((state) => state.resetDialogState);
 
   const hasCategoryFilter = !!filters.carCategory || filters.categoryId !== "";
 
@@ -29,6 +33,30 @@ const FilterDrawer = () => {
     filters.modelId !== "",
     filters.pickupId !== "" && filters.pickupId !== "current-location",
   ].filter(Boolean).length;
+
+  const handleResetToDefault = () => {
+    // Reset booking filters used by the list API.
+    resetFilters();
+    // Reset pickup/return selections used by pickup dialog tabs.
+    setFormData({
+      pickupName: "",
+      pickupType: null,
+      pickupId: null,
+      pickupAirportId: null,
+      pickupTrainId: null,
+      pickupLat: null,
+      pickupLong: null,
+      carReturnLocation: "",
+      carReturnLocationId: null,
+      returnType: null,
+      returnAirportId: null,
+      returnTrainId: null,
+      returnLat: null,
+      returnLong: null,
+    });
+    // Ensure dialog opens from clean state.
+    resetDialogState();
+  };
 
   return (
     <Sheet>
@@ -67,7 +95,7 @@ const FilterDrawer = () => {
           <Button
             className="w-full min-h-11 text-sm! sm:text-base!"
             variant="outline"
-            onClick={resetFilters}
+            onClick={handleResetToDefault}
           >
             {t("bookings.filterDrawer.resetToDefault")}
           </Button>

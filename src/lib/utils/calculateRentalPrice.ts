@@ -39,7 +39,6 @@ export const calculateRentalPrice = ({
   halfMonthlyPrice,
   monthlyPrice,
   yearlyPrice,
-
   offerDailyPrice,
   offerWeeklyPrice,
   offerHalfMonthlyPrice,

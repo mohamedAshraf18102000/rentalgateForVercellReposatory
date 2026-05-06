@@ -11,6 +11,7 @@
   "priceWithTax": "Price includes tax:",
   "priceWithoutTax": "Price excludes tax:",
   "forRentalDays": "({days} days)",
+  "totalForDays": "Total for {days, plural, one {# day} other {# days}}",
   "pricePerPricingType": "/ {pricingType}",
   "specificationsTitle": "Car specifications:",
   "viewSpecifications": "View specifications",

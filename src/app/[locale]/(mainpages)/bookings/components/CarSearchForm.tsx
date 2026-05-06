@@ -153,19 +153,12 @@ const CarSearchForm = ({
                 </p>
               </div>
               {(() => {
-                const currentLocationLabel = t(
-                  "bookings.searchForm.currentLocation",
-                );
-                (filters.pickupName === currentLocationLabel ||
-                  filters.pickupName === "الموقع الحالي" ||
-                  !filters.pickupName) &&
-                userPhysical_Address
-                  ? userPhysical_Address
-                  : filters.pickupName || currentLocationLabel;
+                const resolvedPickupName = filters.pickupName?.trim() || "";
+
                 return (
                   <>
                     <div
-                      title={filters.pickupName}
+                      title={resolvedPickupName}
                       onClick={handleOpenLocationDialog}
                       className={`h-[40px] rounded-lg p-2 w-full bg-[#eceef2] flex items-center gap-2 cursor-pointer ${
                         shouldShowRestrictedLocationMessage
@@ -174,8 +167,8 @@ const CarSearchForm = ({
                       }`}
                     >
                       <p className="text-sm line-clamp-1">
-                        {filters.pickupName ? (
-                          <span>{filters.pickupName}</span>
+                        {resolvedPickupName ? (
+                          <span>{resolvedPickupName}</span>
                         ) : (
                           <span className="text-gray-500">
                             اختر مكان الاستلام
