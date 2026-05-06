@@ -56,6 +56,11 @@ const BookingExtending = dynamic(
   { ssr: false },
 );
 
+const BookingComplement = dynamic(
+  () => import("./DrawerSections/DrawerLocation/BookingComplement"),
+  { ssr: false },
+);
+
 interface BookedCarDetailsDrawerProps {
   trigger?: React.ReactNode;
   data?: ReservationDetailsResponse;
@@ -88,6 +93,7 @@ const BookedCarDetailsDrawer = ({
     | "cancel-booking"
     | "location-details"
     | "booking-extending"
+    | "booking-complement"
   >("booking-details");
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [normalReceiveAddress, setNormalReceiveAddress] = useState<
@@ -254,6 +260,7 @@ const BookedCarDetailsDrawer = ({
 
   return (
     <Sheet
+      open={isDrawerOpen}
       onOpenChange={(open) => {
         setIsDrawerOpen(open);
         if (open) {
@@ -460,15 +467,27 @@ const BookedCarDetailsDrawer = ({
                 {data && <BookingPaymentDetailsCollapseLazy data={data} />}
               </div>
               <SheetFooter className="mt-auto flex-col gap-3 border-t p-6 sm:flex-row">
-                <Button
-                  type="button"
-                  variant="destructive"
-                  className="text-base! w-full border-2 border-StatusRed bg-transparent text-StatusRed sm:w-1/4"
-                  onClick={() => setActiveView("cancel-booking")}
-                >
-                  {t("cancelBooking")}
-                </Button>
-                <Button className="text-base! w-full sm:w-3/4">
+                {data?.reservationStatus !== "FINISHED" && (
+                  <Button
+                    type="button"
+                    variant="destructive"
+                    className="text-base! w-full border-2 border-StatusRed bg-transparent text-StatusRed sm:w-1/4"
+                    onClick={() => setActiveView("cancel-booking")}
+                  >
+                    {t("cancelBooking")}
+                  </Button>
+                )}
+                {data?.reservationStatus === "FINISHED" && (
+                  <Button
+                    type="button"
+                    variant="destructive"
+                    className="text-base! w-full border-2 border-StatusRed bg-transparent text-StatusRed sm:w-1/4"
+                    onClick={() => setActiveView("booking-complement")}
+                  >
+                    ارسال شكوي
+                  </Button>
+                )}
+                <Button className={`text-base! w-full sm:w-3/4`}>
                   {t("myBookings")}
                 </Button>
               </SheetFooter>
@@ -504,6 +523,12 @@ const BookedCarDetailsDrawer = ({
                     : "booking-details",
                 )
               }
+            />
+          ) : activeView === "booking-complement" ? (
+            <BookingComplement
+              reservationId={data?.reservationId}
+              onSubmitted={() => setIsDrawerOpen(false)}
+              onBack={() => setActiveView("booking-details")}
             />
           ) : (
             <CancelConfirmation

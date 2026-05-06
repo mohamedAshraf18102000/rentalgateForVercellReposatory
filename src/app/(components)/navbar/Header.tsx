@@ -65,7 +65,7 @@ export default async function Header() {
               />
             </div>
 
-            <ClearData />
+            {/* <ClearData /> */}
 
             {/* Right Section */}
             <div className={NAVBAR_STYLES.rightSection}>
