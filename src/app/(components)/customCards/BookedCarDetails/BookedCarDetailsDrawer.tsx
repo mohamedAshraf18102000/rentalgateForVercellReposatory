@@ -23,6 +23,7 @@ import {
   SaudiRiyal,
   SaudiRiyalIcon,
   SquarePen,
+  Star,
   User,
 } from "lucide-react";
 import { ReservationDetailsResponse } from "@/types/myBookings/BookingDetails";
@@ -35,6 +36,7 @@ import { useStatusLabel } from "@/hooks/useBookingStatusLabel";
 import { ReservationStatus } from "@/types/myBookings/myBookings";
 import { reverseGeocode } from "@/lib/utils/reverseGeocode";
 import LocationFrom_To from "./DrawerSections/locationFrom_To/LocationFrom_To";
+import Rating from "./DrawerSections/Rating/Rating";
 
 const CancelConfirmation = dynamic(
   () => import("./DrawerSections/DrawerLocation/CancelConfirmation"),
@@ -94,6 +96,7 @@ const BookedCarDetailsDrawer = ({
     | "location-details"
     | "booking-extending"
     | "booking-complement"
+    | "rating"
   >("booking-details");
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [normalReceiveAddress, setNormalReceiveAddress] = useState<
@@ -282,7 +285,30 @@ const BookedCarDetailsDrawer = ({
               <SheetHeader className="text-start! mt-10 px-6 ">
                 <SheetTitle>{t("myBookingsDrawer.title")}</SheetTitle>
               </SheetHeader>
+
               <div className="mx-auto min-h-0 w-full flex-1 overflow-y-auto px-3 sm:w-[95%]">
+                <div className="bg-[#F2F2F2] p-2 my-2 text-center flex flex-col gap-2 items-center rounded-xl">
+                  <Image
+                    src="/ratingIcon.webp"
+                    alt="star"
+                    width={50}
+                    height={50}
+                  />
+                  <p className="text-base font-bold">يسعدنا معرفة تقييمك</p>
+                  <p className="text-sm text-Grey700">
+                    تقييمك يساعدنا على معرفة مستوانا لتحسين الخدمه المقدمة لك
+                  </p>
+                  <Separator className="my-3" />
+                  <Button
+                    variant="outline"
+                    className="bg-white text-base flex gap-2 border-2!"
+                    onClick={() => setActiveView("rating")}
+                  >
+                    <Star className="w-4! h-4!" />
+                    <span className="px-2">أضافة تقييم</span>
+                  </Button>
+                </div>
+
                 <div className="">
                   <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center">
                     <div className="relative h-34 w-full overflow-hidden rounded-2xl sm:w-[40%]">
@@ -528,6 +554,11 @@ const BookedCarDetailsDrawer = ({
             <BookingComplement
               reservationId={data?.reservationId}
               onSubmitted={() => setIsDrawerOpen(false)}
+              onBack={() => setActiveView("booking-details")}
+            />
+          ) : activeView === "rating" ? (
+            <Rating
+              reservationId={data?.reservationId}
               onBack={() => setActiveView("booking-details")}
             />
           ) : (

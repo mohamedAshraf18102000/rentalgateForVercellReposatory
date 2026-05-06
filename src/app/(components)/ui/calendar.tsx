@@ -254,10 +254,7 @@ function Calendar({
             defaultClassNames.months,
           ),
           month: cn("flex w-full flex-col gap-1", defaultClassNames.month),
-          nav: cn(
-            "absolute inset-x-0 top-0 flex w-full items-center justify-between",
-            defaultClassNames.nav,
-          ),
+          nav: cn("hidden!", defaultClassNames.nav),
           button_previous: cn("cal-nav-btn", defaultClassNames.button_previous),
           button_next: cn("cal-nav-btn", defaultClassNames.button_next),
           month_caption: cn(

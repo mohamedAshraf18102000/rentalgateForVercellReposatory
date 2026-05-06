@@ -39,7 +39,7 @@ export default async function Header() {
               <HomeLink
                 href="/"
                 label={translations.home}
-                isActive={false} // Will be handled by client hydration or CSS if needed
+                isActive={false}
                 className={BUTTON_STYLES.navLink}
               />
 
