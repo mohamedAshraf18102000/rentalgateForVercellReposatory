@@ -5,13 +5,18 @@ import { ArrowIcon } from "@/icons";
 import { ProtectedLink } from "../../../(components)/ProtectedLink";
 import { useTranslations } from "next-intl";
 import MoreRequestedCarsCarousel from "@/app/(components)/mostRequestedCars/MoreRequestedCarsCarousel";
-import { useHomeStore } from "@/lib/stores/useHomeStore";
+import { HomeResponse } from "@/types/home/home";
 
-export const MostRequestedCars = ({ locale }: { locale: string }) => {
+export const MostRequestedCars = ({
+  locale,
+  homeData,
+}: {
+  locale: string;
+  homeData: HomeResponse | null;
+}) => {
   const t = useTranslations("home");
   const isRTL = locale === "ar";
 
-  const homeData = useHomeStore((state) => state.data);
   const lastSeen = homeData?.lastSeen ?? [];
 
   if (lastSeen.length === 0) {
@@ -29,7 +34,7 @@ export const MostRequestedCars = ({ locale }: { locale: string }) => {
             <p className="text-gray-500">
               {locale === "ar" ? "لا يوجد سيارات حاليا" : "No cars available"}
             </p>
-          </div>
+        </div>
         </section>
       </section>
     );

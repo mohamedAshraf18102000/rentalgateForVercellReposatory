@@ -8,8 +8,13 @@ import {
 } from "@/lib/stores/useUserPreferedFiltersStore";
 import { useRouter } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
+import { HomeResponse } from "@/types/home/home";
 
-const FavCategoryComponent = () => {
+const FavCategoryComponent = ({
+  categories,
+}: {
+  categories: HomeResponse["carCategories"];
+}) => {
   const { filters, setFilter, applyFilters } = useUserPreferedFiltersStore();
   const router = useRouter();
   const locale = useLocale();
@@ -34,6 +39,7 @@ const FavCategoryComponent = () => {
         </p>
         <FavCategoryTabs
           value={filters.carCategory}
+          categories={categories}
           onValueChange={(value) => {
             setFilter("carCategory", value as CarCategory);
             setFilter("categoryId", value);

@@ -37,12 +37,12 @@ export default async function HomePage({ params }: Props) {
       <HomeSlider bannersData={homeData?.banners ?? []} />
       <PickUpArea />
       <RentalGateInfo />
-      <RentalBookingSearchSection />
+      <RentalBookingSearchSection homeData={homeData} />
       <SuccessPartners companiesData={homeData?.companies ?? []} />
       {(homeData?.todayOffers?.length ?? 0) > 0 && (
         <Offers todayOffersData={homeData?.todayOffers ?? []} />
       )}
-      <MostRequestedCars locale={locale} />
+      <MostRequestedCars locale={locale} homeData={homeData} />
       <CompanyOffers latestOffersData={homeData?.latestOffers ?? []} />
       <HomeMockups />
       <WrapperContainer>

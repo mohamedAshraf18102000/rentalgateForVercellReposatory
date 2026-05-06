@@ -19,7 +19,7 @@ const hasAuthToken = async (): Promise<boolean> => {
   if (typeof window !== "undefined") {
     return document.cookie
       .split(";")
-      .some((cookie) => cookie.trim().startsWith("authToken="));
+      .some((cookie) => cookie.trim().startsWith("authToken"));
   }
 
   try {

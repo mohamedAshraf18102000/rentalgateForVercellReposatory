@@ -2,19 +2,20 @@
 
 import { Tabs, TabsList, TabsTrigger } from "@/ui";
 import { CarCategory } from "@/lib/stores/useUserPreferedFiltersStore";
-import { useHomeStore } from "@/lib/stores/useHomeStore";
+import { CarCategory as HomeCarCategory } from "@/types/home/home";
 import React from "react";
 
 interface PeriodSearchProps {
   value: CarCategory;
   onValueChange: (value: CarCategory) => void;
+  categories: HomeCarCategory[];
 }
 
 export const FavCategoryTabs: React.FC<PeriodSearchProps> = ({
   value,
   onValueChange,
+  categories,
 }) => {
-  const carCategories = useHomeStore((s) => s.data?.carCategories);
   return (
     <Tabs
       value={value}
@@ -22,7 +23,7 @@ export const FavCategoryTabs: React.FC<PeriodSearchProps> = ({
       className="w-full"
     >
       <TabsList className="bg-transparent grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 h-fit">
-        {carCategories?.map((category) => (
+        {categories.map((category) => (
           <TabsTrigger
             key={category.categoryId}
             value={category.categoryId.toString()}
