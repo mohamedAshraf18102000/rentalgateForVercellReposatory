@@ -6,11 +6,12 @@ import {
   CarouselPrevious,
   CarouselDots,
 } from "@/app/(components)/ui/carousel";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import CarsCard from "../customCards/CarsCard/CarsCard";
 import { useRouter } from "next/navigation";
 import { type LastSeen } from "@/types/home/home";
 import { normalizeImageUrl } from "@/util";
+import { calculateDiscount } from "@/lib/utils/calculateDiscount";
 
 interface MoreRequestedCarsCarouselProps {
   data: LastSeen[];
@@ -20,6 +21,7 @@ const MoreRequestedCarsCarousel = ({
   data,
 }: MoreRequestedCarsCarouselProps) => {
   const locale = useLocale();
+  const t = useTranslations("carDetails");
   const router = useRouter();
   const isRtl = locale === "ar";
   return (
@@ -40,6 +42,16 @@ const MoreRequestedCarsCarousel = ({
               Boolean(branch.offerDailyPrice) &&
               branch.offerDailyPrice < branch.dailyPrice;
 
+            const { discountPercentage } = calculateDiscount({
+              originalPrice: branch.dailyPrice,
+              offerPrice: branch.offerDailyPrice ?? 0,
+            });
+
+            const discountBadge =
+              hasDiscount && discountPercentage > 0
+                ? `${t("discountPrefix")} ${discountPercentage}% - ${t("pricingType.daily")}`
+                : undefined;
+
             return (
               <CarouselItem key={item.historyId} className="basis-1/4">
                 <CarsCard
@@ -56,8 +68,8 @@ const MoreRequestedCarsCarousel = ({
                     hasDiscount ? branch.offerDailyPrice : branch.dailyPrice
                   }
                   priceBeforeOffer={branch.dailyPrice}
-                  firstBadgeTitle={hasDiscount ? "Offer" : undefined}
-                  firstBadgeColor={hasDiscount ? "green" : undefined}
+                  firstBadgeTitle={discountBadge}
+                  firstBadgeColor={discountBadge ? "green" : undefined}
                   showTax
                 />
               </CarouselItem>

@@ -20,6 +20,7 @@ import {
 interface NavbarActionsProps {
   translations: {
     profile: string;
+    userNavGreeting: string;
     myBookings: string;
     logout: string;
     login: string;
@@ -28,6 +29,7 @@ interface NavbarActionsProps {
     updateLocationPrefix: string;
     updateLocationLink: string;
     updateLocationSuffix: string;
+    selectPickupLocation: string;
   };
 }
 
@@ -39,9 +41,7 @@ export const NavbarActions: React.FC<NavbarActionsProps> = ({
     authenticated,
     userData,
     isLoading,
-    locale,
     handleLogout,
-    handleLanguageChange,
     handleProfileClick,
     handleBookingsClick,
   } = useHeaderLogic();
@@ -105,16 +105,11 @@ export const NavbarActions: React.FC<NavbarActionsProps> = ({
               <PositioningIcon />
             </span>
             <span className="text-sm underline underline-offset-3">
-              حدد مكان الاستلام
+              {translations.selectPickupLocation}
             </span>
             <ChevronDown className="w-4 h-4" />
           </div>
         )}
-
-        <LanguageSwitcher
-          currentLocale={locale}
-          onToggle={handleLanguageChange}
-        />
 
         {isClient && authenticated ? (
           <UserMenu

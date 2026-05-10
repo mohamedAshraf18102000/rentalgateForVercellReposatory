@@ -41,7 +41,7 @@ export const MostRequestedCars = ({
   }
 
   return (
-    <section className="bg-white py-[60px]">
+    <section className="bg-white py-[20px]">
       <section className="container-custom">
         <header className="flex items-center justify-between">
           <h2
@@ -49,7 +49,7 @@ export const MostRequestedCars = ({
           >
             {t("mostRequestedCars")}
           </h2>
-          <ProtectedLink href="/#">
+          {/* <ProtectedLink href="/#">
             <Button
               variant="outline"
               size="lg"
@@ -60,7 +60,7 @@ export const MostRequestedCars = ({
             >
               {t("viewAll")}
             </Button>
-          </ProtectedLink>
+          </ProtectedLink> */}
         </header>
         <MoreRequestedCarsCarousel data={lastSeen} />
       </section>

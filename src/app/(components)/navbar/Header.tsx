@@ -6,6 +6,8 @@ import { MobileHeader } from "./components/MobileHeader";
 import { NAVBAR_STYLES, BUTTON_STYLES } from "./constants";
 import { NavbarActions } from "./components/NavbarActions";
 import ClearData from "./ClearData";
+import { Separator } from "../ui/separator";
+import { LanguageSwitcher } from "./components";
 
 export default async function Header() {
   const t = await getTranslations("common");
@@ -14,6 +16,7 @@ export default async function Header() {
   // Translations for the client component
   const translations = {
     profile: t("profile") || "Profile",
+    userNavGreeting: t("userNavGreeting"),
     myBookings: t("myBookings") || "My Bookings",
     logout: t("logout") || "تسجيل الخروج",
     login: t("login"),
@@ -22,6 +25,7 @@ export default async function Header() {
     updateLocationPrefix: t("updateLocationPrefix"),
     updateLocationLink: t("updateLocationLink"),
     updateLocationSuffix: t("updateLocationSuffix"),
+    selectPickupLocation: t("selectPickupLocation"),
   };
 
   return (
@@ -34,7 +38,7 @@ export default async function Header() {
             <div className={NAVBAR_STYLES.leftSection}>
               {/* Center Section - Logo */}
               <div className={NAVBAR_STYLES.centerSection}>
-                <Logo href="/" src="/logo-rental.png" alt="logo" />
+                <Logo href="/" src="/RentalGateLogo.webp" alt="logo" />
               </div>
               <HomeLink
                 href="/"
@@ -63,9 +67,13 @@ export default async function Header() {
                 isActive={false}
                 className={BUTTON_STYLES.navLink}
               />
+
+              <Separator orientation="vertical" />
+
+              <LanguageSwitcher />
             </div>
 
-            <ClearData />
+            {/* <ClearData /> */}
 
             {/* Right Section */}
             <div className={NAVBAR_STYLES.rightSection}>

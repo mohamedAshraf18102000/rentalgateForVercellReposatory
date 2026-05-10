@@ -8,6 +8,7 @@
   "updateLocationPrefix": "يرجى التوجه",
   "updateLocationLink": "للصفحة السابقة",
   "updateLocationSuffix": "لتحديث الموقع",
+  "selectPickupLocation": "حدد مكان الاستلام",
   "login": "تسجيل الدخول",
   "getStarted": "ابدأ الآن",
   "learnMore": "اعرف المزيد",
@@ -31,6 +32,7 @@
   "ourBranches": "فروعنا",
   "cars": "السيارات",
   "profile": "حسابي",
+  "userNavGreeting": "حياك الله👋",
   "myBookings": "حجوزاتي",
   "logout": "تسجيل الخروج",
   "footerMarqueeTexts": [

@@ -15,6 +15,7 @@ import { BUTTON_STYLES } from "../constants";
 import type { ClientData } from "@/lib/api/types";
 import { getUserDisplayName } from "../utils";
 import { useLocale } from "next-intl";
+import UserBreifDetails from "./userBreifDetails/UserBreifDetails";
 
 interface UserMenuProps {
   userData: ClientData | null;
@@ -24,6 +25,7 @@ interface UserMenuProps {
   onBookingsClick: () => void;
   translations: {
     profile: string;
+    userNavGreeting: string;
     myBookings: string;
     logout: string;
   };
@@ -37,10 +39,8 @@ export const UserMenu: React.FC<UserMenuProps> = ({
   onBookingsClick,
   translations,
 }) => {
-  const displayName = getUserDisplayName(userData);
-  const firstName = displayName.split(" ")[0]; // Get only the first word
+  const firstName = userData?.clientName; // Get only the first word
   const userImage = userData?.profileImage;
-  const [imageError, setImageError] = React.useState(false);
   const locale = useLocale();
 
   // Show skeleton while loading
@@ -56,24 +56,17 @@ export const UserMenu: React.FC<UserMenuProps> = ({
   return (
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
-        <button className={BUTTON_STYLES.userButton}>
-          <span>{firstName}</span>
-          {userImage && !imageError ? (
-            <img
-              src={userImage}
-              alt={displayName}
-              className="w-6 h-6 rounded-full object-cover"
-              onError={() => setImageError(true)}
-            />
-          ) : (
-            <User className="w-4 h-4" />
-          )}
-          {/* <ChevronDown className="w-4 h-4" /> */}
+        <button>
+          <UserBreifDetails
+            name={firstName!}
+            userImage={userImage!}
+            greeting={translations.userNavGreeting}
+          />
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent
         align="start"
-        className="w-[176px] rounded-[20px] mt-[12px] px-[16px] py-[12px]"
+        className="w-[176px] rounded-[20px] mt-[5px] px-[16px] py-[12px]"
         dir={locale === "ar" ? "rtl" : "ltr"}
       >
         <DropdownMenuItem

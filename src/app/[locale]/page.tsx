@@ -44,7 +44,9 @@ export default async function HomePage({ params }: Props) {
         <Offers todayOffersData={homeData?.todayOffers ?? []} />
       )}
       <MostRequestedCars locale={locale} homeData={homeData} />
-      <CompanyOffers latestOffersData={homeData?.latestOffers ?? []} />
+      {(homeData?.latestOffers?.length ?? 0) > 0 && (
+        <CompanyOffers latestOffersData={homeData?.latestOffers ?? []} />
+      )}
       <HomeMockups />
       <WrapperContainer>
         <BussinessAccountsContent withOutStepper />
