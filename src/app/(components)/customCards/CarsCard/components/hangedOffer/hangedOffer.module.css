@@ -1,0 +1,72 @@
+@keyframes sway {
+  0% {
+    transform: rotate(8deg);
+  }
+
+  50% {
+    transform: rotate(-8deg);
+  }
+
+  100% {
+    transform: rotate(8deg);
+  }
+}
+
+.object {
+  animation: sway 2.4s infinite;
+  animation-timing-function: ease-in-out;
+  -webkit-transform-origin: top;
+  -moz-transform-origin: top;
+  transform-origin: top;
+}
+
+.hanger {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 3.5rem;
+}
+
+.ropeCaret {
+  position: absolute;
+  top: 0.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 1.25rem;
+  pointer-events: none;
+}
+
+.ropeLeg {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 1.5px;
+  height: 100%;
+  margin-left: -0.75px;
+  transform-origin: top center;
+  border-radius: 1px;
+  background-color: rgb(42 42 42 / 0.9);
+}
+
+.ropeLegLeft {
+  margin-left: 2px;
+  transform: rotate(-36deg);
+}
+
+.ropeLegRight {
+  margin-left: -3px;
+  transform: rotate(36deg);
+}
+
+.objectKnot {
+  position: relative;
+  z-index: 1;
+  flex-shrink: 0;
+}
+
+.objectShape {
+  margin-top: 0.84rem;
+  box-shadow: 0 3.03px 3.03px 0 rgb(0 0 0 / 0.25);
+}

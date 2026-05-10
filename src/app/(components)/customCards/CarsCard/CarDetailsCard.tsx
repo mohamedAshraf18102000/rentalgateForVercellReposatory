@@ -26,6 +26,7 @@ import { useMemo } from "react";
 import SpecificationsDialog from "./SpecificationsDialog";
 import WorkingTimes from "./WorkingTimes";
 import { normalizeImageUrl } from "@/util";
+import HangedOfferIcon from "./components/hangedOffer/HangedOfferIcon";
 
 interface CarDetailsCardProps {
   car: Car;
@@ -118,6 +119,17 @@ const CarDetailsCard = ({
   const hasSpecifications =
     specifications.length > 0 || legacySpecsText.length > 0;
 
+  const isMultiDayRental = typeof rentalDays === "number" && rentalDays > 1;
+  const hasOffer = isMultiDayRental
+    ? typeof totalPrice === "number" &&
+      totalPrice > 0 &&
+      typeof originalTotalPrice === "number" &&
+      originalTotalPrice > totalPrice
+    : typeof carPrice === "number" &&
+      carPrice > 0 &&
+      typeof priceBeforeOffer === "number" &&
+      priceBeforeOffer > carPrice;
+
   return (
     <section className="mt-5 flex w-full flex-col overflow-hidden rounded-[18px] border-2 border-white shadow-xl lg:flex-row">
       <div className="w-full overflow-hidden lg:w-[40%]">
@@ -139,7 +151,7 @@ const CarDetailsCard = ({
                   } ${
                     firstBadgeColor === "red"
                       ? "bg-StatusBrownBG text-StatusBrown200"
-                      : "bg-StatusGreen text-StatusDarkGreen"
+                      : "bg-white text-primary-red"
                   }`}
                 >
                   {firstBadgeTitle}
@@ -189,14 +201,13 @@ const CarDetailsCard = ({
             )}
           </div>
 
-          <RoundedRec className="absolute bottom-0 left-1/2 -translate-x-1/2 z-50" />
-
-          <figcaption className="flex items-center gap-2 absolute bottom-0 left-1/2 -translate-x-1/2 z-50">
-            <ExeclusiveOfferIcon />
-            <span className="text-sm font-bold text-StatusDarkGreen">
-              {t("special_offer_title")}
-            </span>
-          </figcaption>
+          {hasOffer && (
+            <figcaption
+              className={`absolute top-5  z-50 scale-120 ${isRTL ? "left-5" : "right-5"}`}
+            >
+              <HangedOfferIcon />
+            </figcaption>
+          )}
         </figure>
       </div>
 
@@ -295,12 +306,12 @@ const CarDetailsCard = ({
           </div>
         </div>
 
-        <Separator className="my-3" />
+        <Separator className="my-3 bg-Grey100" />
         <div className="">
           {workingTime && <WorkingTimes workingHours={workingTime} />}
         </div>
 
-        <Separator className="my-3" />
+        <Separator className="my-3 bg-Grey100" />
         <div className="flex flex-col gap-2 font-bold sm:flex-row sm:items-center sm:justify-between">
           <p>{car.carName}</p>
           <div className="p-1 bg-Grey100 rounded-[12px] w-fit">
@@ -315,11 +326,13 @@ const CarDetailsCard = ({
           </div>
         </div>
 
-        <Separator className="my-3" />
+        <Separator className="my-3 bg-Grey100" />
 
         <div className="grid grid-cols-1 items-center justify-between gap-2 sm:grid-cols-2">
           <div className="flex items-center gap-1">
-            <FreeKmIcon />
+            <div className="w-10 h-10 scale-90">
+              <FreeKmIcon />
+            </div>
             <p className="text-sm">
               {t("freeKilometersLabel")}
               <strong>{freeKm ?? 350} </strong>
@@ -329,7 +342,9 @@ const CarDetailsCard = ({
 
           {extraKmPrice && (
             <div className="flex items-center gap-1">
-              <FreeKmIcon />
+              <div className="w-10 h-10 scale-90">
+                <FreeKmIcon />
+              </div>
               <p className="text-sm flex items-center">
                 {t("extraKilometerCostLabel")}
                 <strong className="mx-1">{extraKmPrice}</strong>
@@ -366,7 +381,7 @@ const CarDetailsCard = ({
 
         {hasSpecifications && (
           <>
-            <Separator className="my-3" />
+            <Separator className="my-3 bg-Grey100" />
             <div className="flex items-center gap-3">
               <p>{t("specificationsTitle")}</p>
               <SpecificationsDialog

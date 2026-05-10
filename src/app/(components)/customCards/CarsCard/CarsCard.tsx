@@ -9,8 +9,6 @@ import {
 } from "@/app/(components)/ui/card";
 import Image from "next/image";
 import { SaudiRiyal } from "lucide-react";
-import RoundedRec from "../../../../constants/icons/RoundedRec";
-import ExeclusiveOfferIcon from "../../../../constants/icons/ExeclusiveOfferIcon";
 import FreeKmIcon from "../../../../constants/icons/FreeKmIcon";
 import StarIcon from "../../../../constants/icons/StarIcon";
 
@@ -19,6 +17,8 @@ import { formatPrice } from "@/lib/utils/formatPrice";
 import { getPriceWithoutTax } from "@/lib/utils/getPriceWithoutTax";
 import { useTranslations } from "next-intl";
 import { normalizeImageUrl } from "@/util";
+import HangedOfferIcon from "./components/hangedOffer/HangedOfferIcon";
+import { Button } from "../../ui/button";
 
 interface carsCard {
   advancedCard?: boolean;
@@ -89,21 +89,21 @@ const CarsCard = ({
     <article>
       <Card
         onClick={onClick}
-        className={`group select-none! relative mx-auto w-full max-w-sm pt-0 rounded-[18px] hover:shadow-lg transition-all duration-300 border-0! ring-0 hover:ring-1 cursor-pointer ${advancedCard ? "bg-transparent hover:bg-white" : "bg-white"}`}
+        className={`select-none! relative mx-auto w-full max-w-sm pt-0 rounded-[18px] hover:shadow-lg transition-all duration-300 border-0! ring-1 cursor-pointer bg-white`}
       >
         {/* Car Image */}
         <figure
-          className={`relative z-20 rounded-[18px] transition-all duration-300 ${advancedCard ? "bg-transparent group-hover:bg-Grey100 border border-white" : "bg-Grey100"}`}
+          className={`relative z-20 rounded-[18px] transition-all duration-300 p-3 ${advancedCard ? "bg-Grey100 border border-white" : "bg-Grey100"}`}
         >
           <img
             src={carImage}
             alt={t("carImageAlt")}
-            className="relative z-20 w-full object-contain min-h-[250px] max-h-[250px]"
+            className="relative z-20 w-full object-cover min-h-[250px] max-h-[250px] rounded-lg"
           />
           {typeof firstBadgeTitle === "string" &&
             firstBadgeTitle.length > 0 && (
               <Badge
-                className={`absolute top-0 -right-2 z-30 p-2 text-xs font-bold sm:p-4 sm:text-sm ${firstBadgeColor === "red" ? "bg-StatusBrownBG text-StatusBrown200" : "bg-StatusGreen text-StatusDarkGreen"}`}
+                className={`absolute top-0 -right-2 z-30 p-2 text-xs font-bold sm:p-4 sm:text-sm ${firstBadgeColor === "red" ? "bg-StatusBrownBG text-StatusBrown200" : "bg-white text-primary-red"}`}
               >
                 {firstBadgeTitle}
               </Badge>
@@ -119,12 +119,8 @@ const CarsCard = ({
 
           {hasOffer && (
             <>
-              <RoundedRec className="absolute bottom-0 left-1/2 -translate-x-1/2 z-50" />
-              <figcaption className="flex items-center gap-2 absolute bottom-0 left-1/2 -translate-x-1/2 z-50">
-                <ExeclusiveOfferIcon />
-                <span className="text-xs font-bold text-StatusDarkGreen sm:text-sm">
-                  {t("special_offer_title")}
-                </span>
+              <figcaption className="absolute top-5 left-5 z-50 scale-120">
+                <HangedOfferIcon />
               </figcaption>
             </>
           )}
@@ -148,7 +144,7 @@ const CarsCard = ({
                   alt="Event cover"
                   width={100}
                   height={100}
-                  className="w-[50px] h-[50px] object-fill rounded-2xl border-2 border-Grey100 p-0.5"
+                  className="w-[40px] h-[40px] object-fill rounded-full border-2 border-Grey100 p-0.5"
                 />
                 <span className="text-sm sm:text-base">{companyName}</span>
               </div>
@@ -165,8 +161,10 @@ const CarsCard = ({
           {/* Free KM */}
           <CardContent className="p-0">
             <div className="flex items-center gap-1">
-              <FreeKmIcon />
-              <p className="text-xs sm:text-sm">
+              <div className="w-10 h-10 scale-90">
+                <FreeKmIcon />
+              </div>
+              <p className="text-xs sm:text-sm mx-3">
                 {t("freeKilometersLabel")}{" "}
                 <strong>
                   {freeKm} {t("kmPerDay")}
@@ -175,63 +173,81 @@ const CarsCard = ({
             </div>
 
             {/* Price */}
-            <div className="flex flex-col mt-3">
-              <div className="flex items-center">
-                {hasDisplayedPrice &&
-                  (showTax ? (
-                    <>
-                      {priceBeforeOffer &&
-                        priceBeforeOffer > displayedPrice && (
-                          <span className="text-xs text-Grey500 line-through sm:text-sm">
-                            {formatPrice(priceBeforeOffer)}
-                          </span>
-                        )}
-                      <data
-                        value="10.56"
-                        className="mx-2 text-sm font-bold sm:text-base"
-                      >
-                        {formatPrice(displayedPrice)}
-                      </data>
-                    </>
-                  ) : (
-                    <>
-                      {priceBeforeOffer &&
-                        priceBeforeOffer > displayedPrice && (
-                          <span className="text-xs text-Grey500 line-through sm:text-sm">
-                            {formatPrice(getPriceWithoutTax(priceBeforeOffer))}
-                          </span>
-                        )}
-                      <data
-                        value="10.56"
-                        className="mx-2 text-sm font-bold sm:text-base"
-                      >
-                        {formatPrice(getPriceWithoutTax(displayedPrice))}
-                      </data>
-                    </>
-                  ))}
 
-                <p className="flex items-center text-sm sm:text-base">
-                  <SaudiRiyal className="h-4 w-4 sm:h-5 sm:w-5" />
-                  <span className="mx-1">
-                    {shouldUseTotalPrice
-                      ? t("totalForDays", { days: rentalDays })
-                      : t("pricePerPricingType", {
+            <div className="w-full py-1 rounded-lg mt-3 bg-[linear-gradient(180deg,#BE2326_0%,#581012_100%)] text-white flex justify-between items-center px-3">
+              <div>
+                <div className="flex flex-col">
+                  <div className="flex items-center">
+                    {hasDisplayedPrice &&
+                      (showTax ? (
+                        <>
+                          <data
+                            value="10.56"
+                            className=" text-sm font-bold sm:text-base"
+                          >
+                            {formatPrice(displayedPrice)}
+                          </data>
+                        </>
+                      ) : (
+                        <>
+                          {priceBeforeOffer &&
+                            priceBeforeOffer > displayedPrice && (
+                              <span className="text-xs text-Grey500 line-through sm:text-sm">
+                                {formatPrice(
+                                  getPriceWithoutTax(priceBeforeOffer),
+                                )}
+                              </span>
+                            )}
+                          <data
+                            value="10.56"
+                            className="mx-2 text-sm font-bold sm:text-base"
+                          >
+                            {formatPrice(getPriceWithoutTax(displayedPrice))}
+                          </data>
+                        </>
+                      ))}
+
+                    <p className="flex items-center text-sm sm:text-base">
+                      <SaudiRiyal className="h-4 w-4 sm:h-5 sm:w-5" />
+                      <span className="mx-1">
+                        {t("pricePerPricingType", {
                           pricingType: pricingTypeLabels[pricingType],
                         })}
-                  </span>
+                      </span>
+                    </p>
+                    {priceBeforeOffer && priceBeforeOffer > displayedPrice! && (
+                      <span className="text-xs text-Grey500 line-through sm:text-sm">
+                        {formatPrice(priceBeforeOffer)}
+                      </span>
+                    )}
+                  </div>
+                  {shouldUseTotalPrice && (
+                    <div className="mt-1 text-xs font-medium text-white">
+                      <span>{`${t("totalForDays", { days: rentalDays })}: `}</span>
+                      <span className="font-bold text-white mx-1">
+                        {showTax
+                          ? formatPrice(totalPrice)
+                          : formatPrice(getPriceWithoutTax(totalPrice))}
+                        <SaudiRiyal className="inline h-3 w-3" />
+                      </span>
+                    </div>
+                  )}
+                </div>
+                <p className="text-[#CFCFCF] text-[12px]">
+                  {showTax ? "شامل الضريبة" : "غير شامل الضريبة"}
                 </p>
               </div>
-              {shouldUseTotalPrice && (
-                <div className="mt-1 text-xs font-medium text-Grey600">
-                  <span>{`${t("totalForDays", { days: rentalDays })}: `}</span>
-                  <span className="font-bold text-foreground">
-                    {showTax
-                      ? formatPrice(totalPrice)
-                      : formatPrice(getPriceWithoutTax(totalPrice))}
-                    <SaudiRiyal className="inline h-3 w-3" />
+
+              <div className="">
+                <Button
+                  variant="secondary"
+                  className=" bg-white font-bold text-base"
+                >
+                  <span className="bg-linear-to-b from-[#BE2326] to-[#581012] bg-clip-text text-transparent">
+                    احجز الآن
                   </span>
-                </div>
-              )}
+                </Button>
+              </div>
             </div>
             {extraContent && (
               <div className="w-full h-full">{extraContent}</div>
