@@ -34,6 +34,8 @@
     "monthly": "شهري",
     "yearly": "سنوي"
   },
+  "branchIdLabel": "رقم الفرع: {id}",
+  "branchWithoutId": "مواقع أخرى",
   "breadcrumb": {
     "home": "الرئيسية",
     "carList": "قائمة السيارات",

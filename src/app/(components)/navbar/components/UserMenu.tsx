@@ -43,6 +43,8 @@ export const UserMenu: React.FC<UserMenuProps> = ({
   const userImage = userData?.profileImage;
   const locale = useLocale();
 
+  console.log(userData);
+
   // Show skeleton while loading
   if (isLoading || !userData) {
     return (
@@ -61,6 +63,8 @@ export const UserMenu: React.FC<UserMenuProps> = ({
             name={firstName!}
             userImage={userImage!}
             greeting={translations.userNavGreeting}
+            availablePoints={userData.availablePoints}
+            walletBalance={userData.walletBalance}
           />
         </button>
       </DropdownMenuTrigger>

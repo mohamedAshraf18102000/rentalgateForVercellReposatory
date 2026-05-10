@@ -4,6 +4,9 @@
 
 export interface ClientData {
   clientId: number;
+  /** Loyalty points (from login / profile API). */
+  availablePoints?: number;
+  walletBalance?: number;
   clientName?: string;
   creationDate?: string;
   mobile?: string;

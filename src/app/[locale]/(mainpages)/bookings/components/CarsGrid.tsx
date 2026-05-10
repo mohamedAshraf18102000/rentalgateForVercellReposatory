@@ -19,6 +19,48 @@ interface CarsGridProps {
   rentalDays: number;
 }
 
+type BranchCarGroup = {
+  branchId: number | null;
+  cars: CarContent[];
+};
+
+/** Stable, first-seen order of distinct company names in a branch row. */
+const companyNamesHeadingFromCars = (cars: CarContent[]): string | null => {
+  const seen = new Set<string>();
+  const ordered: string[] = [];
+  for (const car of cars) {
+    const name = car.companyName?.trim();
+    if (!name || seen.has(name)) continue;
+    seen.add(name);
+    ordered.push(name);
+  }
+  return ordered.length ? ordered.join(" · ") : null;
+};
+
+const groupCarsByBranchStable = (cars: CarContent[]): BranchCarGroup[] => {
+  const orderedKeys: (number | "__none__")[] = [];
+  const groups = new Map<number | "__none__", BranchCarGroup>();
+
+  for (const car of cars) {
+    const hasBid = car.branchId != null && !Number.isNaN(car.branchId);
+    const key: number | "__none__" = hasBid
+      ? (car.branchId as number)
+      : "__none__";
+
+    if (!groups.has(key)) {
+      groups.set(key, {
+        branchId: hasBid ? (car.branchId as number) : null,
+        cars: [],
+      });
+      orderedKeys.push(key);
+    }
+
+    groups.get(key)!.cars.push(car);
+  }
+
+  return orderedKeys.map((k) => groups.get(k)!);
+};
+
 const getOriginalAndOfferPrice = (
   car: CarContent,
   pricingType: PricingType,
@@ -104,6 +146,9 @@ const getCarPricing = (car: CarContent, rentalDays: number) => {
 
 const CarsGrid = ({ cars, isLoading, rentalDays }: CarsGridProps) => {
   const t = useTranslations("carDetails");
+  const isShowTax = useBookedCarDetailsStore(
+    (state) => state.showPricesWithTax,
+  );
   const pricingTypeLabels: Record<PricingType, string> = {
     DAILY: t("pricingType.daily"),
     WEEKLY: t("pricingType.weekly"),
@@ -125,47 +170,79 @@ const CarsGrid = ({ cars, isLoading, rentalDays }: CarsGridProps) => {
     );
   }
 
-  const isShowTax = useBookedCarDetailsStore(
-    (state) => state.showPricesWithTax,
+  const branchGroups = groupCarsByBranchStable(cars);
+  const listingHasBranches = cars.some(
+    (car) => car.branchId != null && !Number.isNaN(car.branchId),
   );
+  const showBranchHeadings =
+    listingHasBranches &&
+    (branchGroups.length > 1 || branchGroups[0]?.branchId != null);
 
   return (
-    <div className="mt-6 grid grid-cols-1 gap-4 sm:mt-8 sm:gap-6 md:grid-cols-2 md:mt-10 lg:grid-cols-3 xl:grid-cols-4">
-      {cars.map((car) => {
-        const {
-          pricePerDay,
-          discountPercentage,
-          pricingType,
-          originalPrice,
-          totalPrice,
-        } = getCarPricing(car, rentalDays);
-
-        const discountBadge =
-          discountPercentage > 0
-            ? `${t("discountPrefix")} ${discountPercentage}% - ${pricingTypeLabels[pricingType]}`
-            : "";
-
+    <div className="mt-6 flex flex-col gap-10">
+      {branchGroups.map((group) => {
+        const companyHeading = companyNamesHeadingFromCars(group.cars);
         return (
-          <Link key={car.ccbId} href={`/carDetails/${car.ccbId}`}>
-            <CarsCard
-              showTax={isShowTax}
-              firstBadgeTitle={discountBadge}
-              firstBadgeColor="green"
-              carImage={normalizeImageUrl(car.carImage)}
-              carName={car.carName}
-              advancedCard
-              carBrand={car.brandName}
-              companyLogo={car.companyLogo}
-              companyName={car.companyName}
-              deliveryInMinutes={car.deliveryInMinutes ?? 0}
-              carPrice={pricePerDay}
-              priceBeforeOffer={originalPrice}
-              freeKm={car.allowedKm ?? 0}
-              pricingType={pricingType}
-              totalPrice={totalPrice}
-              rentalDays={rentalDays}
-            />
-          </Link>
+          <div key={group.branchId ?? "__no_branch__"} className="min-w-0">
+            {showBranchHeadings ? (
+              <h3 className="mb-3 text-base font-semibold text-foreground sm:text-lg">
+                {group.branchId != null ? (
+                  <>
+                    <span className="block">
+                      {companyHeading ??
+                        t("branchIdLabel", { id: group.branchId })}
+                    </span>
+                  </>
+                ) : (
+                  (companyHeading ?? t("branchWithoutId"))
+                )}
+              </h3>
+            ) : null}
+            <div className="flex items-stretch gap-5 overflow-x-auto pb-2">
+              {group.cars.map((car) => {
+                const {
+                  pricePerDay,
+                  discountPercentage,
+                  pricingType,
+                  originalPrice,
+                  totalPrice,
+                } = getCarPricing(car, rentalDays);
+
+                const discountBadge =
+                  discountPercentage > 0
+                    ? `${t("discountPrefix")} ${discountPercentage}% - ${pricingTypeLabels[pricingType]}`
+                    : "";
+
+                return (
+                  <Link
+                    key={car.ccbId}
+                    href={`/carDetails/${car.ccbId}`}
+                    className="my-3 block w-[350px] max-w-sm shrink-0"
+                  >
+                    <CarsCard
+                      className="h-full w-full min-w-0"
+                      showTax={isShowTax}
+                      firstBadgeTitle={discountBadge}
+                      firstBadgeColor="green"
+                      carImage={normalizeImageUrl(car.carImage)}
+                      carName={car.carName}
+                      advancedCard
+                      carBrand={car.categoryNameArabic}
+                      companyLogo={car.companyLogo}
+                      companyName={car.companyName}
+                      deliveryInMinutes={car.deliveryInMinutes ?? 0}
+                      carPrice={pricePerDay}
+                      priceBeforeOffer={originalPrice}
+                      freeKm={car.allowedKm ?? 0}
+                      pricingType={pricingType}
+                      totalPrice={totalPrice}
+                      rentalDays={rentalDays}
+                    />
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
         );
       })}
     </div>

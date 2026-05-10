@@ -14,6 +14,7 @@ export interface LoginUserData {
   creationDate?: string;
   mobile?: string;
   email?: string;
+
   country?: {
     countryId?: number;
     englishName?: string;
@@ -46,6 +47,8 @@ export interface LoginUserData {
   notes?: any;
   status?: string;
   bearerToken?: string;
+  availablePoints?: number;
+  walletBalance?: number;
   [key: string]: any;
 }
 

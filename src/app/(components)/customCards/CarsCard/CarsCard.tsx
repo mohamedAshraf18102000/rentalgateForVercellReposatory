@@ -19,6 +19,7 @@ import { normalizeImageUrl } from "@/util";
 import HangedOfferIcon from "./components/hangedOffer/HangedOfferIcon";
 import RatingStars from "./components/RatingStars";
 import { Button } from "../../ui/button";
+import { cn } from "@/lib/utils";
 
 interface carsCard {
   advancedCard?: boolean;
@@ -28,7 +29,7 @@ interface carsCard {
   extraBadgeColor?: "green" | "red";
   extraContent?: React.ReactNode;
   priceBeforeOffer?: number;
-
+  className?: string;
   carImage?: string;
   carName?: string;
   carBrand?: string;
@@ -61,6 +62,7 @@ const CarsCard = ({
   priceBeforeOffer,
   showTax,
   pricingType = "DAILY",
+  className,
   totalPrice,
   rentalDays,
   onClick,
@@ -85,7 +87,10 @@ const CarsCard = ({
     <article>
       <Card
         onClick={onClick}
-        className={`select-none! relative mx-auto w-full max-w-sm pt-0 rounded-[18px] hover:shadow-lg transition-all duration-300 border-0! ring-1 cursor-pointer bg-white`}
+        className={cn(
+          "select-none! relative mx-auto w-full max-w-sm pt-0 rounded-[18px] hover:shadow-lg transition-all duration-300 border-0! ring-1 cursor-pointer bg-white",
+          className,
+        )}
       >
         {/* Car Image */}
         <figure

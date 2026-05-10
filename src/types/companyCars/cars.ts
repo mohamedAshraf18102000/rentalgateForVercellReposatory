@@ -41,6 +41,11 @@ export interface CarContent {
   offerType: string | null;
   offerValue: number | null;
   categoryName: string;
+  /** Present when listings are grouped by branch (company-cars API, offers, etc.). */
+  branchId?: number | null;
+  branchName?: string | null;
+  branchEnglishName?: string | null;
+  branchArabicName?: string | null;
 }
 
 export interface Sort {

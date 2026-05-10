@@ -50,6 +50,10 @@ const mapOfferCarToCarContent = (car: OfferCar): CarContent => ({
   offerType: null,
   offerValue: null,
   categoryName: car.car.categoryName,
+  branchId: car.branchId,
+  branchName: car.branchName ?? null,
+  branchEnglishName: car.branchEnglishName ?? null,
+  branchArabicName: car.branchArabicName ?? null,
 });
 
 const OfferedCars = () => {

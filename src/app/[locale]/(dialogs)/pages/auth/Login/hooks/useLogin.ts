@@ -86,6 +86,8 @@ export const useLogin = ({
         status: userData.status,
         referralCode: userData.referralCode,
         bearerToken: userData.bearerToken,
+        availablePoints: userData.availablePoints,
+        walletBalance: userData.walletBalance,
       };
 
       if (rememberMe) {

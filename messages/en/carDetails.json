@@ -32,6 +32,8 @@
     "monthly": "Monthly",
     "yearly": "Yearly"
   },
+  "branchIdLabel": "Branch ID: {id}",
+  "branchWithoutId": "Other locations",
   "breadcrumb": {
     "home": "Home",
     "carList": "Car List",

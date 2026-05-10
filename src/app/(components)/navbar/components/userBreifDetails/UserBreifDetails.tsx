@@ -1,12 +1,17 @@
+"use client";
+
 import { normalizeImageUrl } from "@/util";
 import { SaudiRiyal } from "lucide-react";
 import Image from "next/image";
+import { useLocale } from "next-intl";
 import UserPointsWallet from "./UserPointsWallet";
 
 interface IUserBreifDetailsProps {
   name: string;
   userImage: string;
   greeting: string;
+  availablePoints?: number;
+  walletBalance?: number;
 }
 
 const truncateName = (value: string, maxLength = 13) =>
@@ -16,7 +21,10 @@ const UserBreifDetails = ({
   name,
   userImage,
   greeting,
+  availablePoints = 0,
+  walletBalance = 0,
 }: IUserBreifDetailsProps) => {
+  const locale = useLocale();
   const displayName = truncateName(name);
 
   return (
@@ -40,10 +48,14 @@ const UserBreifDetails = ({
         </div>
       </div>
       <div className="text-start text-sm flex flex-col gap-1">
-        <UserPointsWallet icon={"/profile/coin.png"} number={224} />
+        <UserPointsWallet
+          icon={"/profile/coin.png"}
+          number={availablePoints}
+          extraIcon={<span>نقطة</span>}
+        />
         <UserPointsWallet
           icon={"/profile/actionIcons/wallet.webp"}
-          number={50}
+          number={walletBalance}
           extraIcon={<SaudiRiyal className="w-3 h-3" />}
         />
       </div>

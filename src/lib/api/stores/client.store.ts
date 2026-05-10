@@ -23,7 +23,7 @@ interface ClientState {
   clearClientData: () => void;
 }
 
-export const useClientStore = create<ClientState>((set) => ({
+export const useClientStore = create<ClientState>((set, get) => ({
   // Initial state - try to load from cookie first for immediate UI update
   clientData: typeof window !== "undefined" ? getUserData() : null,
   isLoading: false,
@@ -36,17 +36,29 @@ export const useClientStore = create<ClientState>((set) => ({
 
     try {
       const response = await getClientData();
+      const prev = get().clientData;
+      const next = response.data;
+      const merged =
+        next && prev
+          ? {
+              ...next,
+              walletBalance:
+                next.walletBalance ?? prev.walletBalance,
+              availablePoints:
+                next.availablePoints ?? prev.availablePoints,
+            }
+          : next;
       // Update store
       set({
-        clientData: response.data,
+        clientData: merged,
         isLoading: false,
         isError: false,
         error: null,
       });
 
       // Update cookie to persist full data for next refresh
-      if (response.data) {
-        setCookie("userData", JSON.stringify(response.data), 30);
+      if (merged) {
+        setCookie("userData", JSON.stringify(merged), 30);
       }
     } catch (error) {
       const errorMessage =
