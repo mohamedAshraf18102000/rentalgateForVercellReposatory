@@ -146,6 +146,7 @@
       "from": "From",
       "to": "To"
     },
+    "showResults": "Show results",
     "recommendations": {
       "daily": {
         "2d": "2 days",

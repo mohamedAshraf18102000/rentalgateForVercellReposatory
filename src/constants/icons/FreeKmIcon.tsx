@@ -1,8 +1,8 @@
 const FreeKmIcon = () => {
   return (
     <svg
-      width="full"
-      height="full"
+      width="40"
+      height="40"
       viewBox="0 0 24 20"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"

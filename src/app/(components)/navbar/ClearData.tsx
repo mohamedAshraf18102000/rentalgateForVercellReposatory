@@ -17,7 +17,7 @@ const ClearData = () => {
 
   return (
     <button
-      className="bg-red-100 px-3 py-1 rounded-lg"
+      className="bg-red-500 px-3 py-1 rounded-lg"
       onClick={handleClearData}
     >
       Clear Data

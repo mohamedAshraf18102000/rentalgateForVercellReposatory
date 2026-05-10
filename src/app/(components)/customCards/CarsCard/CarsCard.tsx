@@ -10,7 +10,6 @@ import {
 import Image from "next/image";
 import { SaudiRiyal } from "lucide-react";
 import FreeKmIcon from "../../../../constants/icons/FreeKmIcon";
-import StarIcon from "../../../../constants/icons/StarIcon";
 
 import { PricingType } from "@/lib/utils/calculateRentalPrice";
 import { formatPrice } from "@/lib/utils/formatPrice";
@@ -18,6 +17,7 @@ import { getPriceWithoutTax } from "@/lib/utils/getPriceWithoutTax";
 import { useTranslations } from "next-intl";
 import { normalizeImageUrl } from "@/util";
 import HangedOfferIcon from "./components/hangedOffer/HangedOfferIcon";
+import RatingStars from "./components/RatingStars";
 import { Button } from "../../ui/button";
 
 interface carsCard {
@@ -66,13 +66,7 @@ const CarsCard = ({
   onClick,
 }: carsCard) => {
   const t = useTranslations("carDetails");
-  const pricingTypeLabels: Record<PricingType, string> = {
-    DAILY: t("pricingType.daily"),
-    WEEKLY: t("pricingType.weekly"),
-    HALF_MONTHLY: t("pricingType.halfMonthly"),
-    MONTHLY: t("pricingType.monthly"),
-    YEARLY: t("pricingType.yearly"),
-  };
+
   const hasSelectedRentalDays =
     typeof rentalDays === "number" && rentalDays > 0;
   const shouldUseTotalPrice =
@@ -84,6 +78,8 @@ const CarsCard = ({
     hasDisplayedPrice &&
     typeof priceBeforeOffer === "number" &&
     priceBeforeOffer > displayedPrice;
+
+  const rate = 4.2;
 
   return (
     <article>
@@ -150,10 +146,15 @@ const CarsCard = ({
               </div>
 
               <div className="flex items-center gap-1">
-                <data value="4.2" className="text-sm font-bold sm:text-base">
-                  4.2
+                <data
+                  value={String(rate)}
+                  className="text-sm font-bold sm:text-base"
+                >
+                  {rate}
                 </data>
-                <StarIcon />
+                <div className="flex items-center" aria-hidden>
+                  <RatingStars rating={rate} />
+                </div>
               </div>
             </div>
           </CardContent>
@@ -178,6 +179,14 @@ const CarsCard = ({
               <div>
                 <div className="flex flex-col">
                   <div className="flex items-center">
+                    <span className="mx-1">
+                      {priceBeforeOffer &&
+                        priceBeforeOffer > displayedPrice! && (
+                          <span className="text-xs text-white/60 line-through sm:text-sm">
+                            {formatPrice(priceBeforeOffer)}
+                          </span>
+                        )}
+                    </span>
                     {hasDisplayedPrice &&
                       (showTax ? (
                         <>
@@ -209,29 +218,10 @@ const CarsCard = ({
 
                     <p className="flex items-center text-sm sm:text-base">
                       <SaudiRiyal className="h-4 w-4 sm:h-5 sm:w-5" />
-                      <span className="mx-1">
-                        {t("pricePerPricingType", {
-                          pricingType: pricingTypeLabels[pricingType],
-                        })}
-                      </span>
+                      <span className="mx-1">/</span>
+                      <span>{`${hasSelectedRentalDays ? rentalDays : 1} ${t("days")}`}</span>
                     </p>
-                    {priceBeforeOffer && priceBeforeOffer > displayedPrice! && (
-                      <span className="text-xs text-Grey500 line-through sm:text-sm">
-                        {formatPrice(priceBeforeOffer)}
-                      </span>
-                    )}
                   </div>
-                  {shouldUseTotalPrice && (
-                    <div className="mt-1 text-xs font-medium text-white">
-                      <span>{`${t("totalForDays", { days: rentalDays })}: `}</span>
-                      <span className="font-bold text-white mx-1">
-                        {showTax
-                          ? formatPrice(totalPrice)
-                          : formatPrice(getPriceWithoutTax(totalPrice))}
-                        <SaudiRiyal className="inline h-3 w-3" />
-                      </span>
-                    </div>
-                  )}
                 </div>
                 <p className="text-[#CFCFCF] text-[12px]">
                   {showTax ? "شامل الضريبة" : "غير شامل الضريبة"}

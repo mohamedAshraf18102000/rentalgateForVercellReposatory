@@ -13,7 +13,9 @@ import { DateRange } from "react-day-picker";
 import { cn } from "@/lib/utils";
 import { Separator } from "../../ui/separator";
 import { Calendar1 } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
+import { useRouter } from "next/navigation";
+import { useUserPreferedFiltersStore } from "@/lib/stores/useUserPreferedFiltersStore";
 
 interface PeriodSearchProps {
   value: RentPeriod;
@@ -97,6 +99,9 @@ export const PeriodSearchTabs: React.FC<PeriodSearchProps> = ({
   value,
   onValueChange,
 }) => {
+  const router = useRouter();
+  const appLocale = useLocale();
+  const { setFilter, applyFilters } = useUserPreferedFiltersStore();
   const t = useTranslations("home.rentPeriodCard");
   const activePeriod = getActivePeriod(value);
   const [isCalendarOpen, setIsCalendarOpen] = React.useState(false);
@@ -105,7 +110,7 @@ export const PeriodSearchTabs: React.FC<PeriodSearchProps> = ({
   );
   const [selectedRecommendation, setSelectedRecommendation] =
     React.useState<string>(RECOMMENDATIONS[activePeriod][0].id);
-  const locale = React.useMemo(() => t("dateLocale"), [t]);
+  const dateLocale = React.useMemo(() => t("dateLocale"), [t]);
 
   const periods: { value: RentPeriod; label: string }[] = [
     { value: "daily", label: t("tabs.daily") },
@@ -129,6 +134,16 @@ export const PeriodSearchTabs: React.FC<PeriodSearchProps> = ({
     return { from, to };
   }, [activePeriod, selectedOption.amount, startDate]);
   const calendarKey = `${activePeriod}-${selectedRecommendation}-${selectedRange.from?.toISOString()}-${selectedRange.to?.toISOString()}`;
+
+  const handleShowResults = () => {
+    if (!selectedRange.from || !selectedRange.to) return;
+    onValueChange(activePeriod);
+    setFilter("fromDate", selectedRange.from.toISOString());
+    setFilter("toDate", selectedRange.to.toISOString());
+    applyFilters();
+    setIsCalendarOpen(false);
+    router.push(`/${appLocale}/bookings`);
+  };
 
   return (
     <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
@@ -168,16 +183,17 @@ export const PeriodSearchTabs: React.FC<PeriodSearchProps> = ({
           defaultMonth={selectedRange.from}
           onDayClick={(day) => setStartDate(toStartOfDay(day))}
         />
+
         {selectedRange.from && selectedRange.to && (
           <p className="text-xs text-Grey700 text-center my-2 font-bold flex items-center justify-center gap-2">
             <Calendar1 className="w-4 h-4" />
             <span>{t("dateRange.from")}</span>
             <span className="underline">
-              {formatDate(selectedRange.from, locale)}
+              {formatDate(selectedRange.from, dateLocale)}
             </span>
             <span className="mx-2">{t("dateRange.to")}</span>
             <span className="underline">
-              {formatDate(selectedRange.to, locale)}
+              {formatDate(selectedRange.to, dateLocale)}
             </span>
           </p>
         )}
@@ -199,6 +215,14 @@ export const PeriodSearchTabs: React.FC<PeriodSearchProps> = ({
             </button>
           ))}
         </div>
+
+        <button
+          type="button"
+          onClick={handleShowResults}
+          className="w-full rounded-md py-2 bg-black text-white hover:opacity-90 transition-opacity"
+        >
+          {t("showResults")}
+        </button>
       </PopoverContent>
     </Popover>
   );
