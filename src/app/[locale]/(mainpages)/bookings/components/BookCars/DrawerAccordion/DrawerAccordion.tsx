@@ -14,6 +14,7 @@ import { getCompanyCarsCategories } from "@/services/companyCars/carCategories.s
 import { getCarModelByBrands } from "@/services/companyCars/carModelByBrands.service";
 import { getAirports } from "@/services/pickupLocations/airports.service";
 import { getTrainstations } from "@/services/pickupLocations/trainStations.service";
+import { normalizeImageUrl } from "@/util";
 import { useQuery } from "@tanstack/react-query";
 import { useLocale, useTranslations } from "next-intl";
 
@@ -305,7 +306,7 @@ const DrawerAccordion = () => {
                 className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
               >
                 <img
-                  src={`${process.env.NEXT_PUBLIC_IMAGES_PREFIX_URL}${brand.icon}`}
+                  src={normalizeImageUrl(brand.icon)}
                   alt={brand.englishName}
                   width={25}
                   height={25}

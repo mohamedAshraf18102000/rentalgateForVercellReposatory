@@ -9,11 +9,14 @@ import UserProfileActions from "./components/actions/UsersProfileActions";
 import OtherDetailsAction from "./components/otherDetails/OtherDetailsAction";
 import { useAuth } from "@/app/(components)/navbar/hooks/useAuth";
 import { useRouter } from "@/i18n/routing";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import Points_WalletCard from "./components/Points_WalletCard";
 import { useUserPoints } from "@/hooks/api/useUserPoints";
 import { useWalletInfo } from "@/hooks/api/useWalletInfo";
+import { normalizeImageUrl } from "@/util";
+import { ImagePlus, MessageCircleIcon } from "lucide-react";
+import UserImage from "./components/userProfileImage/UserImage";
 
 const page = () => {
   const { data: wallet, isLoading: walletLoading } = useWalletInfo();
@@ -28,6 +31,19 @@ const page = () => {
   } = useAuth();
 
   const router = useRouter();
+
+  const profileImageRaw = storeUserData?.profileImage;
+  const computedAvatarSrc = profileImageRaw?.trim()
+    ? normalizeImageUrl(String(profileImageRaw).trim())
+    : "/profile/userFallbackImage.webp";
+
+  /** Increments when the profile picture is saved so the image URL changes and caches refresh. */
+  const [profileImageNonce, setProfileImageNonce] = useState(0);
+
+  const avatarSrcResolved =
+    profileImageNonce === 0
+      ? computedAvatarSrc
+      : `${computedAvatarSrc}${computedAvatarSrc.includes("?") ? "&" : "?"}rev=${profileImageNonce}`;
 
   useEffect(() => {
     if (isClient && !authenticated) {
@@ -79,14 +95,13 @@ const page = () => {
         <div className="w-full min-w-0 rounded-2xl bg-white p-3 shadow-lg sm:p-4 lg:w-[60%]">
           <div className="flex justify-between items-stretch gap-4 lg:grid-cols-2 lg:items-center">
             <div className="flex min-w-0 flex-row h-full items-center gap-3 sm:flex-row md:items-center sm:justify-items-start">
-              <div className="relative h-[72px] w-[72px] shrink-0 overflow-hidden rounded-2xl bg-[#BE2326] sm:h-[100px] sm:w-[100px]">
-                <Image
-                  className="object-fill scale-120"
-                  src="https://www.shutterstock.com/image-photo/portrait-phot-saudi-guy-profissional-600w-2603387181.jpg"
-                  alt="userImage"
-                  fill
-                />
-              </div>
+              <UserImage
+                avatarSrc={avatarSrcResolved}
+                avatarKey={`${String(profileImageRaw ?? "")}-${profileImageNonce}`}
+                onProfileImageSaved={() =>
+                  setProfileImageNonce((n) => n + 1)
+                }
+              />
               <h2 className="min-w-0 wrap-break-word text-base font-bold sm:text-lg">
                 {t("greeting", {
                   name: storeUserData?.clientName || "",

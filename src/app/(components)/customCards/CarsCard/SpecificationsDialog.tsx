@@ -6,6 +6,7 @@ import { CheckCircle2 } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { Specification } from "@/types/companyCars/carDetails";
 import { DialogWrapper } from "../../ui/dialog-wrapper";
+import { normalizeImageUrl } from "@/util";
 
 interface SpecificationsDialogProps {
   specifications: Specification[];
@@ -63,7 +64,7 @@ const SpecificationsDialog = ({
                     <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-zinc-50 ring-1 ring-zinc-100">
                       {spec.icon ? (
                         <Image
-                          src={`${process.env.NEXT_PUBLIC_IMAGES_PREFIX_URL}/${spec.icon}`}
+                          src={normalizeImageUrl(spec.icon)}
                           alt={label}
                           width={20}
                           height={20}

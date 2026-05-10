@@ -25,6 +25,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { useMemo } from "react";
 import SpecificationsDialog from "./SpecificationsDialog";
 import WorkingTimes from "./WorkingTimes";
+import { normalizeImageUrl } from "@/util";
 
 interface CarDetailsCardProps {
   car: Car;
@@ -125,7 +126,7 @@ const CarDetailsCard = ({
         >
           <div className="w-full h-full flex items-center justify-center">
             <img
-              src={`${process.env.NEXT_PUBLIC_IMAGES_PREFIX_URL}/${car.image}`}
+              src={normalizeImageUrl(car.image)}
               alt={t("carImageAlt")}
               className="relative z-20 w-full object-contain scale-85 mb-5 max-h-[400px]"
             />
@@ -167,7 +168,7 @@ const CarDetailsCard = ({
           >
             <div className="flex items-center gap-1">
               <Image
-                src={`${process.env.NEXT_PUBLIC_IMAGES_PREFIX_URL}/${company?.logo}`}
+                src={normalizeImageUrl(company?.logo)}
                 alt="Event cover"
                 width={100}
                 height={100}

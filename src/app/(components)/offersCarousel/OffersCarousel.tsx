@@ -15,6 +15,7 @@ import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { LatestOffer, TodaysOffer } from "@/types/home/home";
 import { useRouter } from "next/navigation";
+import { normalizeImageUrl } from "@/util";
 
 interface OffersCarouselProps {
   itemsPerSlide?: 1 | 2;
@@ -60,7 +61,7 @@ const OffersCarousel = ({
                   >
                     <div className="relative w-full h-full">
                       <Image
-                        src={`${process.env.NEXT_PUBLIC_IMAGES_PREFIX_URL}/${offer.image}`}
+                        src={normalizeImageUrl(offer.image)}
                         alt={offer.arabicName}
                         fill
                         className="object-cover"

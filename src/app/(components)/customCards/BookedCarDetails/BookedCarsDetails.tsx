@@ -14,6 +14,7 @@ import { ar, enUS } from "date-fns/locale";
 import { useLocale, useTranslations } from "next-intl";
 import { useGetUserReservationById } from "@/hooks/api/useGetUserReservationById";
 import { useStatusLabel } from "@/hooks/useBookingStatusLabel";
+import { normalizeImageUrl } from "@/util";
 
 const BookedCarsDetails = ({ data }: { data: Reservation }) => {
   const getStatusLabel = useStatusLabel();
@@ -34,7 +35,7 @@ const BookedCarsDetails = ({ data }: { data: Reservation }) => {
     >
       <div className="relative h-[200px] w-full shrink-0 sm:h-auto sm:w-[40%] overflow-hidden">
         <Image
-          src={`${process.env.NEXT_PUBLIC_IMAGES_PREFIX_URL}${data.carImage}`}
+          src={normalizeImageUrl(data.carImage)}
           alt="img"
           className="pointer-events-none scale-120 object-contain"
           fill

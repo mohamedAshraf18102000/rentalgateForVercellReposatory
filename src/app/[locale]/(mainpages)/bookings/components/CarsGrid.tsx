@@ -11,6 +11,7 @@ import { calculateDiscount } from "@/lib/utils/calculateDiscount";
 import Link from "next/link";
 import { useBookedCarDetailsStore } from "@/lib/stores/useBookedCarDetailsStore";
 import { useTranslations } from "next-intl";
+import { normalizeImageUrl } from "@/util";
 
 interface CarsGridProps {
   cars: CarContent[];
@@ -95,7 +96,9 @@ const getCarPricing = (car: CarContent, rentalDays: number) => {
     pricingType: priceResult.pricingType,
     discountPercentage: discountResult.discountPercentage,
     originalPrice:
-      rentalDays > 0 ? originalPriceResult.totalPrice : originalPriceResult.pricePerDay,
+      rentalDays > 0
+        ? originalPriceResult.totalPrice
+        : originalPriceResult.pricePerDay,
   };
 };
 
@@ -148,7 +151,7 @@ const CarsGrid = ({ cars, isLoading, rentalDays }: CarsGridProps) => {
               showTax={isShowTax}
               firstBadgeTitle={discountBadge}
               firstBadgeColor="green"
-              carImage={`${process.env.NEXT_PUBLIC_IMAGES_PREFIX_URL}${car.carImage}`}
+              carImage={normalizeImageUrl(car.carImage)}
               carName={car.carName}
               advancedCard
               carBrand={car.brandName}

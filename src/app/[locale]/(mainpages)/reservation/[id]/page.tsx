@@ -28,6 +28,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { useCalculateUserProfileComplete } from "@/hooks/api/useCalculateUserProfileComplete";
 import UpdateUserSavedLocationDialog from "@/app/[locale]/(mainpages)/userProfile/components/userDialog/UpdateUserSavedLocationDialog";
 import { toast } from "sonner";
+import { normalizeImageUrl } from "@/util";
 
 const page = () => {
   const router = useRouter();
@@ -517,7 +518,7 @@ const page = () => {
                       ? carDetails?.car.brandNameArabic
                       : carDetails?.car.brandNameEnglish
                   }
-                  carImage={`${process.env.NEXT_PUBLIC_IMAGES_PREFIX_URL}${carDetails?.car.image}`}
+                  carImage={normalizeImageUrl(carDetails?.car.image)}
                   pricingType={pricingDetails.pricingType}
                   carPrice={pricingDetails.pricePerDay}
                   priceBeforeOffer={pricingDetails.originalPricePerDay}
@@ -536,7 +537,7 @@ const page = () => {
                           destinationLng={carDetails?.longitude}
                           disableMapClickToChangeLocation
                           destinationName={carDetails?.branchName}
-                          destinationLogoUrl={`${process.env.NEXT_PUBLIC_IMAGES_PREFIX_URL}${carDetails?.company.logo}`}
+                          destinationLogoUrl={normalizeImageUrl(carDetails?.company.logo)}
                           autoFitBounds={true}
                           hideSearch={true}
                         />

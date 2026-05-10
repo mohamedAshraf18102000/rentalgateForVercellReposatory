@@ -4,6 +4,7 @@ import GoogleMapsPolyLineLocation from "../../mapsLocation/GoogleMapsPolyLinedLo
 import { useBookedCarDetailsStore } from "@/lib/stores/useBookedCarDetailsStore";
 import EmptyLocationContent from "./EmptyLocationContent/EmptyLocationContent";
 import { usePickupRedirect } from "./usePickupRedirect";
+import { normalizeImageUrl } from "@/util";
 
 const BranchesLocations = () => {
   const { carDetails } = useBookedCarDetailsStore();
@@ -58,7 +59,7 @@ const BranchesLocations = () => {
         destinationLng={carDetails.longitude}
         disableMapClickToChangeLocation
         destinationName={carDetails.branchName}
-        destinationLogoUrl={`${process.env.NEXT_PUBLIC_IMAGES_PREFIX_URL}${carDetails.company.logo}`}
+        destinationLogoUrl={normalizeImageUrl(carDetails.company.logo)}
         autoFitBounds={true}
         hideSearch={true}
       />

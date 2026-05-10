@@ -10,6 +10,7 @@ import { useLocale } from "next-intl";
 import CarsCard from "../customCards/CarsCard/CarsCard";
 import { useRouter } from "next/navigation";
 import { type LastSeen } from "@/types/home/home";
+import { normalizeImageUrl } from "@/util";
 
 interface MoreRequestedCarsCarouselProps {
   data: LastSeen[];
@@ -45,7 +46,7 @@ const MoreRequestedCarsCarousel = ({
                   onClick={() => {
                     router.push(`/carDetails/${item.companyCarBranch.ccbId}`);
                   }}
-                  carImage={`${process.env.NEXT_PUBLIC_IMAGES_PREFIX_URL}/${car.image}`}
+                  carImage={normalizeImageUrl(car.image)}
                   carName={`${car.brandName} ${car.typeName} ${car.year}`}
                   carBrand={car.brandName || car.categoryNameEnglish}
                   companyLogo={branch.company.logo}

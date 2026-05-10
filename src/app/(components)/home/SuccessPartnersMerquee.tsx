@@ -1,6 +1,7 @@
 "use client";
 
 import { Company } from "@/types/home/home";
+import { normalizeImageUrl } from "@/util";
 import Image from "next/image";
 import Marquee from "react-fast-marquee";
 
@@ -122,7 +123,7 @@ const SuccessPartnersMerquee = ({ partners }: { partners: Company[] }) => {
               {row.list.map((partner, i) => (
                 <HexCell
                   key={partner.id}
-                  src={`${process.env.NEXT_PUBLIC_IMAGES_PREFIX_URL}/${partner.logo}`}
+                  src={normalizeImageUrl(partner.logo)}
                   alt={partner.name}
                   colorIdx={ri * 3 + i}
                 />

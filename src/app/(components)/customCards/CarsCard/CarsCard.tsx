@@ -18,6 +18,7 @@ import { PricingType } from "@/lib/utils/calculateRentalPrice";
 import { formatPrice } from "@/lib/utils/formatPrice";
 import { getPriceWithoutTax } from "@/lib/utils/getPriceWithoutTax";
 import { useTranslations } from "next-intl";
+import { normalizeImageUrl } from "@/util";
 
 interface carsCard {
   advancedCard?: boolean;
@@ -143,7 +144,7 @@ const CarsCard = ({
             <div className="flex justify-between items-center">
               <div className="flex items-center gap-1">
                 <Image
-                  src={`${process.env.NEXT_PUBLIC_IMAGES_PREFIX_URL}${companyLogo}`}
+                  src={normalizeImageUrl(companyLogo)}
                   alt="Event cover"
                   width={100}
                   height={100}

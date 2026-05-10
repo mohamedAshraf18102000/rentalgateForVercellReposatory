@@ -10,6 +10,7 @@ import {
   CustomCarouselDots,
 } from "@/app/(components)/ui/carousel";
 import { Banner } from "@/types/home/home";
+import { normalizeImageUrl } from "@/util";
 
 const sliderHeightClass =
   "h-[min(42svh,22rem)] min-h-[12.5rem] " +
@@ -36,7 +37,7 @@ const HomeSlider = ({ bannersData }: { bannersData: Banner[] }) => {
               <CarouselItem key={index} className="relative h-full pl-0">
                 <div className="relative h-full w-full">
                   <Image
-                    src={`${process.env.NEXT_PUBLIC_IMAGES_PREFIX_URL}${image.image}`}
+                    src={normalizeImageUrl(image.image)}
                     alt={image.bannerName}
                     fill
                     sizes="100vw"

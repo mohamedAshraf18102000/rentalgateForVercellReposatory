@@ -27,6 +27,8 @@ export default function PickupCardSectionClient({
     router.push("/bookings");
   };
 
+  console.log(pickupCardDetails);
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full items-stretch justify-items-center">
       {pickupCardDetails.map((card) => (
@@ -40,6 +42,7 @@ export default function PickupCardSectionClient({
         >
           {card.key === "currentLocation" ? (
             <CurrentLocationPickupCard
+              image={card.image}
               title={card.title}
               description={card.description}
               onClick={handleLocationClick}

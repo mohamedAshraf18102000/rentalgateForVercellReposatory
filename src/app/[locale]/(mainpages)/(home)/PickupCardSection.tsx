@@ -10,25 +10,25 @@ export default function PickUpCardsSection() {
       key: "airport",
       title: t("pickupCards.airport.title"),
       description: t("pickupCards.airport.description"),
-      image: "/pickupCard/Airport.png",
+      image: "/pickupCard/Airport.webp",
     },
     {
       key: "trainStation",
       title: t("pickupCards.trainStation.title"),
       description: t("pickupCards.trainStation.description"),
-      image: "/pickupCard/Train.png",
+      image: "/pickupCard/Train.webp",
     },
     {
       key: "branches",
       title: t("pickupCards.branches.title"),
       description: t("pickupCards.branches.description"),
-      image: "/pickupCard/Showroom.png",
+      image: "/pickupCard/Showroom.webp",
     },
     {
       key: "currentLocation",
       title: t("pickupCards.currentLocation.title"),
       description: t("pickupCards.currentLocation.description"),
-      image: "/pickupCard/Showroom.png",
+      image: "/pickupCard/currentLocation.webp",
     },
   ];
 

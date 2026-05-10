@@ -4,6 +4,7 @@ import { Tabs, TabsList, TabsTrigger } from "@/ui";
 import { CarCategory } from "@/lib/stores/useUserPreferedFiltersStore";
 import { CarCategory as HomeCarCategory } from "@/types/home/home";
 import React from "react";
+import { normalizeImageUrl } from "@/util";
 
 interface PeriodSearchProps {
   value: CarCategory;
@@ -32,14 +33,12 @@ export const FavCategoryTabs: React.FC<PeriodSearchProps> = ({
             <div className="h-fit p-2 flex flex-col gap-1 items-center">
               <div className="w-full p-1 bg-[url(/cars/carCateforyBG.png)] bg-cover bg-center bg-no-repeat rounded-2xl">
                 <img
-                  src={`${process.env.NEXT_PUBLIC_IMAGES_PREFIX_URL}${category.icon}`}
+                  src={normalizeImageUrl(category.icon)}
                   alt="img"
                   className="object-contain scale-75 sm:scale-100"
                 />
               </div>
-              <span className="login-tab-text text-sm!">
-                {category.name}
-              </span>
+              <span className="login-tab-text text-sm!">{category.name}</span>
             </div>
           </TabsTrigger>
         ))}
