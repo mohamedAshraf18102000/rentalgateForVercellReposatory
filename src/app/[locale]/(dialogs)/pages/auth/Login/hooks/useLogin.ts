@@ -176,17 +176,10 @@ export const useLogin = ({
           channel,
         );
       } else {
-        const errorKey =
-          errorMessage === "Bad credentials"
-            ? "BAD_CREDENTIALS"
-            : errorMessage === "Account disabled" || errorMessage === "Account"
-              ? "CLIENT_BLOCKED"
-              : errorMessage;
-        const translatedMessage = errorKey
-          ? t(errorKey as any)
-          : t("LOGIN_FAILED");
+        const errorKey = errorMessage === "Bad credentials" ? "BAD_CREDENTIALS" : errorMessage;
+
+        const translatedMessage = errorKey ? t.has(errorKey as any) ? t(errorKey as any) : errorMessage || t("LOGIN_FAILED") : t("LOGIN_FAILED");
         setError(translatedMessage);
-        toast.error(translatedMessage);
       }
     } finally {
       setIsLoading(false);

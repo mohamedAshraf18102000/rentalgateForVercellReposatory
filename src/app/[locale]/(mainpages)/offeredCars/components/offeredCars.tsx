@@ -3,14 +3,14 @@
 import { Skeleton } from "@/app/(components)/ui/skeleton";
 import CarsGrid from "../../bookings/components/CarsGrid";
 import { useGetOfferedCars } from "@/hooks/api/useGetOfferedCars";
-import { useParams, useSearchParams } from "next/navigation";
+import { useParams } from "next/navigation";
 import { CarContent } from "@/types/companyCars/cars";
 import { OfferCar } from "@/types/offeredCars/offeredCars";
-import { Separator } from "@/app/(components)/ui/separator";
 
 const mapOfferCarToCarContent = (
   car: OfferCar,
-  offerType: string | null,
+  offerType: number | null,
+  offerValue: number | null,
 ): CarContent => ({
   ccbId: car.ccbId,
   carName: car.car.carName,
@@ -52,8 +52,8 @@ const mapOfferCarToCarContent = (
   yearlyPrice: car.yearlyPrice ?? null,
   offerYearlyPrice: car.offerYearlyPrice ?? null,
   serviceIds: car.serviceIds || [],
-  offerType,
-  offerValue: null,
+  offerType: offerType?.toString() ?? null,
+  offerValue,
   categoryName: car.car.categoryName,
   branchId: car.branchId,
   branchName: car.branchName ?? null,
@@ -63,11 +63,13 @@ const mapOfferCarToCarContent = (
 
 const OfferedCars = () => {
   const { id } = useParams();
-  const searchParams = useSearchParams();
-  const offerType = searchParams.get("offerType");
   const { data, isLoading } = useGetOfferedCars(Number(id));
   const cars: CarContent[] = (data?.cars ?? []).map((car) =>
-    mapOfferCarToCarContent(car, offerType),
+    mapOfferCarToCarContent(
+      car,
+      data?.offerType ?? null,
+      data?.offerValue ?? null,
+    ),
   );
 
   return (
@@ -80,8 +82,6 @@ const OfferedCars = () => {
         </div>
       ) : cars.length > 0 ? (
         <>
-          <p className="text-xl font-bold">{offerType}</p>
-          <Separator className="my-2" />
           <CarsGrid cars={cars} isLoading={isLoading} rentalDays={0} />
         </>
       ) : (

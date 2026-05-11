@@ -10,17 +10,6 @@ import { LoginFooter } from "./components/LoginFooter";
 import { LoginError } from "./components/LoginError";
 import type { LoginProps } from "./Login.types";
 
-/**
- * Login Dialog
- *
- * Handles the login flow including:
- * - Email/Mobile tab switching
- * - Authentication via useLogin hook
- * - Success/Error messaging
- * - Navigation to ForgotPassword and SignUp
- * - Handling account states (inactive, deactivated)
- */
-
 export function LoginDialog({ onSuccess, onClose, redirectTo }: LoginProps) {
   const { openDialog } = useDialog();
   const t = useTranslations("auth.login");

@@ -47,11 +47,7 @@ const OffersCarousel = ({
         <CarouselContent>
           {offers.map((offer) => (
             <CarouselItem
-              onClick={() =>
-                router.push(
-                  `/offeredCars/${offer.offerId}?offerType=${locale === "ar" ? offer.arabicName : offer.englishName}`,
-                )
-              }
+              onClick={() => router.push(`/offeredCars/${offer.offerId}`)}
               key={offer.offerId}
               className={basisClass + " cursor-pointer"}
             >

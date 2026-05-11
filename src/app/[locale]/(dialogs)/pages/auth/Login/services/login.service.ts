@@ -30,16 +30,11 @@ export const loginUser = async (
       (data.data && (data.data.token || data.data.bearerToken)));
 
   if (!isSuccess) {
-    // Extract only the first word (before : or spaces) from error message
     const rawMessage =
       data.message && typeof data.message === "string"
         ? data.message
         : "LOGIN_FAILED";
-    const cleanMessage =
-      rawMessage === "Bad credentials"
-        ? "Bad credentials"
-        : rawMessage.split(/[:\s]/)[0].trim();
-    throw new Error(cleanMessage);
+    throw new Error(rawMessage.trim());
   }
 
   // Normalize flat response into the expected LoginApiResponse structure

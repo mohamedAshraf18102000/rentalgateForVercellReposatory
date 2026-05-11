@@ -13,6 +13,7 @@ import { useBookedCarDetailsStore } from "@/lib/stores/useBookedCarDetailsStore"
 import { useLocale, useTranslations } from "next-intl";
 import { normalizeImageUrl } from "@/util";
 import { useCallback, useEffect, useState } from "react";
+import getOfferTypeMessage from "@/app/(components)/customCards/CarsCard/utils/offerTypes";
 import {
   type CarouselApi,
   Carousel,
@@ -225,6 +226,14 @@ const BranchCarsCarousel = ({
             discountPercentage > 0
               ? `${discountPrefix} ${discountPercentage}% - ${pricingTypeLabels[pricingType]}`
               : "";
+          const offerBadge = getOfferTypeMessage({
+            offerType: car.offerType,
+            offerValue: car.offerValue,
+            locale,
+          });
+
+          console.log(offerBadge);
+          
 
           return (
             <div key={car.ccbId} className="relative">
@@ -238,7 +247,7 @@ const BranchCarsCarousel = ({
                     showTax={isShowTax}
                     firstBadgeTitle={discountBadge}
                     firstBadgeColor="green"
-                    extraBadgeTitle={car.offerType ?? undefined}
+                    extraBadgeTitle={offerBadge || undefined}
                     extraBadgeColor="red"
                     carImage={normalizeImageUrl(car.carImage)}
                     carName={car.carName}

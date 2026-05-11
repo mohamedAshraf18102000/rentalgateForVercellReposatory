@@ -52,7 +52,9 @@ const Points_WalletCard = ({
 
         <div className="">
           <p className="text-base">
-            {numberOfPoints && <span>{numberOfPoints ?? null}</span>}
+            {numberOfPoints && (
+              <span className="mx-1">{numberOfPoints ?? null}</span>
+            )}
             <span className="text-sm">{pointsTitle ?? t("pointsLabel")}</span>
           </p>
         </div>
