@@ -177,7 +177,11 @@ export const useLogin = ({
         );
       } else {
         const errorKey =
-          errorMessage === "Bad credentials" ? "BAD_CREDENTIALS" : errorMessage;
+          errorMessage === "Bad credentials"
+            ? "BAD_CREDENTIALS"
+            : errorMessage === "Account disabled" || errorMessage === "Account"
+              ? "CLIENT_BLOCKED"
+              : errorMessage;
         const translatedMessage = errorKey
           ? t(errorKey as any)
           : t("LOGIN_FAILED");

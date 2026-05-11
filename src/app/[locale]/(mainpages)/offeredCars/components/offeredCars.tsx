@@ -3,11 +3,15 @@
 import { Skeleton } from "@/app/(components)/ui/skeleton";
 import CarsGrid from "../../bookings/components/CarsGrid";
 import { useGetOfferedCars } from "@/hooks/api/useGetOfferedCars";
-import { useParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 import { CarContent } from "@/types/companyCars/cars";
 import { OfferCar } from "@/types/offeredCars/offeredCars";
+import { Separator } from "@/app/(components)/ui/separator";
 
-const mapOfferCarToCarContent = (car: OfferCar): CarContent => ({
+const mapOfferCarToCarContent = (
+  car: OfferCar,
+  offerType: string | null,
+): CarContent => ({
   ccbId: car.ccbId,
   carName: car.car.carName,
   companyName: car.company.name,
@@ -48,7 +52,7 @@ const mapOfferCarToCarContent = (car: OfferCar): CarContent => ({
   yearlyPrice: car.yearlyPrice ?? null,
   offerYearlyPrice: car.offerYearlyPrice ?? null,
   serviceIds: car.serviceIds || [],
-  offerType: null,
+  offerType,
   offerValue: null,
   categoryName: car.car.categoryName,
   branchId: car.branchId,
@@ -59,8 +63,12 @@ const mapOfferCarToCarContent = (car: OfferCar): CarContent => ({
 
 const OfferedCars = () => {
   const { id } = useParams();
+  const searchParams = useSearchParams();
+  const offerType = searchParams.get("offerType");
   const { data, isLoading } = useGetOfferedCars(Number(id));
-  const cars: CarContent[] = (data?.cars ?? []).map(mapOfferCarToCarContent);
+  const cars: CarContent[] = (data?.cars ?? []).map((car) =>
+    mapOfferCarToCarContent(car, offerType),
+  );
 
   return (
     <section className="mt-6">
@@ -71,7 +79,11 @@ const OfferedCars = () => {
           ))}
         </div>
       ) : cars.length > 0 ? (
-        <CarsGrid cars={cars} isLoading={isLoading} rentalDays={0} />
+        <>
+          <p className="text-xl font-bold">{offerType}</p>
+          <Separator className="my-2" />
+          <CarsGrid cars={cars} isLoading={isLoading} rentalDays={0} />
+        </>
       ) : (
         <div className="mt-6 flex h-[min(50vh,24rem)] w-full items-center justify-center rounded-2xl bg-white shadow sm:mt-8 sm:h-[22rem] md:mt-10 md:h-[25rem]">
           <div className="flex flex-col items-center gap-4 px-4 text-center sm:px-8">

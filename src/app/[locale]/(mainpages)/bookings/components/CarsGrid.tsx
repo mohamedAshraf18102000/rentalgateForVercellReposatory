@@ -238,6 +238,8 @@ const BranchCarsCarousel = ({
                     showTax={isShowTax}
                     firstBadgeTitle={discountBadge}
                     firstBadgeColor="green"
+                    extraBadgeTitle={car.offerType ?? undefined}
+                    extraBadgeColor="red"
                     carImage={normalizeImageUrl(car.carImage)}
                     carName={car.carName}
                     advancedCard
