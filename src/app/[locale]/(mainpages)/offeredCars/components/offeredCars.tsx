@@ -11,6 +11,7 @@ const mapOfferCarToCarContent = (car: OfferCar): CarContent => ({
   ccbId: car.ccbId,
   carName: car.car.carName,
   companyName: car.company.name,
+  companyNameAr: car.company.arabicName,
   carImage: car.car.image,
   companyCarCode: car.companyCarCode || "",
   price: car.dailyPrice ?? null,

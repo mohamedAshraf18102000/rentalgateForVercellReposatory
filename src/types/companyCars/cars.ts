@@ -2,6 +2,7 @@ export interface CarContent {
   ccbId: number;
   carName: string;
   companyName: string;
+  companyNameAr: string;
   carImage: string;
   companyCarCode: string;
   price: number | null;

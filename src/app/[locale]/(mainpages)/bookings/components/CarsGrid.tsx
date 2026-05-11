@@ -34,11 +34,15 @@ type BranchCarGroup = {
 };
 
 /** Stable, first-seen order of distinct company names in a branch row. */
-const companyNamesHeadingFromCars = (cars: CarContent[]): string | null => {
+const companyNamesHeadingFromCars = (
+  cars: CarContent[],
+  locale: string,
+): string | null => {
   const seen = new Set<string>();
   const ordered: string[] = [];
   for (const car of cars) {
-    const name = car.companyName?.trim();
+    const name =
+      locale === "ar" ? car.companyNameAr?.trim() : car.companyName?.trim();
     if (!name || seen.has(name)) continue;
     seen.add(name);
     ordered.push(name);
@@ -303,7 +307,7 @@ const CarsGrid = ({ cars, isLoading, rentalDays }: CarsGridProps) => {
   return (
     <div className="mt-6 flex flex-col gap-5">
       {branchGroups.map((group) => {
-        const companyHeading = companyNamesHeadingFromCars(group.cars);
+        const companyHeading = companyNamesHeadingFromCars(group.cars, locale);
         return (
           <div key={group.branchId ?? "__no_branch__"} className="min-w-0">
             {showBranchHeadings ? (
