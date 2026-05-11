@@ -10,8 +10,17 @@ import {
 import { calculateDiscount } from "@/lib/utils/calculateDiscount";
 import Link from "next/link";
 import { useBookedCarDetailsStore } from "@/lib/stores/useBookedCarDetailsStore";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { normalizeImageUrl } from "@/util";
+import { useCallback, useEffect, useState } from "react";
+import {
+  type CarouselApi,
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/app/(components)/ui/carousel";
 
 interface CarsGridProps {
   cars: CarContent[];
@@ -144,8 +153,121 @@ const getCarPricing = (car: CarContent, rentalDays: number) => {
   };
 };
 
+interface BranchCarsCarouselProps {
+  cars: CarContent[];
+  locale: string;
+  isRtl: boolean;
+  rentalDays: number;
+  isShowTax: boolean;
+  discountPrefix: string;
+  pricingTypeLabels: Record<PricingType, string>;
+}
+
+const BranchCarsCarousel = ({
+  cars,
+  locale,
+  isRtl,
+  rentalDays,
+  isShowTax,
+  discountPrefix,
+  pricingTypeLabels,
+}: BranchCarsCarouselProps) => {
+  const [api, setApi] = useState<CarouselApi>();
+  const [showControls, setShowControls] = useState(false);
+
+  const updateControlVisibility = useCallback((carouselApi: CarouselApi) => {
+    if (!carouselApi) {
+      setShowControls(false);
+      return;
+    }
+
+    setShowControls(carouselApi.scrollSnapList().length > 1);
+  }, []);
+
+  useEffect(() => {
+    if (!api) return;
+
+    updateControlVisibility(api);
+    api.on("reInit", updateControlVisibility);
+    api.on("select", updateControlVisibility);
+
+    return () => {
+      api.off("reInit", updateControlVisibility);
+      api.off("select", updateControlVisibility);
+    };
+  }, [api, updateControlVisibility]);
+
+  return (
+    <Carousel
+      lang={locale}
+      setApi={setApi}
+      opts={{
+        align: "start",
+        direction: isRtl ? "rtl" : "ltr",
+      }}
+      className="w-full"
+    >
+      <CarouselContent className="py-3">
+        {cars.map((car) => {
+          const {
+            pricePerDay,
+            discountPercentage,
+            pricingType,
+            originalPrice,
+            totalPrice,
+          } = getCarPricing(car, rentalDays);
+
+          const discountBadge =
+            discountPercentage > 0
+              ? `${discountPrefix} ${discountPercentage}% - ${pricingTypeLabels[pricingType]}`
+              : "";
+
+          return (
+            <div key={car.ccbId} className="relative">
+              <CarouselItem className="basis-[350px] max-w-sm shrink-0 mx-2 cursor-grab">
+                <Link
+                  href={`/carDetails/${car.ccbId}`}
+                  className="my-3 block w-[350px] max-w-sm"
+                >
+                  <CarsCard
+                    className="w-full h-full min-w-0"
+                    showTax={isShowTax}
+                    firstBadgeTitle={discountBadge}
+                    firstBadgeColor="green"
+                    carImage={normalizeImageUrl(car.carImage)}
+                    carName={car.carName}
+                    advancedCard
+                    carBrand={car.categoryNameArabic}
+                    companyLogo={car.companyLogo}
+                    companyName={car.companyName}
+                    deliveryInMinutes={car.deliveryInMinutes ?? 0}
+                    carPrice={pricePerDay}
+                    priceBeforeOffer={originalPrice}
+                    freeKm={car.allowedKm ?? 0}
+                    pricingType={pricingType}
+                    totalPrice={totalPrice}
+                    rentalDays={rentalDays}
+                  />
+                </Link>
+              </CarouselItem>
+            </div>
+          );
+        })}
+      </CarouselContent>
+      {showControls ? (
+        <>
+          <CarouselPrevious className="absolute right-0 top-1/2 -mr-15" />
+          <CarouselNext className="absolute left-0 top-1/2 -ml-15" />
+        </>
+      ) : null}
+    </Carousel>
+  );
+};
+
 const CarsGrid = ({ cars, isLoading, rentalDays }: CarsGridProps) => {
   const t = useTranslations("carDetails");
+  const locale = useLocale();
+  const isRtl = locale === "ar";
   const isShowTax = useBookedCarDetailsStore(
     (state) => state.showPricesWithTax,
   );
@@ -179,7 +301,7 @@ const CarsGrid = ({ cars, isLoading, rentalDays }: CarsGridProps) => {
     (branchGroups.length > 1 || branchGroups[0]?.branchId != null);
 
   return (
-    <div className="mt-6 flex flex-col gap-10">
+    <div className="mt-6 flex flex-col gap-5">
       {branchGroups.map((group) => {
         const companyHeading = companyNamesHeadingFromCars(group.cars);
         return (
@@ -198,50 +320,15 @@ const CarsGrid = ({ cars, isLoading, rentalDays }: CarsGridProps) => {
                 )}
               </h3>
             ) : null}
-            <div className="flex items-stretch gap-5 overflow-x-auto pb-2">
-              {group.cars.map((car) => {
-                const {
-                  pricePerDay,
-                  discountPercentage,
-                  pricingType,
-                  originalPrice,
-                  totalPrice,
-                } = getCarPricing(car, rentalDays);
-
-                const discountBadge =
-                  discountPercentage > 0
-                    ? `${t("discountPrefix")} ${discountPercentage}% - ${pricingTypeLabels[pricingType]}`
-                    : "";
-
-                return (
-                  <Link
-                    key={car.ccbId}
-                    href={`/carDetails/${car.ccbId}`}
-                    className="my-3 block w-[350px] max-w-sm shrink-0"
-                  >
-                    <CarsCard
-                      className="h-full w-full min-w-0"
-                      showTax={isShowTax}
-                      firstBadgeTitle={discountBadge}
-                      firstBadgeColor="green"
-                      carImage={normalizeImageUrl(car.carImage)}
-                      carName={car.carName}
-                      advancedCard
-                      carBrand={car.categoryNameArabic}
-                      companyLogo={car.companyLogo}
-                      companyName={car.companyName}
-                      deliveryInMinutes={car.deliveryInMinutes ?? 0}
-                      carPrice={pricePerDay}
-                      priceBeforeOffer={originalPrice}
-                      freeKm={car.allowedKm ?? 0}
-                      pricingType={pricingType}
-                      totalPrice={totalPrice}
-                      rentalDays={rentalDays}
-                    />
-                  </Link>
-                );
-              })}
-            </div>
+            <BranchCarsCarousel
+              cars={group.cars}
+              locale={locale}
+              isRtl={isRtl}
+              rentalDays={rentalDays}
+              isShowTax={isShowTax}
+              discountPrefix={t("discountPrefix")}
+              pricingTypeLabels={pricingTypeLabels}
+            />
           </div>
         );
       })}

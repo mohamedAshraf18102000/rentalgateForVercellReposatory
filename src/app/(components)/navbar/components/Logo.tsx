@@ -2,10 +2,10 @@
 // Components - Logo
 // ============================================================================
 
-import React from 'react';
-import { Link } from '@/i18n/routing';
-import Image from 'next/image';
-import { BUTTON_STYLES } from '../constants';
+import React from "react";
+import { Link } from "@/i18n/routing";
+import Image from "next/image";
+import { BUTTON_STYLES } from "../constants";
 
 interface LogoProps {
   href: string;
@@ -19,10 +19,9 @@ export const Logo: React.FC<LogoProps> = ({ href, src, alt, className }) => (
     <Image
       src={src}
       alt={alt}
-      width={100}
-      height={100}
+      width={50}
+      height={50}
       className="w-full h-full object-contain rounded-full"
     />
   </Link>
 );
-

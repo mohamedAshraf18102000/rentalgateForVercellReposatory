@@ -8,18 +8,18 @@
  * @returns A normalized image URL that starts with / or http(s)://
  */
 export const normalizeImageUrl = (imageUrl: string | null | undefined): string => {
-  if (!imageUrl) return '/shared/CarNotFound.png';
-  
+  if (!imageUrl) return '/profile/userFallbackImage.webp';
+
   // If it's already a full URL (starts with http:// or https://), return as is
   if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
     return imageUrl;
   }
-  
+
   // If it already starts with /, return as is (already a valid relative path)
   if (imageUrl.startsWith('/')) {
     return imageUrl;
   }
-  
+
   // Otherwise, construct the full URL using the uploads path
   // This handles filenames like "1767002660546.avif" from the API
   return `https://viganium.co/uploads/${imageUrl}`;

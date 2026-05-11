@@ -3,7 +3,6 @@
 import { normalizeImageUrl } from "@/util";
 import { SaudiRiyal } from "lucide-react";
 import Image from "next/image";
-import { useLocale } from "next-intl";
 import UserPointsWallet from "./UserPointsWallet";
 
 interface IUserBreifDetailsProps {
@@ -24,7 +23,6 @@ const UserBreifDetails = ({
   availablePoints = 0,
   walletBalance = 0,
 }: IUserBreifDetailsProps) => {
-  const locale = useLocale();
   const displayName = truncateName(name);
 
   return (

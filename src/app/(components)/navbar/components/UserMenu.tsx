@@ -43,8 +43,6 @@ export const UserMenu: React.FC<UserMenuProps> = ({
   const userImage = userData?.profileImage;
   const locale = useLocale();
 
-  console.log(userData);
-
   // Show skeleton while loading
   if (isLoading || !userData) {
     return (

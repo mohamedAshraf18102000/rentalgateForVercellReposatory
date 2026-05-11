@@ -8,6 +8,7 @@ import { NavbarActions } from "./components/NavbarActions";
 import ClearData from "./ClearData";
 import { Separator } from "../ui/separator";
 import { LanguageSwitcher } from "./components";
+import { cn } from "@/lib/utils";
 
 export default async function Header() {
   const t = await getTranslations("common");
@@ -37,8 +38,14 @@ export default async function Header() {
             {/* Left Section */}
             <div className={NAVBAR_STYLES.leftSection}>
               {/* Center Section - Logo */}
-              <div className={NAVBAR_STYLES.centerSection}>
-                <Logo href="/" src="/RentalGateLogo.webp" alt="logo" />
+              <div className={cn(NAVBAR_STYLES.centerSection, "")}>
+                <Logo href="/" src="/logo-rental.png" alt="logo" />
+                <div className="flex flex-col justify-center items-center -mx-3">
+                  <p className="p-0! m-0! font-bold text-justify ">رينتال</p>
+                  <p className="p-0! m-0! font-bold text-justify -mt-2!">
+                    جـيـت
+                  </p>
+                </div>
               </div>
               <HomeLink
                 href="/"

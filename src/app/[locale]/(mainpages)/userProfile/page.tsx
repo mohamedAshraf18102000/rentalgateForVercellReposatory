@@ -98,9 +98,7 @@ const page = () => {
               <UserImage
                 avatarSrc={avatarSrcResolved}
                 avatarKey={`${String(profileImageRaw ?? "")}-${profileImageNonce}`}
-                onProfileImageSaved={() =>
-                  setProfileImageNonce((n) => n + 1)
-                }
+                onProfileImageSaved={() => setProfileImageNonce((n) => n + 1)}
               />
               <h2 className="min-w-0 wrap-break-word text-base font-bold sm:text-lg">
                 {t("greeting", {
