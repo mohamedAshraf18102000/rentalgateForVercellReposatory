@@ -5,6 +5,6 @@ export interface ForgotPasswordProps {
   mobile?: string;
   channel?: "EMAIL" | "WHATSAPP";
   isAccountActivation?: boolean;
-  initialStep?: "request" | "verify" | "reset";
+  initialStep?: "request" | "verify";
   initialClientId?: number | null;
 }

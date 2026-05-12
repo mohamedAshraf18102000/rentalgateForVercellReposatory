@@ -6,12 +6,11 @@ import { useTranslations } from "next-intl";
 import * as React from "react";
 import { toast } from "sonner";
 import { useDialog } from "../../../hooks/useDialog";
-import { resetPassword } from "../ForgotPassword/services/forgot-password.service";
 import { ConfirmationChannelTabs } from "../SignUp/components/ConfirmationChannelTabs";
 import type { AccountRecoveryProps } from "./Recovery.types";
 import {
   accountRecovery,
-  resetPasswordVerification,
+  resetAuthPasswordWithOtp,
   verifyAccountRecovery,
 } from "./services/recovery.service";
 
@@ -199,11 +198,6 @@ export function AccountRecoveryDialog({
       return;
     }
 
-    if (!clientId) {
-      toast.error(tValidation("CLIENT_ID_IS_REQUIRED") || "خطأ في البيانات");
-      return;
-    }
-
     if (!otpCode) {
       toast.error(tValidation("CODE_IS_REQUIRED") || "يرجى إدخال رمز التحقق");
       return;
@@ -212,53 +206,30 @@ export function AccountRecoveryDialog({
     setIsLoading(true);
 
     try {
-      // First, verify the code with reset-password-verification
-      const verificationResponse = await resetPasswordVerification({
-        clientId,
-        code: otpCode,
+      const identifier = channel === "EMAIL" ? email : mobile;
+      const response = await resetAuthPasswordWithOtp({
+        email: identifier,
+        newPassword,
+        otpCode,
       });
 
-      console.log(
-        "Reset Password Verification Response:",
-        verificationResponse,
-      );
+      console.log("Reset Password Response:", response);
 
-      // Check for success
-      const isVerificationSuccess =
-        verificationResponse.status === true ||
-        verificationResponse.message === "SUCCESS";
+      const isSuccess =
+        response.status === true || response.message === "SUCCESS";
 
-      if (isVerificationSuccess) {
-        // Then reset the password
-        const response = await resetPassword({
-          email: "123",
-          password: newPassword,
-        });
+      if (isSuccess) {
+        toast.success(t("messages.passwordResetSuccess"));
+        onSuccess?.();
 
-        console.log("Reset Password Response:", response);
-
-        // Check for success: either status is true OR message is SUCCESS
-        const isSuccess =
-          response.status === true || response.message === "SUCCESS";
-
-        if (isSuccess) {
-          toast.success(t("messages.passwordResetSuccess"));
-          onSuccess?.();
-
-          // Close current dialog and open login after a short delay
+        setTimeout(() => {
+          onClose();
           setTimeout(() => {
-            onClose();
-            setTimeout(() => {
-              openDialog("Login", {});
-            }, 300);
-          }, 1500);
-        } else {
-          throw new Error(response.message || "فشل في إعادة تعيين كلمة المرور");
-        }
+            openDialog("Login", {});
+          }, 300);
+        }, 1500);
       } else {
-        throw new Error(
-          verificationResponse.message || "فشل في التحقق من الرمز",
-        );
+        throw new Error(response.message || "فشل في إعادة تعيين كلمة المرور");
       }
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : "";

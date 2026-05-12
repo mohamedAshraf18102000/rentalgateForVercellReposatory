@@ -14,6 +14,8 @@ import type { SuccessProps } from "../pages/Success/Success.types";
 import type { ForgotPasswordProps } from "../pages/auth/ForgotPassword/ForgotPassword.types";
 import type { SignUpProps } from "../pages/auth/SignUp/SignUp.types";
 import type { VerifyOTPProps } from "../pages/auth/VerifyOTP/VerifyOTP.types";
+import type { AuthVerifyOtpProps } from "../pages/auth/AuthVerifyOtp/AuthVerifyOtp.types";
+import type { ResetPasswordConfirmProps } from "../pages/auth/ResetPasswordConfirm/ResetPasswordConfirm.types";
 import type { EditPersonalInfoProps } from "../pages/(profile)/EditPersonalInfo/EditPersonalInfo.types";
 import type { EditBasicInfoProps } from "../pages/(profile)/EditBasicInfo/EditBasicInfo.types";
 import type { ChangePasswordProps } from "../pages/(profile)/ChangePassword/ChangePassword.types";
@@ -35,6 +37,8 @@ export type DialogName =
   | "ForgotPassword"
   | "SignUp"
   | "VerifyOTP"
+  | "AuthVerifyOtp"
+  | "ResetPasswordConfirm"
   | "EditPersonalInfo"
   | "EditBasicInfo"
   | "ChangePassword"
@@ -70,6 +74,8 @@ export interface DialogPropsMap {
   ForgotPassword: Omit<ForgotPasswordProps, "onClose">;
   SignUp: Omit<SignUpProps, "onClose">;
   VerifyOTP: Omit<VerifyOTPProps, "onClose">;
+  AuthVerifyOtp: Omit<AuthVerifyOtpProps, "onClose">;
+  ResetPasswordConfirm: Omit<ResetPasswordConfirmProps, "onClose">;
   EditPersonalInfo: Omit<EditPersonalInfoProps, "onClose">;
   EditBasicInfo: Omit<EditBasicInfoProps, "onClose">;
   ChangePassword: Omit<ChangePasswordProps, "onClose">;
@@ -93,6 +99,8 @@ export type DialogState =
   | { name: "ForgotPassword"; props: ForgotPasswordProps }
   | { name: "SignUp"; props: SignUpProps }
   | { name: "VerifyOTP"; props: VerifyOTPProps }
+  | { name: "AuthVerifyOtp"; props: AuthVerifyOtpProps }
+  | { name: "ResetPasswordConfirm"; props: ResetPasswordConfirmProps }
   | { name: "EditPersonalInfo"; props: EditPersonalInfoProps }
   | { name: "EditBasicInfo"; props: EditBasicInfoProps }
   | { name: "ChangePassword"; props: ChangePasswordProps }

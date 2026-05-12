@@ -22,6 +22,8 @@ interface UseLoginProps {
     mobile?: string,
     channel?: "EMAIL" | "WHATSAPP",
   ) => void;
+  /** HTTP 423 — e.g. locked account; caller should close login and show error UI */
+  onLoginHttp423?: () => void;
 }
 
 interface UseLoginReturn {
@@ -47,6 +49,7 @@ export const useLogin = ({
   redirectTo,
   onClientInactive,
   onClientDeactivated,
+  onLoginHttp423,
 }: UseLoginProps): UseLoginReturn => {
   const [loginType, setLoginType] = React.useState<"mobile" | "email">(
     "mobile",
@@ -175,6 +178,8 @@ export const useLogin = ({
           loginType === "mobile" ? mobile : undefined,
           channel,
         );
+      } else if (errorMessage === "LOGIN_HTTP_423" && onLoginHttp423) {
+        onLoginHttp423();
       } else {
         const errorKey = errorMessage === "Bad credentials" ? "BAD_CREDENTIALS" : errorMessage;
 

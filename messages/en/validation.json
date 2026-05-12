@@ -43,6 +43,7 @@
     "CODE_IS_REQUIRED": "Code is required",
     "CODE_IS_INVALID": "Invalid code",
     "INVALID_OTP_CODE": "Invalid verification code",
+    "Invalid OTP code": "Invalid verification code",
     "CLIENT_NOT_FOUND": "Client not found",
     "MOBILE_EMAIL_NAME_ALL_MUST_BE_UNIQUE": "User already exists with this information",
     "MOBILE_NOT_FOUND": "Mobile number not found",

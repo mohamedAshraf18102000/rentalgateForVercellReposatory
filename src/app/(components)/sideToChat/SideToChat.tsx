@@ -20,6 +20,13 @@ const SideToChat = () => {
         />
         <span className="text-sm">تحويل إلى محادثة</span>
       </p>
+      <p className="block font-bold text-white md:hidden">
+        <MessageCircle
+          className="size-6 shrink-0"
+          strokeWidth={2}
+          aria-hidden
+        />
+      </p>
     </div>
   );
 };

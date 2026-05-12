@@ -43,6 +43,7 @@
     "CODE_IS_REQUIRED": "الرمز مطلوب",
     "CODE_IS_INVALID": "الرمز غير صحيح",
     "INVALID_OTP_CODE": "رمز التحقق غير صحيح",
+    "Invalid OTP code": "رمز التحقق غير صحيح",
     "CLIENT_NOT_FOUND": "لم يتم العثور على العميل",
     "MOBILE_EMAIL_NAME_ALL_MUST_BE_UNIQUE": "المستخدم موجود مسبقاً بهذه المعلومات",
     "MOBILE_NOT_FOUND": "رقم الموبايل غير موجود",

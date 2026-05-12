@@ -1,26 +1,27 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import { OTPInput } from "input-otp"
-import { MinusIcon } from "lucide-react"
+import * as React from "react";
+import { OTPInput } from "input-otp";
+import { MinusIcon } from "lucide-react";
 
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/utils";
 
 // ============================================
 // Simple API InputOtp (HeroUI style)
 // ============================================
 
 interface InputOtpProps {
-  length?: number
-  value?: string
-  defaultValue?: string
-  onValueChange?: (value: string) => void
-  onComplete?: (value: string) => void
-  disabled?: boolean
-  className?: string
-  slotClassName?: string
-  separator?: boolean
-  separatorAfter?: number
+  length?: number;
+  value?: string;
+  defaultValue?: string;
+  onValueChange?: (value: string) => void;
+  onComplete?: (value: string) => void;
+  disabled?: boolean;
+  className?: string;
+  slotClassName?: string;
+  separator?: boolean;
+  separatorAfter?: number;
+  dir?: "ltr" | "rtl";
 }
 
 function InputOtp({
@@ -34,15 +35,17 @@ function InputOtp({
   slotClassName,
   separator = false,
   separatorAfter = 3,
+  dir = "ltr",
 }: InputOtpProps) {
-  const slots = Array.from({ length }, (_, i) => i)
-  
+  const slots = Array.from({ length }, (_, i) => i);
+
   // Split slots for separator
-  const firstGroup = separator ? slots.slice(0, separatorAfter) : slots
-  const secondGroup = separator ? slots.slice(separatorAfter) : []
+  const firstGroup = separator ? slots.slice(0, separatorAfter) : slots;
+  const secondGroup = separator ? slots.slice(separatorAfter) : [];
 
   return (
     <OTPInput
+      dir={dir}
       data-slot="input-otp"
       maxLength={length}
       value={value}
@@ -51,15 +54,15 @@ function InputOtp({
       disabled={disabled}
       containerClassName={cn(
         "flex items-center gap-2 has-disabled:opacity-50",
-        className
+        className,
       )}
       render={({ slots: inputSlots }) => (
         <>
           <InputOTPGroup>
             {firstGroup.map((index) => (
-              <InputOTPSlot 
-                key={index} 
-                index={index} 
+              <InputOTPSlot
+                key={index}
+                index={index}
                 slots={inputSlots}
                 className={slotClassName}
               />
@@ -70,9 +73,9 @@ function InputOtp({
               <InputOTPSeparator />
               <InputOTPGroup>
                 {secondGroup.map((index) => (
-                  <InputOTPSlot 
-                    key={index} 
-                    index={index} 
+                  <InputOTPSlot
+                    key={index}
+                    index={index}
                     slots={inputSlots}
                     className={slotClassName}
                   />
@@ -83,7 +86,21 @@ function InputOtp({
         </>
       )}
     />
-  )
+  );
+}
+
+// Blinking insertion caret — visible on both empty and filled active slots
+// (library often only sets hasFakeCaret when empty; users still need a caret when editing digits).
+function OtpCaret({ className }: { className?: string }) {
+  return (
+    <span
+      aria-hidden
+      className={cn(
+        "inline-block h-5 w-px shrink-0 rounded-full bg-primary motion-safe:animate-[blink_1s_step-end_infinite]",
+        className,
+      )}
+    />
+  );
 }
 
 // Internal slot component
@@ -92,11 +109,11 @@ function InputOTPSlot({
   slots,
   className,
 }: {
-  index: number
-  slots: { char: string | null; hasFakeCaret: boolean; isActive: boolean }[]
-  className?: string
+  index: number;
+  slots: { char: string | null; hasFakeCaret: boolean; isActive: boolean }[];
+  className?: string;
 }) {
-  const { char, hasFakeCaret, isActive } = slots[index] ?? {}
+  const { char, hasFakeCaret, isActive } = slots[index] ?? {};
 
   return (
     <div
@@ -104,31 +121,38 @@ function InputOTPSlot({
       data-active={isActive}
       data-filled={!!char}
       className={cn(
-        // Base styles - HeroUI exact style
-        " relative flex h-10 w-10 items-center justify-center rounded-lg border border-gray-200 bg-[#ECEEF2] text-base font-medium cursor-text",
-        // Transitions
-        "transition-all duration-150 ease-out",
-        // Group hover
+        // Fixed border-2 everywhere so focus/active never changes box size (no digit jump)
+        "relative flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border-2 border-gray-200 bg-[#ECEEF2] text-base font-medium text-foreground cursor-text",
+        "transition-[border-color,background-color,box-shadow] duration-150 ease-out",
         "group-hover/otp:border-gray-300",
-        // Individual hover
         "hover:border-gray-300 hover:bg-gray-50",
-        // Active state (focused) - dark border like HeroUI
-        "data-[active=true]:border-primary data-[active=true]:border-1 data-[active=true]:bg-white",
-        // Filled state
         "data-[filled=true]:border-gray-200 data-[filled=true]:bg-white",
-        className
+        "data-[active=true]:z-1 data-[active=true]:border-primary data-[active=true]:bg-white",
+        "data-[active=true]:shadow-[inset_0_0_0_1px_rgba(0,0,0,0.04)]",
+        className,
       )}
     >
-      <span>
-        {char}
-      </span>
-      {hasFakeCaret && (
-        <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
-          <div className="h-5 w-px animate-[blink_1s_step-end_infinite] bg-foreground" />
-        </div>
+      {char ? (
+        <>
+          {/* Digit stays centered; caret is overlaid so layout does not shift when focusing */}
+          <span className="tabular-nums leading-none">{char}</span>
+          {isActive && (
+            <span className="pointer-events-none absolute end-3 top-[20px] -translate-y-1/2">
+              <OtpCaret />
+            </span>
+          )}
+        </>
+      ) : (
+        <>
+          {(isActive || hasFakeCaret) && (
+            <span className="pointer-events-none absolute inset-0 flex items-center justify-center">
+              <OtpCaret />
+            </span>
+          )}
+        </>
       )}
     </div>
-  )
+  );
 }
 
 function InputOTPGroup({ className, ...props }: React.ComponentProps<"div">) {
@@ -138,20 +162,26 @@ function InputOTPGroup({ className, ...props }: React.ComponentProps<"div">) {
       className={cn("group/otp flex items-center gap-1.5", className)}
       {...props}
     />
-  )
+  );
 }
 
-function InputOTPSeparator({ className, ...props }: React.ComponentProps<"div">) {
+function InputOTPSeparator({
+  className,
+  ...props
+}: React.ComponentProps<"div">) {
   return (
-    <div 
-      data-slot="input-otp-separator" 
-      role="separator" 
-      className={cn("flex items-center justify-center w-4 text-muted-foreground", className)}
+    <div
+      data-slot="input-otp-separator"
+      role="separator"
+      className={cn(
+        "flex items-center justify-center w-4 text-muted-foreground",
+        className,
+      )}
       {...props}
     >
       <MinusIcon className="size-4" />
     </div>
-  )
+  );
 }
 
-export { InputOtp }
+export { InputOtp };

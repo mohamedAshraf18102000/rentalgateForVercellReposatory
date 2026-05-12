@@ -10,24 +10,27 @@ export function ErrorDialog({ message, onClose, onClick }: ApiErrorProps) {
 
   return (
     <DialogWrapper
-      className="overflow-x-hidden! max-w-lg! z-999999!"
+      className="z-999999"
       open={true}
       onOpenChange={(open) => !open && onClose()}
       closeOnOutsideClick={false}
+      size="md"
       header={{
         mainTitle: t("apiErrorDialog.title"),
       }}
       content={
-        <div className="flex flex-col items-center justify-center max-h-[500px] overflow-y-auto">
-          <CircleX className="w-10 h-10 text-red-500" />
-          <div className="text-sm my-2">
-            <span>{message}</span>
+        <div className="flex min-h-0 w-full max-w-full flex-col items-center justify-center gap-2 px-1 py-1 sm:gap-3 sm:px-2 max-h-[min(500px,calc(100dvh-12rem))] overflow-y-auto overscroll-contain">
+          <CircleX className="h-9 w-9 shrink-0 text-red-500 sm:h-10 sm:w-10" />
+          <div className="w-full max-w-full text-center text-sm leading-relaxed text-foreground sm:text-base">
+            <span className="inline-block max-w-full wrap-break-word">
+              {message}
+            </span>
           </div>
         </div>
       }
       footer={
         <Button
-          className="w-full mt-5 "
+          className="mt-4 w-full sm:mt-5"
           onClick={() => {
             onClick?.();
             onClose();

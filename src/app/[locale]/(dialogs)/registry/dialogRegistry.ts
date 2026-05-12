@@ -9,6 +9,8 @@ import { SuccessDialog } from "../pages/Success/SuccessDialog";
 import { ForgotPasswordDialog } from "../pages/auth/ForgotPassword/ForgotPasswordDialog";
 import { SignUpDialog } from "../pages/auth/SignUp/SignUpDialog";
 import { VerifyOTPDialog } from "../pages/auth/VerifyOTP/VerifyOTPDialog";
+import { AuthVerifyOtpDialog } from "../pages/auth/AuthVerifyOtp/AuthVerifyOtpDialog";
+import { ResetPasswordConfirmDialog } from "../pages/auth/ResetPasswordConfirm/ResetPasswordConfirmDialog";
 import { EditBranchDialog } from "../pages/EditBranch/EditBranchDialog";
 import { EditPersonalInfoDialog } from "../pages/(profile)/EditPersonalInfo/EditPersonalInfoDialog";
 import { EditBasicInfoDialog } from "../pages/(profile)/EditBasicInfo/EditBasicInfoDialog";
@@ -50,6 +52,8 @@ export const dialogRegistry: DialogRegistry = {
   ForgotPassword: ForgotPasswordDialog,
   SignUp: SignUpDialog,
   VerifyOTP: VerifyOTPDialog,
+  AuthVerifyOtp: AuthVerifyOtpDialog,
+  ResetPasswordConfirm: ResetPasswordConfirmDialog,
   EditPersonalInfo: EditPersonalInfoDialog,
   EditBasicInfo: EditBasicInfoDialog,
   ChangePassword: ChangePasswordDialog,

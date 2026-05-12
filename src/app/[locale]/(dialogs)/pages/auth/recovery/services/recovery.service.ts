@@ -2,7 +2,7 @@
  * Account Recovery Service - API calls
  */
 
-import { AUTH_URL } from "@/util/api";
+import { AUTH_URL, URL } from "@/util/api";
 import type {
   AccountRecoveryPayload,
   AccountRecoveryResponse,
@@ -15,6 +15,7 @@ import type {
 const ACCOUNT_RECOVERY_API_URL = "/account-recovery";
 const VERIFY_ACCOUNT_RECOVERY_API_URL = "/verify-account-recovery";
 const RESET_PASSWORD_VERIFICATION_API_URL = "/reset-password-verification";
+const AUTH_RESET_PASSWORD_API_URL = "/clients/auth/reset-password";
 
 export const accountRecovery = async (
   payload: AccountRecoveryPayload
@@ -71,6 +72,29 @@ export const resetPasswordVerification = async (
 
   if (!response.ok || (data.status !== undefined && !data.status)) {
     throw new Error(data.message || "فشل في التحقق من الرمز");
+  }
+
+  return data;
+};
+
+export const resetAuthPasswordWithOtp = async (payload: {
+  email: string;
+  newPassword: string;
+  otpCode: string;
+}): Promise<{ status?: boolean; message: string; data?: unknown }> => {
+  const response = await fetch(URL(AUTH_RESET_PASSWORD_API_URL), {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(payload),
+  });
+
+  const data: { status?: boolean; message: string; data?: unknown } =
+    await response.json();
+
+  if (!data.status && data.status !== undefined) {
+    throw new Error(data.message || "فشل في إعادة تعيين كلمة المرور");
   }
 
   return data;

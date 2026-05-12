@@ -19,6 +19,18 @@ export const loginUser = async (
 
   const data = await response.json();
 
+  if (response.status === 423) {
+    const apiMessage =
+      data.message && typeof data.message === "string"
+        ? data.message.trim()
+        : undefined;
+    const err = new Error("LOGIN_HTTP_423") as Error & {
+      apiMessage?: string;
+    };
+    if (apiMessage) err.apiMessage = apiMessage;
+    throw err;
+  }
+
   // Check if response is successful
   // Explicitly check for token or bearerToken as evidence of success
   const isSuccess =

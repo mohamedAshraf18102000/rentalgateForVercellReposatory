@@ -1,6 +1,6 @@
 "use client";
 
-import { DialogWrapper, Button } from "@/ui";
+import { DialogWrapper } from "@/ui";
 import { useTranslations } from "next-intl";
 import { useDialog } from "../../..";
 import { useLogin } from "./hooks/useLogin";
@@ -8,6 +8,7 @@ import FormLogin from "./FormLogin";
 import { LoginTabs } from "./components/LoginTabs";
 import { LoginFooter } from "./components/LoginFooter";
 import { LoginError } from "./components/LoginError";
+import { LoginHTTP423 } from "./components/LoginHTTP423";
 import type { LoginProps } from "./Login.types";
 
 export function LoginDialog({ onSuccess, onClose, redirectTo }: LoginProps) {
@@ -48,6 +49,20 @@ export function LoginDialog({ onSuccess, onClose, redirectTo }: LoginProps) {
         email,
         mobile,
         channel,
+      });
+    },
+    onLoginHttp423: () => {
+      onClose();
+      const channel: "EMAIL" | "WHATSAPP" =
+        loginType === "email" ? "EMAIL" : "WHATSAPP";
+      openDialog("ApiError", {
+        message: (
+          <LoginHTTP423
+            email={loginType === "email" ? email : undefined}
+            mobile={loginType === "mobile" ? mobile : undefined}
+            channel={channel}
+          />
+        ),
       });
     },
   });
