@@ -9,6 +9,7 @@ import { NavbarActions } from "./components/NavbarActions";
 import { Separator } from "../ui/separator";
 import { LanguageSwitcher } from "./components";
 import { cn } from "@/lib/utils";
+import ClearData from "./ClearData";
 
 export default async function Header() {
   const t = await getTranslations("common");
