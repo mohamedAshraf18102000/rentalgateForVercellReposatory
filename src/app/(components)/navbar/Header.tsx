@@ -1,11 +1,11 @@
 import { getTranslations, getLocale } from "next-intl/server";
 import { HomeLink } from "./components/HomeLink";
+import { ProfileNavLink } from "./components/ProfileNavLink";
 import { Logo } from "./components/Logo";
 import { MobileBottomNav } from "./components/MobileBottomNav";
 import { MobileHeader } from "./components/MobileHeader";
 import { NAVBAR_STYLES, BUTTON_STYLES } from "./constants";
 import { NavbarActions } from "./components/NavbarActions";
-import ClearData from "./ClearData";
 import { Separator } from "../ui/separator";
 import { LanguageSwitcher } from "./components";
 import { cn } from "@/lib/utils";
@@ -68,12 +68,7 @@ export default async function Header() {
                 className={BUTTON_STYLES.navLink}
               />
 
-              <HomeLink
-                href="/userProfile"
-                label={locale === "ar" ? "الملف الشخصي" : "Profile"}
-                isActive={false}
-                className={BUTTON_STYLES.navLink}
-              />
+              <ProfileNavLink />
 
               <Separator orientation="vertical" />
 

@@ -1,29 +1,40 @@
-"use client";
 import WrapperContainer from "@/app/(components)/wrapperContainer/WrapperContainer";
-import useUserAddreses from "@/hooks/api/useUserAddreses";
-import { useRemoveAccountMutation } from "./disable";
+import {
+  getHomePageOffers,
+  hasHomeOffersCoordinates,
+} from "@/services/home/homeOffers.service";
+import { cookies } from "next/headers";
 
-const page = () => {
-  const { data: userAddresses, isLoading: isLoadingAddresses } =
-    useUserAddreses();
+const page = async () => {
+  try {
+    const cookieStore = await cookies();
 
-  const { mutate: removeAccount, isSuccess: isSuccessRemoveAccount } =
-    useRemoveAccountMutation();
+    const latitude = cookieStore.get("lat")?.value ?? "";
+    const longitude = cookieStore.get("lng")?.value ?? "";
 
-  const handleRemoveAccount = () => {
-    removeAccount();
-  };
+    const offers = hasHomeOffersCoordinates(latitude, longitude)
+      ? await getHomePageOffers(latitude, longitude)
+      : null;
 
-  return (
-    <WrapperContainer exceedNav>
-      <div>
-        <h1>User Addresses</h1>
-        <pre>{JSON.stringify(userAddresses, null, 2)}</pre>
-
-        <button onClick={handleRemoveAccount}>Remove account</button>
-      </div>
-    </WrapperContainer>
-  );
+    return (
+      <WrapperContainer exceedNav>
+        <pre>
+          {JSON.stringify(
+            offers ?? { skipped: "please set latitude and longitude" },
+            null,
+            2,
+          )}
+        </pre>
+      </WrapperContainer>
+    );
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    return (
+      <WrapperContainer exceedNav>
+        <pre>{JSON.stringify({ error: message }, null, 2)}</pre>
+      </WrapperContainer>
+    );
+  }
 };
 
 export default page;
