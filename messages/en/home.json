@@ -70,7 +70,10 @@
       "rentalPeriod": "Rental period:",
       "visibleCars": "Visible cars:",
       "pickupDatePlaceholder": "Select pickup date",
-      "returnDatePlaceholder": "Select return date"
+      "returnDatePlaceholder": "Select return date",
+      "sortPriceInactive": "Sort by price",
+      "sortPriceAscending": "Sort by price: lowest first",
+      "sortPriceDescending": "Sort by price: highest first"
     },
     "filterDrawer": {
       "filter": "Filter",

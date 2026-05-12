@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 
 import { useForm } from "react-hook-form";
@@ -23,6 +23,9 @@ interface FormValues {
 }
 
 const BookCars = () => {
+  const [priceSort, setPriceSort] = useState<
+    "price_asc" | "price_desc" | null
+  >(null);
   const t = useTranslations("home");
   const { openDialog } = usePickupDialogStore();
   const userPhysical_Address = useLocationStore(
@@ -75,6 +78,7 @@ const BookCars = () => {
           : undefined,
     locationType: appliedFilters.pickupType === "branches" ? "1" : undefined,
     brandId: appliedFilters.brandId || undefined,
+    ...(priceSort ? { sortBy: priceSort } : {}),
   };
 
   const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } =
@@ -166,6 +170,14 @@ const BookCars = () => {
           handleSearch={handleSearch}
           shown={allCars.length}
           total={totalElements}
+          priceSort={priceSort}
+          onTogglePriceSort={() =>
+            setPriceSort((prev) => {
+              if (prev === null) return "price_asc";
+              if (prev === "price_asc") return "price_desc";
+              return null;
+            })
+          }
         />
       </div>
       {isLoading ? (

@@ -1,7 +1,13 @@
 import { Controller } from "react-hook-form";
 import { DateTimePicker } from "@/app/(components)/ui/dateTime-picker";
 import { Button, Checkbox } from "@/app/(components)";
-import { ArrowLeft, Search } from "lucide-react";
+import {
+  ArrowDownWideNarrow,
+  ArrowLeft,
+  ArrowUpDown,
+  ArrowUpWideNarrow,
+  Search,
+} from "lucide-react";
 import PositioningIcon from "@/constants/icons/PositioningIcon";
 import CarRentIcon from "@/constants/icons/CarRentIcon";
 import PaginationDateView from "@/app/(components)/PaginationDateView";
@@ -25,6 +31,8 @@ const CarSearchForm = ({
   handleSearch,
   shown,
   total,
+  priceSort,
+  onTogglePriceSort,
 }: any) => {
   const t = useTranslations("home");
   const fromDate = watch("fromDate");
@@ -229,6 +237,42 @@ const CarSearchForm = ({
             </div>
 
             <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-end lg:contents">
+              <button
+                type="button"
+                onClick={onTogglePriceSort}
+                title={
+                  priceSort === null
+                    ? t("bookings.searchForm.sortPriceInactive")
+                    : priceSort === "price_asc"
+                      ? t("bookings.searchForm.sortPriceAscending")
+                      : t("bookings.searchForm.sortPriceDescending")
+                }
+                aria-label={
+                  priceSort === null
+                    ? t("bookings.searchForm.sortPriceInactive")
+                    : priceSort === "price_asc"
+                      ? t("bookings.searchForm.sortPriceAscending")
+                      : t("bookings.searchForm.sortPriceDescending")
+                }
+                className="flex min-h-10 shrink-0 touch-manipulation items-center justify-center rounded-xl border-2 border-Grey400 p-2 sm:min-h-11"
+              >
+                {priceSort === null ? (
+                  <ArrowUpDown
+                    className="size-4 shrink-0 sm:size-4.5"
+                    aria-hidden
+                  />
+                ) : priceSort === "price_asc" ? (
+                  <ArrowDownWideNarrow
+                    className="size-4 shrink-0 sm:size-4.5"
+                    aria-hidden
+                  />
+                ) : (
+                  <ArrowUpWideNarrow
+                    className="size-4 shrink-0 sm:size-4.5"
+                    aria-hidden
+                  />
+                )}
+              </button>
               <FilterDrawer />
               <Button type="submit" className="w-full shrink-0 sm:w-auto">
                 <Search />

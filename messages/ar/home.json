@@ -70,7 +70,10 @@
       "rentalPeriod": "مدة الإيجار:",
       "visibleCars": "السيارات الظاهرة:",
       "pickupDatePlaceholder": "اختر تاريخ الاستلام",
-      "returnDatePlaceholder": "اختر تاريخ التسليم"
+      "returnDatePlaceholder": "اختر تاريخ التسليم",
+      "sortPriceInactive": "ترتيب حسب السعر",
+      "sortPriceAscending": "ترتيب السعر: من الأقل للأعلى",
+      "sortPriceDescending": "ترتيب السعر: من الأعلى للأقل"
     },
     "filterDrawer": {
       "filter": "تصفية",
