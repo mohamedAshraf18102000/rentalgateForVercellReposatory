@@ -17,10 +17,10 @@ const ClearData = () => {
 
   return (
     <button
-      className="bg-red-500 px-3 py-1 rounded-lg"
+      className="bg-red-900 px-3 py-1 rounded-full w-8 h-8 text-center flex items-center justify-center text-white"
       onClick={handleClearData}
     >
-      Clear Data
+      C
     </button>
   );
 };

@@ -4,12 +4,13 @@ import { useAuth } from "@/app/(components)/navbar/hooks/useAuth";
 import useUpdateUserProfile from "@/hooks/api/useUpdateUserProfile";
 import { useClientStore } from "@/lib/api/stores/client.store";
 import { useUploadImageMutation } from "@/services/uploadImages/uploadImage.service";
-import { ImagePlus, Loader2 } from "lucide-react";
+import { ImagePlus, Loader2, Pencil } from "lucide-react";
 import Image from "next/image";
 import { useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import ProfileImageCropDialog from "./ProfileImageCropDialog";
 import { toast } from "sonner";
+import { cn } from "@/lib/utils";
 
 const FALLBACK_AVATAR = "/profile/userFallbackImage.webp";
 
@@ -32,11 +33,13 @@ interface UserImageProps {
   /** Changes after save so Next/Image remounts and bypasses cached optimized response. */
   avatarKey: string;
   onProfileImageSaved?: () => void;
+  className?: string;
 }
 
 const UserImage = ({
   avatarSrc,
   avatarKey,
+  className,
   onProfileImageSaved,
 }: UserImageProps) => {
   const t = useTranslations("profile");
@@ -137,7 +140,7 @@ const UserImage = ({
         }}
         className={`group relative h-[72px] w-[72px] shrink-0 overflow-hidden rounded-2xl bg-[#BE2326] sm:h-[100px] sm:w-[100px] ${
           isBusy ? "cursor-wait" : "cursor-pointer"
-        }`}
+        } ${className}`}
       >
         <input
           ref={fileInputRef}
@@ -149,6 +152,10 @@ const UserImage = ({
         />
 
         <ProfileAvatarPicture key={avatarKey} avatarSrc={avatarSrc} />
+
+        <div className="md:hidden absolute inset-0 z-10 flex cursor-pointer items-center justify-center transition-opacity duration-1000 ease-in-out motion-safe:animate-pulse">
+          <Pencil className="h-5 w-5 text-white/80 " />
+        </div>
 
         <div
           className={`pointer-events-none absolute inset-0 z-10 flex cursor-pointer items-center justify-center bg-black/50 transition-opacity duration-300 ease-in-out ${

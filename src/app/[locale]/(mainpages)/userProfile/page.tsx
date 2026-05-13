@@ -1,7 +1,6 @@
 "use client";
 import WrapperContainer from "@/app/(components)/wrapperContainer/WrapperContainer";
 import ProfileBreadCrump from "./components/ProfileBreadCrump";
-import Image from "next/image";
 import { Separator } from "@/app/(components)/ui/separator";
 import UserDetailsCard from "./components/UserDetailsCard";
 import UserReferal from "./components/UserReferal";
@@ -15,10 +14,9 @@ import Points_WalletCard from "./components/Points_WalletCard";
 import { useUserPoints } from "@/hooks/api/useUserPoints";
 import { useWalletInfo } from "@/hooks/api/useWalletInfo";
 import { normalizeImageUrl } from "@/util";
-import { ImagePlus, MessageCircleIcon } from "lucide-react";
 import UserImage from "./components/userProfileImage/UserImage";
 
-const page = () => {
+const Page = () => {
   const { data: wallet, isLoading: walletLoading } = useWalletInfo();
 
   const { data: pointsData, isLoading: userPointsLoading } = useUserPoints();
@@ -75,11 +73,11 @@ const page = () => {
     return (
       <WrapperContainer exceedNav>
         <ProfileBreadCrump />
-        <div className="w-full p-2 sm:p-3 mt-4 sm:mt-6 min-h-[280px] sm:min-h-[320px]">
-          <div className="bg-white rounded-2xl shadow-lg p-4 sm:p-6 flex justify-center items-center min-h-[240px] sm:min-h-[300px]">
-            <div className="animate-pulse flex flex-col items-center">
-              <div className="rounded-full bg-slate-200 h-20 w-20"></div>
-              <div className="h-4 bg-slate-200 rounded w-48 mt-4"></div>
+        <div className="mt-4 min-h-[280px] w-full p-2 sm:mt-6 sm:min-h-[320px] sm:p-3">
+          <div className="flex min-h-[240px] items-center justify-center rounded-2xl bg-white p-4 shadow-lg sm:min-h-[300px] sm:p-6">
+            <div className="flex animate-pulse flex-col items-center">
+              <div className="h-20 w-20 rounded-full bg-slate-200"></div>
+              <div className="mt-4 h-4 w-48 rounded bg-slate-200"></div>
             </div>
           </div>
         </div>
@@ -91,22 +89,22 @@ const page = () => {
     <WrapperContainer exceedNav>
       <ProfileBreadCrump />
 
-      <div className="mt-4 sm:mt-6 flex w-full min-w-0 flex-col gap-4 p-2 sm:p-3 lg:flex-row lg:justify-between lg:items-start">
-        <div className="w-full min-w-0 rounded-2xl bg-white p-3 shadow-lg sm:p-4 lg:w-[60%]">
-          <div className="flex justify-between items-stretch gap-4 lg:grid-cols-2 lg:items-center">
-            <div className="flex min-w-0 flex-row h-full items-center gap-3 sm:flex-row md:items-center sm:justify-items-start">
+      <div className="mt-4 flex w-full min-w-0 flex-col gap-4 p-2 sm:mt-6 sm:p-3 xl:flex-row xl:items-start">
+        <div className="w-full min-w-0 rounded-2xl bg-white p-3 shadow-lg sm:p-4 lg:p-5 xl:w-[60%]">
+          <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
+            <div className="flex min-w-0 items-center gap-3 sm:gap-4">
               <UserImage
                 avatarSrc={avatarSrcResolved}
                 avatarKey={`${String(profileImageRaw ?? "")}-${profileImageNonce}`}
                 onProfileImageSaved={() => setProfileImageNonce((n) => n + 1)}
               />
-              <h2 className="min-w-0 wrap-break-word text-base font-bold sm:text-lg">
+              <h2 className="min-w-0 wrap-break-word text-base font-bold leading-snug sm:text-lg lg:text-xl">
                 {t("greeting", {
                   name: storeUserData?.clientName || "",
                 })}
               </h2>
             </div>
-            <div className="flex gap-2 w-[65%]">
+            <div className="grid w-full min-w-0 grid-cols-1 gap-2 sm:grid-cols-2 xl:max-w-[65%]">
               {/* <Points /> */}
               <Points_WalletCard
                 loading={userPointsLoading}
@@ -131,7 +129,7 @@ const page = () => {
           <Separator className="my-2" />
           <div>
             <p className="text-base mb-2">{t("personalDataTitle")}</p>
-            <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
+            <div className="grid grid-cols-1 gap-2 lg:grid-cols-2">
               {userData.map((item, index) => (
                 <UserDetailsCard
                   key={index}
@@ -147,15 +145,15 @@ const page = () => {
 
           <div className="">
             <p className="text-base mb-2">{t("otherDataTitle")}</p>
-            <div className="grid grid-cols-1 items-center gap-3 sm:grid-cols-2 sm:gap-4">
+            <div className="grid grid-cols-1 items-start gap-3 md:grid-cols-2 sm:gap-4">
               <OtherDetailsAction />
             </div>
           </div>
         </div>
 
-        <div className="w-full min-w-0 rounded-2xl p-2 sm:p-3 lg:w-[40%]">
+        <div className="w-full min-w-0 xl:w-[40%]">
           <UserReferal />
-          <div className="flex flex-col gap-4 mt-4">
+          <div className="mt-4 flex flex-col gap-4">
             <UserProfileActions />
           </div>
         </div>
@@ -164,4 +162,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;
