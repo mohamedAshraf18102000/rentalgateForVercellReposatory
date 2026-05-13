@@ -53,12 +53,14 @@ const getOfferTypeMessage = ({
   if (normalizedValue === null) return "";
 
   if (normalizedType === 1) {
-    return `${normalizedValue}%`;
+    return locale === "ar"
+      ? `نسبة خصم ${normalizedValue}%`
+      : `Discount ${normalizedValue}%`;
   }
 
   return locale === "ar"
-    ? `${normalizedValue} ريال`
-    : `${normalizedValue} Riyal`;
+    ? `خصم ${normalizedValue} ريال`
+    : `Discount ${normalizedValue} Riyal`;
 };
 
 export default getOfferTypeMessage;

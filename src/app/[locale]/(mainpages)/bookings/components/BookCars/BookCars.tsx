@@ -23,9 +23,9 @@ interface FormValues {
 }
 
 const BookCars = () => {
-  const [priceSort, setPriceSort] = useState<
-    "price_asc" | "price_desc" | null
-  >(null);
+  const [priceSort, setPriceSort] = useState<"price_asc" | "price_desc" | null>(
+    null,
+  );
   const t = useTranslations("home");
   const { openDialog } = usePickupDialogStore();
   const userPhysical_Address = useLocationStore(

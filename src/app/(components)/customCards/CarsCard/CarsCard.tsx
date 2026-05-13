@@ -99,7 +99,7 @@ const CarsCard = ({
           <img
             src={carImage}
             alt={t("carImageAlt")}
-            className="relative z-20 w-full object-cover min-h-[250px] max-h-[250px] rounded-lg"
+            className="relative z-20 w-full object-contain min-h-[200px] max-h-[200px] rounded-lg"
           />
           {typeof firstBadgeTitle === "string" &&
             firstBadgeTitle.length > 0 && (

@@ -68,8 +68,6 @@ const MoreRequestedCarsCarousel = ({
                     hasDiscount ? branch.offerDailyPrice : branch.dailyPrice
                   }
                   priceBeforeOffer={branch.dailyPrice}
-                  firstBadgeTitle={discountBadge}
-                  firstBadgeColor={discountBadge ? "green" : undefined}
                   showTax
                 />
               </CarouselItem>

@@ -199,8 +199,6 @@ const page = () => {
           carPrice={pricing.pricePerDay}
           priceBeforeOffer={originalPricing.pricePerDay}
           originalPrice={originalPricing.pricePerDay}
-          firstBadgeTitle={discountBadge}
-          firstBadgeColor="green"
           pricingType={pricingType}
           totalPrice={pricing.totalPrice}
           originalTotalPrice={originalPricing.totalPrice}

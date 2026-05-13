@@ -18,6 +18,7 @@ import {
   type CarouselApi,
   Carousel,
   CarouselContent,
+  CarouselDots,
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
@@ -210,6 +211,8 @@ const BranchCarsCarousel = ({
 }: BranchCarsCarouselProps) => {
   const [api, setApi] = useState<CarouselApi>();
   const [showControls, setShowControls] = useState(false);
+  const slideClassName =
+    "basis-[90%] pl-3 sm:basis-[calc(50%-1rem)] sm:pl-4 lg:basis-[350px] xl:basis-[380px]";
 
   const updateControlVisibility = useCallback((carouselApi: CarouselApi) => {
     if (!carouselApi) {
@@ -241,9 +244,9 @@ const BranchCarsCarousel = ({
         align: "start",
         direction: isRtl ? "rtl" : "ltr",
       }}
-      className="w-full"
+      className="w-full sm:px-12"
     >
-      <CarouselContent className="py-3">
+      <CarouselContent className="-ml-3 py-2 sm:-ml-4 sm:py-3">
         {cars.map((car) => {
           const {
             pricePerDay,
@@ -264,43 +267,47 @@ const BranchCarsCarousel = ({
           });
 
           return (
-            <div key={car.ccbId} className="relative">
-              <CarouselItem className="basis-[350px] max-w-sm shrink-0 mx-2 cursor-grab">
-                <Link
-                  href={`/carDetails/${car.ccbId}`}
-                  className="my-3 block w-[350px] max-w-sm"
-                >
-                  <CarsCard
-                    className="w-full h-full min-w-0"
-                    showTax={isShowTax}
-                    firstBadgeTitle={discountBadge}
-                    firstBadgeColor="green"
-                    extraBadgeTitle={offerBadge || undefined}
-                    extraBadgeColor="red"
-                    carImage={normalizeImageUrl(car.carImage)}
-                    carName={car.carName}
-                    advancedCard
-                    carBrand={car.categoryNameArabic}
-                    companyLogo={car.companyLogo}
-                    companyName={car.companyName}
-                    deliveryInMinutes={car.deliveryInMinutes ?? 0}
-                    carPrice={pricePerDay}
-                    priceBeforeOffer={originalPrice}
-                    freeKm={car.allowedKm ?? 0}
-                    pricingType={pricingType}
-                    totalPrice={totalPrice}
-                    rentalDays={rentalDays}
-                  />
-                </Link>
-              </CarouselItem>
-            </div>
+            <CarouselItem
+              key={car.ccbId}
+              className={`${slideClassName} cursor-grab`}
+            >
+              <Link
+                href={`/carDetails/${car.ccbId}`}
+                className="my-2 block h-full w-full sm:my-3"
+              >
+                <CarsCard
+                  className="h-full w-full min-w-0"
+                  showTax={isShowTax}
+                  firstBadgeTitle={offerBadge || undefined}
+                  firstBadgeColor="red"
+                  carImage={normalizeImageUrl(car.carImage)}
+                  carName={car.carName}
+                  advancedCard
+                  carBrand={car.categoryNameArabic}
+                  companyLogo={car.companyLogo}
+                  companyName={car.companyName}
+                  deliveryInMinutes={car.deliveryInMinutes ?? 0}
+                  carPrice={pricePerDay}
+                  priceBeforeOffer={originalPrice}
+                  freeKm={car.allowedKm ?? 0}
+                  pricingType={pricingType}
+                  totalPrice={totalPrice}
+                  rentalDays={rentalDays}
+                />
+              </Link>
+            </CarouselItem>
           );
         })}
       </CarouselContent>
       {showControls ? (
         <>
-          <CarouselPrevious className="absolute right-0 top-1/2 -mr-15" />
-          <CarouselNext className="absolute left-0 top-1/2 -ml-15" />
+          <CarouselPrevious
+            className={`absolute top-1/2 z-10 hidden -translate-y-1/2 sm:flex ${isRtl ? "right-0" : "left-0"}`}
+          />
+          <CarouselDots className="flex md:hidden" />
+          <CarouselNext
+            className={`absolute top-1/2 z-10 hidden -translate-y-1/2 sm:flex ${isRtl ? "left-0" : "right-0"}`}
+          />
         </>
       ) : null}
     </Carousel>

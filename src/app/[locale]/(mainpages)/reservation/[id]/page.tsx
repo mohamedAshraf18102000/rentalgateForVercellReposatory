@@ -524,8 +524,6 @@ const page = () => {
                   priceBeforeOffer={pricingDetails.originalPricePerDay}
                   rentalDays={rentalDays}
                   totalPrice={pricingDetails.totalPrice}
-                  firstBadgeTitle={discountBadge}
-                  firstBadgeColor="green"
                   extraContent={
                     (formData.returnType === "BRANCH" ||
                       formData.pickupType === "BRANCH") && (
@@ -537,7 +535,9 @@ const page = () => {
                           destinationLng={carDetails?.longitude}
                           disableMapClickToChangeLocation
                           destinationName={carDetails?.branchName}
-                          destinationLogoUrl={normalizeImageUrl(carDetails?.company.logo)}
+                          destinationLogoUrl={normalizeImageUrl(
+                            carDetails?.company.logo,
+                          )}
                           autoFitBounds={true}
                           hideSearch={true}
                         />
