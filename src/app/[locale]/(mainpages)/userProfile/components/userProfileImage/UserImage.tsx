@@ -10,7 +10,6 @@ import { useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import ProfileImageCropDialog from "./ProfileImageCropDialog";
 import { toast } from "sonner";
-import { cn } from "@/lib/utils";
 
 const FALLBACK_AVATAR = "/profile/userFallbackImage.webp";
 

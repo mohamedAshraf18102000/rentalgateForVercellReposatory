@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { getTranslations } from "next-intl/server";
+import Link from "next/link";
 
 const BookingsPanner = async () => {
   const t = await getTranslations("home");
@@ -17,7 +18,7 @@ const BookingsPanner = async () => {
 
       <div className="w-full text-white lg:w-auto lg:shrink-0">
         <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 lg:justify-end">
-          <a
+          <Link
             href="#"
             target="_blank"
             className="block w-[140px] sm:w-[160px] h-[44px] sm:h-[52px] hover:scale-105 transition-transform"
@@ -29,8 +30,8 @@ const BookingsPanner = async () => {
               height={60}
               className="w-full h-full object-contain"
             />
-          </a>
-          <a
+          </Link>
+          <Link
             href="#"
             target="_blank"
             className="block w-[140px] sm:w-[160px] h-[44px] sm:h-[52px] hover:scale-105 transition-transform"
@@ -42,7 +43,7 @@ const BookingsPanner = async () => {
               height={60}
               className="w-full h-full object-contain"
             />
-          </a>
+          </Link>
         </div>
       </div>
     </section>

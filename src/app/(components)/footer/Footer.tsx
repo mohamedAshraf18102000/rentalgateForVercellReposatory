@@ -79,46 +79,51 @@ export default function Footer() {
 
           {/* Social Icons - Left in RTL: YouTube, Facebook, Twitter, Instagram, LinkedIn */}
           <div className="flex items-center gap-4 order-3 md:order-3">
-            <a
+            <Link
+              href="#"
               target="_blank"
               rel="noopener noreferrer"
               aria-label={t("visitYouTube")}
               className="text-white hover:text-red-500 transition-colors cursor-pointer"
             >
               <YoutubeIcon className="w-6 h-6" />
-            </a>
-            <a
+            </Link>
+            <Link
+              href="#"
               target="_blank"
               rel="noopener noreferrer"
               aria-label={t("visitFacebook")}
               className="text-white hover:text-red-500 transition-colors cursor-pointer"
             >
               <Facebook className="w-6 h-6" aria-hidden="true" />
-            </a>
-            <a
+            </Link>
+            <Link
+              href="#"
               target="_blank"
               rel="noopener noreferrer"
               aria-label={t("visitTwitter")}
               className="text-white hover:text-red-500 transition-colors flex items-center justify-center cursor-pointer"
             >
               <XTwitterIcon className="w-5 h-5" />
-            </a>
-            <a
+            </Link>
+            <Link
+              href="#"
               target="_blank"
               rel="noopener noreferrer"
               aria-label={t("visitInstagram")}
               className="text-white hover:text-red-500 transition-colors cursor-pointer"
             >
               <Instagram className="w-6 h-6" aria-hidden="true" />
-            </a>
-            <a
+            </Link>
+            <Link
+              href="#"
               target="_blank"
               rel="noopener noreferrer"
               aria-label={t("visitLinkedIn")}
               className="text-white hover:text-red-500 transition-colors"
             >
               <Linkedin className="w-6 h-6 cursor-pointer" aria-hidden="true" />
-            </a>
+            </Link>
           </div>
         </div>
       </div>

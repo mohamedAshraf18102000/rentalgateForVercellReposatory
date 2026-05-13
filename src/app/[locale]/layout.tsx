@@ -1,10 +1,15 @@
 import { routing } from "@/i18n/routing";
 import { DialogProvider, Footer, Header, Toaster } from "@/ui";
 import type { Metadata } from "next";
+import { headers } from "next/headers";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages, setRequestLocale } from "next-intl/server";
 import { Almarai, Zain } from "next/font/google";
 import { notFound } from "next/navigation";
+import arCommonMessages from "../../../messages/ar/common.json";
+import arHomeMessages from "../../../messages/ar/home.json";
+import enCommonMessages from "../../../messages/en/common.json";
+import enHomeMessages from "../../../messages/en/home.json";
 import "../../globals.css";
 import { RouteGuard } from "./(components)/RouteGuard";
 import SideToChat from "../(components)/sideToChat/SideToChat";
@@ -27,6 +32,53 @@ const fontAlmarai = Almarai({
   variable: "--font-almarai",
 });
 
+const metadataMessages = {
+  ar: {
+    common: arCommonMessages,
+    home: arHomeMessages,
+  },
+  en: {
+    common: enCommonMessages,
+    home: enHomeMessages,
+  },
+} as const;
+
+function getLocaleMetadata(locale: string) {
+  const normalizedLocale = locale === "en" ? "en" : "ar";
+  const { common, home } = metadataMessages[normalizedLocale];
+  const isArabic = normalizedLocale === "ar";
+  const siteName = isArabic ? "رينتال جيت" : "Rental Gate";
+  const title = isArabic
+    ? `${home.title || "مرحباً بك في رينتال جيت"} - ${common.companyName || "رينتال جيت"}`
+    : `${home.title || "Welcome to Rental Gate"} - ${common.companyName || "Rental Gate"}`;
+  const description = isArabic
+    ? home.description || "منصتك الموثوقة لتأجير السيارات في المملكة العربية السعودية"
+    : home.description || "Your trusted platform for car rental in Saudi Arabia";
+
+  return {
+    locale: normalizedLocale,
+    isArabic,
+    siteName,
+    title,
+    description,
+  };
+}
+
+async function getBaseUrl() {
+  const headerStore = await headers();
+  const host = headerStore.get("x-forwarded-host") || headerStore.get("host");
+
+  if (host) {
+    const protocol =
+      headerStore.get("x-forwarded-proto") ||
+      (host.includes("localhost") ? "http" : "https");
+
+    return `${protocol}://${host}`;
+  }
+
+  return process.env.NEXT_PUBLIC_SITE_URL || "https://almqam.com";
+}
+
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
 }
@@ -37,31 +89,19 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
-  const messages = await getMessages({ locale });
-  const tCommon = messages.common as Record<string, string>;
-  const tHome = messages.home as Record<string, string>;
+  const {
+    locale: normalizedLocale,
+    isArabic,
+    siteName,
+    title,
+    description,
+  } = getLocaleMetadata(locale);
 
-  const isArabic = locale === "ar";
-  const siteName = isArabic ? "رينتال جيت" : "Rental Gate";
-  const title = isArabic
-    ? `${tHome.title || "مرحباً بك في رينتال جيت"} - ${tCommon.companyName || "رينتال جيت"}`
-    : `${tHome.title || "Welcome to Rental Gate"} - ${tCommon.companyName || "Rental Gate"}`;
-  const description = isArabic
-    ? tHome.description ||
-      "منصتك الموثوقة لتأجير السيارات في المملكة العربية السعودية"
-    : tHome.description ||
-      "Your trusted platform for car rental in Saudi Arabia";
-
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://almqam.com";
-  const url = `${baseUrl}/${locale}`;
+  const baseUrl = await getBaseUrl();
+  const url = `${baseUrl}/${normalizedLocale}`;
 
   return {
     metadataBase: new URL(baseUrl),
-    title: {
-      default: title,
-      template: `%s | ${siteName}`,
-    },
-    description,
     keywords: isArabic
       ? ["تأجير سيارات", "رينتال جيت", "تأجير", "سيارات", "السعودية", "الرياض"]
       : [
@@ -82,7 +122,7 @@ export async function generateMetadata({
     },
     openGraph: {
       type: "website",
-      locale: locale === "ar" ? "ar_SA" : "en_US",
+      locale: normalizedLocale === "ar" ? "ar_SA" : "en_US",
       url,
       siteName,
       title,
@@ -120,14 +160,6 @@ export async function generateMetadata({
       shortcut: "/logo-rental.png",
     },
     manifest: "/manifest.json",
-    alternates: {
-      canonical: url,
-      languages: {
-        ar: `${baseUrl}/ar`,
-        en: `${baseUrl}/en`,
-        "x-default": `${baseUrl}/en`,
-      },
-    },
     verification: {
       // يمكن إضافة Google Search Console verification code هنا
       // google: 'your-verification-code',
@@ -149,6 +181,14 @@ export default async function LocaleLayout({
     notFound();
   }
 
+  const {
+    locale: normalizedLocale,
+    title,
+    description,
+  } = getLocaleMetadata(locale);
+  const baseUrl = await getBaseUrl();
+  const canonicalUrl = `${baseUrl}/${normalizedLocale}`;
+
   // Enable static rendering
   setRequestLocale(locale);
 
@@ -163,6 +203,13 @@ export default async function LocaleLayout({
       className={` ${fontAlmarai.variable}`}
     >
       <head>
+        <title>{title}</title>
+        <meta name="description" content={description} />
+        <link rel="canonical" href={canonicalUrl} />
+        <link rel="alternate" hrefLang="ar" href={`${baseUrl}/ar`} />
+        <link rel="alternate" hrefLang="en" href={`${baseUrl}/en`} />
+        <link rel="alternate" hrefLang="x-default" href={`${baseUrl}/en`} />
+
         {/* Favicon */}
         <link rel="icon" href="/logo-rental.png" type="image/png" />
         <link rel="apple-touch-icon" href="/logo-rental.png" />

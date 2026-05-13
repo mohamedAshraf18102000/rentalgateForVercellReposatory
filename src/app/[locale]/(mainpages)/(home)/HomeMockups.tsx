@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { useTranslations, useLocale } from "next-intl";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 function HomeMockups() {
   const t = useTranslations("home");
@@ -47,7 +48,7 @@ function HomeMockups() {
               </h2>
 
               <div className="flex gap-3 justify-center">
-                <a
+                <Link
                   href={""}
                   target="_blank"
                   className="block w-[140px] sm:w-[160px] h-[44px] sm:h-[52px] hover:scale-105 transition-transform"
@@ -59,8 +60,8 @@ function HomeMockups() {
                     height={60}
                     className="w-full h-full object-contain"
                   />
-                </a>
-                <a
+                </Link>
+                <Link
                   href={""}
                   target="_blank"
                   className="block w-[140px] sm:w-[160px] h-[44px] sm:h-[52px] hover:scale-105 transition-transform"
@@ -72,7 +73,7 @@ function HomeMockups() {
                     height={60}
                     className="w-full h-full object-contain"
                   />
-                </a>
+                </Link>
               </div>
             </div>
           </div>
@@ -95,7 +96,7 @@ function HomeMockups() {
               </h2>
 
               <div className="flex gap-4 justify-center md:justify-start">
-                <a
+                <Link
                   href="#"
                   className="block w-[160px] lg:w-[180px] h-[52px] lg:h-[60px] hover:scale-105 transition-transform"
                 >
@@ -106,8 +107,8 @@ function HomeMockups() {
                     height={60}
                     className="w-full h-full object-contain"
                   />
-                </a>
-                <a
+                </Link>
+                <Link
                   href="#"
                   className="block w-[160px] lg:w-[180px] h-[52px] lg:h-[60px] hover:scale-105 transition-transform"
                 >
@@ -118,7 +119,7 @@ function HomeMockups() {
                     height={60}
                     className="w-full h-full object-contain"
                   />
-                </a>
+                </Link>
               </div>
             </div>
 
