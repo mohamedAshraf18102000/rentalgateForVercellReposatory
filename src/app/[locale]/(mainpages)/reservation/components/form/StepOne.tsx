@@ -351,6 +351,7 @@ const StepOne = ({ control, errors, watch, setValue }: StepOneProps) => {
             control={control}
             render={({ field }) => (
               <Input
+                required
                 {...field}
                 value={pickupDisplayValue || ""}
                 label={t("reservation.stepOne.pickupLocationLabel")}
@@ -383,6 +384,7 @@ const StepOne = ({ control, errors, watch, setValue }: StepOneProps) => {
             render={({ field }) => (
               <Input
                 {...field}
+                required
                 value={returnDisplayValue || ""}
                 label={t("reservation.stepOne.dropoffLocationLabel")}
                 placeholder={t(
@@ -431,6 +433,8 @@ const StepOne = ({ control, errors, watch, setValue }: StepOneProps) => {
             control={control}
             render={({ field }) => (
               <DateTimePicker
+                required
+                labelClassName="text-base!"
                 placeholder={t("reservation.stepOne.pickupDatePlaceholder")}
                 {...field}
                 label={t("reservation.stepOne.rentalPeriodLabel")}
@@ -462,6 +466,7 @@ const StepOne = ({ control, errors, watch, setValue }: StepOneProps) => {
             control={control}
             render={({ field }) => (
               <DateTimePicker
+                required
                 placeholder={t("reservation.stepOne.dropoffDatePlaceholder")}
                 {...field}
                 className="w-full"

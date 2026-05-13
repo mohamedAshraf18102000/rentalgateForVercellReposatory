@@ -23,6 +23,7 @@ import {
 } from "react-hook-form";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
+import InputRequired from "@/app/(components)/InputRequired";
 
 interface ProfileFormProps {
   control: Control<UpdateUserReservationProfileFormValues>;
@@ -58,7 +59,7 @@ const ProfileForm = ({
               <div className="space-y-1.5 w-full">
                 <Label className="flex items-center gap-1.5 text-sm font-medium text-foreground">
                   {t("fields.residenceType.label")}
-                  {<span className="text-StatusRed text-base">*</span>}
+                  <InputRequired />
                 </Label>
                 <div className="mt-2">
                   <Select onValueChange={field.onChange} value={field.value}>
@@ -199,8 +200,8 @@ const ProfileForm = ({
             control={control}
             render={({ field }) => (
               <InputFileUpload
+                InputAsterisk
                 {...field}
-                required
                 label={t("fields.licenseImage.label")}
                 placeholder={t("fields.licenseImage.placeholder")}
                 initialPreviewUrl={licenseImagePreviewUrl}

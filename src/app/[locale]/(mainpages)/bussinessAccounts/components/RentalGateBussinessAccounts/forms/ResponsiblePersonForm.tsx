@@ -17,6 +17,7 @@ const ResponsiblePersonForm = () => {
     <div className="mt-8 flex flex-col gap-3">
       <div>
         <Input
+          required
           id="responsableName"
           type="text"
           placeholder={t("step2.placeholders.name")}
@@ -46,6 +47,7 @@ const ResponsiblePersonForm = () => {
           <>
             <div className="relative z-50 overflow-visible">
               <CountryPhone
+                required
                 inputClassName="bg-white!"
                 labelClassName="text-base! text-primary!"
                 placeholder={t("step2.fields.phone")}

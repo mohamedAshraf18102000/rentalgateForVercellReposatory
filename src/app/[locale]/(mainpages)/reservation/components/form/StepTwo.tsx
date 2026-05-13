@@ -27,6 +27,7 @@ import { Separator } from "@/app/(components)/ui/separator";
 import { InputFileUpload } from "@/app/(components)/ui/inputFileUpload";
 import { ReservationFormValues } from "@/lib/validations/reservationSchema";
 import { useBookedCarDetailsStore } from "@/lib/stores/useBookedCarDetailsStore";
+import InputRequired from "@/app/(components)/InputRequired";
 
 interface StepTwoProps {
   control: Control<ReservationFormValues>;
@@ -66,6 +67,7 @@ const StepTwo = ({ control, errors, setValue }: StepTwoProps) => {
               <div className="space-y-1.5 w-full">
                 <Label className="flex items-center gap-1.5 text-sm font-medium text-foreground">
                   {t("reservation.stepTwo.residenceTypeLabel")}
+                  <InputRequired />
                 </Label>
                 <div className="mt-2">
                   <Select
@@ -110,6 +112,7 @@ const StepTwo = ({ control, errors, setValue }: StepTwoProps) => {
             control={control}
             render={({ field }) => (
               <Input
+                required
                 {...field}
                 label={t("reservation.stepTwo.nationalityLabel")}
                 startIcon={<Globe className="size-4" />}
@@ -126,6 +129,7 @@ const StepTwo = ({ control, errors, setValue }: StepTwoProps) => {
               control={control}
               render={({ field }) => (
                 <Input
+                  required
                   type="number"
                   {...field}
                   label={t("reservation.stepTwo.personalIdLabel")}
@@ -145,6 +149,7 @@ const StepTwo = ({ control, errors, setValue }: StepTwoProps) => {
               control={control}
               render={({ field }) => (
                 <Input
+                  required
                   type="number"
                   {...field}
                   label={t("reservation.stepTwo.passportNumberLabel")}
@@ -166,6 +171,7 @@ const StepTwo = ({ control, errors, setValue }: StepTwoProps) => {
               control={control}
               render={({ field }) => (
                 <Input
+                  required
                   type="number"
                   {...field}
                   label={t("reservation.stepTwo.borderNumberLabel")}
@@ -184,6 +190,7 @@ const StepTwo = ({ control, errors, setValue }: StepTwoProps) => {
             control={control}
             render={({ field }) => (
               <DateTimePicker
+                required
                 {...field}
                 placeholder={identityExpiryLabel}
                 label={identityExpiryLabel}
@@ -208,6 +215,7 @@ const StepTwo = ({ control, errors, setValue }: StepTwoProps) => {
               control={control}
               render={({ field }) => (
                 <InputFileUpload
+                  InputAsterisk
                   {...field}
                   label={t("reservation.stepTwo.licenseImageLabel")}
                   placeholder={t("reservation.stepTwo.licenseImagePlaceholder")}
@@ -261,6 +269,7 @@ const StepTwo = ({ control, errors, setValue }: StepTwoProps) => {
               render={({ field }) => (
                 <DateTimePicker
                   {...field}
+                  required
                   placeholder={t(
                     "reservation.stepTwo.licenseExpiryPlaceholder",
                   )}

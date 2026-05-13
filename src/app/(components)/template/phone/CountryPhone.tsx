@@ -6,6 +6,7 @@ import { useEffect, useMemo, useState } from "react";
 import { PhoneInput } from "react-international-phone";
 import "react-international-phone/style.css";
 import "./phone.css";
+import InputRequired from "../../InputRequired";
 
 interface CountryPhoneProps {
   value?: string;
@@ -191,7 +192,7 @@ export default function CountryPhone({
         className={`text-sm font-medium text-foreground ${labelClassName}`}
       >
         {label}
-        {required && <span className="text-StatusRed text-base">*</span>}
+        {required && <InputRequired />}
       </label>
       <div className="mt-2">{phoneInput}</div>
     </div>

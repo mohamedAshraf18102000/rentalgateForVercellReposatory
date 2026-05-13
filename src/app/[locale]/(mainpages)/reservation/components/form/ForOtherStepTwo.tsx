@@ -67,7 +67,9 @@ const StepTwo = ({ control, errors, setValue }: StepTwoProps) => {
                   value={field.value}
                   onChange={field.onChange}
                   onBlur={field.onBlur}
-                  placeholder={t("reservation.forOtherStepTwo.phonePlaceholder")}
+                  placeholder={t(
+                    "reservation.forOtherStepTwo.phonePlaceholder",
+                  )}
                   defaultCountry="sa"
                   showValidation={true}
                   label={t("reservation.forOtherStepTwo.phoneLabel")}
@@ -94,7 +96,9 @@ const StepTwo = ({ control, errors, setValue }: StepTwoProps) => {
                 value={field.value ?? ""}
                 label={t("reservation.forOtherStepTwo.personalIdLabel")}
                 startIcon={<IdCard className="size-4" />}
-                placeholder={t("reservation.forOtherStepTwo.personalIdPlaceholder")}
+                placeholder={t(
+                  "reservation.forOtherStepTwo.personalIdPlaceholder",
+                )}
                 errorMessage={errors.OtherPersonalId?.message}
               />
             )}
@@ -112,6 +116,7 @@ const StepTwo = ({ control, errors, setValue }: StepTwoProps) => {
               control={control}
               render={({ field }) => (
                 <InputFileUpload
+                  InputAsterisk
                   {...field}
                   label={t("reservation.forOtherStepTwo.licenseImageLabel")}
                   placeholder={t(

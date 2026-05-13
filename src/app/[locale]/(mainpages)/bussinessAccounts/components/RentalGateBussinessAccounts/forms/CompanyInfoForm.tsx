@@ -50,6 +50,7 @@ const CompanyInfoForm = ({ step = 1 }: CompanyInfoFormProps) => {
         <>
           <div>
             <Input
+              required
               id="companyName"
               type="text"
               placeholder="أدخل أسم الشركة"
@@ -68,6 +69,7 @@ const CompanyInfoForm = ({ step = 1 }: CompanyInfoFormProps) => {
 
           <div>
             <Input
+              required
               id="empsNumber"
               type="number"
               placeholder="أدخل عدد الموظفين"
@@ -94,6 +96,7 @@ const CompanyInfoForm = ({ step = 1 }: CompanyInfoFormProps) => {
               control={control}
               render={({ field }) => (
                 <InputFileUpload
+                  InputAsterisk
                   wrapperClassName={`bg-white! font-bold! border-2! ${errors.taxImage ? "border-red-500" : ""}`}
                   size="sm"
                   className="text-center!"
@@ -116,6 +119,7 @@ const CompanyInfoForm = ({ step = 1 }: CompanyInfoFormProps) => {
               control={control}
               render={({ field }) => (
                 <InputFileUpload
+                  InputAsterisk
                   wrapperClassName={`bg-white! font-bold! border-2! ${errors.registrationImage ? "border-red-500" : ""}`}
                   size="sm"
                   className="text-center!"

@@ -17,6 +17,7 @@ import { ar, enUS } from "date-fns/locale";
 import "react-day-picker/dist/style.css";
 import "./style.css";
 import { DialogWrapper } from "./dialog-wrapper"; // adjust path
+import InputRequired from "../InputRequired";
 
 // ─── Hook ─────────────────────────────────────────────────────────────────────
 
@@ -666,7 +667,7 @@ export function DateTimePicker({
         >
           {labelIcon}
           {label}
-          {required && <span className="text-StatusRed text-base">*</span>}
+          {required && <InputRequired />}
         </label>
       )}
       <div className="relative">

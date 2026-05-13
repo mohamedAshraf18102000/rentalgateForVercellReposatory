@@ -4,6 +4,7 @@ import * as React from "react";
 import { Button } from "./button";
 import { Eye, EyeOff } from "lucide-react";
 import { cn } from "@/lib/utils";
+import InputRequired from "../InputRequired";
 
 interface InputProps extends Omit<
   React.InputHTMLAttributes<HTMLInputElement>,
@@ -241,7 +242,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         >
           {labelIcon && labelIcon}
           {label}
-          {required && <span className="text-StatusRed text-base">*</span>}
+          {required && <InputRequired />}
         </label>
         <div className="mt-2">{inputWithWrapper}</div>
         {errorMessage && (

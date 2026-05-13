@@ -83,6 +83,7 @@ const UpdateLicenceDialog = ({ open, setOpen }: UpdatePasswordDialogProps) => {
       content={
         <div className="flex flex-col gap-5 mb-5 px-1">
           <InputFileUpload
+            InputAsterisk
             className="text-base!"
             label={t("licenseImageLabel")}
             labelClassName="text-base font-semibold"
