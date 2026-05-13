@@ -31,7 +31,20 @@ interface CarsGridProps {
 
 type BranchCarGroup = {
   branchId: number | null;
+  reactKey: string;
   cars: CarContent[];
+};
+
+const normalizeBranchId = (branchId: unknown): number | null => {
+  if (branchId == null || branchId === "") return null;
+  if (typeof branchId !== "number" && typeof branchId !== "string") {
+    return null;
+  }
+
+  const parsedBranchId =
+    typeof branchId === "number" ? branchId : Number(branchId);
+
+  return Number.isFinite(parsedBranchId) ? parsedBranchId : null;
 };
 
 /** Stable, first-seen order of distinct company names in a branch row. */
@@ -52,18 +65,20 @@ const companyNamesHeadingFromCars = (
 };
 
 const groupCarsByBranchStable = (cars: CarContent[]): BranchCarGroup[] => {
-  const orderedKeys: (number | "__none__")[] = [];
-  const groups = new Map<number | "__none__", BranchCarGroup>();
+  const orderedKeys: string[] = [];
+  const groups = new Map<string, BranchCarGroup>();
 
   for (const car of cars) {
-    const hasBid = car.branchId != null && !Number.isNaN(car.branchId);
-    const key: number | "__none__" = hasBid
-      ? (car.branchId as number)
-      : "__none__";
+    const normalizedBranchId = normalizeBranchId(car.branchId);
+    const key =
+      normalizedBranchId == null
+        ? "__no_branch__"
+        : `branch-${normalizedBranchId}`;
 
     if (!groups.has(key)) {
       groups.set(key, {
-        branchId: hasBid ? (car.branchId as number) : null,
+        branchId: normalizedBranchId,
+        reactKey: key,
         cars: [],
       });
       orderedKeys.push(key);
@@ -232,9 +247,6 @@ const BranchCarsCarousel = ({
             locale,
           });
 
-          console.log(offerBadge);
-          
-
           return (
             <div key={car.ccbId} className="relative">
               <CarouselItem className="basis-[350px] max-w-sm shrink-0 mx-2 cursor-grab">
@@ -309,7 +321,7 @@ const CarsGrid = ({ cars, isLoading, rentalDays }: CarsGridProps) => {
 
   const branchGroups = groupCarsByBranchStable(cars);
   const listingHasBranches = cars.some(
-    (car) => car.branchId != null && !Number.isNaN(car.branchId),
+    (car) => normalizeBranchId(car.branchId) != null,
   );
   const showBranchHeadings =
     listingHasBranches &&
@@ -320,7 +332,7 @@ const CarsGrid = ({ cars, isLoading, rentalDays }: CarsGridProps) => {
       {branchGroups.map((group) => {
         const companyHeading = companyNamesHeadingFromCars(group.cars, locale);
         return (
-          <div key={group.branchId ?? "__no_branch__"} className="min-w-0">
+          <div key={group.reactKey} className="min-w-0">
             {showBranchHeadings ? (
               <h3 className="mb-3 text-base font-semibold text-foreground sm:text-lg">
                 {group.branchId != null ? (

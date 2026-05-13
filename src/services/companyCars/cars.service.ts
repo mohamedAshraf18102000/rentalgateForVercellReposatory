@@ -47,9 +47,11 @@ export const getCompanyCars = async (
   if (!hasAppliedFilters) {
     const latitude = filters?.userPhysicalLatitudeFilter ?? "";
     const longitude = filters?.userPhysicalLongitudeFilter ?? "";
+    const pageToUse = filters?.page ?? page;
+    const sizeToUse = filters?.size ?? 20;
 
     return fetcher<CarApiResponse>(
-      `/company-cars?latitude=${latitude}&longitude=${longitude}`,
+      `/company-cars?latitude=${latitude}&longitude=${longitude}&page=${pageToUse}&size=${sizeToUse}`,
     );
   }
 
