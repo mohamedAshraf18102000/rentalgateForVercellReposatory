@@ -16,7 +16,7 @@ const OffersCard = ({
   warningAvailable,
 }: TofferPackageProps) => {
   return (
-    <div className="border-2 w-full flex items-end rounded-2xl relative overflow-hidden min-h-[100px] sm:min-h-[100px]">
+    <div className="border-2 w-full flex items-end rounded-2xl relative overflow-hidden min-h-[100px] sm:min-h-[100px] bg-white">
       {/* Badge */}
       <Badge className="text-xs sm:text-sm font-bold absolute top-0 -left-2 z-10 bg-StatusGreen text-StatusDarkGreen px-3 py-2 sm:p-4 rounded-none rounded-br-2xl leading-tight">
         {offerPackage.extraDays} {offerPackage.extraDays > 1 ? "أيام" : "يوم"}{" "}

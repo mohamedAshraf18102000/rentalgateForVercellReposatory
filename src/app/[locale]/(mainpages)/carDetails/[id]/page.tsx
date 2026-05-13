@@ -20,6 +20,7 @@ import {
 } from "@/lib/utils/calculateRentalPrice";
 import DriverCard from "@/app/(components)/customCards/DriverCard";
 import { useTranslations } from "next-intl";
+import OffersCard from "@/app/(components)/customCards/OffersCard";
 
 const page = () => {
   const t = useTranslations("carDetails");
@@ -238,6 +239,18 @@ const page = () => {
           badgeTitle={t("driverInsideCity")}
         />
       </div>
+
+      <div className="flex flex-col gap-1 mt-4">
+        <h3 className="col-span-1 my-4 text-xl font-bold sm:col-span-2 lg:col-span-4 lg:text-xl">
+          {t("reservation.stepOne.offersTitle")}
+        </h3>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {data.offerPackages.map((offer) => (
+            <OffersCard key={offer.ccoId} offerPackage={offer} />
+          ))}
+        </div>
+      </div>
+
       <Panner />
     </WrapperContainer>
   );
