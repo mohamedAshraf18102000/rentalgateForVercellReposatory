@@ -232,7 +232,7 @@
     "toastError": "An error occurred while updating data"
   },
   "updateReservationProfileDialog": {
-    "title": "Update Reservation Profile",
+    "title": "Update Personal Profile",
     "actions": {
       "cancel": "Cancel",
       "fillFromProfile": "Fill from profile",
@@ -300,4 +300,3 @@
     }
   }
 }
-

@@ -19,6 +19,7 @@ import { Skeleton } from "../../ui/skeleton";
 const HomeUserCurrentLocation = () => {
   const { authenticated } = useAuth();
   const t = useTranslations("home");
+  const commonT = useTranslations("common");
   const { data: userAddresses, isLoading: isLoadingAddresses } =
     useUserAddreses(authenticated);
   const { data: trainStationsData } = useGetTrainStations();
@@ -102,7 +103,7 @@ const HomeUserCurrentLocation = () => {
       {/* CONTENT */}
 
       {authenticated ? (
-        <div className="bg-white/95 backdrop-blur-md text-primary shadow-2xl border border-Grey100 rounded-2xl w-full p-2">
+        <div className="bg-white/95 backdrop-blur-md text-primary border-Grey100 w-full p-2">
           <div className="flex justify-between items-center mb-3">
             <h5 className="font-bold text-base">
               {t("pickupDialog.savedAddressesTitle")}
@@ -111,13 +112,14 @@ const HomeUserCurrentLocation = () => {
               onClick={() => setIsAddLocationDialogOpen(true)}
               className="font-bold text-sm border-2 px-3 py-1.5 rounded-lg flex items-center gap-1 hover:bg-Grey200 transition-colors"
             >
-              <span>اضافة عنوان جديد</span> <ChevronLeft className="w-4 h-4" />
+              <span>{t("pickupDialog.addNewAddress")}</span>{" "}
+              <ChevronLeft className="w-4 h-4" />
             </button>
           </div>
 
           {userAddresses?.length === 0 && (
             <p className="text-center text-Grey600 text-sm">
-              لا توجد عناوين مسجلة
+              {t("pickupDialog.noSavedAddresses")}
             </p>
           )}
           {isLoadingAddresses && (
@@ -155,14 +157,14 @@ const HomeUserCurrentLocation = () => {
       ) : (
         <div className="w-full h-full p-2 flex items-center justify-center absolute top-0 left-0">
           <p>
-            يرجى{" "}
+            {t("pickupDialog.loginPromptPrefix")}{" "}
             <span
               onClick={handleOpenLoginDialog}
               className="font-bold underline cursor-pointer underline-offset-5"
             >
-              تسجيل الدخول
+              {commonT("login")}
             </span>{" "}
-            أولًا لإمكانية الاختيار من العناوين المسجّلة.
+            {t("pickupDialog.loginPromptSuffix")}
           </p>
         </div>
       )}

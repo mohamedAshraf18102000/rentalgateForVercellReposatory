@@ -57,6 +57,7 @@ function InputFileUpload({
   onFileChange,
   initialFile,
   initialPreviewUrl,
+  required = false,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   value: _value, // file inputs can't be controlled via `value` — discard it
   ...props
@@ -236,6 +237,7 @@ function InputFileUpload({
         ref={mergedRef}
         type="file"
         className="sr-only"
+        required={required}
         {...props}
         onChange={handleChange}
       />
@@ -277,6 +279,7 @@ function InputFileUpload({
       >
         {labelIcon && labelIcon}
         {label}
+        {required && <span className="text-StatusRed text-base">*</span>}
       </label>
       <div className="mt-2">{content}</div>
     </div>

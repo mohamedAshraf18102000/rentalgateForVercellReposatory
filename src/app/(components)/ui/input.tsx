@@ -62,6 +62,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
       labelClassName,
       labelIcon,
       errorMessage,
+      required = false,
       ...props
     },
     ref,
@@ -240,6 +241,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         >
           {labelIcon && labelIcon}
           {label}
+          {required && <span className="text-StatusRed text-base">*</span>}
         </label>
         <div className="mt-2">{inputWithWrapper}</div>
         {errorMessage && (

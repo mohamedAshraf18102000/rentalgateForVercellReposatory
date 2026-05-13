@@ -36,7 +36,10 @@
     "close": "إغلاق",
     "showResults": "إظهار النتائج",
     "savedAddressesTitle": "العناوين المسجلة",
+    "addNewAddress": "إضافة عنوان جديد",
     "noSavedAddresses": "لا توجد عناوين مسجلة",
+    "loginPromptPrefix": "يرجى",
+    "loginPromptSuffix": "أولًا لإمكانية الاختيار من العناوين المسجّلة.",
     "popularLocations": {
       "airports": "المطارات الأكثر شهرة:",
       "trainStations": "محطات القطار الأكثر شهرة:"

@@ -36,6 +36,7 @@ function useIsMobile(breakpoint = 768) {
 interface DatePickerProps {
   label?: string;
   labelIcon?: ReactNode;
+  required?: boolean;
   value?: Date | null;
   onChange?: (date: Date | null) => void;
   placeholder?: string;
@@ -464,6 +465,7 @@ export function DateTimePicker({
   pickerDateLabel,
   pickerTimeLabel,
   allowClear = false,
+  required = false,
 }: DatePickerProps) {
   // ── All hooks at the top — never inside conditionals ──────────────────────
   const isMobile = useIsMobile();
@@ -664,6 +666,7 @@ export function DateTimePicker({
         >
           {labelIcon}
           {label}
+          {required && <span className="text-StatusRed text-base">*</span>}
         </label>
       )}
       <div className="relative">

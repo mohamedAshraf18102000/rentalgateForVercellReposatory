@@ -58,6 +58,7 @@ const ProfileForm = ({
               <div className="space-y-1.5 w-full">
                 <Label className="flex items-center gap-1.5 text-sm font-medium text-foreground">
                   {t("fields.residenceType.label")}
+                  {<span className="text-StatusRed text-base">*</span>}
                 </Label>
                 <div className="mt-2">
                   <Select onValueChange={field.onChange} value={field.value}>
@@ -98,6 +99,7 @@ const ProfileForm = ({
             render={({ field }) => (
               <Input
                 {...field}
+                required
                 label={t("fields.nationality.label")}
                 startIcon={<Globe className="size-4" />}
                 placeholder={t("fields.nationality.placeholder")}
@@ -114,6 +116,7 @@ const ProfileForm = ({
               control={control}
               render={({ field }) => (
                 <Input
+                  required
                   type="number"
                   {...field}
                   label={t("fields.personalId.label")}
@@ -133,6 +136,7 @@ const ProfileForm = ({
               control={control}
               render={({ field }) => (
                 <Input
+                  required
                   type="number"
                   {...field}
                   label={t("fields.passportNumber.label")}
@@ -152,6 +156,7 @@ const ProfileForm = ({
               control={control}
               render={({ field }) => (
                 <Input
+                  required
                   type="number"
                   {...field}
                   label={t("fields.borderNumber.label")}
@@ -171,6 +176,7 @@ const ProfileForm = ({
             render={({ field }) => (
               <DateTimePicker
                 {...field}
+                required
                 placeholder={t("fields.identityExpiryDate.placeholder")}
                 label={t("fields.identityExpiryDate.label")}
               />
@@ -194,6 +200,7 @@ const ProfileForm = ({
             render={({ field }) => (
               <InputFileUpload
                 {...field}
+                required
                 label={t("fields.licenseImage.label")}
                 placeholder={t("fields.licenseImage.placeholder")}
                 initialPreviewUrl={licenseImagePreviewUrl}
@@ -237,6 +244,7 @@ const ProfileForm = ({
             render={({ field }) => (
               <DateTimePicker
                 {...field}
+                required
                 value={
                   field.value
                     ? field.value instanceof Date

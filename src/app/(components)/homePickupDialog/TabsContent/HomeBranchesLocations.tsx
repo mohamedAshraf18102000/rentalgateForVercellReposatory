@@ -72,7 +72,7 @@ const HomeBranchesLocations = () => {
   };
 
   return (
-    <div className="relative">
+    <div className="relative p-2">
       <GoogleMapsLocation
         storeless
         selectedLat={tempLocation?.lat}

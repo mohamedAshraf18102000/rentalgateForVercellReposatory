@@ -232,7 +232,7 @@
     "toastError": "حدث خطأ أثناء تحديث البيانات"
   },
   "updateReservationProfileDialog": {
-    "title": "تحديث بيانات الحجز",
+    "title": "تحديث بيانات الملف الشخصي",
     "actions": {
       "cancel": "إلغاء",
       "fillFromProfile": "تعبئة من الملف الشخصي",

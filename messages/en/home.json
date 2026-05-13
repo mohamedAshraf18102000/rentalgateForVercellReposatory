@@ -36,7 +36,10 @@
     "close": "Close",
     "showResults": "Show results",
     "savedAddressesTitle": "Saved addresses",
+    "addNewAddress": "Add new address",
     "noSavedAddresses": "No saved addresses",
+    "loginPromptPrefix": "Please",
+    "loginPromptSuffix": "first to choose from your saved addresses.",
     "popularLocations": {
       "airports": "Most popular airports:",
       "trainStations": "Most popular train stations:"

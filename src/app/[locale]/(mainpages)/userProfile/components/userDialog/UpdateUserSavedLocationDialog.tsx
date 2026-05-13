@@ -311,12 +311,17 @@ const UpdateUserSavedLocationDialog = ({
                 render={({ field }) => (
                   <div className="w-full">
                     <CountryPhone
+                      required
                       value={field.value}
                       onChange={field.onChange}
                       onBlur={field.onBlur}
                       defaultCountry="sa"
                       labelClassName="text-base!"
-                      inputClassName="text-sm! bg-Grey100! border-1! border-red-500!"
+                      inputClassName={`text-sm! bg-Grey100!${
+                        errors.mobile && !isPhoneValid
+                          ? " border-1! border-red-500!"
+                          : ""
+                      }`}
                       label={t("fields.mobile.label")}
                       placeholder={t("fields.mobile.placeholder")}
                       showValidation={true}
@@ -332,6 +337,7 @@ const UpdateUserSavedLocationDialog = ({
               />
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <Input
+                  required
                   {...register("addressName")}
                   labelClassName="text-base!"
                   className="text-sm! bg-Grey100!"
@@ -457,7 +463,8 @@ const UpdateUserSavedLocationDialog = ({
             <>
               <Button
                 size="lg"
-                className="w-fit text-black hover:bg-white underline py-3 border-none px-5 bg-white text-base font-bold"
+                variant="default"
+                className="w-fit text-base px-5"
                 onClick={() => setOpen(false)}
               >
                 {t("actions.close")}
