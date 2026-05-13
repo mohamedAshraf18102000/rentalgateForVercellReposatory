@@ -62,6 +62,8 @@ interface DatePickerProps {
   pickerDateLabel?: string;
   pickerTimeLabel?: string;
   allowClear?: boolean;
+  isDateDisabled?: (date: Date) => boolean;
+  isTimeDisabled?: (date: Date) => boolean;
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -119,16 +121,55 @@ function generateTimeSlots() {
 }
 const TIME_SLOTS = generateTimeSlots();
 
+function buildSlotDate(
+  baseDate: Date | null | undefined,
+  hours: number,
+  minutes: number,
+) {
+  const slotDate = baseDate ? new Date(baseDate) : new Date();
+  slotDate.setHours(hours, minutes, 0, 0);
+  return slotDate;
+}
+
+function findFirstAvailableTime({
+  baseDate,
+  isTimeDisabled,
+}: {
+  baseDate: Date;
+  isTimeDisabled?: (date: Date) => boolean;
+}) {
+  const now = new Date();
+  const isToday =
+    baseDate.getFullYear() === now.getFullYear() &&
+    baseDate.getMonth() === now.getMonth() &&
+    baseDate.getDate() === now.getDate();
+
+  for (const slot of TIME_SLOTS) {
+    const slotDate = buildSlotDate(baseDate, slot.hours, slot.minutes);
+    const isPast = isToday && slotDate < now;
+
+    if (!isPast && !isTimeDisabled?.(slotDate)) {
+      return slotDate;
+    }
+  }
+
+  return null;
+}
+
 // ─── TimePicker ───────────────────────────────────────────────────────────────
 
 function TimePicker({
   selectedDate,
+  referenceDate,
   onTimeSelect,
   locale = "ar",
+  isTimeDisabled,
 }: {
   selectedDate: Date | null | undefined;
+  referenceDate: Date;
   onTimeSelect: (h: number, m: number) => void;
   locale?: string;
+  isTimeDisabled?: (date: Date) => boolean;
 }) {
   const selH = selectedDate?.getHours() ?? -1;
   const selM = selectedDate?.getMinutes() ?? -1;
@@ -156,34 +197,37 @@ function TimePicker({
               ? "ص"
               : "Am";
         const label = `${displayH}:${displayM} ${ampm}`;
+        const slotDate = buildSlotDate(
+          selectedDate ?? referenceDate,
+          slot.hours,
+          slot.minutes,
+        );
 
         const now = new Date();
         const isToday =
-          !!selectedDate &&
-          selectedDate.getFullYear() === now.getFullYear() &&
-          selectedDate.getMonth() === now.getMonth() &&
-          selectedDate.getDate() === now.getDate();
-        const isPast =
-          isToday &&
-          (slot.hours < now.getHours() ||
-            (slot.hours === now.getHours() && slot.minutes < now.getMinutes()));
+          slotDate.getFullYear() === now.getFullYear() &&
+          slotDate.getMonth() === now.getMonth() &&
+          slotDate.getDate() === now.getDate();
+        const isPast = isToday && slotDate < now;
+        const isBlocked = isTimeDisabled?.(slotDate) ?? false;
+        const isDisabled = isPast || isBlocked;
 
         return (
           <button
             key={label}
             ref={isActive ? activeRef : null}
             type="button"
-            disabled={isPast}
-            aria-disabled={isPast}
+            disabled={isDisabled}
+            aria-disabled={isDisabled}
             onClick={() => {
-              if (isPast) return;
+              if (isDisabled) return;
               onTimeSelect(slot.hours, slot.minutes);
             }}
             className={cn(
               "rounded-2xl px-3 sm:px-4 py-2.5 text-xs sm:text-sm font-medium transition-all whitespace-nowrap text-left",
               isActive
                 ? "bg-gray-900 text-white shadow-md"
-                : isPast
+                : isDisabled
                   ? "text-gray-300 cursor-not-allowed bg-transparent"
                   : "text-gray-700 bg-gray-50 hover:bg-gray-100 border border-gray-100",
             )}
@@ -204,12 +248,14 @@ function CalendarPanel({
   locale,
   minAllowedDate,
   maxAllowedDate,
+  isDateDisabled,
 }: {
   selected: Date | null | undefined;
   onSelect: (date: Date | undefined) => void;
   locale: string;
   minAllowedDate: Date;
   maxAllowedDate?: Date | null;
+  isDateDisabled?: (date: Date) => boolean;
 }) {
   const dayPickerLocale = locale === "ar" ? ar : enUS;
   const defaultMonth = selected ?? minAllowedDate;
@@ -235,7 +281,7 @@ function CalendarPanel({
         d.setHours(0, 0, 0, 0);
         if (d < minAllowedDate) return true;
         if (maxAllowedDate && d > maxAllowedDate) return true;
-        return false;
+        return isDateDisabled?.(d) ?? false;
       }}
     />
   );
@@ -253,6 +299,8 @@ function DateTimeContent({
   title,
   pickerDateLabel,
   pickerTimeLabel,
+  isDateDisabled,
+  isTimeDisabled,
 }: {
   selectedDate: Date | null | undefined;
   onDateChange: (date: Date | undefined) => void;
@@ -263,6 +311,8 @@ function DateTimeContent({
   title?: string;
   pickerDateLabel?: string;
   pickerTimeLabel?: string;
+  isDateDisabled?: (date: Date) => boolean;
+  isTimeDisabled?: (date: Date) => boolean;
 }) {
   const isArabic = locale === "ar";
   const displayDateLabel = pickerDateLabel || (isArabic ? "من يوم:" : "Day:");
@@ -270,7 +320,9 @@ function DateTimeContent({
     pickerTimeLabel || (isArabic ? "من الساعة:" : "Time:");
 
   function handleTimeSelect(hours: number, minutes: number) {
-    const base = selectedDate ? new Date(selectedDate) : new Date();
+    const base = selectedDate
+      ? new Date(selectedDate)
+      : new Date(minAllowedDate);
     base.setHours(hours, minutes, 0, 0);
     onDateChange(base);
   }
@@ -299,6 +351,7 @@ function DateTimeContent({
             locale={locale}
             minAllowedDate={minAllowedDate}
             maxAllowedDate={maxAllowedDate}
+            isDateDisabled={isDateDisabled}
           />
         </div>
         {withTime && (
@@ -308,8 +361,10 @@ function DateTimeContent({
             </p>
             <TimePicker
               selectedDate={selectedDate}
+              referenceDate={selectedDate ?? minAllowedDate}
               onTimeSelect={handleTimeSelect}
               locale={locale}
+              isTimeDisabled={isTimeDisabled}
             />
           </div>
         )}
@@ -361,6 +416,8 @@ function PickerShell({
   withTime,
   pickerDateLabel,
   pickerTimeLabel,
+  isDateDisabled,
+  isTimeDisabled,
 }: {
   open: boolean;
   onOpenChange: (v: boolean) => void;
@@ -375,6 +432,8 @@ function PickerShell({
   withTime?: boolean;
   pickerDateLabel?: string;
   pickerTimeLabel?: string;
+  isDateDisabled?: (date: Date) => boolean;
+  isTimeDisabled?: (date: Date) => boolean;
 }) {
   const isArabic = locale === "ar";
 
@@ -390,6 +449,8 @@ function PickerShell({
       title={isMobile ? undefined : title}
       pickerDateLabel={pickerDateLabel}
       pickerTimeLabel={pickerTimeLabel}
+      isDateDisabled={isDateDisabled}
+      isTimeDisabled={isTimeDisabled}
     />
   );
 
@@ -467,6 +528,8 @@ export function DateTimePicker({
   pickerTimeLabel,
   allowClear = false,
   required = false,
+  isDateDisabled,
+  isTimeDisabled,
 }: DatePickerProps) {
   // ── All hooks at the top — never inside conditionals ──────────────────────
   const isMobile = useIsMobile();
@@ -490,22 +553,45 @@ export function DateTimePicker({
     minDaysFromToday,
   );
 
+  function getResolvedDateValue(
+    date: Date,
+    currentValue?: Date | null,
+  ): Date | null {
+    const nextDate =
+      withTime && currentValue ? new Date(currentValue) : new Date(date);
+
+    if (withTime && currentValue) {
+      nextDate.setFullYear(date.getFullYear(), date.getMonth(), date.getDate());
+    }
+
+    if (!withTime) {
+      return nextDate;
+    }
+
+    if (!isTimeDisabled?.(nextDate)) {
+      return nextDate;
+    }
+
+    return findFirstAvailableTime({
+      baseDate: nextDate,
+      isTimeDisabled,
+    });
+  }
+
   // ── Range variant ─────────────────────────────────────────────────────────
   if (isRange) {
     function handleFromDateChange(date: Date | undefined) {
       if (!date) return;
-      const base = withTime && fromValue ? new Date(fromValue) : date;
-      if (withTime && fromValue)
-        base.setFullYear(date.getFullYear(), date.getMonth(), date.getDate());
+      const base = getResolvedDateValue(date, fromValue);
+      if (!base) return;
       onFromChange?.(base);
       if (!withTime) setFromOpen(false);
     }
 
     function handleToDateChange(date: Date | undefined) {
       if (!date) return;
-      const base = withTime && toValue ? new Date(toValue) : date;
-      if (withTime && toValue)
-        base.setFullYear(date.getFullYear(), date.getMonth(), date.getDate());
+      const base = getResolvedDateValue(date, toValue);
+      if (!base) return;
       onToChange?.(base);
       if (!withTime) setToOpen(false);
     }
@@ -599,6 +685,8 @@ export function DateTimePicker({
               withTime={withTime}
               pickerDateLabel={pickerDateLabel}
               pickerTimeLabel={pickerTimeLabel}
+              isDateDisabled={isDateDisabled}
+              isTimeDisabled={isTimeDisabled}
             />
           </div>
 
@@ -628,6 +716,8 @@ export function DateTimePicker({
                 withTime={withTime}
                 pickerDateLabel={pickerDateLabel}
                 pickerTimeLabel={pickerTimeLabel}
+                isDateDisabled={isDateDisabled}
+                isTimeDisabled={isTimeDisabled}
               />
             )}
           </div>
@@ -680,7 +770,9 @@ export function DateTimePicker({
           selectedDate={value}
           onDateChange={(d) => {
             if (!d) return;
-            onChange?.(d);
+            const nextDate = getResolvedDateValue(d, value);
+            if (!nextDate) return;
+            onChange?.(nextDate);
             if (!withTime) setSingleOpen(false);
           }}
           locale={locale}
@@ -689,6 +781,8 @@ export function DateTimePicker({
           withTime={withTime}
           pickerDateLabel={pickerDateLabel}
           pickerTimeLabel={pickerTimeLabel}
+          isDateDisabled={isDateDisabled}
+          isTimeDisabled={isTimeDisabled}
         />
         {allowClear && value && (
           <span

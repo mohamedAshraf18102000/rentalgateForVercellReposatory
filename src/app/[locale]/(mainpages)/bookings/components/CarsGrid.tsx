@@ -64,6 +64,22 @@ const companyNamesHeadingFromCars = (
   return ordered.length ? ordered.join(" · ") : null;
 };
 
+const branchNameHeadingFromCars = (
+  cars: CarContent[],
+  locale: string,
+): string | null => {
+  for (const car of cars) {
+    const name =
+      locale === "ar"
+        ? car.branchArabicName?.trim() || car.branchName?.trim()
+        : car.branchEnglishName?.trim() || car.branchName?.trim();
+
+    if (name) return name;
+  }
+
+  return null;
+};
+
 const groupCarsByBranchStable = (cars: CarContent[]): BranchCarGroup[] => {
   const orderedKeys: string[] = [];
   const groups = new Map<string, BranchCarGroup>();
@@ -331,6 +347,7 @@ const CarsGrid = ({ cars, isLoading, rentalDays }: CarsGridProps) => {
     <div className="mt-6 flex flex-col gap-5">
       {branchGroups.map((group) => {
         const companyHeading = companyNamesHeadingFromCars(group.cars, locale);
+        const branchHeading = branchNameHeadingFromCars(group.cars, locale);
         return (
           <div key={group.reactKey} className="min-w-0">
             {showBranchHeadings ? (
@@ -340,6 +357,11 @@ const CarsGrid = ({ cars, isLoading, rentalDays }: CarsGridProps) => {
                     <span className="block">
                       {companyHeading ??
                         t("branchIdLabel", { id: group.branchId })}
+                      {branchHeading ? (
+                        <span className="mx-1 text-sm font-normal text-muted-foreground">
+                          ({branchHeading})
+                        </span>
+                      ) : null}
                     </span>
                   </>
                 ) : (

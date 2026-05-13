@@ -4,6 +4,7 @@ import {
   Airport,
   CarDetailsResponse,
   TrainStation,
+  WorkingHours,
 } from "@/types/companyCars/carDetails";
 import { CompanyService } from "@/types/companyCars/carServices";
 import { PricingType } from "@/lib/utils/calculateRentalPrice";
@@ -136,6 +137,7 @@ const createInitialFormData = (): ReservationFormData => ({
 
 export interface BookedCarDetailsState {
   carDetails: CarDetailsResponse | null;
+  workingHours: WorkingHours | null;
   services: CompanyService[];
   airports: Airport[];
   trainStations: TrainStation[];
@@ -169,6 +171,7 @@ export const useBookedCarDetailsStore = create<BookedCarDetailsState>()(
   persist(
     (set, get) => ({
       carDetails: null,
+      workingHours: null,
       services: [],
       airports: [],
       trainStations: [],
@@ -178,8 +181,12 @@ export const useBookedCarDetailsStore = create<BookedCarDetailsState>()(
       _hasHydrated: false,
       setHasHydrated: (state) => set({ _hasHydrated: state }),
 
-      setCarDetails: (carDetails) => set({ carDetails }),
-      clearCarDetails: () => set({ carDetails: null }),
+      setCarDetails: (carDetails) =>
+        set({
+          carDetails,
+          workingHours: carDetails.workingHours ?? null,
+        }),
+      clearCarDetails: () => set({ carDetails: null, workingHours: null }),
 
       setServices: (services) => set({ services }),
       clearServices: () => set({ services: [] }),
@@ -208,6 +215,7 @@ export const useBookedCarDetailsStore = create<BookedCarDetailsState>()(
       resetStore: () =>
         set({
           carDetails: null,
+          workingHours: null,
           services: [],
           airports: [],
           trainStations: [],
@@ -226,6 +234,7 @@ export const useBookedCarDetailsStore = create<BookedCarDetailsState>()(
 
       partialize: (state) => ({
         carDetails: state.carDetails,
+        workingHours: state.workingHours,
         services: state.services,
         airports: state.airports,
         trainStations: state.trainStations,

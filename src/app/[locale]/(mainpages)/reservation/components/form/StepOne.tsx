@@ -23,6 +23,7 @@ import WarningMessage from "@/app/(components)/WarningMessage";
 import { useRentalDays } from "@/hooks/useCalculateRentalDays";
 import { getBestOffer } from "@/lib/utils/getBestOffer";
 import { formatLocalDateTime } from "@/lib/utils/formatLocalDateTime";
+import { WorkingHours } from "@/types/companyCars/carDetails";
 import { useLocale, useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 
@@ -32,6 +33,40 @@ interface StepOneProps {
   watch: UseFormWatch<ReservationFormValues>;
   setValue: UseFormSetValue<ReservationFormValues>;
 }
+
+const DAY_CONFIG = [
+  { key: "sun", dayOfWeek: "SUNDAY" },
+  { key: "mon", dayOfWeek: "MONDAY" },
+  { key: "tue", dayOfWeek: "TUESDAY" },
+  { key: "wed", dayOfWeek: "WEDNESDAY" },
+  { key: "thu", dayOfWeek: "THURSDAY" },
+  { key: "fri", dayOfWeek: "FRIDAY" },
+  { key: "sat", dayOfWeek: "SATURDAY" },
+] as const;
+
+const TIME_SLOT_INTERVAL_MINUTES = 30;
+
+const parseTimeToMinutes = (time?: string | null) => {
+  if (!time) return null;
+
+  const [hourString, minuteString] = time.split(":");
+  const hours = Number.parseInt(hourString ?? "", 10);
+  const minutes = Number.parseInt(minuteString ?? "", 10);
+
+  if (Number.isNaN(hours) || Number.isNaN(minutes)) {
+    return null;
+  }
+
+  return hours * 60 + minutes;
+};
+
+const isMinutesWithinRange = (value: number, start: number, end: number) => {
+  if (start <= end) {
+    return value >= start && value <= end;
+  }
+
+  return value >= start || value <= end;
+};
 
 const inferLocationType = ({
   explicitType,
@@ -73,6 +108,7 @@ const StepOne = ({ control, errors, watch, setValue }: StepOneProps) => {
   const [isDropoffManuallyChanged, setIsDropoffManuallyChanged] =
     useState(false);
   const formData = useBookedCarDetailsStore((state) => state.formData);
+  const workingHours = useBookedCarDetailsStore((state) => state.workingHours);
   const setBookedCarFormData = useBookedCarDetailsStore(
     (state) => state.setFormData,
   );
@@ -264,6 +300,108 @@ const StepOne = ({ control, errors, watch, setValue }: StepOneProps) => {
     );
   };
 
+  const isDateTimeBlocked = (
+    date: Date | null | undefined,
+    minBoundary?: Date | null,
+  ) => {
+    if (!date || Number.isNaN(date.getTime())) {
+      return false;
+    }
+
+    const now = new Date();
+    if (date < now) {
+      return true;
+    }
+
+    if (minBoundary && date < minBoundary) {
+      return true;
+    }
+
+    if (!workingHours) {
+      return false;
+    }
+
+    const dayConfig = DAY_CONFIG[date.getDay()];
+    const openTime = workingHours[
+      `${dayConfig.key}OpenTime` as keyof WorkingHours
+    ] as string | null | undefined;
+    const closeTime = workingHours[
+      `${dayConfig.key}CloseTime` as keyof WorkingHours
+    ] as string | null | undefined;
+
+    const openMinutes = parseTimeToMinutes(openTime);
+    const closeMinutes = parseTimeToMinutes(closeTime);
+
+    if (openMinutes === null || closeMinutes === null) {
+      return true;
+    }
+
+    const currentMinutes = date.getHours() * 60 + date.getMinutes();
+    if (!isMinutesWithinRange(currentMinutes, openMinutes, closeMinutes)) {
+      return true;
+    }
+
+    return (
+      workingHours.breaks?.some((breakTime) => {
+        if (breakTime.dayOfWeek !== dayConfig.dayOfWeek) {
+          return false;
+        }
+
+        const breakStart = parseTimeToMinutes(breakTime.startTime);
+        const breakEnd = parseTimeToMinutes(breakTime.endTime);
+
+        if (breakStart === null || breakEnd === null) {
+          return false;
+        }
+
+        return isMinutesWithinRange(currentMinutes, breakStart, breakEnd);
+      }) ?? false
+    );
+  };
+
+  const findFirstAvailableDateTime = (
+    date: Date | null | undefined,
+    minBoundary?: Date | null,
+  ) => {
+    if (!date || Number.isNaN(date.getTime())) {
+      return null;
+    }
+
+    const dayStart = new Date(date);
+    dayStart.setHours(0, 0, 0, 0);
+
+    for (let hour = 0; hour < 24; hour++) {
+      for (let minute = 0; minute < 60; minute += TIME_SLOT_INTERVAL_MINUTES) {
+        const candidate = new Date(dayStart);
+        candidate.setHours(hour, minute, 0, 0);
+
+        if (!isDateTimeBlocked(candidate, minBoundary)) {
+          return candidate;
+        }
+      }
+    }
+
+    return null;
+  };
+
+  const isDateBlocked = (date: Date, minBoundary?: Date | null) =>
+    findFirstAvailableDateTime(date, minBoundary) === null;
+
+  const normalizeDateTimeToAvailability = (
+    date: Date | null,
+    minBoundary?: Date | null,
+  ) => {
+    if (!date) {
+      return null;
+    }
+
+    if (!isDateTimeBlocked(date, minBoundary)) {
+      return date;
+    }
+
+    return findFirstAvailableDateTime(date, minBoundary);
+  };
+
   const handleOpenPickupLocationDialog = () => {
     const pickupDialogInitialTab =
       shouldDisableCurrentLocationTab && formData.pickupType === "AIRPORT"
@@ -443,10 +581,17 @@ const StepOne = ({ control, errors, watch, setValue }: StepOneProps) => {
                 inputClassName="text-base!"
                 withTime
                 allowClear
+                isDateDisabled={(date) => isDateBlocked(date)}
+                isTimeDisabled={(date) => isDateTimeBlocked(date)}
                 value={field.value}
                 onChange={(date: Date | null) => {
-                  field.onChange(date);
-                  if (isDateLessThanMinimumRental(date, watch("toDate"))) {
+                  const nextDate = normalizeDateTimeToAvailability(date);
+                  if (date && !nextDate) {
+                    return;
+                  }
+
+                  field.onChange(nextDate);
+                  if (isDateLessThanMinimumRental(nextDate, watch("toDate"))) {
                     setValue("toDate", undefined);
                   }
                 }}
@@ -474,6 +619,8 @@ const StepOne = ({ control, errors, watch, setValue }: StepOneProps) => {
                 withTime
                 allowClear
                 minDate={minToDate ?? undefined}
+                isDateDisabled={(date) => isDateBlocked(date, minToDate)}
+                isTimeDisabled={(date) => isDateTimeBlocked(date, minToDate)}
                 value={field.value}
                 onChange={(date: Date | null) => {
                   if (!date) {
@@ -481,12 +628,20 @@ const StepOne = ({ control, errors, watch, setValue }: StepOneProps) => {
                     return;
                   }
 
-                  if (isDateLessThanMinimumRental(fromDate, date)) {
-                    field.onChange(minToDate ?? date);
+                  const nextDate = normalizeDateTimeToAvailability(
+                    date,
+                    minToDate,
+                  );
+                  if (!nextDate) {
                     return;
                   }
 
-                  field.onChange(date);
+                  if (isDateLessThanMinimumRental(fromDate, nextDate)) {
+                    field.onChange(minToDate ?? nextDate);
+                    return;
+                  }
+
+                  field.onChange(nextDate);
                 }}
               />
             )}
