@@ -8,7 +8,7 @@
  * @returns A normalized image URL that starts with / or http(s)://
  */
 export const normalizeImageUrl = (imageUrl: string | null | undefined): string => {
-  if (!imageUrl) return '/profile/userFallbackImage.webp';
+  if (!imageUrl) return '/cars/Image_not_available.webp';
 
   // If it's already a full URL (starts with http:// or https://), return as is
   if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
