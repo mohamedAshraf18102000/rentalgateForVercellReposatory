@@ -561,7 +561,18 @@ export function DateTimePicker({
       withTime && currentValue ? new Date(currentValue) : new Date(date);
 
     if (withTime && currentValue) {
+      const isSameDay =
+        date.getFullYear() === currentValue.getFullYear() &&
+        date.getMonth() === currentValue.getMonth() &&
+        date.getDate() === currentValue.getDate();
+
       nextDate.setFullYear(date.getFullYear(), date.getMonth(), date.getDate());
+      // When the day hasn't changed, it's a time-slot selection — apply the new time.
+      // When the day changes (calendar pick), preserve the existing time so the user
+      // doesn't lose their previously chosen hour, then validate below.
+      if (isSameDay) {
+        nextDate.setHours(date.getHours(), date.getMinutes(), 0, 0);
+      }
     }
 
     if (!withTime) {

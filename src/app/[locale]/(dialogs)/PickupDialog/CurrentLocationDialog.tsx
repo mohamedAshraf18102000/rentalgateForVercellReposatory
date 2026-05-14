@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { DialogWrapper } from "@/app/(components)";
+import { Button, DialogWrapper } from "@/app/(components)";
 import GoogleMapsLocation from "@/app/(components)/mapsLocation/GoogleMapsLocation";
 import { useLocationStore } from "@/lib/stores/useLocationStore";
 import { LocateFixed } from "lucide-react";
@@ -38,9 +38,8 @@ export function CurrentLocationDialog() {
   const [userAddresses, setUserAddresses] = useState<UserAddress[]>([]);
   const [filterTempLocation, setFilterTempLocation] =
     useState<TempLocation | null>(null);
-  const [dialogTempLocation, setDialogTempLocation] = useState<TempLocation | null>(
-    null,
-  );
+  const [dialogTempLocation, setDialogTempLocation] =
+    useState<TempLocation | null>(null);
   const pathname = usePathname();
   const isTermsPage = pathname.includes("/terms&conditions");
   const setFilter = useUserPreferedFiltersStore((state) => state.setFilter);
@@ -278,12 +277,12 @@ export function CurrentLocationDialog() {
             إغلاق
           </button>
 
-          <button
+          <Button
             onClick={handleSave}
-            className="rounded-xl py-3 bg-primary text-white font-bold w-fit px-5"
+            className="rounded-xl py-3 bg-primary text-white font-bold w-fit px-5 text-base"
           >
             حفظ
-          </button>
+          </Button>
         </div>
       }
     />

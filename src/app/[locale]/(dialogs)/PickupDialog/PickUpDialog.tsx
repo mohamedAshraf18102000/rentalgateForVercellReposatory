@@ -1,6 +1,6 @@
 "use client";
 
-import { DialogWrapper } from "@/app/(components)";
+import { Button, DialogWrapper } from "@/app/(components)";
 import CarPickupDialogTabs from "@/app/(components)/carPickupDialogComponent/CarPickupDialogTabs";
 import { usePickupDialogStore } from "@/lib/stores/usePickupDialogStore";
 import UpdateUserSavedLocationDialog from "@/app/[locale]/(mainpages)/userProfile/components/userDialog/UpdateUserSavedLocationDialog";
@@ -92,12 +92,12 @@ export function PickupDialog({ title }: { title?: string }) {
               {t("pickupDialog.close")}
             </button>
 
-            <button
+            <Button
               onClick={handleConfirm}
-              className="w-full rounded-[12px] bg-primary px-5 py-3 font-bold text-white sm:w-fit"
+              className="w-full rounded-[12px] bg-primary px-5 py-3 font-bold text-white sm:w-fit text-base"
             >
               {title || t("pickupDialog.showResults")}
-            </button>
+            </Button>
           </div>
         }
       />
