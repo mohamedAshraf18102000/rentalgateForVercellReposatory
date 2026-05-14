@@ -114,13 +114,19 @@ const ReservationDrawer = ({
                   )}
                 </div>
                 <div className="mt-6">
-                  <Coupon isCalculating={isCalculating} />
+                  <Coupon
+                    isCalculating={isCalculating}
+                    onApplied={onCalculateQuote}
+                  />
                 </div>
                 <div className="mt-6">
                   <Separator className="my-2" />
                 </div>
                 <div className="mt-6">
-                  <Discounts isCalculating={isCalculating} />
+                  <Discounts
+                    isCalculating={isCalculating}
+                    onApplied={onCalculateQuote}
+                  />
                 </div>
               </div>
             </div>

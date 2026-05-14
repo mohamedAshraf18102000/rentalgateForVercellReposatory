@@ -101,6 +101,22 @@ const StepThree = ({ control, errors }: StepThreeProps) => {
     }
   };
 
+  const visibleDrivers = companyDriversPricing?.filter((driver) =>
+    [
+      driver.dailyPrice,
+      driver.dayNumberHours,
+      driver.extraHourPrice,
+      driver.halfMonthPrice,
+      driver.hourPrice,
+      driver.minHours,
+      driver.monthlyPrice,
+      driver.notes,
+      driver.percentage,
+      driver.weeklyPrice,
+      driver.yearlyPrice,
+    ].some((value) => value !== null),
+  );
+
   return (
     <div className="space-y-6">
       <div className="relative">
@@ -124,7 +140,9 @@ const StepThree = ({ control, errors }: StepThreeProps) => {
             <SelectableServiceCard
               service={
                 {
-                  serviceArabicName: t("reservation.stepThree.unlimitedKmTitle"),
+                  serviceArabicName: t(
+                    "reservation.stepThree.unlimitedKmTitle",
+                  ),
                   notes: t("reservation.stepThree.unlimitedKmNotes"),
                   price: calculateServicePrice(
                     {
@@ -164,7 +182,7 @@ const StepThree = ({ control, errors }: StepThreeProps) => {
             );
           })}
 
-          {companyDriversPricing?.map((driver) => {
+          {visibleDrivers?.map((driver) => {
             const drvId = driver.cdsId;
             const isSelected = selectedDriver?.id === drvId;
             return (
