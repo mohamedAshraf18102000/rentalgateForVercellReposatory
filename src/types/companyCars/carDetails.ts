@@ -238,8 +238,8 @@ export interface WorkingHourBreak {
   | "THURSDAY"
   | "FRIDAY"
   | "SATURDAY";
-  startTime: string;
-  endTime: string;
+  startTime: string | null;
+  endTime: string | null;
 }
 
 export interface WorkingHours {
@@ -248,21 +248,21 @@ export interface WorkingHours {
   branchEnName: string;
   branchArName: string;
 
-  sunOpenTime: string;
-  monOpenTime: string;
-  tueOpenTime: string;
-  wedOpenTime: string;
-  thuOpenTime: string;
-  friOpenTime: string;
-  satOpenTime: string;
+  sunOpenTime: string | null;
+  monOpenTime: string | null;
+  tueOpenTime: string | null;
+  wedOpenTime: string | null;
+  thuOpenTime: string | null;
+  friOpenTime: string | null;
+  satOpenTime: string | null;
 
-  sunCloseTime: string;
-  monCloseTime: string;
-  tueCloseTime: string;
-  wedCloseTime: string;
-  thuCloseTime: string;
-  friCloseTime: string;
-  satCloseTime: string;
+  sunCloseTime: string | null;
+  monCloseTime: string | null;
+  tueCloseTime: string | null;
+  wedCloseTime: string | null;
+  thuCloseTime: string | null;
+  friCloseTime: string | null;
+  satCloseTime: string | null;
 
   breaks: WorkingHourBreak[];
 }

@@ -14,10 +14,23 @@ const DAYS = [
   { key: "sat", dayOfWeek: "SATURDAY" },
 ] as const;
 
-const formatTime = (time: string, locale: string) => {
+const TIME_FALLBACK = "--";
+
+const formatTime = (time: string | null | undefined, locale: string) => {
+  if (!time) {
+    return TIME_FALLBACK;
+  }
+
   const [hourStr, minuteStr] = time.split(":");
+  const hour = Number.parseInt(hourStr ?? "", 10);
+  const minute = Number.parseInt(minuteStr ?? "", 10);
+
+  if (Number.isNaN(hour) || Number.isNaN(minute)) {
+    return TIME_FALLBACK;
+  }
+
   const date = new Date();
-  date.setHours(parseInt(hourStr, 10), parseInt(minuteStr, 10), 0, 0);
+  date.setHours(hour, minute, 0, 0);
   return new Intl.DateTimeFormat(locale, {
     hour: "numeric",
     minute: "2-digit",
@@ -36,10 +49,10 @@ const WorkingTimes = ({ workingHours }: { workingHours: WorkingHours }) => {
       {DAYS.map(({ key, dayOfWeek }, index) => {
         const openTime = workingHours[
           `${key}OpenTime` as keyof WorkingHours
-        ] as string;
+        ] as string | null | undefined;
         const closeTime = workingHours[
           `${key}CloseTime` as keyof WorkingHours
-        ] as string;
+        ] as string | null | undefined;
         const isToday = index === todayIndex;
         const dayDate = new Date(2026, 0, 4 + index);
         const short = new Intl.DateTimeFormat(locale, {

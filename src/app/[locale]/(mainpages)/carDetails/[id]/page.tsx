@@ -210,21 +210,17 @@ const page = () => {
         />
       </div>
 
-      {services && services.length > 0 && (
-        <div className="my-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <h3 className="col-span-1 my-4 text-xl font-bold sm:col-span-2 lg:col-span-4 lg:text-2xl">
-            {t("providedServices")}
-          </h3>
-          {services?.map((service) => (
-            <ServiceCard
-              showTax={showPricesWithTax}
-              key={service.csId}
-              service={service}
-            />
-          ))}
-        </div>
-      )}
-      <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="my-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <h3 className="col-span-1 my-4 text-xl font-bold sm:col-span-2 lg:col-span-4 lg:text-2xl">
+          {t("providedServices")}
+        </h3>
+        {services?.map((service) => (
+          <ServiceCard
+            showTax={showPricesWithTax}
+            key={service.csId}
+            service={service}
+          />
+        ))}
         <DriverCard
           image={"/driver/driverImage.png"}
           serviceName={t("driverService")}

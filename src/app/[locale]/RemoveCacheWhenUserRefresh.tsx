@@ -6,7 +6,7 @@ const RemoveCacheWhenUserRefresh = () => {
   useEffect(() => {
     const REFRESH_FLAG_KEY = "general-settings-page-refreshed";
     if (sessionStorage.getItem(REFRESH_FLAG_KEY) === "1") {
-      resetAllStores();
+      resetAllStores({ excludeLocationReset: true });
       sessionStorage.removeItem(REFRESH_FLAG_KEY);
     }
 
