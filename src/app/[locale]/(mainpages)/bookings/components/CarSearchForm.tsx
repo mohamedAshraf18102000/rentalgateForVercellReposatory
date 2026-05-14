@@ -184,6 +184,13 @@ const CarSearchForm = ({
                         )}
                       </p>
                     </div>
+
+                    {shouldShowRestrictedLocationMessage &&
+                      restrictedLocationMessage && (
+                        <span className="block md:hidden mt-2 text-xs text-StatusRed">
+                          {restrictedLocationMessage}
+                        </span>
+                      )}
                   </>
                 );
               })()}
@@ -280,7 +287,7 @@ const CarSearchForm = ({
             </div>
           </div>
           {shouldShowRestrictedLocationMessage && restrictedLocationMessage && (
-            <span className="text-xs text-StatusRed">
+            <span className="hidden md:block mt-2 text-xs text-StatusRed">
               {restrictedLocationMessage}
             </span>
           )}

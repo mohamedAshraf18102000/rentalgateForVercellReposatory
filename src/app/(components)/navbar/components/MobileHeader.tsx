@@ -7,8 +7,16 @@
 import { Link } from "@/i18n/routing";
 import { useLocale } from "next-intl";
 import { Logo } from "./Logo";
+import {
+  LocationTrigger,
+  type LocationTriggerTranslations,
+} from "./LocationTrigger";
 
-export const MobileHeader: React.FC = () => {
+interface MobileHeaderProps {
+  translations: LocationTriggerTranslations;
+}
+
+export const MobileHeader: React.FC<MobileHeaderProps> = ({ translations }) => {
   const locale = useLocale();
 
   return (
@@ -16,7 +24,7 @@ export const MobileHeader: React.FC = () => {
       {/* Main Header */}
       <div className="flex items-center justify-between px-4 h-14 py-8 bg-white text-white relative shadow-sm">
         {/* Center - Title and Logo */}
-        <div className={`flex items-center gap-3  `}>
+        <div className={`flex items-center gap-3`}>
           {/* Logo */}
           <div className="w-[45px] bg-white h-[45px] flex items-center justify-center   z-10 rounded-full navbar-logo-shadow-mobile">
             <Logo
@@ -26,16 +34,20 @@ export const MobileHeader: React.FC = () => {
               className="w-full h-full bg-white p-1.5 rounded-full"
             />
           </div>
-          <Link href="/" className="flex flex-col items-center">
-            <h1 className="text-[#1A1A1A] font-bold text-lg leading-tight">
+          <Link href="/" className="flex flex-col items-start">
+            <h1 className="text-[#1A1A1A] font-bold text-sm leading-tight">
               {locale === "ar" ? "رينتال جيت" : "Rental Gate"}
             </h1>
-            <p className="text-[#1A1A1A]/80 text-[14px] leading-tight">
+            <p className="text-[#1A1A1A]/80 text-xs leading-tight">
               {locale === "ar" ? "لتأجير السيارات" : "Car Rental"}
             </p>
           </Link>
         </div>
-        <span className="w-2 h-2 bg-green-500 rounded-full block" />
+        <LocationTrigger
+          translations={translations}
+          className="max-w-42 text-black"
+          labelClassName="max-w-[6.5rem] text-xs"
+        />
       </div>
     </header>
   );

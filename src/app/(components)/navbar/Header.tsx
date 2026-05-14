@@ -32,7 +32,7 @@ export default async function Header() {
 
   return (
     <>
-      <MobileHeader />
+      <MobileHeader translations={translations} />
       <header className={NAVBAR_STYLES.header}>
         <div className={NAVBAR_STYLES.container}>
           <div className={NAVBAR_STYLES.navbar}>

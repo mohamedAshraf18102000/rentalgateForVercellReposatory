@@ -167,6 +167,7 @@ const BussinessAccountsContentClient = ({
                 </div>
                 <div className="mt-3 flex shrink-0 justify-center sm:mt-4 sm:justify-end">
                   <Button
+                    variant={"ghost"}
                     type="submit"
                     className="border border-Grey600 text-primary bg-white! hover:bg-none text-sm! sm:text-base! hover:bg-Grey200! transition-all duration-300 w-full min-h-11 sm:min-h-0 sm:w-auto sm:min-w-40"
                     icon={<ChevronLeft />}

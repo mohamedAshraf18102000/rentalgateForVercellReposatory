@@ -17,6 +17,7 @@ import { Separator } from "@/app/(components)/ui/separator";
 import { InputFileUpload } from "@/app/(components)/ui/inputFileUpload";
 import { ReservationFormValues } from "@/lib/validations/reservationSchema";
 import CountryPhone from "@/app/(components)/template/phone/CountryPhone";
+import { DateTimePicker } from "@/app/(components)/ui/dateTime-picker";
 
 interface StepTwoProps {
   control: Control<ReservationFormValues>;
@@ -104,6 +105,26 @@ const StepTwo = ({ control, errors, setValue }: StepTwoProps) => {
             )}
           />
         </div>
+
+        <div>
+          <Controller
+            name="identityExpiryDate"
+            control={control}
+            render={({ field }) => (
+              <DateTimePicker
+                required
+                {...field}
+                placeholder={"ادخل تاريخ انتهاء الهوية"}
+                label={"تاريخ انتهاء الهوية"}
+              />
+            )}
+          />
+          {errors.identityExpiryDate?.message && (
+            <p className="text-red-500 text-sm">
+              {String(errors.identityExpiryDate?.message)}
+            </p>
+          )}
+        </div>
       </div>
 
       <Separator className="my-4" />
@@ -142,6 +163,7 @@ const StepTwo = ({ control, errors, setValue }: StepTwoProps) => {
                 />
               )}
             />
+
             {isPending && (
               <p className="mt-2 text-blue-500 text-sm">
                 {t("reservation.forOtherStepTwo.uploadingImage")}
@@ -159,7 +181,28 @@ const StepTwo = ({ control, errors, setValue }: StepTwoProps) => {
               </p>
             )}
           </div>
-          <div className="hidden md:block" />
+
+          <div>
+            <Controller
+              name="licenceExpiryDate"
+              control={control}
+              render={({ field }) => (
+                <DateTimePicker
+                  {...field}
+                  required
+                  placeholder={t(
+                    "reservation.stepTwo.licenseExpiryPlaceholder",
+                  )}
+                  label={t("reservation.stepTwo.licenseExpiryLabel")}
+                />
+              )}
+            />
+            {errors.licenceExpiryDate?.message && (
+              <p className="text-red-500 text-sm">
+                {String(errors.licenceExpiryDate?.message)}
+              </p>
+            )}
+          </div>
         </div>
       </div>
     </>

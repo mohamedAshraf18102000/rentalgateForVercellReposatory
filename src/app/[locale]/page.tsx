@@ -12,6 +12,7 @@ import CompanyOffersLocationRefresh from "./(mainpages)/(home)/offers/CompanyOff
 import BussinessAccountsContent from "./(mainpages)/bussinessAccounts/components/BussinessAccountsContent";
 import WrapperContainer from "../(components)/wrapperContainer/WrapperContainer";
 import { HomeResponse } from "@/types/home/home";
+import { Suspense } from "react";
 
 import { getHomePageDetailsWithAuth } from "@/services/home/home.service";
 import RemoveCacheWhenUserRefresh from "./RemoveCacheWhenUserRefresh";
@@ -45,8 +46,10 @@ export default async function HomePage({ params }: Props) {
         <Offers todayOffersData={homeData?.todayOffers ?? []} />
       )}
       <MostRequestedCars locale={locale} homeData={homeData} />
-      <CompanyOffersLocationRefresh />
-      <CompanyOffers />
+      <Suspense fallback={null}>
+        <CompanyOffersLocationRefresh />
+        <CompanyOffers />
+      </Suspense>
       <HomeMockups />
       <WrapperContainer>
         <BussinessAccountsContent withOutStepper />

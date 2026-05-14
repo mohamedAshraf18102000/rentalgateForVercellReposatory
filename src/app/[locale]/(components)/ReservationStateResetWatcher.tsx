@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { Suspense, useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
 import { resetReservationState } from "@/lib/stores/resetReservationState";
 
@@ -15,7 +15,7 @@ const getReservationIdFromPathname = (pathname: string) => {
 
 const isReservationPath = (pathname: string) => pathname.includes("/reservation/");
 
-const ReservationStateResetWatcher = () => {
+const ReservationStateResetWatcherContent = () => {
   const pathname = usePathname();
   const previousPathnameRef = useRef<string | null>(null);
 
@@ -53,6 +53,14 @@ const ReservationStateResetWatcher = () => {
   }, [pathname]);
 
   return null;
+};
+
+const ReservationStateResetWatcher = () => {
+  return (
+    <Suspense fallback={null}>
+      <ReservationStateResetWatcherContent />
+    </Suspense>
+  );
 };
 
 export default ReservationStateResetWatcher;

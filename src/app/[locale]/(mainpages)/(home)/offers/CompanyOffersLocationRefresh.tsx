@@ -2,7 +2,7 @@
 
 import { useLocationStore } from "@/lib/stores/useLocationStore";
 import { useRouter } from "next/navigation";
-import { useEffect, useRef } from "react";
+import { startTransition, Suspense, useEffect, useRef } from "react";
 
 function pairKey(lat: number | null, lng: number | null): string {
   if (lat == null || lng == null) return "";
@@ -14,7 +14,7 @@ function pairKey(lat: number | null, lng: number | null): string {
  * does not re-run. This triggers `router.refresh()` so server components like
  * {@link CompanyOffers} fetch again with the new cookies (SSR stays correct).
  */
-export default function CompanyOffersLocationRefresh() {
+function CompanyOffersLocationRefreshContent() {
   const router = useRouter();
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | undefined>(
     undefined,
@@ -27,7 +27,9 @@ export default function CompanyOffersLocationRefresh() {
       }
       timeoutRef.current = setTimeout(() => {
         timeoutRef.current = undefined;
-        router.refresh();
+        startTransition(() => {
+          router.refresh();
+        });
       }, 0);
     };
 
@@ -69,4 +71,12 @@ export default function CompanyOffersLocationRefresh() {
   }, [router]);
 
   return null;
+}
+
+export default function CompanyOffersLocationRefresh() {
+  return (
+    <Suspense fallback={null}>
+      <CompanyOffersLocationRefreshContent />
+    </Suspense>
+  );
 }

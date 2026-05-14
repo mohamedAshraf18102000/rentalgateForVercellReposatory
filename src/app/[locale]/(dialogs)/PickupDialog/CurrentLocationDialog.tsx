@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { Button, DialogWrapper } from "@/app/(components)";
 import GoogleMapsLocation from "@/app/(components)/mapsLocation/GoogleMapsLocation";
 import { useLocationStore } from "@/lib/stores/useLocationStore";
@@ -19,7 +19,7 @@ type TempLocation = {
   addressId?: number;
 };
 
-export function CurrentLocationDialog() {
+function CurrentLocationDialogContent() {
   // StateManagment Stores
   const isAuthenticated = !!getAuthToken();
 
@@ -286,5 +286,13 @@ export function CurrentLocationDialog() {
         </div>
       }
     />
+  );
+}
+
+export function CurrentLocationDialog() {
+  return (
+    <Suspense fallback={null}>
+      <CurrentLocationDialogContent />
+    </Suspense>
   );
 }

@@ -11,6 +11,29 @@ import {
   onCloseDialog,
 } from "@/lib/utils/errorDialogEvents";
 
+function DialogNavigationHandler({
+  onNavigate,
+}: {
+  onNavigate: () => void;
+}) {
+  const router = useRouter();
+
+  React.useEffect(() => {
+    return onAppNavigate(({ href, replace }) => {
+      onNavigate();
+
+      if (replace) {
+        router.replace(href);
+        return;
+      }
+
+      router.push(href);
+    });
+  }, [onNavigate, router]);
+
+  return null;
+}
+
 /**
  * DialogProvider
  * 
@@ -20,7 +43,6 @@ import {
  * @param {React.ReactNode} children - Child components
  */
 export function DialogProvider({ children }: { children: React.ReactNode }) {
-  const router = useRouter();
   const [dialogState, setDialogState] = React.useState<DialogState>(null);
 
   const openDialog = React.useCallback(
@@ -54,17 +76,6 @@ export function DialogProvider({ children }: { children: React.ReactNode }) {
   }, [openDialog]);
 
   React.useEffect(() => {
-    return onAppNavigate(({ href, replace }) => {
-      setDialogState(null);
-      if (replace) {
-        router.replace(href);
-        return;
-      }
-      router.push(href);
-    });
-  }, [router]);
-
-  React.useEffect(() => {
     return onCloseDialog(() => {
       setDialogState(null);
     });
@@ -81,6 +92,9 @@ export function DialogProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <DialogContext.Provider value={value}>
+      <React.Suspense fallback={null}>
+        <DialogNavigationHandler onNavigate={closeDialog} />
+      </React.Suspense>
       {children}
       <DialogRenderer dialogState={dialogState} />
     </DialogContext.Provider>
