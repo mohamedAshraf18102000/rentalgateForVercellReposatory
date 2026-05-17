@@ -3,7 +3,10 @@
 import { normalizeImageUrl } from "@/util";
 import { SaudiRiyal } from "lucide-react";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 import UserPointsWallet from "./UserPointsWallet";
+import { useWalletInfo } from "@/hooks/api/useWalletInfo";
+import { useUserPoints } from "@/hooks/api/useUserPoints";
 
 interface IUserBreifDetailsProps {
   name: string;
@@ -20,10 +23,11 @@ const UserBreifDetails = ({
   name,
   userImage,
   greeting,
-  availablePoints = 0,
-  walletBalance = 0,
 }: IUserBreifDetailsProps) => {
+  const t = useTranslations("common");
   const displayName = truncateName(name);
+  const { data: wallet } = useWalletInfo();
+  const { data: pointsData } = useUserPoints();
 
   return (
     <div className="flex items-center gap-2">
@@ -48,12 +52,12 @@ const UserBreifDetails = ({
       <div className="text-start text-sm flex flex-col gap-1">
         <UserPointsWallet
           icon={"/profile/coin.png"}
-          number={availablePoints}
-          extraIcon={<span>نقطة</span>}
+          number={pointsData?.availablePoints ?? 0}
+          extraIcon={<span>{t("points")}</span>}
         />
         <UserPointsWallet
           icon={"/profile/actionIcons/wallet.webp"}
-          number={walletBalance}
+          number={wallet?.balance ?? 0}
           extraIcon={<SaudiRiyal className="w-3 h-3" />}
         />
       </div>

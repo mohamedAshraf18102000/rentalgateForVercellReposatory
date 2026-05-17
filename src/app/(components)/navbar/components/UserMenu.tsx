@@ -1,7 +1,3 @@
-// ============================================================================
-// Components - UserMenu
-// ============================================================================
-
 import React from "react";
 import {
   DropdownMenu,
@@ -10,10 +6,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../../ui/dropdown-menu";
-import { LogOut, User, ChevronDown, Car } from "lucide-react";
+import { LogOut, User, Car } from "lucide-react";
 import { BUTTON_STYLES } from "../constants";
 import type { ClientData } from "@/lib/api/types";
-import { getUserDisplayName } from "../utils";
 import { useLocale } from "next-intl";
 import UserBreifDetails from "./userBreifDetails/UserBreifDetails";
 
@@ -39,7 +34,7 @@ export const UserMenu: React.FC<UserMenuProps> = ({
   onBookingsClick,
   translations,
 }) => {
-  const firstName = userData?.clientName; // Get only the first word
+  const firstName = userData?.clientName;
   const userImage = userData?.profileImage;
   const locale = useLocale();
 
@@ -61,8 +56,6 @@ export const UserMenu: React.FC<UserMenuProps> = ({
             name={firstName!}
             userImage={userImage!}
             greeting={translations.userNavGreeting}
-            availablePoints={userData.availablePoints}
-            walletBalance={userData.walletBalance}
           />
         </button>
       </DropdownMenuTrigger>
