@@ -277,12 +277,12 @@ function CurrentLocationDialogContent() {
             إغلاق
           </button>
 
-          <Button
+          <button
             onClick={handleSave}
             className="rounded-xl py-3 bg-primary text-white font-bold w-fit px-5 text-base"
           >
             حفظ
-          </Button>
+          </button>
         </div>
       }
     />
