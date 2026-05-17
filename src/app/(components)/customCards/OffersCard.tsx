@@ -11,7 +11,6 @@ type TofferPackageProps = {
 
 const OffersCard = ({
   offerPackage,
-  className,
   warnToTakeOfferDate,
   warningAvailable,
 }: TofferPackageProps) => {
@@ -24,7 +23,7 @@ const OffersCard = ({
       </Badge>
 
       {/* Image Section */}
-      <div className="relative w-1/3 sm:w-[40%] shrink-0 bg-Grey100 self-stretch min-h-[80px] sm:min-h-[80px]">
+      <div className="relative w-1/3 sm:w-[35%] shrink-0 bg-Grey100 self-stretch min-h-[80px] sm:min-h-[80px]">
         <Image
           src="/offers/offerImage.png"
           alt="offer"

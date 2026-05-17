@@ -21,6 +21,7 @@ import {
 import DriverCard from "@/app/(components)/customCards/DriverCard";
 import { useTranslations } from "next-intl";
 import OffersCard from "@/app/(components)/customCards/OffersCard";
+import KMPackageCard from "@/app/(components)/customCards/KMPackageCard";
 
 const page = () => {
   const t = useTranslations("carDetails");
@@ -160,11 +161,6 @@ const page = () => {
     [pricingType, data],
   );
 
-  const discountBadge =
-    discountPercentage > 0
-      ? `${t("discountPrefix")} ${discountPercentage}% - ${pricingTypeLabels[pricingType]}`
-      : "";
-
   if (isLoading || !data)
     return (
       <WrapperContainer exceedNav>
@@ -240,9 +236,12 @@ const page = () => {
         <h3 className="col-span-1 my-4 text-xl font-bold sm:col-span-2 lg:col-span-4 lg:text-xl">
           {t("reservation.stepOne.offersTitle")}
         </h3>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 3xl:grid-cols-4!">
           {data.offerPackages.map((offer) => (
             <OffersCard key={offer.ccoId} offerPackage={offer} />
+          ))}
+          {data.kilometerPackages.map((pack) => (
+            <KMPackageCard key={pack.cceId} kilometerPackage={pack} />
           ))}
         </div>
       </div>
