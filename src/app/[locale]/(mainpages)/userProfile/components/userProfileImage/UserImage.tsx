@@ -103,7 +103,7 @@ const UserImage = ({
       if (current) {
         setClientData({ ...current, profileImage: filename });
       }
-      await fetchClientData();
+      await fetchClientData({ force: true });
       onProfileImageSaved?.();
       toast.success(t("updateSuccess"));
       handleCropDialogChange(false);

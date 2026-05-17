@@ -7,6 +7,7 @@ import { UserAddress } from "@/types/userProfile/userAddress";
 import { Separator } from "@/app/(components)/ui/separator";
 import { MapPinPlus } from "lucide-react";
 import { useAuth } from "@/app/(components)/navbar/hooks/useAuth";
+import { useTranslations } from "next-intl";
 
 type TempLocation = {
   lat: number;
@@ -50,6 +51,7 @@ export function UserSavedAddresses({
   setTempLocation,
   onAddressAdded,
 }: UserSavedAddressesProps) {
+  const t = useTranslations("home");
   const { userData } = useAuth();
   const [isAddAddressDialogOpen, setIsAddAddressDialogOpen] = useState(false);
   const [queryClient] = useState(() => new QueryClient());
@@ -98,14 +100,16 @@ export function UserSavedAddresses({
   return (
     <div className="absolute bottom-0 left-0 rounded-2xl! bg-gray-100/10! p-2 backdrop-blur-sm w-full">
       <div className="w-full flex justify-between items-center">
-        <p className="text-base font-bold mb-2">العناوين المسجله</p>
+        <p className="text-base font-bold mb-2">
+          {t("pickupDialog.savedAddressesTitle")}
+        </p>
         <button
           type="button"
           onClick={() => setIsAddAddressDialogOpen(true)}
           className="text-base fontbold underline cursor-pointer flex items-center gap-1"
         >
           <MapPinPlus className="w-5 h-5" />
-          <span>إضافة عنوان جديد</span>
+          <span>{t("pickupDialog.addNewAddress")}</span>
           <span></span>
         </button>
       </div>
@@ -149,7 +153,7 @@ export function UserSavedAddresses({
         </div>
       ) : (
         <p className="py-2 text-center text-xs text-Grey600">
-          لا توجد عناوين محفوظة
+          {t("pickupDialog.noSavedAddresses")}
         </p>
       )}
       <QueryClientProvider client={queryClient}>

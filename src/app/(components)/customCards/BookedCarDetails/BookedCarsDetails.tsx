@@ -51,10 +51,12 @@ const BookedCarsDetails = ({ data }: { data: Reservation }) => {
       <div className="min-w-0 flex-1 bg-white p-3 sm:w-[60%] sm:p-4">
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-5">
           <p className="min-w-0 flex-1 text-sm font-bold sm:w-3/4">
-            {data.carBrandEnglishName} {data.carName}
+            {locale === "ar" ? data.carNameAr : data.carNameEn}
           </p>
           <p className="shrink-0 rounded-lg bg-Grey100 p-2 text-center text-xs font-bold sm:h-full sm:w-1/4 sm:text-sm">
-            {data.carCategoryEnglishName}
+            {locale === "ar"
+              ? data.carCategoryArabicName
+              : data.carCategoryEnglishName}
           </p>
         </div>
         <Separator className="my-3 sm:my-4" />

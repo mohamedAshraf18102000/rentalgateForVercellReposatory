@@ -281,7 +281,7 @@ const BranchCarsCarousel = ({
                   firstBadgeTitle={offerBadge || undefined}
                   firstBadgeColor="red"
                   carImage={normalizeImageUrl(car.carImage)}
-                  carName={car.carName}
+                  carName={locale === "ar" ? car.carNameAr : car.carNameEn}
                   advancedCard
                   carBrand={car.categoryNameArabic}
                   companyLogo={car.companyLogo}

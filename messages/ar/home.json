@@ -33,7 +33,9 @@
   "pickupDialog": {
     "pickupTitle": "مكان الاستلام",
     "returnTitle": "مكان التسليم",
+    "currentLocationTitle": "موقعك الحالي",
     "close": "إغلاق",
+    "save": "حفظ",
     "showResults": "إظهار النتائج",
     "savedAddressesTitle": "العناوين المسجلة",
     "addNewAddress": "إضافة عنوان جديد",

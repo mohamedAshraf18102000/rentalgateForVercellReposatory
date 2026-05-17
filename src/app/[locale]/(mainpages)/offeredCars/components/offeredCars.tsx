@@ -13,7 +13,12 @@ const mapOfferCarToCarContent = (
   offerValue: number | null,
 ): CarContent => ({
   ccbId: car.ccbId,
-  carName: car.car.carName,
+  carNameEn:
+    `${car.car.brandNameEnglish} ${car.car.typeNameEnglish} ${car.car.year}`.trim() ||
+    car.car.carName,
+  carNameAr:
+    `${car.car.brandNameArabic} ${car.car.typeNameArabic} ${car.car.year}`.trim() ||
+    car.car.carName,
   companyName: car.company.name,
   companyNameAr: car.company.arabicName,
   carImage: car.car.image,

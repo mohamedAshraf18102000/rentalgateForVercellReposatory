@@ -33,7 +33,9 @@
   "pickupDialog": {
     "pickupTitle": "Pickup Location",
     "returnTitle": "Return Location",
+    "currentLocationTitle": "Your current location",
     "close": "Close",
+    "save": "Save",
     "showResults": "Show results",
     "savedAddressesTitle": "Saved addresses",
     "addNewAddress": "Add new address",

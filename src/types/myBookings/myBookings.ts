@@ -10,7 +10,8 @@ export type ReceiveType =
 export interface Reservation {
   reservationId: number;
 
-  carName: string;
+  carNameEn: string;
+  carNameAr: string;
   carImage: string;
 
   carBrandArabicName: string;

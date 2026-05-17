@@ -8,6 +8,15 @@ import type { ClientData } from "@/lib/api/types/client.types";
 import { getUserData } from "@/util/auth";
 import { setCookie } from "@/util/cookies";
 
+export interface FetchClientDataOptions {
+  /** Bypass session cache and fetch fresh data from the API. */
+  force?: boolean;
+}
+
+/** Shared across all store subscribers — prevents duplicate profile requests. */
+let clientDataFetchPromise: Promise<void> | null = null;
+let hasSyncedWithServer = false;
+
 interface ClientState {
   // Data
   clientData: ClientData | null;
@@ -18,7 +27,7 @@ interface ClientState {
   error: string | null;
 
   // Actions
-  fetchClientData: () => Promise<void>;
+  fetchClientData: (options?: FetchClientDataOptions) => Promise<void>;
   setClientData: (data: ClientData | null) => void;
   clearClientData: () => void;
 }
@@ -30,45 +39,61 @@ export const useClientStore = create<ClientState>((set, get) => ({
   isError: false,
   error: null,
 
-  // Fetch client data from API
-  fetchClientData: async () => {
-    set({ isLoading: true, isError: false, error: null });
+  // Fetch client data from API (deduped: one in-flight request, one sync per session)
+  fetchClientData: async (options?: FetchClientDataOptions) => {
+    const force = options?.force ?? false;
 
-    try {
-      const response = await getClientData();
-      const prev = get().clientData;
-      const next = response.data;
-      const merged =
-        next && prev
-          ? {
-              ...next,
-              walletBalance:
-                next.walletBalance ?? prev.walletBalance,
-              availablePoints:
-                next.availablePoints ?? prev.availablePoints,
-            }
-          : next;
-      // Update store
-      set({
-        clientData: merged,
-        isLoading: false,
-        isError: false,
-        error: null,
-      });
-
-      // Update cookie to persist full data for next refresh
-      if (merged) {
-        setCookie("userData", JSON.stringify(merged), 30);
-      }
-    } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : "حدث خطأ غير متوقع";
-      set({
-        isLoading: false,
-        isError: true,
-        error: errorMessage,
-      });
+    if (!force && hasSyncedWithServer) {
+      return;
     }
+
+    if (clientDataFetchPromise) {
+      return clientDataFetchPromise;
+    }
+
+    clientDataFetchPromise = (async () => {
+      set({ isLoading: true, isError: false, error: null });
+
+      try {
+        const response = await getClientData();
+        const prev = get().clientData;
+        const next = response.data;
+        const merged =
+          next && prev
+            ? {
+                ...next,
+                walletBalance:
+                  next.walletBalance ?? prev.walletBalance,
+                availablePoints:
+                  next.availablePoints ?? prev.availablePoints,
+              }
+            : next;
+        set({
+          clientData: merged,
+          isLoading: false,
+          isError: false,
+          error: null,
+        });
+
+        if (merged) {
+          setCookie("userData", JSON.stringify(merged), 30);
+        }
+
+        hasSyncedWithServer = true;
+      } catch (error) {
+        const errorMessage =
+          error instanceof Error ? error.message : "حدث خطأ غير متوقع";
+        set({
+          isLoading: false,
+          isError: true,
+          error: errorMessage,
+        });
+      } finally {
+        clientDataFetchPromise = null;
+      }
+    })();
+
+    return clientDataFetchPromise;
   },
 
   // Set client data directly
@@ -81,6 +106,8 @@ export const useClientStore = create<ClientState>((set, get) => ({
 
   // Clear client data
   clearClientData: () => {
+    hasSyncedWithServer = false;
+    clientDataFetchPromise = null;
     set({
       clientData: null,
       isLoading: false,

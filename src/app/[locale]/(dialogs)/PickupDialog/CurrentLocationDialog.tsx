@@ -11,6 +11,7 @@ import { UserAddress } from "@/types/userProfile/userAddress";
 import { UserSavedAddresses } from "./UserSavedAddresses";
 import { useUserPreferedFiltersStore } from "@/lib/stores/useUserPreferedFiltersStore";
 import { getAuthToken } from "@/util/auth";
+import { useTranslations } from "next-intl";
 
 type TempLocation = {
   lat: number;
@@ -20,7 +21,7 @@ type TempLocation = {
 };
 
 function CurrentLocationDialogContent() {
-  // StateManagment Stores
+  const t = useTranslations("home");
   const isAuthenticated = !!getAuthToken();
 
   const {
@@ -220,7 +221,7 @@ function CurrentLocationDialogContent() {
       onOpenChange={handleOpenChange}
       closeOnOutsideClick={false}
       size="xl"
-      header={{ mainTitle: `موقعك الحالي ${dialogOpenSource}` }}
+      header={{ mainTitle: t("pickupDialog.currentLocationTitle") }}
       content={
         <div
           className="overflow-hidden relative"
@@ -274,14 +275,14 @@ function CurrentLocationDialogContent() {
             onClick={handleClose}
             className="py-3 text-primary font-normal w-fit px-2 underline underline-offset-3"
           >
-            إغلاق
+            {t("pickupDialog.close")}
           </button>
 
           <button
             onClick={handleSave}
             className="rounded-xl py-3 bg-primary text-white font-bold w-fit px-5 text-base"
           >
-            حفظ
+            {t("pickupDialog.save")}
           </button>
         </div>
       }

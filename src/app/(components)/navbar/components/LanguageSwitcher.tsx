@@ -24,18 +24,17 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
       onClick={onToggle ?? handleLanguageChange}
       variant="outline"
       size="lg"
-      icon={<Globe className="w-4 h-4 text-inherit" />}
       aria-label={
         currentLocale === "ar"
           ? "Switch language to English"
           : "التبديل إلى العربية"
       }
       className={cn(
-        "border-none    *[color:var(--primary)] rounded-[12px] hover:opacity-90 transition-opacity",
-        "font-normal text-base leading-[130%] tracking-normal",
-        "[font-family:var(--font-almarai),Almarai,sans-serif]",
+        "flex items-center justify-center gap-0! w-8 h-8 border-none",
         className,
       )}
-    />
+    >
+      <Globe className="w-4 h-4 text-inherit" />
+    </Button>
   );
 };

@@ -137,7 +137,7 @@ export const useLogin = ({
 
         // Fetch and save complete client data to Zustand store after successful login
         try {
-          await fetchClientData();
+          await fetchClientData({ force: true });
         } catch (error) {
           // If fetching client data fails, it's not critical - we already have login data
           console.warn("Failed to fetch complete client data:", error);

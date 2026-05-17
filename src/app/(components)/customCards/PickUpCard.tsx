@@ -16,12 +16,12 @@ const PickUpCard = ({
   return (
     <div className="w-full" onClick={onClick}>
       <div className="w-full h-full pb-5 rounded-[18px] cursor-pointer group hover:bg-white transition-all duration-300">
-        <div className="relative aspect-video w-full overflow-hidden rounded-[18px]">
+        <div className="relative aspect-video w-full rounded-[18px]">
           <Image
             src={image}
             alt={title}
             fill
-            className="object-cover border-3 border-white shadow-lg"
+            className="object-cover border-3 border-white shadow-lg rounded-2xl"
           />
         </div>
         <div className="group-hover:p-2 transition-all duration-300">

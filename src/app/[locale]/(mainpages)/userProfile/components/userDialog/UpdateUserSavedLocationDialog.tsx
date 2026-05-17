@@ -223,6 +223,7 @@ const UpdateUserSavedLocationDialog = ({
             <div className="px-1">
               <div className="w-full flex justify-end">
                 <Button
+                  variant={"outline"}
                   className="bg-transparent border-2 border-Grey200 hover:bg-transparent text-black mb-3 text-sm!"
                   startIcon={<MapPinPlusInside className="w-5! h-5!" />}
                   onClick={() => setShowAddForm(true)}
@@ -472,8 +473,7 @@ const UpdateUserSavedLocationDialog = ({
             </>
           ) : (
             <>
-              <Button
-                size="lg"
+              <button
                 className="w-fit text-black hover:bg-white underline py-3 border-none px-5 bg-white text-base font-bold"
                 onClick={() => {
                   if (addFormOnlyMode) {
@@ -485,7 +485,7 @@ const UpdateUserSavedLocationDialog = ({
                 disabled={isPending}
               >
                 {t("actions.cancel")}
-              </Button>
+              </button>
               <Button
                 size="lg"
                 type="submit"

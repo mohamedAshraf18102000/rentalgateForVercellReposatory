@@ -12,7 +12,7 @@ const useCompleteUserProfile = () => {
       completeUserProfile(payload as CompleteUserProfilePayload),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["userProfile"] });
-      fetchClientData();
+      fetchClientData({ force: true });
     },
   });
 };

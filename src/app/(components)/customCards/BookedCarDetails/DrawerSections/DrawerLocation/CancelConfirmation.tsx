@@ -172,8 +172,9 @@ const CancelConfirmation = ({
 
         <SheetFooter className="mt-auto gap-3 border-t p-6 flex-col sm:flex-row">
           <Button
+            variant="destructive"
             type="button"
-            className="text-base! w-full sm:w-1/2 bg-transparent text-black border-2 border-Grey400 hover:bg-transparent"
+            className="text-base! w-full sm:w-1/2 bg-transparent text-black font-bold! border-2 border-Grey400 hover:bg-transparent"
           >
             {t("myBookings")}
           </Button>

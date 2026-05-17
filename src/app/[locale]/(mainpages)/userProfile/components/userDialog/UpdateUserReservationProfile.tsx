@@ -100,7 +100,7 @@ const UpdateUserReservationProfile = ({
     },
     onSuccess: () => {
       toast.success(t("toast.updateSuccess"));
-      fetchClientData();
+      fetchClientData({ force: true });
       setOpen(false);
     },
     onError: (error: Error) => {
