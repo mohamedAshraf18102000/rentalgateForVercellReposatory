@@ -18,7 +18,7 @@ function ProfileAvatarPicture({ avatarSrc }: { avatarSrc: string }) {
 
   return (
     <Image
-      className={"object-fill scale-120"}
+      className={"object-contain"}
       src={loadFailed ? FALLBACK_AVATAR : avatarSrc}
       alt=""
       fill
