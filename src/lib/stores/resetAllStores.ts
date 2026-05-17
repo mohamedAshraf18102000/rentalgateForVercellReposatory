@@ -23,6 +23,4 @@ export function resetAllStores(
     useLocationStore.getState().resetLocationState();
   }
   usePickupDialogStore.getState().resetDialogState();
-
-  sessionStorage.removeItem("hasClosedLocationDialog");
 }

@@ -46,14 +46,16 @@ export const NavbarActions: React.FC<NavbarActionsProps> = ({
         <LocationTrigger translations={translations} />
 
         {isClient && authenticated ? (
-          <UserMenu
-            userData={userData}
-            isLoading={isLoading}
-            onLogout={handleLogout}
-            onProfileClick={handleProfileClick}
-            onBookingsClick={handleBookingsClick}
-            translations={translations}
-          />
+          <>
+            <UserMenu
+              userData={userData}
+              isLoading={isLoading}
+              onLogout={handleLogout}
+              onProfileClick={handleProfileClick}
+              onBookingsClick={handleBookingsClick}
+              translations={translations}
+            />
+          </>
         ) : (
           <LoginButton className={BUTTON_STYLES.primary} variant="default">
             {translations.login}

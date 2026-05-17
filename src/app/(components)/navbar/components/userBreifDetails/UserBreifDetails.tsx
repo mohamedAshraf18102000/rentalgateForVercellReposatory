@@ -30,7 +30,7 @@ const UserBreifDetails = ({
   const { data: pointsData } = useUserPoints();
 
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex items-center gap-2 outline-0">
       <div className="flex items-center gap-2 hover:bg-Grey100 p-1 rounded-lg transition duration-200">
         <Image
           src={normalizeImageUrl(userImage)}

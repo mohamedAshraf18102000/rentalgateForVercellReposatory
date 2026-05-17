@@ -51,7 +51,7 @@ export const UserMenu: React.FC<UserMenuProps> = ({
   return (
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
-        <button>
+        <button className="outline-0">
           <UserBreifDetails
             name={firstName!}
             userImage={userImage!}
