@@ -23,7 +23,7 @@ export const FavCategoryTabs: React.FC<PeriodSearchProps> = ({
       onValueChange={(newValue) => onValueChange(newValue as CarCategory)}
       className="w-full"
     >
-      <TabsList className="bg-transparent grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 h-fit">
+      <TabsList className="bg-transparent grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-[2px] h-fit">
         {categories.map((category) => (
           <TabsTrigger
             key={category.categoryId}

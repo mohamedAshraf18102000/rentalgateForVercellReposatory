@@ -31,10 +31,10 @@ export function UserSuggestionDialog({ onClose }: UserSuggestionProps) {
     <DialogWrapper
       open={true}
       onOpenChange={(open) => !open && onClose()}
-      size="md"
+      size="lg"
       closeOnOutsideClick={false}
       scrollableContent={true}
-      maxScrollHeight="350px"
+      maxScrollHeight="400px"
       header={{
         mainTitle: (
           <div className="flex items-center justify-between w-full">
@@ -45,7 +45,7 @@ export function UserSuggestionDialog({ onClose }: UserSuggestionProps) {
         ),
       }}
       content={
-        <div className="flex flex-col gap-3 mb-5">
+        <div className="flex flex-col gap-3 mb-5 px-2">
           <div className="flex flex-col gap-2">
             <label className="text-base font-medium text-foreground">
               {t("cancellationReason")}
@@ -69,7 +69,7 @@ export function UserSuggestionDialog({ onClose }: UserSuggestionProps) {
           <Textarea
             label="الرسالة:"
             labelClassName="text-base!"
-            className="text-sm!"
+            className="text-sm! "
             placeholder="شاركنا معلوماتك، وسيتواصل معك فريقنا في أقرب وقت."
             startIcon={<TextAreaIcon />}
             rows={10}
@@ -79,8 +79,9 @@ export function UserSuggestionDialog({ onClose }: UserSuggestionProps) {
       footer={
         <div className="flex w-full justify-end gap-2">
           <Button
+            variant="outline"
             size="lg"
-            className="w-fit text-black hover:bg-white underline py-3 border-none px-5 bg-white text-base"
+            className="w-fit text-black hover:bg-white underline py-3 border-none px-5 bg-white text-base underline-offset-5"
             onClick={onClose}
           >
             إغلاق

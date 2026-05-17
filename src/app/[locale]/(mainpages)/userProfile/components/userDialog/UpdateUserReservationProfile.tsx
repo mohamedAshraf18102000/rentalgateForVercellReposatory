@@ -170,10 +170,10 @@ const UpdateUserReservationProfile = ({
     <DialogWrapper
       open={open}
       onOpenChange={setOpen}
-      size="lg"
+      size="xl"
       closeOnOutsideClick={false}
       scrollableContent={true}
-      maxScrollHeight="500px"
+      maxScrollHeight="550px"
       header={{
         mainTitle: (
           <div>

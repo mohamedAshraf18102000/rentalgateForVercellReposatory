@@ -145,7 +145,7 @@ export function ChangePasswordDialog({ onClose }: ChangePasswordProps) {
             <div className="col-span-4">
                 <Button
                     variant="outline"
-                    className="w-full"
+                    className="w-full text-base"
                     size="lg"
                     onClick={onClose}
                     disabled={isLoading}
@@ -155,7 +155,7 @@ export function ChangePasswordDialog({ onClose }: ChangePasswordProps) {
             </div>
             <div className="col-span-8">
                 <Button
-                    className="w-full"
+                    className="w-full text-base"
                     size="lg"
                     type="submit"
                     form="change-password-form"

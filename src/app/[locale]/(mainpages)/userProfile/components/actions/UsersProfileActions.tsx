@@ -35,12 +35,12 @@ const UserProfileActions = () => {
         icon="/profile/actionIcons/language.webp"
       />
 
-      <ProfileActionCard
+      {/* <ProfileActionCard
         onClick={() => openDialog("UserSuggestion", {})}
         title={t("supportTitle")}
         description={t("supportDescription")}
         icon="/profile/actionIcons/customerService.webp"
-      />
+      /> */}
     </>
   );
 };
