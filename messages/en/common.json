@@ -89,6 +89,8 @@
   "whatsapp": "WhatsApp",
   "workingHours": "Working Hours",
   "openInGoogleMaps": "Open in Google Maps",
+  "navigateToBranch": "Navigate to branch",
+  "navigateWithGoogleMaps": "Navigate with Google Maps",
   "loadingMap": "Loading map...",
   "extendBooking": "Extend Booking",
   "extensionDays": "Extension Days",

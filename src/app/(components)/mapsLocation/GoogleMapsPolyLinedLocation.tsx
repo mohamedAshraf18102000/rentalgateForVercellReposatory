@@ -14,6 +14,7 @@ import { useLocationStore } from "@/lib/stores/useLocationStore";
 import { reverseGeocode } from "@/lib/utils/reverseGeocode";
 import { useDebounce } from "./hooks/useDebounce";
 import { usePlacesAutocomplete } from "./hooks/usePlacesAutocomplete";
+import { useTranslations } from "next-intl";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Types
@@ -413,6 +414,7 @@ const GoogleMapsPolyLinedLocation = ({
   autoFitBounds?: boolean;
   disableMapClickToChangeLocation?: boolean;
 }) => {
+  const t = useTranslations("common");
   const {
     userPhysical_Latitude,
     userPhysical_Longitude,
@@ -426,7 +428,9 @@ const GoogleMapsPolyLinedLocation = ({
   });
 
   const [locationLoading, setLocationLoading] = useState(
-    !(initialLat && initialLng) && !userPhysical_Latitude && !userPhysical_Longitude,
+    !(initialLat && initialLng) &&
+      !userPhysical_Latitude &&
+      !userPhysical_Longitude,
   );
   const [isLocating, setIsLocating] = useState(false);
 
@@ -516,7 +520,8 @@ const GoogleMapsPolyLinedLocation = ({
 
     if (!hasCalledInitialChange.current) {
       hasCalledInitialChange.current = true;
-      const address = userPhysical_Address || (await reverseGeocode(pos.lat, pos.lng));
+      const address =
+        userPhysical_Address || (await reverseGeocode(pos.lat, pos.lng));
       handleSetLocation(pos.lat, pos.lng, address, false);
     }
 
@@ -546,7 +551,13 @@ const GoogleMapsPolyLinedLocation = ({
     };
     setup();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userPhysical_Latitude, userPhysical_Longitude, initialLat, initialLng, userPhysical_Address]);
+  }, [
+    userPhysical_Latitude,
+    userPhysical_Longitude,
+    initialLat,
+    initialLng,
+    userPhysical_Address,
+  ]);
 
   useEffect(() => {
     if (mapRef.current) mapRef.current.panTo(currentLocation);
@@ -708,7 +719,7 @@ const GoogleMapsPolyLinedLocation = ({
             type="button"
             onClick={() => openInGoogleMaps(destinationPos, currentLocation)}
             className="z-[9999] absolute bottom-4 left-1/2 -translate-x-1/2 bg-blue-600 hover:bg-blue-700 active:scale-95 transition-all text-white flex items-center gap-2 px-4 py-2 shadow-lg text-sm font-medium rounded-2xl whitespace-nowrap"
-            title="Navigate with Google Maps"
+            title={t("navigateWithGoogleMaps")}
           >
             <svg
               width="14"
@@ -722,7 +733,7 @@ const GoogleMapsPolyLinedLocation = ({
             >
               <polygon points="3 11 22 2 13 21 11 13 3 11" />
             </svg>
-            التوجه الي الفرع
+            {t("navigateToBranch")}
           </button>
         )}
 

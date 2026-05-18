@@ -61,7 +61,6 @@ const CarsCard = ({
   firstBadgeColor,
   priceBeforeOffer,
   showTax,
-  pricingType = "DAILY",
   className,
   totalPrice,
   rentalDays,
@@ -229,7 +228,7 @@ const CarsCard = ({
                   </div>
                 </div>
                 <p className="text-[#CFCFCF] text-[12px]">
-                  {showTax ? "شامل الضريبة" : "غير شامل الضريبة"}
+                  {showTax ? t("taxIncluded") : t("taxExcluded")}
                 </p>
               </div>
 
@@ -239,7 +238,7 @@ const CarsCard = ({
                   className=" bg-white font-bold text-base"
                 >
                   <span className="bg-linear-to-b from-[#BE2326] to-[#581012] bg-clip-text text-transparent">
-                    احجز الآن
+                    {t("bookNow")}
                   </span>
                 </Button>
               </div>

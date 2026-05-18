@@ -1,7 +1,12 @@
+"use client";
+
 import { cn } from "@/lib/utils";
+import { useTranslations } from "next-intl";
 import styles from "./hangedOffer.module.css";
 
 const HangedOfferIcon = () => {
+  const t = useTranslations("carDetails");
+
   return (
     <div className={styles.object}>
       <div className={styles.hanger}>
@@ -22,9 +27,11 @@ const HangedOfferIcon = () => {
             "bg-[#2A2A2A]/90 w-12 rounded-md flex flex-col text-center",
           )}
         >
-          <span className="text-[9px] text-white font-normal">عرض</span>
+          <span className="text-[9px] text-white font-normal">
+            {t("hangedOfferTop")}
+          </span>
           <span className="text-[11px] text-primary-red font-extrabold -mt-1">
-            خاص
+            {t("hangedOfferBottom")}
           </span>
         </div>
       </div>

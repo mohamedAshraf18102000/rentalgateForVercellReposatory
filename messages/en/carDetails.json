@@ -10,6 +10,10 @@
   "carImageAlt": "Car for rent",
   "priceWithTax": "Price includes tax:",
   "priceWithoutTax": "Price excludes tax:",
+  "taxIncluded": "Includes tax",
+  "taxExcluded": "Excludes tax",
+  "hangedOfferTop": "Special",
+  "hangedOfferBottom": "Offer",
   "forRentalDays": "({days} days)",
   "totalForDays": "Total for {days, plural, one {# day} other {# days}}",
   "pricePerPricingType": "/ {pricingType}",
@@ -321,5 +325,15 @@
   "locationNotValidForDelivery": "Selected location is not valid for delivery",
   "loadingMap": "Loading map...",
   "cannotAccessCurrentLocation": "Cannot access current location",
-  "geolocationNotSupported": "Geolocation not supported"
+  "geolocationNotSupported": "Geolocation not supported",
+  "offersCard": {
+    "imageAlt": "Offer",
+    "badgeExtraDays": "{count, plural, one {{count} day free} other {{count} days free}}",
+    "bookPrefix": "Book",
+    "and": "and",
+    "getPrefix": "get",
+    "dayCount": "{count, plural, one {{count} day} other {{count} days}}",
+    "extraDaysFree": "{count, plural, one {{count} day free} other {{count} days free}}",
+    "offerExpiryWarning": "To benefit from this offer, choose an end date by"
+  }
 }

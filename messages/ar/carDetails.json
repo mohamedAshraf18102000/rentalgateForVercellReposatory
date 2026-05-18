@@ -10,6 +10,10 @@
   "carImageAlt": "سيارة للإيجار",
   "priceWithTax": "السعر شامل الضريبة:",
   "priceWithoutTax": "السعر غير شامل الضريبة:",
+  "taxIncluded": "شامل الضريبة",
+  "taxExcluded": "غير شامل الضريبة",
+  "hangedOfferTop": "عرض",
+  "hangedOfferBottom": "خاص",
   "forRentalDays": "( لـ {days} يوم )",
   "totalForDays": "اجمالي السعر لعدد {days} يوم",
   "pricePerPricingType": "/ {pricingType}",
@@ -324,5 +328,15 @@
   "locationNotValidForDelivery": "الموقع المحدد غير صالح للتوصيل",
   "loadingMap": "جاري تحميل الخريطة...",
   "cannotAccessCurrentLocation": "لا يمكن الوصول إلى الموقع الحالي",
-  "geolocationNotSupported": "الموقع الجغرافي غير مدعوم"
+  "geolocationNotSupported": "الموقع الجغرافي غير مدعوم",
+  "offersCard": {
+    "imageAlt": "عرض",
+    "badgeExtraDays": "{count, plural, one {{count} يوم مجاناً} other {{count} أيام مجاناً}}",
+    "bookPrefix": "احجز",
+    "and": "و",
+    "getPrefix": "احصل علي",
+    "dayCount": "{count, plural, one {{count} يوم} other {{count} أيام}}",
+    "extraDaysFree": "{count, plural, one {{count} يوم مجاناً} other {{count} أيام مجاناً}}",
+    "offerExpiryWarning": "للاستفادة من العرض اختر تاريخ الانتهاء حتي"
+  }
 }
