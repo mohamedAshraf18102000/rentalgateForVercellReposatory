@@ -60,6 +60,11 @@
     "description": "For every person you refer, you will get 50% discount on the rental period",
     "shareCode": "Share the code:"
   },
+  "userProfile": {
+    "breadcrumb": {
+      "currentPage": "Profile"
+    }
+  },
   "bookings": {
     "title": "My Bookings",
     "description": "View and manage all your bookings (Cars) in one place",
@@ -70,6 +75,7 @@
     "searchForm": {
       "showPricesWithTax": "Show prices with tax",
       "pickupLocation": "Pickup location:",
+      "selectPickupLocation": "Select pickup location",
       "currentLocation": "Current location",
       "branchPickup": "Pickup from branch",
       "rentalPeriod": "Rental period:",

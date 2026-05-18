@@ -4,12 +4,14 @@ import { Building, UsersRound, Loader2 } from "lucide-react";
 import { useFormContext, Controller } from "react-hook-form";
 import { useUploadImageMutation } from "@/services/uploadImages/uploadImage.service";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 
 interface CompanyInfoFormProps {
   step?: number;
 }
 
 const CompanyInfoForm = ({ step = 1 }: CompanyInfoFormProps) => {
+  const t = useTranslations("companyQuotation.businessAccount.companyForm");
   const {
     register,
     control,
@@ -30,10 +32,10 @@ const CompanyInfoForm = ({ step = 1 }: CompanyInfoFormProps) => {
     try {
       const filename = await uploadImage(file);
       onChange(filename);
-      toast.success("تم رفع الصورة بنجاح");
+      toast.success(t("toast.uploadSuccess"));
     } catch (error) {
       console.error(error);
-      toast.error("حدث خطأ أثناء رفع الصورة");
+      toast.error(t("toast.uploadError"));
       onChange("");
     }
   };
@@ -53,8 +55,8 @@ const CompanyInfoForm = ({ step = 1 }: CompanyInfoFormProps) => {
               required
               id="companyName"
               type="text"
-              placeholder="أدخل أسم الشركة"
-              label="اسم الشركة:"
+              placeholder={t("placeholders.companyName")}
+              label={t("fields.companyName")}
               className={`bg-white! border-2! rounded-xl! text-base! ${errors.companyName ? "border-red-500!" : "border-Grey400!"}`}
               labelClassName="text-base text-primary"
               startIcon={<Building className="text-primary" />}
@@ -62,7 +64,7 @@ const CompanyInfoForm = ({ step = 1 }: CompanyInfoFormProps) => {
             />
             {errors.companyName && (
               <span className="text-red-500 text-sm mt-1">
-                {errors.companyName.message as string}
+                {t("errors.companyName")}
               </span>
             )}
           </div>
@@ -72,8 +74,8 @@ const CompanyInfoForm = ({ step = 1 }: CompanyInfoFormProps) => {
               required
               id="empsNumber"
               type="number"
-              placeholder="أدخل عدد الموظفين"
-              label="عدد الموظفين:"
+              placeholder={t("placeholders.empsNumber")}
+              label={t("fields.empsNumber")}
               className={`bg-white! border-2! rounded-xl! text-base! ${errors.empsNumber ? "border-red-500!" : "border-Grey400!"}`}
               labelClassName="text-base text-primary"
               startIcon={<UsersRound className="text-primary" />}
@@ -81,7 +83,7 @@ const CompanyInfoForm = ({ step = 1 }: CompanyInfoFormProps) => {
             />
             {errors.empsNumber && (
               <span className="text-red-500 text-sm mt-1">
-                {errors.empsNumber.message as string}
+                {t("errors.empsNumber")}
               </span>
             )}
           </div>
@@ -100,7 +102,7 @@ const CompanyInfoForm = ({ step = 1 }: CompanyInfoFormProps) => {
                   wrapperClassName={`bg-white! font-bold! border-2! ${errors.taxImage ? "border-red-500" : ""}`}
                   size="sm"
                   className="text-center!"
-                  uploadText="صورة البطاقة الضريبية"
+                  uploadText={t("uploads.taxImage")}
                   onFileChange={(file) =>
                     handleFileUpload(file, field.onChange)
                   }
@@ -109,7 +111,7 @@ const CompanyInfoForm = ({ step = 1 }: CompanyInfoFormProps) => {
             />
             {errors.taxImage && (
               <span className="text-red-500 text-sm text-center block mt-1">
-                مطلوب مرفق
+                {t("errors.attachmentRequired")}
               </span>
             )}
           </div>
@@ -123,7 +125,7 @@ const CompanyInfoForm = ({ step = 1 }: CompanyInfoFormProps) => {
                   wrapperClassName={`bg-white! font-bold! border-2! ${errors.registrationImage ? "border-red-500" : ""}`}
                   size="sm"
                   className="text-center!"
-                  uploadText="صورة السجل التجاري"
+                  uploadText={t("uploads.registrationImage")}
                   onFileChange={(file) =>
                     handleFileUpload(file, field.onChange)
                   }
@@ -132,7 +134,7 @@ const CompanyInfoForm = ({ step = 1 }: CompanyInfoFormProps) => {
             />
             {errors.registrationImage && (
               <span className="text-red-500 text-sm text-center block mt-1">
-                مطلوب مرفق
+                {t("errors.attachmentRequired")}
               </span>
             )}
           </div>

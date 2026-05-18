@@ -170,7 +170,11 @@ const BussinessAccountsContentClient = ({
                     variant={"ghost"}
                     type="submit"
                     className="border border-Grey600 text-primary bg-white! hover:bg-none text-sm! sm:text-base! hover:bg-Grey200! transition-all duration-300 w-full min-h-11 sm:min-h-0 sm:w-auto sm:min-w-40"
-                    icon={<ChevronLeft />}
+                    icon={
+                      <ChevronLeft
+                        className={`w-4 h-4 ${isRtl ? "" : "rotate-180"}`}
+                      />
+                    }
                     loading={isPending}
                   >
                     {activeStep !== 4

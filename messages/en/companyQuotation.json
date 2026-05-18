@@ -77,7 +77,47 @@
       "second": "Second step",
       "third": "Third step"
     },
-    "featuresTitle": "Features"
+    "featuresTitle": "Features",
+    "companyForm": {
+      "fields": {
+        "companyName": "Company Name:",
+        "empsNumber": "Number of Employees:"
+      },
+      "placeholders": {
+        "companyName": "Enter company name",
+        "empsNumber": "Enter number of employees"
+      },
+      "uploads": {
+        "taxImage": "Tax Card Image",
+        "registrationImage": "Commercial Registration Image"
+      },
+      "errors": {
+        "attachmentRequired": "Attachment required",
+        "companyName": "Company name is required",
+        "empsNumber": "Number of employees is required",
+        "taxImage": "Tax card image is required",
+        "registrationImage": "Commercial registration image is required"
+      },
+      "toast": {
+        "uploadSuccess": "Image uploaded successfully",
+        "uploadError": "An error occurred while uploading the image"
+      }
+    },
+    "notesForm": {
+      "fields": {
+        "notes": "Notes:"
+      },
+      "placeholders": {
+        "notes": "Write your notes and our team will contact you as soon as possible."
+      }
+    },
+    "successDialog": {
+      "title": "Confirmation Message",
+      "heading": "Your request has been received successfully",
+      "description": "Our team will contact you as soon as possible.",
+      "continueButton": "Continue browsing",
+      "imageAlt": "Request submitted successfully"
+    }
   }
 }
 

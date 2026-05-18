@@ -1,22 +1,25 @@
 import { BreadcrumbNav } from "@/app/(components)/template/BreadcrumbNav";
+import { useTranslations } from "next-intl";
 
 const ProfileBreadCrump = () => {
+  const t = useTranslations("home");
+
   return (
     <BreadcrumbNav
       className="mt-5"
       textColor="text-[var(--color-primary)]"
       items={[
         {
-          label: "الرئيسية",
+          label: t("bookings.breadcrumb.home"),
           href: "/",
         },
         {
-          label: "قائمة السيارات",
+          label: t("bookings.breadcrumb.currentPage"),
           href: "/bookings",
         },
         {
           isCurrentPage: true,
-          label: "الملف الشخصي",
+          label: t("userProfile.breadcrumb.currentPage"),
           href: "/userProfile",
         },
       ]}

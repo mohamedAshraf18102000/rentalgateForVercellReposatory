@@ -283,7 +283,11 @@ const BranchCarsCarousel = ({
                   carImage={normalizeImageUrl(car.carImage)}
                   carName={locale === "ar" ? car.carNameAr : car.carNameEn}
                   advancedCard
-                  carBrand={car.categoryNameArabic}
+                  carBrand={
+                    locale === "ar"
+                      ? car.categoryNameArabic
+                      : car.categoryNameEnglish
+                  }
                   companyLogo={car.companyLogo}
                   companyName={car.companyName}
                   deliveryInMinutes={car.deliveryInMinutes ?? 0}

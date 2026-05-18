@@ -179,7 +179,7 @@ const CarSearchForm = ({
                           <span>{resolvedPickupName}</span>
                         ) : (
                           <span className="text-gray-500">
-                            اختر مكان الاستلام
+                            {t("bookings.searchForm.selectPickupLocation")}
                           </span>
                         )}
                       </p>

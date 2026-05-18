@@ -1,5 +1,6 @@
 import { Button, DialogWrapper } from "@/app/(components)";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 
 interface SuccessDialogProps {
   open: boolean;
@@ -7,28 +8,28 @@ interface SuccessDialogProps {
 }
 
 const SuccessDialoge = ({ open, onOpenChange }: SuccessDialogProps) => {
+  const t = useTranslations("companyQuotation.businessAccount.successDialog");
+
   return (
     <DialogWrapper
       open={open}
       onOpenChange={onOpenChange}
       size="md"
       header={{
-        mainTitle: "رسالة تأكيد",
+        mainTitle: t("title"),
       }}
       content={
         <div className="text-center flex flex-col items-center justify-center">
           <div className="relative w-[80px] h-[80px] bg-Grey100 rounded-full">
             <Image
               src="/bussinesAccounts/dialogeSuccessImage.png"
-              alt=""
+              alt={t("imageAlt")}
               fill
             />
           </div>
           <div className="mt-5">
-            <p className="text-base! font-bold">تم إستلام طلبك بنجاح</p>
-            <p className="text-sm text-Grey700 my-2">
-              سيتواصل معك فريقنا في أقرب وقت.
-            </p>
+            <p className="text-base! font-bold">{t("heading")}</p>
+            <p className="text-sm text-Grey700 my-2">{t("description")}</p>
           </div>
         </div>
       }
@@ -39,7 +40,7 @@ const SuccessDialoge = ({ open, onOpenChange }: SuccessDialogProps) => {
           className="mt-4 text-base! w-fit px-10 font-normal"
           size="lg"
         >
-          أكمل مشاهدتك
+          {t("continueButton")}
         </Button>
       }
     />

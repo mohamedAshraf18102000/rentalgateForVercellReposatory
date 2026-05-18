@@ -77,7 +77,47 @@
       "second": "الخطوة الثانية",
       "third": "الخطوة الثالثة"
     },
-    "featuresTitle": "المميزات"
+    "featuresTitle": "المميزات",
+    "companyForm": {
+      "fields": {
+        "companyName": "اسم الشركة:",
+        "empsNumber": "عدد الموظفين:"
+      },
+      "placeholders": {
+        "companyName": "أدخل أسم الشركة",
+        "empsNumber": "أدخل عدد الموظفين"
+      },
+      "uploads": {
+        "taxImage": "صورة البطاقة الضريبية",
+        "registrationImage": "صورة السجل التجاري"
+      },
+      "errors": {
+        "attachmentRequired": "مطلوب مرفق",
+        "companyName": "اسم الشركة مطلوب",
+        "empsNumber": "عدد الموظفين مطلوب",
+        "taxImage": "صورة البطاقة الضريبية مطلوبة",
+        "registrationImage": "صورة السجل التجاري مطلوبة"
+      },
+      "toast": {
+        "uploadSuccess": "تم رفع الصورة بنجاح",
+        "uploadError": "حدث خطأ أثناء رفع الصورة"
+      }
+    },
+    "notesForm": {
+      "fields": {
+        "notes": "ملاحظات:"
+      },
+      "placeholders": {
+        "notes": "اكتب ملاحظاتك وسيتواصل معك فريقنا في أقرب وقت."
+      }
+    },
+    "successDialog": {
+      "title": "رسالة تأكيد",
+      "heading": "تم إستلام طلبك بنجاح",
+      "description": "سيتواصل معك فريقنا في أقرب وقت.",
+      "continueButton": "أكمل مشاهدتك",
+      "imageAlt": "تم إرسال الطلب بنجاح"
+    }
   }
 }
 
