@@ -5,7 +5,6 @@ import CurrentLocationPickupCard from "@/app/(components)/customCards/CurrentLoc
 import { usePickupDialogStore } from "@/lib/stores/usePickupDialogStore";
 import { PickUpCardDetails } from "@/types/pickUpTypes";
 import { useLocationStore } from "@/lib/stores/useLocationStore";
-import { useUserPreferedFiltersStore } from "@/lib/stores/useUserPreferedFiltersStore";
 import { useRouter } from "next/navigation";
 
 interface PickupCardSectionClientProps {
@@ -26,8 +25,6 @@ export default function PickupCardSectionClient({
   const handleShowResultsClick = () => {
     router.push("/bookings");
   };
-
-  console.log(pickupCardDetails);
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full items-stretch justify-items-center">

@@ -1,6 +1,3 @@
-"use client";
-
-import { useRef } from "react";
 import Image from "next/image";
 import Autoplay from "embla-carousel-autoplay";
 import {
@@ -17,16 +14,11 @@ const sliderHeightClass =
   "sm:h-screen md:h-screen lg:h-screen xl:h-screen 2xl:h-screen";
 
 const HomeSlider = ({ bannersData }: { bannersData: Banner[] }) => {
-  const autoplayPlugin = useRef(
-    Autoplay({ delay: 20000, stopOnInteraction: false }),
-  );
-
   return (
     <section dir="ltr" className="w-full">
       <div className={`relative w-full overflow-hidden ${sliderHeightClass}`}>
         <Carousel
           className="h-full w-full"
-          plugins={[autoplayPlugin.current]}
           opts={{
             align: "start",
             loop: true,
