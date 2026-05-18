@@ -12,7 +12,7 @@ import type { ChangePasswordProps } from "./ChangePassword.types";
 
 /**
  * Change Password Dialog
- * 
+ *
  * Secure password change using react-hook-form and Zod validation.
  * Uses the /clients/auth/change-password endpoint.
  */
@@ -142,29 +142,29 @@ export function ChangePasswordDialog({ onClose }: ChangePasswordProps) {
       }
       footer={
         <div className="grid grid-cols-12 gap-4 w-full mt-5">
-            <div className="col-span-4">
-                <Button
-                    variant="outline"
-                    className="w-full text-base"
-                    size="lg"
-                    onClick={onClose}
-                    disabled={isLoading}
-                >
-                    {tCommon("cancel")}
-                </Button>
-            </div>
-            <div className="col-span-8">
-                <Button
-                    className="w-full text-base"
-                    size="lg"
-                    type="submit"
-                    form="change-password-form"
-                    disabled={isLoading}
-                    loading={isLoading}
-                >
-                    {isLoading ? tCommon("saving") : tCommon("saveChanges")}
-                </Button>
-            </div>
+          <div className="col-span-4">
+            <Button
+              variant="outline"
+              className="w-full text-base"
+              size="lg"
+              onClick={onClose}
+              disabled={isLoading}
+            >
+              {tCommon("cancel")}
+            </Button>
+          </div>
+          <div className="col-span-8">
+            <Button
+              className="w-full text-base"
+              size="lg"
+              type="submit"
+              form="change-password-form"
+              disabled={isLoading}
+              loading={isLoading}
+            >
+              {isLoading ? tCommon("saving") : tCommon("saveChanges")}
+            </Button>
+          </div>
         </div>
       }
     />

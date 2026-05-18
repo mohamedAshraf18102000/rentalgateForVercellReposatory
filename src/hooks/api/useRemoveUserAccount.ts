@@ -14,7 +14,7 @@ const removeAccount = async (): Promise<RemoveAccountResponse> =>
         method: "DELETE",
     });
 
-export const useRemoveAccountMutation = () =>
+export const useRemoveUserAccount = () =>
     useMutation({
         mutationFn: removeAccount,
         onSuccess: () => {

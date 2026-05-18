@@ -23,6 +23,7 @@ import type { EditLicenseImageProps } from "../pages/(profile)/EditLicenseImage/
 import type { AccountRecoveryProps } from "../pages/auth/recovery/Recovery.types";
 import type { AccountDeactivatedProps } from "../pages/auth/AccountDeactivated/AccountDeactivated.types";
 import type { UserSuggestionProps } from "../pages/(profile)/UserSuggestion/UserSuggestion.types";
+import type { UserDeleteAccountProps } from "../pages/(profile)/UserDeleteAccount/UserDeleteAccount.types";
 import type { ApiErrorProps } from "../pages/ApiError/ApiError.types";
 
 /**
@@ -46,6 +47,7 @@ export type DialogName =
   | "AccountRecovery"
   | "AccountDeactivated"
   | "UserSuggestion"
+  | "UserDeleteAccount"
   | "ApiError";
 
 /**
@@ -83,6 +85,7 @@ export interface DialogPropsMap {
   AccountRecovery: Omit<AccountRecoveryProps, "onClose">;
   AccountDeactivated: Omit<AccountDeactivatedProps, "onClose">;
   UserSuggestion: Omit<UserSuggestionProps, "onClose">;
+  UserDeleteAccount: Omit<UserDeleteAccountProps, "onClose">;
   ApiError: Omit<ApiErrorProps, "onClose">;
 }
 
@@ -108,6 +111,7 @@ export type DialogState =
   | { name: "AccountRecovery"; props: AccountRecoveryProps }
   | { name: "AccountDeactivated"; props: AccountDeactivatedProps }
   | { name: "UserSuggestion"; props: UserSuggestionProps }
+  | { name: "UserDeleteAccount"; props: UserDeleteAccountProps }
   | { name: "ApiError"; props: ApiErrorProps }
   | null;
 

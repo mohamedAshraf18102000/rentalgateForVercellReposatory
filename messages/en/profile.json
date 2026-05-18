@@ -69,6 +69,8 @@
     "passwordDescription": "Change your account password",
     "languageTitle": "Change language",
     "languageDescription": "Switch your preferred language",
+    "deleteAccountTitle": "Delete account",
+    "deleteAccountDescription": "Deactivate your account",
     "supportTitle": "Support & suggestions",
     "supportDescription": "Reach out if you have feedback or ran into an issue"
   },
@@ -201,6 +203,32 @@
         "label": "Notes:",
         "placeholder": "Notes"
       }
+    }
+  },
+  "deleteAccountDialog": {
+    "title": "Delete account",
+    "bannerTitle": "Deactivate your account",
+    "bannerDescription": "You are about to start deactivating your account on RentalGate. After deactivation, your display name and profile will no longer be visible in the app or on the website.",
+    "importantNotesTitle": "Important things you should know",
+    "warnings": {
+      "reactivate": "You can reactivate your account within 30 days of deactivation by signing in again.",
+      "subscriptions": "If you have active paid subscriptions, they will remain active. You can manage them on the platform where you subscribed. Website subscriptions will be cancelled automatically.",
+      "searchEngines": "Some of your account information may remain available on search engines such as Google or Bing for a limited time.",
+      "editProfile": "If you only want to update your profile or contact details, you do not need to deactivate your account — you can edit them in settings.",
+      "changeEmail": "If you want to use your email or phone number with a different account, change them here first before deactivating this account.",
+      "downloadData": "If you want to download your data, you must complete the download request before deactivating your account. Download links cannot be sent to deactivated accounts."
+    },
+    "closeButton": "Close",
+    "deactivateButton": "Deactivate account",
+    "confirm": {
+      "title": "Confirm account deactivation",
+      "description": "Are you sure you want to deactivate your account? You can reactivate it within 30 days by signing in again.",
+      "confirm": "Yes, deactivate account",
+      "confirming": "Deactivating..."
+    },
+    "toast": {
+      "success": "Your account was deactivated successfully",
+      "error": "Something went wrong while deactivating your account"
     }
   },
   "changePasswordDialog": {

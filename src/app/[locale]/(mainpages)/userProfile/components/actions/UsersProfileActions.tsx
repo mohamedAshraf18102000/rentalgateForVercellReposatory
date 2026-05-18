@@ -20,6 +20,10 @@ const UserProfileActions = () => {
     openDialog("ChangePassword", {});
   };
 
+  const handleDeleteAccount = () => {
+    openDialog("UserDeleteAccount", {});
+  };
+
   return (
     <>
       <ProfileActionCard
@@ -33,6 +37,13 @@ const UserProfileActions = () => {
         title={t("languageTitle")}
         description={t("languageDescription")}
         icon="/profile/actionIcons/language.webp"
+      />
+
+      <ProfileActionCard
+        onClick={handleDeleteAccount}
+        title={t("deleteAccountTitle")}
+        description={t("deleteAccountDescription")}
+        icon="/profile/actionIcons/trash.webp"
       />
 
       {/* <ProfileActionCard
