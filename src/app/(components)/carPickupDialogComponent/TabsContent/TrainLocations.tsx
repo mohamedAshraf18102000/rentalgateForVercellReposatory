@@ -127,31 +127,29 @@ const TrainLocations = () => {
               content={
                 <div className="flex flex-col gap-2 justify-center items-center text-center text-[15px]">
                   <p className="text-StatusRed">
-                    خدمة التسليم/ الاستلام في محطات القطار غير متوفرة لهذه
-                    السيارة حالياً.
+                    {t("pickupDialog.emptyState.trainStation.unavailable")}
                   </p>
 
-                  <p>
-                    يمكنك بسهولة العثور على سيارات تدعم التسليم/ الاستلام في
-                    محطات القطار بتحديد مكان الاستلام .
-                  </p>
+                  <p>{t("pickupDialog.emptyState.trainStation.suggestion")}</p>
 
                   <p className="flex gap-0.5">
-                    <span>من</span>
+                    <span>{t("pickupDialog.emptyState.redirectFrom")}</span>
                     <span
                       className="underline font-bold underline-offset-4 cursor-pointer"
                       onClick={(event) => handleRedirectClick(event, "/")}
                     >
-                      الصفحة الرئيسية
+                      {t("pickupDialog.emptyState.homePage")}
                     </span>
-                    <span className="px-0.5">أو</span>
+                    <span className="px-0.5">
+                      {t("pickupDialog.emptyState.redirectOr")}
+                    </span>
                     <span
                       className="underline font-bold underline-offset-4 cursor-pointer"
                       onClick={(event) =>
                         handleRedirectClick(event, "/bookings")
                       }
                     >
-                      التصفية
+                      {t("pickupDialog.emptyState.filtering")}
                     </span>
                   </p>
                 </div>

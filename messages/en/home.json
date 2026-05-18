@@ -44,7 +44,8 @@
     "loginPromptSuffix": "first to choose from your saved addresses.",
     "popularLocations": {
       "airports": "Most popular airports:",
-      "trainStations": "Most popular train stations:"
+      "trainStations": "Most popular train stations:",
+      "airportsCarOnlyNotice": "These airports are available for booking with this car only and do not apply to other cars."
     },
     "tabs": {
       "currentLocation": "Your location",
@@ -53,6 +54,28 @@
       "branches": "Branches",
       "airportUnavailable": "This car cannot be picked up from or delivered to an airport.",
       "trainStationUnavailable": "This car cannot be picked up from or delivered to a train station."
+    },
+    "emptyState": {
+      "redirectFrom": "From",
+      "homePage": "Home page",
+      "redirectOr": "or",
+      "filtering": "Filtering",
+      "airport": {
+        "unavailable": "Airport pickup/drop-off is not currently available for this car.",
+        "suggestion": "You can easily find cars that support airport pickup/drop-off by selecting a pickup location."
+      },
+      "trainStation": {
+        "unavailable": "Train station pickup/drop-off is not currently available for this car.",
+        "suggestion": "You can easily find cars that support train station pickup/drop-off by selecting a pickup location."
+      },
+      "branches": {
+        "unavailable": "Branch pickup is not currently available for this car.",
+        "suggestion": "Try picking up from your current location, or search for a car that supports branch pickup."
+      },
+      "delivery": {
+        "unavailable": "Delivery service is not currently available for this car.",
+        "suggestion": "You can easily find cars that support delivery by selecting a pickup location."
+      }
     }
   },
   "referral": {
@@ -84,7 +107,9 @@
       "returnDatePlaceholder": "Select return date",
       "sortPriceInactive": "Sort by price",
       "sortPriceAscending": "Sort by price: lowest first",
-      "sortPriceDescending": "Sort by price: highest first"
+      "sortPriceDescending": "Sort by price: highest first",
+      "restrictedAirportLocation": "Your current address is an airport. Please choose from the available airports.",
+      "restrictedTrainStationLocation": "Your current address is a train station. Please choose from the available train stations."
     },
     "filterDrawer": {
       "filter": "Filter",

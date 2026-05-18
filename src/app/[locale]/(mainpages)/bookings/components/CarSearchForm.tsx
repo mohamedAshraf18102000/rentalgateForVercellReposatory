@@ -86,9 +86,9 @@ const CarSearchForm = ({
     filters.pickupType !== "airport" &&
     filters.pickupType !== "trainStation";
   const restrictedLocationMessage = isAirportLocation
-    ? "عنوانك الحالي هو مطار يرجي اختيار من المطارات المتاحة"
+    ? t("bookings.searchForm.restrictedAirportLocation")
     : isTrainStationLocation
-      ? "عنوانك الحالي هو محطة قطار يرجي اختيار من محطات القطار المتاحة"
+      ? t("bookings.searchForm.restrictedTrainStationLocation")
       : null;
 
   useEffect(() => {
@@ -187,7 +187,7 @@ const CarSearchForm = ({
 
                     {shouldShowRestrictedLocationMessage &&
                       restrictedLocationMessage && (
-                        <span className="block md:hidden mt-2 text-xs text-StatusRed">
+                        <span className="block md:hidden mt-2 text-xs text-StatusRed ">
                           {restrictedLocationMessage}
                         </span>
                       )}

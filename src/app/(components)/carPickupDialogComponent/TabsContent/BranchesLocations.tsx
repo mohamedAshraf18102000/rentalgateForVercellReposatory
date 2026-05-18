@@ -5,8 +5,10 @@ import { useBookedCarDetailsStore } from "@/lib/stores/useBookedCarDetailsStore"
 import EmptyLocationContent from "./EmptyLocationContent/EmptyLocationContent";
 import { usePickupRedirect } from "./usePickupRedirect";
 import { normalizeImageUrl } from "@/util";
+import { useTranslations } from "next-intl";
 
 const BranchesLocations = () => {
+  const t = useTranslations("home");
   const { carDetails } = useBookedCarDetailsStore();
   const { handleRedirectClick } = usePickupRedirect();
 
@@ -17,26 +19,25 @@ const BranchesLocations = () => {
           content={
             <div className="flex flex-col gap-2 justify-center items-center text-center text-[15px]">
               <p className="text-StatusRed">
-                الاستلام من الفرع غير متاح لهذه السيارة حالياً.
+                {t("pickupDialog.emptyState.branches.unavailable")}
               </p>
-              <p>
-                جرّب اختيار الاستلام من موقعك الحالي، أو ابحث عن سيارة تدعم
-                الاستلام من الفرع.
-              </p>
+              <p>{t("pickupDialog.emptyState.branches.suggestion")}</p>
               <p className="flex gap-0.5">
-                <span>من</span>
+                <span>{t("pickupDialog.emptyState.redirectFrom")}</span>
                 <span
                   className="underline font-bold underline-offset-4 cursor-pointer"
                   onClick={(event) => handleRedirectClick(event, "/")}
                 >
-                  الصفحة الرئيسية
+                  {t("pickupDialog.emptyState.homePage")}
                 </span>
-                <span className="px-0.5">أو</span>
+                <span className="px-0.5">
+                  {t("pickupDialog.emptyState.redirectOr")}
+                </span>
                 <span
                   className="underline font-bold underline-offset-4 cursor-pointer"
                   onClick={(event) => handleRedirectClick(event, "/bookings")}
                 >
-                  التصفية
+                  {t("pickupDialog.emptyState.filtering")}
                 </span>
               </p>
             </div>
