@@ -14,10 +14,6 @@ const ProfileBreadCrump = () => {
           href: "/",
         },
         {
-          label: t("bookings.breadcrumb.currentPage"),
-          href: "/bookings",
-        },
-        {
           isCurrentPage: true,
           label: t("userProfile.breadcrumb.currentPage"),
           href: "/userProfile",
