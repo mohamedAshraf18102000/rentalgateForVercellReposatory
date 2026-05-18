@@ -27,6 +27,8 @@ export interface CreateReservationParams {
     phone: string;
     nationalId: string;
     licenseImage: string;
+    identityExpiryDate?: string;
+    licenseExpirationDate?: string;
   };
 }
 

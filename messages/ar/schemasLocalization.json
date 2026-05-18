@@ -39,6 +39,8 @@
     "otherPersonPhoneRequired": "يجب إدخال رقم الجوال",
     "otherPersonPhoneInvalid": "رقم الجوال غير صالح",
     "otherPersonLicenseImageRequired": "يجب إرفاق صورة الرخصة",
-    "otherPersonalIdRequired": "يجب إدخال رقم الهوية"
+    "otherPersonalIdRequired": "يجب إدخال رقم الهوية",
+    "identityExpiryDateRequired": "يجب تحديد تاريخ انتهاء الهوية",
+    "licenceExpiryDateRequired": "يجب تحديد تاريخ انتهاء الرخصة"
   }
 }

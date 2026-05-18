@@ -152,7 +152,6 @@ const StepTwo = ({ control, errors, setValue }: StepTwoProps) => {
               render={({ field }) => (
                 <Input
                   required
-                  type="number"
                   {...field}
                   label={t("reservation.stepTwo.passportNumberLabel")}
                   startIcon={<IdCard className="size-4" />}

@@ -48,6 +48,8 @@ export interface ReservationFormData {
     phone: string;
     nationalId: string;
     licenseImage: string;
+    identityExpiryDate: string;
+    licenseExpirationDate: string;
   };
 
   // Step 3
@@ -114,6 +116,8 @@ const createInitialFormData = (): ReservationFormData => ({
     phone: "",
     nationalId: "",
     licenseImage: "",
+    identityExpiryDate: "",
+    licenseExpirationDate: "",
   },
   plan: null,
   services: [],

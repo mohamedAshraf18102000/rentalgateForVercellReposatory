@@ -116,6 +116,19 @@
     }
   },
   "walletPage": {
+    "walletTitle": "Wallet",
+    "balancePrefix": "You have",
+    "userAvatarAlt": "User avatar",
+    "defaultTransactionDescription": "Wallet transaction",
+    "remainingBalance": "Remaining balance:",
+    "balanceAfterTransaction": "Balance after transaction",
+    "amountLabel": "Amount",
+    "reservationNumber": "Reservation no.: {reservationId}",
+    "offersTabs": {
+      "all": "All",
+      "earned": "Earned",
+      "used": "Used"
+    },
     "transactionsLoadError": "An error occurred while loading transactions.",
     "emptyTransactionsTitle": "No transactions to display",
     "emptyTransactionsDescription": "No transactions to display",

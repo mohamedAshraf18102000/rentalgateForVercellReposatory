@@ -18,6 +18,7 @@ import { InputFileUpload } from "@/app/(components)/ui/inputFileUpload";
 import { ReservationFormValues } from "@/lib/validations/reservationSchema";
 import CountryPhone from "@/app/(components)/template/phone/CountryPhone";
 import { DateTimePicker } from "@/app/(components)/ui/dateTime-picker";
+import WarningMessage from "@/app/(components)/WarningMessage";
 
 interface StepTwoProps {
   control: Control<ReservationFormValues>;
@@ -51,10 +52,15 @@ const StepTwo = ({ control, errors, setValue }: StepTwoProps) => {
                 label={t("reservation.forOtherStepTwo.nameLabel")}
                 startIcon={<User className="size-4" />}
                 placeholder={t("reservation.forOtherStepTwo.namePlaceholder")}
-                errorMessage={errors.OtherPersonName?.message}
               />
             )}
           />
+          {errors.OtherPersonName?.message && (
+            <WarningMessage
+              errorClassName="text-sm!"
+              message={String(errors.OtherPersonName?.message)}
+            />
+          )}
         </div>
 
         <div className="col-span-1">
@@ -77,9 +83,10 @@ const StepTwo = ({ control, errors, setValue }: StepTwoProps) => {
                   withoutValidations={true}
                 />
                 {errors.OtherPersonPhoneNumber && (
-                  <p className="text-StatusRedBG! text-sm">
-                    {String(errors.OtherPersonPhoneNumber?.message)}
-                  </p>
+                  <WarningMessage
+                    errorClassName="text-sm!"
+                    message={String(errors.OtherPersonPhoneNumber?.message)}
+                  />
                 )}
               </div>
             )}
@@ -92,7 +99,6 @@ const StepTwo = ({ control, errors, setValue }: StepTwoProps) => {
             control={control}
             render={({ field }) => (
               <Input
-                type="number"
                 {...field}
                 value={field.value ?? ""}
                 label={t("reservation.forOtherStepTwo.personalIdLabel")}
@@ -100,10 +106,15 @@ const StepTwo = ({ control, errors, setValue }: StepTwoProps) => {
                 placeholder={t(
                   "reservation.forOtherStepTwo.personalIdPlaceholder",
                 )}
-                errorMessage={errors.OtherPersonalId?.message}
               />
             )}
           />
+          {errors.OtherPersonalId?.message && (
+            <WarningMessage
+              errorClassName="text-sm!"
+              message={String(errors.OtherPersonalId?.message)}
+            />
+          )}
         </div>
 
         <div>
@@ -120,9 +131,10 @@ const StepTwo = ({ control, errors, setValue }: StepTwoProps) => {
             )}
           />
           {errors.identityExpiryDate?.message && (
-            <p className="text-red-500 text-sm">
-              {String(errors.identityExpiryDate?.message)}
-            </p>
+            <WarningMessage
+              errorClassName="text-sm!"
+              message={String(errors.identityExpiryDate?.message)}
+            />
           )}
         </div>
       </div>
@@ -170,21 +182,25 @@ const StepTwo = ({ control, errors, setValue }: StepTwoProps) => {
               </p>
             )}
             {uploadError && (
-              <p className="mt-2 text-StatusRedBG! text-sm">
-                {(uploadError as Error).message ||
-                  t("reservation.forOtherStepTwo.uploadImageError")}
-              </p>
+              <WarningMessage
+                errorClassName="text-sm!"
+                message={
+                  (uploadError as Error).message ||
+                  t("reservation.forOtherStepTwo.uploadImageError")
+                }
+              />
             )}
             {errors.OtherPersonLicenseImage?.message && (
-              <p className="text-StatusRedBG! text-sm">
-                {String(errors.OtherPersonLicenseImage?.message)}
-              </p>
+              <WarningMessage
+                errorClassName="text-sm!"
+                message={String(errors.OtherPersonLicenseImage?.message)}
+              />
             )}
           </div>
 
           <div>
             <Controller
-              name="licenceExpiryDate"
+              name="licenseExpirationDate"
               control={control}
               render={({ field }) => (
                 <DateTimePicker
@@ -197,10 +213,11 @@ const StepTwo = ({ control, errors, setValue }: StepTwoProps) => {
                 />
               )}
             />
-            {errors.licenceExpiryDate?.message && (
-              <p className="text-red-500 text-sm">
-                {String(errors.licenceExpiryDate?.message)}
-              </p>
+            {errors.licenseExpirationDate?.message && (
+              <WarningMessage
+                errorClassName="text-sm!"
+                message={String(errors.licenseExpirationDate?.message)}
+              />
             )}
           </div>
         </div>

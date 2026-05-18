@@ -1,4 +1,7 @@
-import { formatLocalDateTime } from "@/lib/utils/formatLocalDateTime";
+import {
+  formatDateAsLocalDayTime,
+  formatLocalDateTime,
+} from "@/lib/utils/formatLocalDateTime";
 
 export const buildReservationPayload = (formData: any) => {
   const reservationForOther = formData.reservationForOther;
@@ -79,6 +82,12 @@ export const buildReservationPayload = (formData: any) => {
         phone: reservationForOther?.phone ?? "",
         nationalId: reservationForOther?.nationalId ?? "",
         licenseImage: reservationForOther?.licenseImage ?? "",
+        identityExpiryDate: formatDateAsLocalDayTime(
+          reservationForOther?.identityExpiryDate,
+        ),
+        licenseExpirationDate: formatDateAsLocalDayTime(
+          reservationForOther?.licenseExpirationDate,
+        ),
       }
       : null,
   };

@@ -116,6 +116,19 @@
     }
   },
   "walletPage": {
+    "walletTitle": "المحفظة",
+    "balancePrefix": "لديك",
+    "userAvatarAlt": "صورة المستخدم",
+    "defaultTransactionDescription": "معاملة محفظة",
+    "remainingBalance": "الرصيد المتبقي:",
+    "balanceAfterTransaction": "الرصيد بعد العملية",
+    "amountLabel": "القيمة",
+    "reservationNumber": "رقم الحجز: {reservationId}",
+    "offersTabs": {
+      "all": "الكل",
+      "earned": "المكتسبة",
+      "used": "المستخدمة"
+    },
     "transactionsLoadError": "حدث خطأ أثناء تحميل العمليات.",
     "emptyTransactionsTitle": "لا يوجد عمليات لعرضها",
     "emptyTransactionsDescription": "لا يوجد عمليات لعرضها",

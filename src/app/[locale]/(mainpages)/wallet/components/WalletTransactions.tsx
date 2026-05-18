@@ -5,10 +5,11 @@ import VoucherCard from "./VoucherCard";
 import { useWalletTransactions } from "@/hooks/api/useWalletTransactions";
 import { Skeleton } from "@/app/(components)/ui/skeleton";
 import EmptyState from "@/app/(components)/EmptyState";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 
 const WalletTransactions = () => {
   const t = useTranslations("profile.walletPage");
+  const locale = useLocale();
   const { data: response, isLoading, isError } = useWalletTransactions();
   const transactions: Transaction[] = response?.content || [];
 
@@ -48,7 +49,7 @@ const WalletTransactions = () => {
   const groupedTransactions = transactions.reduce(
     (acc, current) => {
       const date = new Date(current.createdAt);
-      const dateString = new Intl.DateTimeFormat("ar-EG", {
+      const dateString = new Intl.DateTimeFormat(locale, {
         day: "numeric",
         month: "long",
         year: "numeric",

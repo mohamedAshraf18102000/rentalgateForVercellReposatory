@@ -6,6 +6,8 @@ export type ForOtherStepTwoSchemaMessages = {
   otherPersonPhoneInvalid: string;
   otherPersonLicenseImageRequired: string;
   otherPersonalIdRequired: string;
+  identityExpiryDateRequired: string;
+  licenceExpiryDateRequired: string;
 };
 
 export const createForOtherStepTwoSchema = (
@@ -22,6 +24,16 @@ export const createForOtherStepTwoSchema = (
       .string()
       .min(1, messages.otherPersonLicenseImageRequired),
     OtherPersonalId: z.string().min(1, messages.otherPersonalIdRequired),
+    identityExpiryDate: z
+      .any()
+      .refine((val) => val instanceof Date && !isNaN(val.getTime()), {
+        message: messages.identityExpiryDateRequired,
+      }),
+    licenseExpirationDate: z
+      .any()
+      .refine((val) => val instanceof Date && !isNaN(val.getTime()), {
+        message: messages.licenceExpiryDateRequired,
+      }),
   });
 
 export type ForOtherStepTwoFormValues = z.infer<

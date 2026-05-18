@@ -81,11 +81,8 @@ export const createReservationSchema = (messages: ReservationSchemaMessages) =>
           message: messages.identityExpiryDateRequired,
         }),
       licenseImage: z.string().min(1, messages.licenseImageRequired),
-      licenceExpiryDate: z
-        .any()
-        .refine((val) => val instanceof Date && !isNaN(val.getTime()), {
-          message: messages.licenceExpiryDateRequired,
-        }),
+      licenceExpiryDate: z.any().optional(),
+      licenseExpirationDate: z.any().optional(),
 
       // Step 3 - Additional Services (Can be optional/required)
       services: z.array(z.number()).optional(),
@@ -171,6 +168,37 @@ export const createReservationSchema = (messages: ReservationSchemaMessages) =>
             path: ["OtherPersonalId"],
           });
         }
+
+        if (
+          !(data.identityExpiryDate instanceof Date) ||
+          isNaN(data.identityExpiryDate.getTime())
+        ) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: messages.identityExpiryDateRequired,
+            path: ["identityExpiryDate"],
+          });
+        }
+
+        if (
+          !(data.licenseExpirationDate instanceof Date) ||
+          isNaN(data.licenseExpirationDate.getTime())
+        ) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: messages.licenceExpiryDateRequired,
+            path: ["licenseExpirationDate"],
+          });
+        }
+      } else if (
+        !(data.licenceExpiryDate instanceof Date) ||
+        isNaN(data.licenceExpiryDate.getTime())
+      ) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: messages.licenceExpiryDateRequired,
+          path: ["licenceExpiryDate"],
+        });
       }
 
       // 0: Citizen, 1: Resident, 2: Visitor, 3: Gulf Citizen

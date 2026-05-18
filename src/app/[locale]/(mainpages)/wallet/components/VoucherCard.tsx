@@ -1,6 +1,6 @@
 import { SaudiRiyalIcon } from "lucide-react";
 import { Transaction } from "@/types/wallet/wallet";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { getWalletTransactionTypeLabel } from "@/lib/wallet/transactionTypeLabel";
 
 type Props = {
@@ -9,16 +9,19 @@ type Props = {
 
 const VoucherCard = ({ transaction }: Props) => {
   const t = useTranslations("profile.walletPage");
+  const locale = useLocale();
   const isPositive = transaction.amount >= 0;
 
-  // Format the date/time string, e.g., 10:30 AM
   const formattedTime = new Date(transaction.createdAt).toLocaleTimeString(
-    "ar-EG",
+    locale,
     {
       hour: "2-digit",
       minute: "2-digit",
     },
   );
+
+  const description =
+    transaction.description || t("defaultTransactionDescription");
 
   return (
     <div className="border-2 w-full bg-white flex items-end gap-5 rounded-2xl relative overflow-hidden">
@@ -42,14 +45,11 @@ const VoucherCard = ({ transaction }: Props) => {
             <SaudiRiyalIcon className="w-3 h-3 mr-1" />
           </p>
         </div>
-        <p
-          className="text-base! font-bold truncate mt-2"
-          title={transaction.description || "معاملة محفظة"}
-        >
-          {transaction.description || "معاملة محفظة"}
+        <p className="text-base! font-bold truncate mt-2" title={description}>
+          {description}
         </p>
         <div className="flex items-center mt-3">
-          <span className="text-Grey600">الرصيد المتبقي:</span>
+          <span className="text-Grey600">{t("remainingBalance")}</span>
           <span className="font-bold mx-2">
             {transaction.balanceAfter.toFixed(2)}
           </span>

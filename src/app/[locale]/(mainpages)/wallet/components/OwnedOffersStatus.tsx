@@ -1,6 +1,7 @@
 "use client";
 
 import { Tabs, TabsList, TabsTrigger } from "@/ui";
+import { useTranslations } from "next-intl";
 
 interface PeriodSearchProps {
   value: "all" | "current" | "past";
@@ -11,6 +12,8 @@ export const OwnedOffersStatus: React.FC<PeriodSearchProps> = ({
   value,
   onValueChange,
 }) => {
+  const t = useTranslations("profile.walletPage.offersTabs");
+
   return (
     <>
       <Tabs
@@ -22,7 +25,7 @@ export const OwnedOffersStatus: React.FC<PeriodSearchProps> = ({
       >
         <TabsList className="bg-Grey100 p-2">
           <TabsTrigger value="all" className="login-tab-trigger">
-            <span className="login-tab-text text-base">الكل</span>
+            <span className="login-tab-text text-base">{t("all")}</span>
           </TabsTrigger>
           {/* <TabsTrigger value="gift" className="login-tab-trigger">
             <span className="login-tab-text text-base">المكتسبة</span>

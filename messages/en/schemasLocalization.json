@@ -39,6 +39,8 @@
     "otherPersonPhoneRequired": "Mobile number is required",
     "otherPersonPhoneInvalid": "Invalid mobile number",
     "otherPersonLicenseImageRequired": "Driver's license image is required",
-    "otherPersonalIdRequired": "ID number is required"
+    "otherPersonalIdRequired": "ID number is required",
+    "identityExpiryDateRequired": "Identity expiry date is required",
+    "licenceExpiryDateRequired": "License expiry date is required"
   }
 }

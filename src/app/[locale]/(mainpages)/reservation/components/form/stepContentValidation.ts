@@ -3,7 +3,10 @@ import { completeUserProfile } from "@/services/userProfile/completeUserProfile.
 import { ReservationFormValues } from "@/lib/validations/reservationSchema";
 import { ReservationFormData } from "@/lib/stores/useBookedCarDetailsStore";
 import { getRentalDays } from "./stepContentFormValues";
-import { formatDateAsLocalDay } from "@/lib/utils/formatLocalDateTime";
+import {
+  formatDateAsLocalDay,
+  formatDateAsLocalDayTime,
+} from "@/lib/utils/formatLocalDateTime";
 
 
 interface ValidateStepParams {
@@ -41,6 +44,8 @@ const STEP_TWO_OTHER_FIELDS: (keyof ReservationFormValues)[] = [
   "OtherPersonPhoneNumber",
   "OtherPersonLicenseImage",
   "OtherPersonalId",
+  "identityExpiryDate",
+  "licenseExpirationDate",
 ];
 
 const STEP_TWO_SELF_FIELDS: (keyof ReservationFormValues)[] = [
@@ -124,6 +129,12 @@ export const validateCurrentStep = async ({
           phone: values.OtherPersonPhoneNumber || "",
           nationalId: values.OtherPersonalId || "",
           licenseImage: values.OtherPersonLicenseImage || "",
+          identityExpiryDate: formatDateAsLocalDayTime(
+            values.identityExpiryDate as Date | string | undefined,
+          ),
+          licenseExpirationDate: formatDateAsLocalDayTime(
+            values.licenseExpirationDate as Date | string | undefined,
+          ),
         },
       });
       return true;

@@ -2,7 +2,10 @@ import { ReservationFormData } from "@/lib/stores/useBookedCarDetailsStore";
 import { BookingFilters } from "@/lib/stores/useUserPreferedFiltersStore";
 import { ReservationFormValues } from "@/lib/validations/reservationSchema";
 import { isCurrentLocationPlaceholder } from "@/lib/validations/currentLocationLabels";
-import { formatLocalDateTime } from "@/lib/utils/formatLocalDateTime";
+import {
+  formatLocalDateTime,
+  parseLocalDay,
+} from "@/lib/utils/formatLocalDateTime";
 
 const normalizeLocationValue = (value?: string | null) =>
   value && !isCurrentLocationPlaceholder(value) ? value : "";
@@ -71,12 +74,15 @@ export const buildInitialReservationValues = ({
     isForOtherReservation,
     idNumber: formData.idNumber || "0",
     nationality: formData.nationality || "",
-    identityExpiryDate: formData.identityExpiryDate
-      ? new Date(formData.identityExpiryDate)
-      : undefined,
+    identityExpiryDate: isForOtherReservation
+      ? parseLocalDay(formData.reservationForOther.identityExpiryDate)
+      : parseLocalDay(formData.identityExpiryDate),
     licenseImage: formData.licenseImage || "",
-    licenceExpiryDate: formData.licenceExpiryDate
-      ? new Date(formData.licenceExpiryDate)
+    licenceExpiryDate: isForOtherReservation
+      ? undefined
+      : parseLocalDay(formData.licenceExpiryDate),
+    licenseExpirationDate: isForOtherReservation
+      ? parseLocalDay(formData.reservationForOther.licenseExpirationDate)
       : undefined,
     personalId: formData.personalId || "",
     passportNumber: formData.passportNumber || "",
@@ -108,6 +114,7 @@ export const buildResetReservationValues = (): ReservationFormValues => ({
   identityExpiryDate: undefined,
   licenseImage: "",
   licenceExpiryDate: undefined,
+  licenseExpirationDate: undefined,
   personalId: "",
   passportNumber: "",
   borderNumber: "",

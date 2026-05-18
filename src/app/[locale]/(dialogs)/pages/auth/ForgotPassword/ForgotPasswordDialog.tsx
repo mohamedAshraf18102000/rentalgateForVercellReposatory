@@ -23,6 +23,7 @@ export function ForgotPasswordDialog({
   mobile: initialMobile,
   channel: initialChannel,
   isAccountActivation = false,
+  isAccountRecovery = false,
   initialStep = "request",
 }: ForgotPasswordProps) {
   const [step, setStep] = React.useState<Step>(initialStep || "request");
@@ -39,6 +40,7 @@ export function ForgotPasswordDialog({
   const [resendTimer, setResendTimer] = React.useState(0);
   const tValidation = useTranslations("validation.AUTH_ERRORS");
   const t = useTranslations("auth.forgotPassword");
+  const tRecovery = useTranslations("auth.accountRecovery");
   const { openDialog } = useDialog();
 
   // Timer for resend OTP
@@ -355,6 +357,16 @@ export function ForgotPasswordDialog({
   };
 
   const getHeaderTitle = () => {
+    if (isAccountRecovery) {
+      switch (step) {
+        case "request":
+          return tRecovery("title.request");
+        case "verify":
+          return tRecovery("title.verify");
+        default:
+          return tRecovery("title.request");
+      }
+    }
     if (isAccountActivation) {
       switch (step) {
         case "request":
@@ -387,6 +399,16 @@ export function ForgotPasswordDialog({
   };
 
   const getHeaderDescription = () => {
+    if (isAccountRecovery) {
+      switch (step) {
+        case "request":
+          return tRecovery("description.request");
+        case "verify":
+          return tRecovery("description.verify");
+        default:
+          return "";
+      }
+    }
     if (isAccountActivation) {
       switch (step) {
         case "request":

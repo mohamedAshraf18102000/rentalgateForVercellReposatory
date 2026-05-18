@@ -72,7 +72,7 @@ export default async function Header() {
               <LanguageSwitcher />
             </div>
 
-            {/* <ClearData /> */}
+            <ClearData />
 
             {/* Right Section */}
             <div className={NAVBAR_STYLES.rightSection}>

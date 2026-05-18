@@ -2,7 +2,7 @@
 
 import { Transaction } from "@/types/wallet/wallet";
 import { SaudiRiyalIcon } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { getWalletTransactionTypeLabel } from "@/lib/wallet/transactionTypeLabel";
 
 type Props = {
@@ -11,14 +11,18 @@ type Props = {
 
 const TransactionCard = ({ transaction }: Props) => {
   const t = useTranslations("profile.walletPage");
-  // Try to parse the date, or just show it if not parsing correctly
+  const locale = useLocale();
+
   const formattedTime = new Date(transaction.createdAt).toLocaleTimeString(
-    "ar-EG",
+    locale,
     {
       hour: "2-digit",
       minute: "2-digit",
     },
   );
+
+  const description =
+    transaction.description || t("defaultTransactionDescription");
 
   return (
     <div className="border-2 w-full bg-white p-4 flex flex-col gap-3 rounded-2xl relative overflow-hidden">
@@ -31,18 +35,20 @@ const TransactionCard = ({ transaction }: Props) => {
 
       <div>
         <p className="text-base font-bold">
-          {transaction.description || "معاملة محفظة"}
+          {description}
         </p>
         {transaction.reservationId && (
           <p className="text-sm text-Grey600 mt-1">
-            رقم الحجز: {transaction.reservationId}
+            {t("reservationNumber", {
+              reservationId: transaction.reservationId,
+            })}
           </p>
         )}
       </div>
 
       <div className="flex justify-between items-end mt-2 pt-2">
         <div className="flex flex-col">
-          <p className="text-sm text-Grey600">الرصيد بعد العملية</p>
+          <p className="text-sm text-Grey600">{t("balanceAfterTransaction")}</p>
           <div className="flex items-center gap-1 font-bold mt-1">
             <span>{transaction.balanceAfter.toFixed(2)}</span>
             <SaudiRiyalIcon className="w-4 h-4" />
@@ -50,7 +56,7 @@ const TransactionCard = ({ transaction }: Props) => {
         </div>
 
         <div className="flex flex-col items-end">
-          <p className="text-sm text-Grey600">القيمة</p>
+          <p className="text-sm text-Grey600">{t("amountLabel")}</p>
           <div
             className={`flex items-center gap-1 font-extrabold text-lg mt-1 ${
               transaction.amount >= 0 ? "text-StatusDarkGreen" : "text-red-500"
