@@ -1,52 +1,19 @@
 import createMiddleware from "next-intl/middleware";
-import { routing } from "./i18n/routing";
 import { NextRequest, NextResponse } from "next/server";
-
-// Define protected routes that require authentication
-const PROTECTED_ROUTES = [
-  "/profile",
-  "/userProfile",
-  "/booking",
-  "/myBookings",
-  "/wallet",
-  "/reservation",
-  // Add more protected routes here as needed
-];
-
-// Helper function to check if a path is protected
-function isProtectedRoute(pathname: string): boolean {
-  // Remove locale prefix (e.g., /ar/profile -> /profile, /en/profile -> /profile)
-  // Handle both /locale/route and /route patterns
-  const pathWithoutLocale = pathname.replace(/^\/(ar|en)(\/|$)/, "/") || "/";
-
-  return PROTECTED_ROUTES.some((route) => {
-    // Exact match or starts with the protected route
-    const normalizedPath = pathWithoutLocale === "/" ? "/" : pathWithoutLocale;
-    return normalizedPath === route || normalizedPath.startsWith(route + "/");
-  });
-}
-
-// Helper function to check if user is authenticated
-function isAuthenticated(request: NextRequest): boolean {
-  const authToken = request.cookies.get("authToken");
-  return !!authToken?.value;
-}
-
-// Helper function to get locale from pathname
-function getLocaleFromPath(pathname: string): string {
-  const segments = pathname.split("/").filter(Boolean);
-  const firstSegment = segments[0];
-  return routing.locales.includes(firstSegment as any)
-    ? firstSegment
-    : routing.defaultLocale;
-}
+import { routing } from "./i18n/routing";
+import { isAuthenticatedOnServer } from "./util/auth-server";
+import {
+  ensureLocalizedPathname,
+  getPreferredLocale,
+  hasLocalePrefix,
+} from "./util/locale-path";
+import { isProtectedPath } from "./util/protected-routes";
 
 const intlMiddleware = createMiddleware(routing);
 
-export default function middleware(request: NextRequest) {
-  const { pathname } = request.nextUrl;
+export default function proxy(request: NextRequest) {
+  const { pathname, search } = request.nextUrl;
 
-  // Skip middleware for API routes, static files, and Next.js internals
   if (
     pathname.startsWith("/api") ||
     pathname.startsWith("/_next") ||
@@ -57,51 +24,46 @@ export default function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // Check if route is protected
-  if (isProtectedRoute(pathname)) {
-    // Check if user is authenticated
-    if (!isAuthenticated(request)) {
-      // Check if requireAuth query parameter already exists (to avoid infinite redirect)
-      const url = request.nextUrl.clone();
-      const hasRequireAuth = url.searchParams.has("requireAuth");
+  // Force locale prefix before Next matches [locale] with a route segment (404).
+  if (!hasLocalePrefix(pathname)) {
+    const locale = getPreferredLocale(request);
+    const localizedPath = ensureLocalizedPathname(pathname, locale);
+    const redirectUrl = new URL(`${localizedPath}${search}`, request.url);
+    return NextResponse.redirect(redirectUrl);
+  }
 
-      if (!hasRequireAuth) {
-        // Redirect to home page with requireAuth query parameter
-        // This prevents the protected page from loading at all
-        const locale = getLocaleFromPath(pathname);
-        const url = new URL(`/${locale}`, request.url);
-        url.searchParams.set("requireAuth", "true");
-        url.searchParams.set("redirect", pathname);
-        return NextResponse.redirect(url);
-      }
-    } else {
-      // User is authenticated, remove requireAuth parameter if it exists
-      const url = request.nextUrl.clone();
-      if (url.searchParams.has("requireAuth")) {
-        url.searchParams.delete("requireAuth");
-        const redirectPath = url.searchParams.get("redirect");
-        url.searchParams.delete("redirect");
+  if (isProtectedPath(pathname) && !isAuthenticatedOnServer(request)) {
+    const locale = getPreferredLocale(request);
+    const redirectUrl = new URL(`/${locale}${search}`, request.url);
+    redirectUrl.searchParams.set("requireAuth", "true");
+    redirectUrl.searchParams.set(
+      "redirect",
+      ensureLocalizedPathname(pathname, locale),
+    );
+    return NextResponse.redirect(redirectUrl);
+  }
 
-        // If there's a redirect parameter, use it; otherwise use current pathname
-        const finalPath = redirectPath || pathname;
-        const finalUrl = url.searchParams.toString()
-          ? `${finalPath}?${url.searchParams.toString()}`
-          : finalPath;
-        return NextResponse.redirect(new URL(finalUrl, request.url));
-      }
+  if (isAuthenticatedOnServer(request)) {
+    const url = request.nextUrl.clone();
+    if (url.searchParams.has("requireAuth")) {
+      url.searchParams.delete("requireAuth");
+      const redirectPath = url.searchParams.get("redirect");
+      url.searchParams.delete("redirect");
+
+      const locale = getPreferredLocale(request);
+      const finalPath = redirectPath
+        ? ensureLocalizedPathname(redirectPath, locale)
+        : pathname;
+      const finalUrl = url.searchParams.toString()
+        ? `${finalPath}?${url.searchParams.toString()}`
+        : finalPath;
+      return NextResponse.redirect(new URL(finalUrl, request.url));
     }
   }
 
-  // Continue with internationalization middleware
   return intlMiddleware(request);
 }
 
 export const config = {
-  // Match only internationalized pathnames
-  matcher: [
-    // Match all pathnames except for
-    // - … if they start with `/api`, `/_next` or `/_vercel`
-    // - … the ones containing a dot (e.g. `favicon.ico`)
-    "/((?!api|_next|_vercel|.*\\..*).*)",
-  ],
+  matcher: ["/((?!api|_next|_vercel|.*\\..*).*)"],
 };

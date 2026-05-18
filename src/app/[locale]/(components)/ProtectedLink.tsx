@@ -4,9 +4,7 @@ import * as React from "react";
 import { Link, useRouter, usePathname } from "@/i18n/routing";
 import { useDialog } from "../(dialogs)";
 import { isAuthenticated, isTokenValid } from "@/util/auth";
-
-// Protected routes that require authentication
-const PROTECTED_ROUTES = ["/profile", "/booking", "/reservation"];
+import { isProtectedPath } from "@/util/protected-routes";
 
 interface ProtectedLinkProps extends React.ComponentProps<typeof Link> {
   href: string;
@@ -28,16 +26,7 @@ export function ProtectedLink({
   const pathname = usePathname();
   const { openDialog } = useDialog();
 
-  const isRouteProtected = React.useMemo(() => {
-    // Check if route is protected (href might be with or without locale)
-    // Remove locale prefix if present
-    const pathWithoutLocale = href.replace(/^\/(ar|en)(\/|$)/, "/") || "/";
-    const normalizedPath = pathWithoutLocale === "/" ? "/" : pathWithoutLocale;
-    return PROTECTED_ROUTES.some(
-      (route) =>
-        normalizedPath === route || normalizedPath.startsWith(route + "/"),
-    );
-  }, [href]);
+  const isRouteProtected = React.useMemo(() => isProtectedPath(href), [href]);
 
   const handleClick = React.useCallback(
     (e: React.MouseEvent<HTMLAnchorElement>) => {
