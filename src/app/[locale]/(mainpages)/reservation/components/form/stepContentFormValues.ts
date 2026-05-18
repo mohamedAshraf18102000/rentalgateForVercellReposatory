@@ -1,13 +1,11 @@
 import { ReservationFormData } from "@/lib/stores/useBookedCarDetailsStore";
 import { BookingFilters } from "@/lib/stores/useUserPreferedFiltersStore";
 import { ReservationFormValues } from "@/lib/validations/reservationSchema";
+import { isCurrentLocationPlaceholder } from "@/lib/validations/currentLocationLabels";
 import { formatLocalDateTime } from "@/lib/utils/formatLocalDateTime";
 
-const isCurrentLocationLabel = (value?: string | null) =>
-  value === "الموقع الحالي";
-
 const normalizeLocationValue = (value?: string | null) =>
-  value && !isCurrentLocationLabel(value) ? value : "";
+  value && !isCurrentLocationPlaceholder(value) ? value : "";
 
 export const getRentalDays = (fromDate?: Date | string, toDate?: Date | string) => {
   const normalizedFromDate = formatLocalDateTime(fromDate);

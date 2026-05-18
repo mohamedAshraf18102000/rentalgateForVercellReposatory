@@ -17,14 +17,14 @@ import {
   MapPinPlusInside,
   Trash,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import GoogleMapsLocation from "@/app/(components)/mapsLocation/GoogleMapsLocation";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import CountryPhone from "@/app/(components)/template/phone/CountryPhone";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
-  userSavedLocationSchema,
+  createUserSavedLocationSchema,
   UserSavedLocationFormValues,
 } from "@/schemas/userAddressSchema";
 import { addAddress } from "@/services/userProfile/addAddress.service";
@@ -62,6 +62,17 @@ const UpdateUserSavedLocationDialog = ({
   onSuccess,
 }: UpdateUserSavedLocationDialogProps) => {
   const t = useTranslations("profile.userSavedLocationDialog");
+  const tSchema = useTranslations("schemasLocalization.userSavedLocation");
+
+  const userSavedLocationSchema = useMemo(
+    () =>
+      createUserSavedLocationSchema({
+        addressNameRequired: tSchema("addressNameRequired"),
+        mobileRequired: tSchema("mobileRequired"),
+      }),
+    [tSchema],
+  );
+
   const [showAddForm, setShowAddForm] = useState(initialShowAddForm);
   const [isPhoneValid, setIsPhoneValid] = useState(false);
   const [hasRestrictedLocationType, setHasRestrictedLocationType] =

@@ -11,7 +11,7 @@ import {
 import { Globe, IdCard, Mail, Phone } from "lucide-react";
 import { useMutation } from "@tanstack/react-query";
 import { uploadImage } from "@/services/uploadImages/uploadImage.service";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 
 import {
   Input,
@@ -39,6 +39,7 @@ interface StepTwoProps {
 const StepTwo = ({ control, errors, setValue }: StepTwoProps) => {
   const { formData, setFormField } = useBookedCarDetailsStore();
   const t = useTranslations("carDetails");
+  const locale = useLocale();
 
   const residenceTypeStr = useWatch({ control, name: "idNumber" });
   const identityExpiryLabel =
@@ -65,12 +66,13 @@ const StepTwo = ({ control, errors, setValue }: StepTwoProps) => {
             control={control}
             render={({ field }) => (
               <div className="space-y-1.5 w-full">
-                <Label className="flex items-center gap-1.5 text-sm font-medium text-foreground">
+                <Label className="flex items-center gap-1.5 text-sm font-medium text-foreground ">
                   {t("reservation.stepTwo.residenceTypeLabel")}
                   <InputRequired />
                 </Label>
                 <div className="mt-2">
                   <Select
+                    dir={locale === "ar" ? "ltr" : "rtl"}
                     onValueChange={field.onChange}
                     defaultValue={field.value}
                   >

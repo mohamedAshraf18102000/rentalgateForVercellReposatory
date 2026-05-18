@@ -1,0 +1,44 @@
+{
+  "reservation": {
+    "pickupNameRequired": "يجب تحديد مكان الاستلام",
+    "pickupNameInvalid": "الرجاء تحديد موقع الاستلام ",
+    "carReturnLocationRequired": "يجب تحديد مكان التسليم",
+    "carReturnLocationInvalid": "الرجاء تحديد موقع التسليم ",
+    "fromDateRequired": "يجب تحديد تاريخ الاستلام",
+    "toDateRequired": "يجب تحديد تاريخ التسليم",
+    "idNumberRequired": "يجب إدخال نوع الإقامة",
+    "nationalityRequired": "يجب إدخال الجنسية",
+    "identityExpiryDateRequired": "يجب تحديد تاريخ انتهاء الهوية",
+    "licenseImageRequired": "يجب إرفاق صورة الرخصة",
+    "licenceExpiryDateRequired": "يجب تحديد تاريخ انتهاء الرخصة",
+    "minRentalDuration": "يجب أن يكون وقت التسليم بعد الاستلام بساعتين على الأقل",
+    "otherPersonNameRequired": "يجب إدخال الاسم",
+    "otherPersonPhoneRequired": "يجب إدخال رقم الجوال",
+    "otherPersonPhoneInvalid": "رقم الجوال غير صالح",
+    "otherPersonLicenseImageRequired": "يجب إرفاق صورة الرخصة",
+    "otherPersonalIdRequired": "يجب إدخال رقم الهوية",
+    "personalIdRequired": "يجب إدخال بطاقة تحقيق الشخصية",
+    "passportNumberRequired": "يجب إدخال رقم الباسبور",
+    "borderNumberRequired": "يجب إدخال رقم الحدود"
+  },
+  "businessAccount": {
+    "responsibleNameRequired": "اسم المسئول مطلوب",
+    "mobileRequired": "رقم الجوال مطلوب",
+    "mobileInvalid": "رقم الجوال غير صحيح، يجب ألا يقل عن 9 أرقام",
+    "companyNameRequired": "اسم الشركة مطلوب",
+    "employeesNumberRequired": "عدد الموظفين مطلوب",
+    "taxImageRequired": "صورة البطاقة الضريبية مطلوبة",
+    "registrationImageRequired": "صورة السجل التجاري مطلوبة"
+  },
+  "userSavedLocation": {
+    "addressNameRequired": "اسم المكان مطلوب",
+    "mobileRequired": "رقم الجوال مطلوب"
+  },
+  "forOtherStepTwo": {
+    "otherPersonNameRequired": "يجب إدخال الاسم",
+    "otherPersonPhoneRequired": "يجب إدخال رقم الجوال",
+    "otherPersonPhoneInvalid": "رقم الجوال غير صالح",
+    "otherPersonLicenseImageRequired": "يجب إرفاق صورة الرخصة",
+    "otherPersonalIdRequired": "يجب إدخال رقم الهوية"
+  }
+}

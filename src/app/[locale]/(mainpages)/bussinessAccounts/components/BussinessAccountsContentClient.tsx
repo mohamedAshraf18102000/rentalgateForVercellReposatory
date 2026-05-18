@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, FormEvent } from "react";
+import { useState, FormEvent, useMemo } from "react";
 import { Button } from "@/app/(components)";
 import { ChevronLeft } from "lucide-react";
 import Stepper from "@/app/(components)/rentalStepper/Stepper";
@@ -12,7 +12,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useCreateBusinessAccountMutation } from "@/services/bussinessAccounts/bussinissAccounts.service";
 import { CreateBusinessAccountPayload } from "@/types/bussinessAccounts/bussinessAccounts";
 import { createBusinessAccountSchema } from "@/schemas/bussinessAccountsSchema";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 
 interface BussinessAccountsContentClientProps {
   withOutStepper?: boolean;
@@ -33,13 +33,28 @@ const BussinessAccountsContentClient = ({
 }: BussinessAccountsContentClientProps) => {
   const locale = useLocale();
   const isRtl = locale === "ar";
+  const tSchema = useTranslations("schemasLocalization.businessAccount");
+
+  const businessAccountSchema = useMemo(
+    () =>
+      createBusinessAccountSchema({
+        responsibleNameRequired: tSchema("responsibleNameRequired"),
+        mobileRequired: tSchema("mobileRequired"),
+        mobileInvalid: tSchema("mobileInvalid"),
+        companyNameRequired: tSchema("companyNameRequired"),
+        employeesNumberRequired: tSchema("employeesNumberRequired"),
+        taxImageRequired: tSchema("taxImageRequired"),
+        registrationImageRequired: tSchema("registrationImageRequired"),
+      }),
+    [tSchema],
+  );
 
   const [activeStep, setActiveStep] = useState<number>(1);
   const [isSuccessDialogOpen, setIsSuccessDialogOpen] =
     useState<boolean>(false);
 
   const methods = useForm<CreateBusinessAccountPayload>({
-    resolver: zodResolver(createBusinessAccountSchema),
+    resolver: zodResolver(businessAccountSchema),
     defaultValues: {
       responsableName: "",
       responsableMobile: "",

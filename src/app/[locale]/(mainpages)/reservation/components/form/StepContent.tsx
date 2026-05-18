@@ -2,14 +2,16 @@
 import { useStepAnimation } from "../../../../../(components)/rentalStepper/hooks/useStepAnimation";
 import { useUserPreferedFiltersStore } from "@/lib/stores/useUserPreferedFiltersStore";
 import { useBookedCarDetailsStore } from "@/lib/stores/useBookedCarDetailsStore";
-import { forwardRef, useImperativeHandle } from "react";
+import { forwardRef, useImperativeHandle, useMemo } from "react";
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
-  reservationSchema,
+  createReservationSchema,
   ReservationFormValues,
+  ReservationSchemaMessages,
 } from "@/lib/validations/reservationSchema";
+import { useLocale, useTranslations } from "next-intl";
 
 import StepOne from "./StepOne";
 import StepTwo from "./StepTwo";
@@ -32,11 +34,42 @@ export type { StepContentRef } from "./StepContent.types";
 
 const StepContent = forwardRef<StepContentRef, StepContentProps>(
   ({ activeStep, isForOtherReservation = false }, ref) => {
+    const locale = useLocale();
+    const tSchema = useTranslations("schemasLocalization.reservation");
     const { displayStep, animationClass } = useStepAnimation(activeStep);
     const { filters, setFilter } = useUserPreferedFiltersStore();
     const { carDetails, formData, setFormData, _hasHydrated } =
       useBookedCarDetailsStore();
     const { setClientData } = useClientStore();
+
+    const reservationSchema = useMemo(() => {
+      const messages = {
+        pickupNameRequired: tSchema("pickupNameRequired"),
+        pickupNameInvalid: tSchema("pickupNameInvalid"),
+        carReturnLocationRequired: tSchema("carReturnLocationRequired"),
+        carReturnLocationInvalid: tSchema("carReturnLocationInvalid"),
+        fromDateRequired: tSchema("fromDateRequired"),
+        toDateRequired: tSchema("toDateRequired"),
+        idNumberRequired: tSchema("idNumberRequired"),
+        nationalityRequired: tSchema("nationalityRequired"),
+        identityExpiryDateRequired: tSchema("identityExpiryDateRequired"),
+        licenseImageRequired: tSchema("licenseImageRequired"),
+        licenceExpiryDateRequired: tSchema("licenceExpiryDateRequired"),
+        minRentalDuration: tSchema("minRentalDuration"),
+        otherPersonNameRequired: tSchema("otherPersonNameRequired"),
+        otherPersonPhoneRequired: tSchema("otherPersonPhoneRequired"),
+        otherPersonPhoneInvalid: tSchema("otherPersonPhoneInvalid"),
+        otherPersonLicenseImageRequired: tSchema(
+          "otherPersonLicenseImageRequired",
+        ),
+        otherPersonalIdRequired: tSchema("otherPersonalIdRequired"),
+        personalIdRequired: tSchema("personalIdRequired"),
+        passportNumberRequired: tSchema("passportNumberRequired"),
+        borderNumberRequired: tSchema("borderNumberRequired"),
+      } satisfies ReservationSchemaMessages;
+
+      return createReservationSchema(messages);
+    }, [tSchema, locale]);
 
     const {
       control,

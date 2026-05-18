@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { BookingFilters } from "@/lib/stores/useUserPreferedFiltersStore";
 import { ReservationFormData } from "@/lib/stores/useBookedCarDetailsStore";
 import { ReservationFormValues } from "@/lib/validations/reservationSchema";
+import { isCurrentLocationPlaceholder } from "@/lib/validations/currentLocationLabels";
 import { formatLocalDateTime } from "@/lib/utils/formatLocalDateTime";
 import {
   buildInitialReservationValues,
@@ -257,14 +258,14 @@ export const useSyncFormToStores = ({
         setFilter("carReturnAirportId", value.returnAirportId as number);
       }
 
-      if (value.pickupName && value.pickupName !== "الموقع الحالي") {
+      if (value.pickupName && !isCurrentLocationPlaceholder(value.pickupName)) {
         if (filters.pickupName !== value.pickupName) {
           setFilter("pickupName", value.pickupName);
         }
       }
       if (
         value.carReturnLocation &&
-        value.carReturnLocation !== "الموقع الحالي"
+        !isCurrentLocationPlaceholder(value.carReturnLocation)
       ) {
         if (filters.carReturnLocation !== value.carReturnLocation) {
           setFilter("carReturnLocation", value.carReturnLocation);

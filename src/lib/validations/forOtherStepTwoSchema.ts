@@ -1,15 +1,29 @@
 import { z } from "zod";
 
-export const forOtherStepTwoSchema = z
-  .object({
-    OtherPersonName: z.string().trim().min(1, "يجب إدخال الاسم"),
+export type ForOtherStepTwoSchemaMessages = {
+  otherPersonNameRequired: string;
+  otherPersonPhoneRequired: string;
+  otherPersonPhoneInvalid: string;
+  otherPersonLicenseImageRequired: string;
+  otherPersonalIdRequired: string;
+};
+
+export const createForOtherStepTwoSchema = (
+  messages: ForOtherStepTwoSchemaMessages,
+) =>
+  z.object({
+    OtherPersonName: z.string().trim().min(1, messages.otherPersonNameRequired),
     OtherPersonPhoneNumber: z
       .string()
       .trim()
-      .min(1, "يجب إدخال رقم الجوال")
-      .regex(/^\+?[0-9]{8,15}$/, "رقم الجوال غير صالح"),
-    OtherPersonLicenseImage: z.string().min(1, "يجب إرفاق صورة الرخصة"),
-    OtherPersonalId: z.string().min(1, "يجب إدخال رقم الهوية"),
-  })
+      .min(1, messages.otherPersonPhoneRequired)
+      .regex(/^\+?[0-9]{8,15}$/, messages.otherPersonPhoneInvalid),
+    OtherPersonLicenseImage: z
+      .string()
+      .min(1, messages.otherPersonLicenseImageRequired),
+    OtherPersonalId: z.string().min(1, messages.otherPersonalIdRequired),
+  });
 
-export type ForOtherStepTwoFormValues = z.infer<typeof forOtherStepTwoSchema>;
+export type ForOtherStepTwoFormValues = z.infer<
+  ReturnType<typeof createForOtherStepTwoSchema>
+>;

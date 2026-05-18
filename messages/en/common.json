@@ -226,5 +226,14 @@
       "totalBeforeTaxLabel": "Total amount (excluding tax)",
       "taxValueLabel": "Tax amount"
     }
+  },
+  "dateTimePicker": {
+    "selectDate": "Select date",
+    "from": "From:",
+    "to": "To:",
+    "selectPickupDay": "Select car pickup day:",
+    "dayLabel": "Day:",
+    "timeLabel": "Time:",
+    "confirm": "Confirm"
   }
 }

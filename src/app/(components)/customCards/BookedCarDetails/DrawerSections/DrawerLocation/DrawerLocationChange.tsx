@@ -22,14 +22,14 @@ import {
   MapPin,
   MapPinPlusInside,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import useUserAddreses from "@/hooks/api/useUserAddreses";
 import { useLocationStore } from "@/lib/stores/useLocationStore";
 import { addAddress } from "@/services/userProfile/addAddress.service";
 import { deleteAddress } from "@/services/userProfile/useDeleteAddress.service";
 import {
-  userSavedLocationSchema,
+  createUserSavedLocationSchema,
   UserSavedLocationFormValues,
 } from "@/schemas/userAddressSchema";
 import type { UserAddress } from "@/types/userProfile/userAddress";
@@ -52,8 +52,18 @@ const DrawerLocationChange = ({
   defaultLocationNames = [],
 }: DrawerLocationChangeProps) => {
   const t = useTranslations("common");
+  const tSchema = useTranslations("schemasLocalization.userSavedLocation");
   const locale = useLocale();
   const isRTL = locale === "ar";
+
+  const userSavedLocationSchema = useMemo(
+    () =>
+      createUserSavedLocationSchema({
+        addressNameRequired: tSchema("addressNameRequired"),
+        mobileRequired: tSchema("mobileRequired"),
+      }),
+    [tSchema],
+  );
   const BackIcon = isRTL ? ChevronRight : ChevronLeft;
   const { mutate: changeReservationLocation, isPending: isChangingLocation } =
     useChangeReservationLocation();
@@ -64,7 +74,11 @@ const DrawerLocationChange = ({
     null,
   );
   const queryClient = useQueryClient();
-  const { setUserPhysical_Location, userPhysical_Latitude, userPhysical_Longitude } = useLocationStore();
+  const {
+    setUserPhysical_Location,
+    userPhysical_Latitude,
+    userPhysical_Longitude,
+  } = useLocationStore();
   const { data: userAddresses, isLoading: isLoadingAddresses } =
     useUserAddreses(true);
 
@@ -123,7 +137,9 @@ const DrawerLocationChange = ({
     );
 
     if (!selectedAddress) {
-      toast.error(t("myBookingsDrawer.locationChange.toast.selectAddressFirst"));
+      toast.error(
+        t("myBookingsDrawer.locationChange.toast.selectAddressFirst"),
+      );
       return;
     }
 
@@ -149,7 +165,8 @@ const DrawerLocationChange = ({
         },
         onError: (error: Error) => {
           toast.error(
-            error.message || t("myBookingsDrawer.locationChange.toast.saveError"),
+            error.message ||
+              t("myBookingsDrawer.locationChange.toast.saveError"),
           );
         },
       },
@@ -299,7 +316,9 @@ const DrawerLocationChange = ({
                   {...register("addressName")}
                   labelClassName="text-base!"
                   className="text-sm! bg-Grey100!"
-                  placeholder={t("myBookingsDrawer.locationChange.placePlaceholder")}
+                  placeholder={t(
+                    "myBookingsDrawer.locationChange.placePlaceholder",
+                  )}
                   label={t("myBookingsDrawer.locationChange.placeLabel")}
                   errorMessage={errors.addressName?.message}
                 />
@@ -324,13 +343,19 @@ const DrawerLocationChange = ({
                         </SelectTrigger>
                         <SelectContent>
                           <SelectItem value="Home">
-                            {t("myBookingsDrawer.locationChange.addressTypes.home")}
+                            {t(
+                              "myBookingsDrawer.locationChange.addressTypes.home",
+                            )}
                           </SelectItem>
                           <SelectItem value="Work">
-                            {t("myBookingsDrawer.locationChange.addressTypes.work")}
+                            {t(
+                              "myBookingsDrawer.locationChange.addressTypes.work",
+                            )}
                           </SelectItem>
                           <SelectItem value="Other">
-                            {t("myBookingsDrawer.locationChange.addressTypes.other")}
+                            {t(
+                              "myBookingsDrawer.locationChange.addressTypes.other",
+                            )}
                           </SelectItem>
                         </SelectContent>
                       </Select>
@@ -350,7 +375,9 @@ const DrawerLocationChange = ({
                 labelClassName="text-base!"
                 className="text-sm! bg-Grey100!"
                 disabled
-                placeholder={t("myBookingsDrawer.locationChange.addressPlaceholder")}
+                placeholder={t(
+                  "myBookingsDrawer.locationChange.addressPlaceholder",
+                )}
                 label={t("myBookingsDrawer.locationChange.addressLabel")}
                 errorMessage={errors.address?.message}
               />
@@ -361,7 +388,9 @@ const DrawerLocationChange = ({
                   startIcon={<LocateFixed />}
                   labelClassName="text-base!"
                   className="text-sm! bg-Grey100!"
-                  placeholder={t("myBookingsDrawer.locationChange.areaPlaceholder")}
+                  placeholder={t(
+                    "myBookingsDrawer.locationChange.areaPlaceholder",
+                  )}
                   label={t("myBookingsDrawer.locationChange.areaLabel")}
                   errorMessage={errors.street?.message}
                 />
@@ -370,7 +399,9 @@ const DrawerLocationChange = ({
                   startIcon={<Building2 />}
                   labelClassName="text-base!"
                   className="text-sm! bg-Grey100!"
-                  placeholder={t("myBookingsDrawer.locationChange.buildingPlaceholder")}
+                  placeholder={t(
+                    "myBookingsDrawer.locationChange.buildingPlaceholder",
+                  )}
                   label={t("myBookingsDrawer.locationChange.buildingLabel")}
                   errorMessage={errors.buildingNo?.message}
                 />
@@ -382,7 +413,9 @@ const DrawerLocationChange = ({
                   type="number"
                   labelClassName="text-base!"
                   className="text-sm! bg-Grey100!"
-                  placeholder={t("myBookingsDrawer.locationChange.floorPlaceholder")}
+                  placeholder={t(
+                    "myBookingsDrawer.locationChange.floorPlaceholder",
+                  )}
                   label={t("myBookingsDrawer.locationChange.floorLabel")}
                   errorMessage={errors.floor?.message}
                 />
@@ -390,7 +423,9 @@ const DrawerLocationChange = ({
                   {...register("flatNo")}
                   labelClassName="text-base!"
                   className="text-sm! bg-Grey100!"
-                  placeholder={t("myBookingsDrawer.locationChange.flatNoPlaceholder")}
+                  placeholder={t(
+                    "myBookingsDrawer.locationChange.flatNoPlaceholder",
+                  )}
                   label={t("myBookingsDrawer.locationChange.flatNoLabel")}
                   errorMessage={errors.flatNo?.message}
                 />
@@ -439,7 +474,9 @@ const DrawerLocationChange = ({
                 {...register("notes")}
                 labelClassName="text-base!"
                 className="text-sm! bg-Grey100!"
-                placeholder={t("myBookingsDrawer.locationChange.notesPlaceholder")}
+                placeholder={t(
+                  "myBookingsDrawer.locationChange.notesPlaceholder",
+                )}
                 label={t("myBookingsDrawer.locationChange.notesLabel")}
                 errorMessage={errors.notes?.message}
               />

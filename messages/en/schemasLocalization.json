@@ -1,0 +1,44 @@
+{
+  "reservation": {
+    "pickupNameRequired": "Pickup location is required",
+    "pickupNameInvalid": "Please select a pickup location",
+    "carReturnLocationRequired": "Drop-off location is required",
+    "carReturnLocationInvalid": "Please select a drop-off location",
+    "fromDateRequired": "Pickup date is required",
+    "toDateRequired": "Drop-off date is required",
+    "idNumberRequired": "Residence type is required",
+    "nationalityRequired": "Nationality is required",
+    "identityExpiryDateRequired": "Identity expiry date is required",
+    "licenseImageRequired": "Driver's license image is required",
+    "licenceExpiryDateRequired": "License expiry date is required",
+    "minRentalDuration": "Drop-off must be at least 2 hours after pickup",
+    "otherPersonNameRequired": "Name is required",
+    "otherPersonPhoneRequired": "Mobile number is required",
+    "otherPersonPhoneInvalid": "Invalid mobile number",
+    "otherPersonLicenseImageRequired": "Driver's license image is required",
+    "otherPersonalIdRequired": "ID number is required",
+    "personalIdRequired": "National ID is required",
+    "passportNumberRequired": "Passport number is required",
+    "borderNumberRequired": "Border number is required"
+  },
+  "businessAccount": {
+    "responsibleNameRequired": "Responsible person's name is required",
+    "mobileRequired": "Mobile number is required",
+    "mobileInvalid": "Invalid mobile number, must be at least 9 digits",
+    "companyNameRequired": "Company name is required",
+    "employeesNumberRequired": "Number of employees is required",
+    "taxImageRequired": "Tax card image is required",
+    "registrationImageRequired": "Commercial registration image is required"
+  },
+  "userSavedLocation": {
+    "addressNameRequired": "Location name is required",
+    "mobileRequired": "Mobile number is required"
+  },
+  "forOtherStepTwo": {
+    "otherPersonNameRequired": "Name is required",
+    "otherPersonPhoneRequired": "Mobile number is required",
+    "otherPersonPhoneInvalid": "Invalid mobile number",
+    "otherPersonLicenseImageRequired": "Driver's license image is required",
+    "otherPersonalIdRequired": "ID number is required"
+  }
+}

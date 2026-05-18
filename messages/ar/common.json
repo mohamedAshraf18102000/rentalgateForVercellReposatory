@@ -226,5 +226,14 @@
       "totalBeforeTaxLabel": "إجمالي المبلغ (غير شامل الضريبة)",
       "taxValueLabel": "قيمة الضريبة"
     }
+  },
+  "dateTimePicker": {
+    "selectDate": "اختر التاريخ",
+    "from": "من:",
+    "to": "إلى:",
+    "selectPickupDay": "حدد يوم أستلام السيارة:",
+    "dayLabel": "من يوم:",
+    "timeLabel": "من الساعة:",
+    "confirm": "تأكيد"
   }
 }

@@ -4,6 +4,7 @@ import {
   useState,
   useRef,
   useEffect,
+  useMemo,
   type ReactNode,
   type MouseEvent,
 } from "react";
@@ -14,10 +15,12 @@ import { X } from "lucide-react";
 import { EditIcon } from "@/constants/icons";
 import { DayPicker } from "react-day-picker";
 import { ar, enUS } from "date-fns/locale";
+import { format } from "date-fns";
 import "react-day-picker/dist/style.css";
 import "./style.css";
-import { DialogWrapper } from "./dialog-wrapper"; // adjust path
+import { DialogWrapper } from "./dialog-wrapper";
 import InputRequired from "../InputRequired";
+import { useLocale, useTranslations } from "next-intl";
 
 // ─── Hook ─────────────────────────────────────────────────────────────────────
 
@@ -33,6 +36,16 @@ function useIsMobile(breakpoint = 768) {
 }
 
 // ─── Types ────────────────────────────────────────────────────────────────────
+
+export type DateTimePickerLabels = {
+  selectDate: string;
+  from: string;
+  to: string;
+  selectPickupDay: string;
+  dayLabel: string;
+  timeLabel: string;
+  confirm: string;
+};
 
 interface DatePickerProps {
   label?: string;
@@ -68,49 +81,24 @@ interface DatePickerProps {
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-const arabicDays = [
-  "الأحد",
-  "الإثنين",
-  "الثلاثاء",
-  "الأربعاء",
-  "الخميس",
-  "الجمعة",
-  "السبت",
-];
-const englishDays = [
-  "Sunday",
-  "Monday",
-  "Tuesday",
-  "Wednesday",
-  "Thursday",
-  "Friday",
-  "Saturday",
-];
+function getDateFnsLocale(locale: string) {
+  return locale === "ar" ? ar : enUS;
+}
 
-function formatDate(date: Date | null | undefined, locale = "ar"): string {
+function formatDate(date: Date | null | undefined, locale: string): string {
   if (!date) return "";
   const d = date instanceof Date ? date : new Date(date);
   if (isNaN(d.getTime())) return "";
-  const days = locale === "ar" ? arabicDays : englishDays;
-  return `${days[d.getDay()]} ${d.getDate()}-${d.getMonth() + 1}-${d.getFullYear()}`;
+  return format(d, "EEEE d-M-yyyy", { locale: getDateFnsLocale(locale) });
 }
 
-function formatDateTime(date: Date | null | undefined, locale = "ar"): string {
+function formatDateTime(date: Date | null | undefined, locale: string): string {
   if (!date) return "";
   const d = date instanceof Date ? date : new Date(date);
   if (isNaN(d.getTime())) return "";
   const datePart = formatDate(d, locale);
-  const h = d.getHours();
-  const m = d.getMinutes().toString().padStart(2, "0");
-  const ampm =
-    h >= 12
-      ? locale === "ar"
-        ? "مساءً"
-        : "Pm"
-      : locale === "ar"
-        ? "صباحاً"
-        : "Am";
-  return `${datePart}  ${h % 12 === 0 ? 12 : h % 12}:${m} ${ampm}`;
+  const timePart = format(d, "h:mm a", { locale: getDateFnsLocale(locale) });
+  return `${datePart}  ${timePart}`;
 }
 
 function generateTimeSlots() {
@@ -162,13 +150,13 @@ function TimePicker({
   selectedDate,
   referenceDate,
   onTimeSelect,
-  locale = "ar",
+  locale,
   isTimeDisabled,
 }: {
   selectedDate: Date | null | undefined;
   referenceDate: Date;
   onTimeSelect: (h: number, m: number) => void;
-  locale?: string;
+  locale: string;
   isTimeDisabled?: (date: Date) => boolean;
 }) {
   const selH = selectedDate?.getHours() ?? -1;
@@ -186,22 +174,14 @@ function TimePicker({
     >
       {TIME_SLOTS.map((slot) => {
         const isActive = slot.hours === selH && slot.minutes === selM;
-        const displayH = slot.hours % 12 === 0 ? 12 : slot.hours % 12;
-        const displayM = slot.minutes.toString().padStart(2, "0");
-        const ampm =
-          slot.hours >= 12
-            ? locale === "ar"
-              ? "م"
-              : "Pm"
-            : locale === "ar"
-              ? "ص"
-              : "Am";
-        const label = `${displayH}:${displayM} ${ampm}`;
         const slotDate = buildSlotDate(
           selectedDate ?? referenceDate,
           slot.hours,
           slot.minutes,
         );
+        const label = format(slotDate, "h:mm a", {
+          locale: getDateFnsLocale(locale),
+        });
 
         const now = new Date();
         const isToday =
@@ -299,6 +279,7 @@ function DateTimeContent({
   title,
   pickerDateLabel,
   pickerTimeLabel,
+  labels,
   isDateDisabled,
   isTimeDisabled,
 }: {
@@ -311,13 +292,12 @@ function DateTimeContent({
   title?: string;
   pickerDateLabel?: string;
   pickerTimeLabel?: string;
+  labels: DateTimePickerLabels;
   isDateDisabled?: (date: Date) => boolean;
   isTimeDisabled?: (date: Date) => boolean;
 }) {
-  const isArabic = locale === "ar";
-  const displayDateLabel = pickerDateLabel || (isArabic ? "من يوم:" : "Day:");
-  const displayTimeLabel =
-    pickerTimeLabel || (isArabic ? "من الساعة:" : "Time:");
+  const displayDateLabel = pickerDateLabel || labels.dayLabel;
+  const displayTimeLabel = pickerTimeLabel || labels.timeLabel;
 
   function handleTimeSelect(hours: number, minutes: number) {
     const base = selectedDate
@@ -416,6 +396,7 @@ function PickerShell({
   withTime,
   pickerDateLabel,
   pickerTimeLabel,
+  labels,
   isDateDisabled,
   isTimeDisabled,
 }: {
@@ -432,11 +413,10 @@ function PickerShell({
   withTime?: boolean;
   pickerDateLabel?: string;
   pickerTimeLabel?: string;
+  labels: DateTimePickerLabels;
   isDateDisabled?: (date: Date) => boolean;
   isTimeDisabled?: (date: Date) => boolean;
 }) {
-  const isArabic = locale === "ar";
-
   const pickerContent = (
     <DateTimeContent
       selectedDate={selectedDate}
@@ -449,6 +429,7 @@ function PickerShell({
       title={isMobile ? undefined : title}
       pickerDateLabel={pickerDateLabel}
       pickerTimeLabel={pickerTimeLabel}
+      labels={labels}
       isDateDisabled={isDateDisabled}
       isTimeDisabled={isTimeDisabled}
     />
@@ -475,7 +456,7 @@ function PickerShell({
                 className="w-full rounded-xl bg-gray-900 text-white py-3 text-sm font-medium"
                 onClick={() => onOpenChange(false)}
               >
-                {isArabic ? "تأكيد" : "Confirm"}
+                {labels.confirm}
               </button>
             ) : undefined
           }
@@ -522,7 +503,7 @@ export function DateTimePicker({
   toDisabled = false,
   minDaysFromToday = 0,
   minDate,
-  locale = "ar",
+  locale: localeProp,
   withTime = false,
   pickerDateLabel,
   pickerTimeLabel,
@@ -532,19 +513,31 @@ export function DateTimePicker({
   isTimeDisabled,
 }: DatePickerProps) {
   // ── All hooks at the top — never inside conditionals ──────────────────────
+  const nextIntlLocale = useLocale();
+  const resolvedLocale = localeProp ?? nextIntlLocale;
+  const t = useTranslations("common.dateTimePicker");
+  const labels = useMemo<DateTimePickerLabels>(
+    () => ({
+      selectDate: t("selectDate"),
+      from: t("from"),
+      to: t("to"),
+      selectPickupDay: t("selectPickupDay"),
+      dayLabel: t("dayLabel"),
+      timeLabel: t("timeLabel"),
+      confirm: t("confirm"),
+    }),
+    [t],
+  );
+
   const isMobile = useIsMobile();
   const [singleOpen, setSingleOpen] = useState(false);
   const [fromOpen, setFromOpen] = useState(false);
   const [toOpen, setToOpen] = useState(false);
 
-  const isArabic = locale === "ar";
-  const defaultPlaceholder =
-    placeholder || (isArabic ? "اختر التاريخ" : "Select date");
-  const defaultFromLabel = fromLabel || (isArabic ? "من:" : "From:");
-  const defaultToLabel = toLabel || (isArabic ? "إلى:" : "To:");
-  const defaultDialogTitle =
-    dialogTitle ||
-    (isArabic ? "حدد يوم أستلام السيارة:" : "Select car pickup day:");
+  const defaultPlaceholder = placeholder || labels.selectDate;
+  const defaultFromLabel = fromLabel || labels.from;
+  const defaultToLabel = toLabel || labels.to;
+  const defaultDialogTitle = dialogTitle || labels.selectPickupDay;
 
   const isRange = onFromChange !== undefined || onToChange !== undefined;
   const formatFn = withTime ? formatDateTime : formatDate;
@@ -620,7 +613,7 @@ export function DateTimePicker({
           {defaultFromLabel}
         </span>
         <span className="text-xs md:text-sm font-medium text-gray-900 underline truncate flex-1 min-w-0">
-          {fromValue ? formatFn(fromValue, locale) : defaultPlaceholder}
+          {fromValue ? formatFn(fromValue, resolvedLocale) : defaultPlaceholder}
         </span>
         {allowClear && fromValue ? (
           <span
@@ -655,7 +648,7 @@ export function DateTimePicker({
           {defaultToLabel}
         </span>
         <span className="text-xs md:text-sm font-medium text-gray-900 underline truncate flex-1 min-w-0">
-          {toValue ? formatFn(toValue, locale) : defaultPlaceholder}
+          {toValue ? formatFn(toValue, resolvedLocale) : defaultPlaceholder}
         </span>
         {allowClear && toValue ? (
           <span
@@ -690,12 +683,13 @@ export function DateTimePicker({
               title={fromDialogTitle || defaultDialogTitle}
               selectedDate={fromValue}
               onDateChange={handleFromDateChange}
-              locale={locale}
+              locale={resolvedLocale}
               minAllowedDate={minAllowedDate}
               maxAllowedDate={maxAllowedDate}
               withTime={withTime}
               pickerDateLabel={pickerDateLabel}
               pickerTimeLabel={pickerTimeLabel}
+              labels={labels}
               isDateDisabled={isDateDisabled}
               isTimeDisabled={isTimeDisabled}
             />
@@ -709,7 +703,9 @@ export function DateTimePicker({
                   {defaultToLabel}
                 </span>
                 <span className="text-xs md:text-sm font-medium text-gray-900 underline truncate flex-1 min-w-0">
-                  {toValue ? formatFn(toValue, locale) : defaultPlaceholder}
+                  {toValue
+                    ? formatFn(toValue, resolvedLocale)
+                    : defaultPlaceholder}
                 </span>
               </div>
             ) : (
@@ -721,12 +717,13 @@ export function DateTimePicker({
                 title={toDialogTitle || defaultDialogTitle}
                 selectedDate={toValue}
                 onDateChange={handleToDateChange}
-                locale={locale}
+                locale={resolvedLocale}
                 minAllowedDate={minAllowedDate}
                 maxAllowedDate={maxAllowedDate}
                 withTime={withTime}
                 pickerDateLabel={pickerDateLabel}
                 pickerTimeLabel={pickerTimeLabel}
+                labels={labels}
                 isDateDisabled={isDateDisabled}
                 isTimeDisabled={isTimeDisabled}
               />
@@ -746,7 +743,7 @@ export function DateTimePicker({
     >
       <Input
         readOnly
-        value={formatFn(value, locale)}
+        value={formatFn(value, resolvedLocale)}
         placeholder={defaultPlaceholder}
         className={cn(
           "cursor-pointer w-full",
@@ -786,12 +783,13 @@ export function DateTimePicker({
             onChange?.(nextDate);
             if (!withTime) setSingleOpen(false);
           }}
-          locale={locale}
+          locale={resolvedLocale}
           minAllowedDate={minAllowedDate}
           maxAllowedDate={maxAllowedDate}
           withTime={withTime}
           pickerDateLabel={pickerDateLabel}
           pickerTimeLabel={pickerTimeLabel}
+          labels={labels}
           isDateDisabled={isDateDisabled}
           isTimeDisabled={isTimeDisabled}
         />

@@ -22,6 +22,7 @@ export default getRequestConfig(async ({ requestLocale }) => {
     carDetails: (await import(`../../messages/${locale}/carDetails.json`)).default,
     auth: (await import(`../../messages/${locale}/auth.json`)).default,
     companyQuotation: (await import(`../../messages/${locale}/companyQuotation.json`)).default,
+    schemasLocalization: (await import(`../../messages/${locale}/schemasLocalization.json`)).default,
   };
 
   return {
