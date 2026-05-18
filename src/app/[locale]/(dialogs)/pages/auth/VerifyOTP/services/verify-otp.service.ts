@@ -1,3 +1,4 @@
+import { getLocaleRequestHeaders } from "@/services/api";
 import type { VerifyOTPPayload, VerifyOTPResponse } from "../types/api.types";
 import type { SignUpPayload } from "../../SignUp/types/api.types";
 
@@ -7,10 +8,12 @@ const RESEND_API_URL = "/clients/resend-registration-otp";
 export const verifyOTP = async (
   payload: VerifyOTPPayload,
 ): Promise<VerifyOTPResponse> => {
+  const localeHeaders = await getLocaleRequestHeaders();
   const response = await fetch(`https://api.rentalgate.net/api${VERIFY_API_URL}`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      ...localeHeaders,
     },
     body: JSON.stringify(payload),
   });
@@ -28,10 +31,12 @@ export const verifyOTP = async (
 export const resendRegistrationOTP = async (
   payload: SignUpPayload,
 ): Promise<VerifyOTPResponse> => {
+  const localeHeaders = await getLocaleRequestHeaders();
   const response = await fetch(`https://api.rentalgate.net/api${RESEND_API_URL}`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      ...localeHeaders,
     },
     body: JSON.stringify(payload),
   });

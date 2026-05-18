@@ -2,6 +2,7 @@
  * Login Service - API calls
  */
 
+import { getLocaleRequestHeaders } from "@/services/api";
 import type { LoginApiResponse, LoginPayload } from "../types/api.types";
 
 const LOGIN_API_URL = "/clients/login";
@@ -9,10 +10,12 @@ const LOGIN_API_URL = "/clients/login";
 export const loginUser = async (
   payload: LoginPayload,
 ): Promise<LoginApiResponse> => {
+  const localeHeaders = await getLocaleRequestHeaders();
   const response = await fetch(`https://api.rentalgate.net/api${LOGIN_API_URL}`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      ...localeHeaders,
     },
     body: JSON.stringify(payload),
   });

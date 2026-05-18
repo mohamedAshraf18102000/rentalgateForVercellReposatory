@@ -52,16 +52,24 @@ const getCurrentLocale = async (): Promise<AppLocale> => {
   return "ar";
 };
 
+export async function getLocaleRequestHeaders(): Promise<Record<string, string>> {
+  const currentLocale = await getCurrentLocale();
+  return {
+    "Accept-Language": currentLocale,
+    "X-Locale": currentLocale,
+  };
+}
+
 export async function fetcher<T>(
   url: string,
   options?: (RequestInit & { skipErrorToast?: boolean }),
 ): Promise<T> {
   const token = await getAuthToken();
-  const currentLocale = await getCurrentLocale();
+  const localeHeaders = await getLocaleRequestHeaders();
   const requestHeaders = new Headers(options?.headers);
   requestHeaders.set("Content-Type", "application/json");
-  requestHeaders.set("Accept-Language", currentLocale);
-  requestHeaders.set("X-Locale", currentLocale);
+  requestHeaders.set("Accept-Language", localeHeaders["Accept-Language"]);
+  requestHeaders.set("X-Locale", localeHeaders["X-Locale"]);
   if (token) {
     requestHeaders.set("Authorization", `Bearer ${token}`);
   }

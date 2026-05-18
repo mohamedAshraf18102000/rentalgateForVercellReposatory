@@ -2,6 +2,7 @@
  * Forgot Password Service - API calls
  */
 
+import { getLocaleRequestHeaders } from "@/services/api";
 import { URL } from "@/util/api";
 import type {
   ForgetPasswordPayload,
@@ -20,10 +21,12 @@ const VERIFY_OTP_API_URL = "/clients/auth/verify-otp";
 export const forgetPassword = async (
   payload: ForgetPasswordPayload,
 ): Promise<ForgetPasswordResponse> => {
+  const localeHeaders = await getLocaleRequestHeaders();
   const response = await fetch(URL(FORGET_PASSWORD_API_URL), {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      ...localeHeaders,
     },
     body: JSON.stringify(payload),
   });
@@ -40,10 +43,12 @@ export const forgetPassword = async (
 export const resendOTP = async (
   payload: ResendOTPPayload,
 ): Promise<ResendOTPResponse> => {
+  const localeHeaders = await getLocaleRequestHeaders();
   const response = await fetch(URL(RESEND_OTP_API_URL), {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      ...localeHeaders,
     },
     body: JSON.stringify({ email: payload.email, channel: payload.channel }),
   });
@@ -62,10 +67,12 @@ export const verifyAuthOtp = async (payload: {
   email: string;
   otpCode: string;
 }): Promise<{ status?: boolean; message?: string; data?: unknown }> => {
+  const localeHeaders = await getLocaleRequestHeaders();
   const response = await fetch(URL(VERIFY_OTP_API_URL), {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      ...localeHeaders,
     },
     body: JSON.stringify({
       email: payload.email,
@@ -92,10 +99,12 @@ export const verifyAuthOtp = async (payload: {
 export const resetPassword = async (
   payload: ResetPasswordPayload,
 ): Promise<ResetPasswordResponse> => {
+  const localeHeaders = await getLocaleRequestHeaders();
   const response = await fetch(URL(RESET_PASSWORD_API_URL), {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      ...localeHeaders,
     },
     body: JSON.stringify({
       email: payload.email,

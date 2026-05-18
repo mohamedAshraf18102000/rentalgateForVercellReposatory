@@ -2,16 +2,19 @@
  * SignUp Service - API calls
  */
 
+import { getLocaleRequestHeaders } from "@/services/api";
 import { AUTH_URL } from "@/util/api";
 import type { SignUpApiResponse, SignUpPayload } from "../types/api.types";
 
 const SIGNUP_API_URL = "/signup";
 
 export const signUpUser = async (payload: SignUpPayload): Promise<SignUpApiResponse> => {
+  const localeHeaders = await getLocaleRequestHeaders();
   const response = await fetch(AUTH_URL(SIGNUP_API_URL), {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      ...localeHeaders,
     },
     body: JSON.stringify(payload),
   });
