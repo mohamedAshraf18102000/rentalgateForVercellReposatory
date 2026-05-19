@@ -35,7 +35,6 @@ const CarSearchForm = ({
   priceSort,
   onTogglePriceSort,
   onCarSearch,
-  appliedCarSearchName,
 }: any) => {
   const t = useTranslations("home");
   const fromDate = watch("fromDate");
