@@ -19,7 +19,7 @@ type PaymentMethodsProps = {
   onPaySuccess?: () => void;
 };
 
-const SUCCESS_REDIRECT_SECONDS = 10;
+const SUCCESS_REDIRECT_SECONDS = 5;
 
 const PaymentMethods = ({
   isRTL = false,
@@ -94,7 +94,7 @@ const PaymentMethods = ({
   const navigateAfterSuccess = useCallback(() => {
     if (didNavigateAfterSuccessRef.current) return;
     didNavigateAfterSuccessRef.current = true;
-    resetAllStores();
+    resetAllStores({ excludeLocationReset: true });
     onPaySuccess?.();
     router.replace("/myBookings");
   }, [onPaySuccess, router]);
