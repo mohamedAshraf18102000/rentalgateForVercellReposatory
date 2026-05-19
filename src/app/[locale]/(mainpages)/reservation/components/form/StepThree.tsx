@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Control, FieldErrors, useController } from "react-hook-form";
 import { ReservationFormValues } from "@/lib/validations/reservationSchema";
 import { useBookedCarDetailsStore } from "@/lib/stores/useBookedCarDetailsStore";
@@ -69,8 +69,26 @@ const StepThree = ({ control, errors }: StepThreeProps) => {
 
   const setFormData = useBookedCarDetailsStore((s) => s.setFormData);
 
+  const clearExtraKm = () => {
+    onChangeExtraKmType("QUOTA");
+    onChangeExtraKmApplied(false);
+    onChangeExtraKmQuotaId(null);
+    setFormData({
+      extraKmType: "QUOTA",
+      extraKmApplied: false,
+      extraKmQuotaId: null,
+    });
+  };
+
   const selectQuota = (quotaId: number) => {
-    if (extraKmType === "QUOTA" && extraKmQuotaId === quotaId) return;
+    if (
+      extraKmApplied &&
+      extraKmType === "QUOTA" &&
+      extraKmQuotaId === quotaId
+    ) {
+      clearExtraKm();
+      return;
+    }
 
     onChangeExtraKmType("QUOTA");
     onChangeExtraKmApplied(true);
@@ -83,7 +101,10 @@ const StepThree = ({ control, errors }: StepThreeProps) => {
   };
 
   const selectUnlimited = () => {
-    if (extraKmType === "UNLIMITED") return;
+    if (extraKmApplied && extraKmType === "UNLIMITED") {
+      clearExtraKm();
+      return;
+    }
 
     onChangeExtraKmType("UNLIMITED");
     onChangeExtraKmApplied(true);
@@ -94,18 +115,6 @@ const StepThree = ({ control, errors }: StepThreeProps) => {
       extraKmQuotaId: null,
     });
   };
-
-  useEffect(() => {
-    if (extraKmApplied) return;
-
-    const packages = carDetails?.kilometerPackages;
-    if (packages?.length) {
-      selectQuota(packages[0].cceId);
-    } else if (formdata.carDetails?.unlimitedKmPrice !== 0) {
-      selectUnlimited();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [carDetails?.kilometerPackages, extraKmApplied]);
 
   // Lifted state: keyed by drvId
   const [driverHours, setDriverHours] = useState<Record<number, number>>({});
@@ -162,7 +171,7 @@ const StepThree = ({ control, errors }: StepThreeProps) => {
   );
 
   return (
-    <div className="space-y-6">
+    <div className="grid grid-cols-1 gap-4">
       <div className="relative">
         <h2 className="text-lg font-semibold leading-tight text-gray-900 sm:text-xl">
           {t("reservation.stepThree.title")}
@@ -180,7 +189,7 @@ const StepThree = ({ control, errors }: StepThreeProps) => {
         </div>
       ) : (
         <>
-          <div className="">
+          <div className="grid grid-cols-1 gap-4">
             {carDetails?.kilometerPackages.map((km) => (
               <SelectableServiceCard
                 key={km.cceId}
@@ -190,110 +199,109 @@ const StepThree = ({ control, errors }: StepThreeProps) => {
                   price: formatPrice(km.price),
                 }}
                 selected={
-                  extraKmType === "QUOTA" && extraKmQuotaId === km.cceId
+                  !!extraKmApplied &&
+                  extraKmType === "QUOTA" &&
+                  extraKmQuotaId === km.cceId
                 }
                 onToggle={() => selectQuota(km.cceId)}
               />
             ))}
           </div>
-          <div className="grid grid-cols-1 gap-4">
-            {formdata.carDetails?.unlimitedKmPrice !== 0 && (
-              <SelectableServiceCard
-                service={{
-                  serviceArabicName: t(
-                    "reservation.stepThree.unlimitedKmTitle",
-                  ),
-                  notes: t("reservation.stepThree.unlimitedKmNotes"),
-                  price: calculateServicePrice(
-                    {
-                      price: formdata.carDetails?.unlimitedKmPrice || 0,
-                      csType: "everyday",
-                      priceType: "same",
-                    },
-                    formdata.rentalDays || 1,
-                  ),
-                }}
-                selected={extraKmType === "UNLIMITED"}
-                badge={
-                  <p className="text-sm p-2 bg-StatusBrownBG rounded-[8px] text-StatusBrown200 font-bold flex items-center gap-1">
-                    <Flame />
-                    <span>{t("reservation.stepThree.unlimitedKmBadge")}</span>
-                  </p>
-                }
-                onToggle={() => toggleService(0, "unlimited")}
-              />
-            )}
-            {services.map((service) => {
-              const id = service.serviceId;
-              const calculatedPrice = calculateServicePrice(
-                service,
-                formdata.rentalDays || 1,
-              );
-              return (
-                <SelectableServiceCard
-                  rentalDays={Number(formdata.rentalDays) || 1}
-                  key={service.serviceId}
-                  service={{ ...service, price: calculatedPrice }}
-                  selected={!!selectedServiceIds?.includes(id)}
-                  onToggle={() => toggleService(id, "service")}
-                />
-              );
-            })}
 
-            {isPending ? (
-              <Skeleton className="bg-Grey200 w-full h-[200px] rounded-md" />
-            ) : (
-              <>
-                {visibleDrivers?.map((driver) => {
-                  const drvId = driver.cdsId;
-                  const isSelected = selectedDriver?.id === drvId;
-                  return (
-                    <SelectableServiceDriverCard
-                      key={driver.cdsId}
-                      driver={driver}
-                      selected={isSelected}
-                      onToggle={() => toggleService(drvId, "driver")}
-                      badge={
-                        driver.cdsType === "in"
-                          ? t("reservation.stepThree.driverInsideCity")
-                          : t("reservation.stepThree.driverOutsideCity")
+          {formdata.carDetails?.unlimitedKmPrice !== 0 && (
+            <SelectableServiceCard
+              service={{
+                serviceArabicName: t("reservation.stepThree.unlimitedKmTitle"),
+                notes: t("reservation.stepThree.unlimitedKmNotes"),
+                price: calculateServicePrice(
+                  {
+                    price: formdata.carDetails?.unlimitedKmPrice || 0,
+                    csType: "everyday",
+                    priceType: "same",
+                  },
+                  formdata.rentalDays || 1,
+                ),
+              }}
+              selected={!!extraKmApplied && extraKmType === "UNLIMITED"}
+              badge={
+                <p className="text-sm p-2 bg-StatusBrownBG rounded-[8px] text-StatusBrown200 font-bold flex items-center gap-1">
+                  <Flame />
+                  <span>{t("reservation.stepThree.unlimitedKmBadge")}</span>
+                </p>
+              }
+              onToggle={() => toggleService(0, "unlimited")}
+            />
+          )}
+          {services.map((service) => {
+            const id = service.serviceId;
+            const calculatedPrice = calculateServicePrice(
+              service,
+              formdata.rentalDays || 1,
+            );
+            return (
+              <SelectableServiceCard
+                rentalDays={Number(formdata.rentalDays) || 1}
+                key={service.serviceId}
+                service={{ ...service, price: calculatedPrice }}
+                selected={!!selectedServiceIds?.includes(id)}
+                onToggle={() => toggleService(id, "service")}
+              />
+            );
+          })}
+
+          {isPending ? (
+            <Skeleton className="bg-Grey200 w-full h-[200px] rounded-md" />
+          ) : (
+            <>
+              {visibleDrivers?.map((driver) => {
+                const drvId = driver.cdsId;
+                const isSelected = selectedDriver?.id === drvId;
+                return (
+                  <SelectableServiceDriverCard
+                    key={driver.cdsId}
+                    driver={driver}
+                    selected={isSelected}
+                    onToggle={() => toggleService(drvId, "driver")}
+                    badge={
+                      driver.cdsType === "in"
+                        ? t("reservation.stepThree.driverInsideCity")
+                        : t("reservation.stepThree.driverOutsideCity")
+                    }
+                    hoursPerDay={
+                      driverHours[drvId] ?? selectedDriver?.hours ?? 1
+                    }
+                    numberOfDays={
+                      driverDays[drvId] ?? selectedDriver?.days ?? 1
+                    }
+                    onHoursChange={(h) => {
+                      setDriverHours((prev) => ({ ...prev, [drvId]: h }));
+                      if (isSelected) {
+                        const next = {
+                          ...selectedDriver,
+                          hours: h,
+                          type: driver.cdsType as "in" | "out",
+                        };
+                        onChangeDriver(next);
+                        setFormData({ driver: next });
                       }
-                      hoursPerDay={
-                        driverHours[drvId] ?? selectedDriver?.hours ?? 1
+                    }}
+                    onDaysChange={(d) => {
+                      setDriverDays((prev) => ({ ...prev, [drvId]: d }));
+                      if (isSelected) {
+                        const next = {
+                          ...selectedDriver,
+                          days: d,
+                          type: driver.cdsType as "in" | "out",
+                        };
+                        onChangeDriver(next);
+                        setFormData({ driver: next });
                       }
-                      numberOfDays={
-                        driverDays[drvId] ?? selectedDriver?.days ?? 1
-                      }
-                      onHoursChange={(h) => {
-                        setDriverHours((prev) => ({ ...prev, [drvId]: h }));
-                        if (isSelected) {
-                          const next = {
-                            ...selectedDriver,
-                            hours: h,
-                            type: driver.cdsType as "in" | "out",
-                          };
-                          onChangeDriver(next);
-                          setFormData({ driver: next });
-                        }
-                      }}
-                      onDaysChange={(d) => {
-                        setDriverDays((prev) => ({ ...prev, [drvId]: d }));
-                        if (isSelected) {
-                          const next = {
-                            ...selectedDriver,
-                            days: d,
-                            type: driver.cdsType as "in" | "out",
-                          };
-                          onChangeDriver(next);
-                          setFormData({ driver: next });
-                        }
-                      }}
-                    />
-                  );
-                })}
-              </>
-            )}
-          </div>
+                    }}
+                  />
+                );
+              })}
+            </>
+          )}
         </>
       )}
 

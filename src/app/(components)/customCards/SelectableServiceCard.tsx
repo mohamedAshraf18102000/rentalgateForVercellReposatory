@@ -1,6 +1,6 @@
 "use client";
 
-import { formatPrice } from "@/lib/utils";
+import { cn, formatPrice } from "@/lib/utils";
 import { SaudiRiyal } from "lucide-react";
 import { useLocale } from "next-intl";
 
@@ -23,6 +23,7 @@ interface SelectableServiceCardProps<
   selected: boolean;
   onToggle: () => void;
   badge?: React.ReactNode;
+  className?: string;
 }
 
 function SelectableServiceCard<T extends SelectableServiceBase>({
@@ -31,6 +32,7 @@ function SelectableServiceCard<T extends SelectableServiceBase>({
   selected,
   onToggle,
   badge,
+  className,
 }: SelectableServiceCardProps<T>) {
   const locale = useLocale();
   const isRTL = locale === "ar";
@@ -44,7 +46,8 @@ function SelectableServiceCard<T extends SelectableServiceBase>({
     <label
       htmlFor={checkboxId}
       dir={isRTL ? "rtl" : "ltr"}
-      className={`
+      className={cn(
+        `
         relative flex w-full cursor-pointer flex-col gap-2 rounded-lg border-2 px-3 py-3 transition-all duration-300 sm:px-4
         ${isRTL ? "text-right" : "text-left"}
         ${
@@ -52,7 +55,9 @@ function SelectableServiceCard<T extends SelectableServiceBase>({
             ? "bg-white border-primary border-[0.5px] shadow-lg"
             : "bg-Grey100 border-transparent hover:border-gray-200"
         }
-      `}
+      `,
+        className,
+      )}
     >
       <input
         id={checkboxId}
