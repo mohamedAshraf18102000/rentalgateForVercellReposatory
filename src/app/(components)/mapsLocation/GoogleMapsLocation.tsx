@@ -11,6 +11,7 @@ import {
 } from "@/lib/utils/reverseGeocode";
 import { useDebounce } from "./hooks/useDebounce";
 import { usePlacesAutocomplete } from "./hooks/usePlacesAutocomplete";
+import { useTranslations } from "next-intl";
 
 const defaultLocation = { lat: 0, lng: 0 };
 const libraries: "places"[] = ["places"];
@@ -46,6 +47,7 @@ const GoogleMapsLocation = ({
   containerHeight?: string;
   className?: string;
 }) => {
+  const t = useTranslations("common");
   const {
     userPhysical_Latitude,
     userPhysical_Longitude,
@@ -273,7 +275,7 @@ const GoogleMapsLocation = ({
             wrapperClassName="mb-3"
             className="bg-white text-sm rounded-xl w-full"
             type="search"
-            placeholder="بحث ..."
+            placeholder={t("searchPlaceholder")}
             startIcon={<Search className="w-6 h-6" />}
           />
           {predictions.length > 0 && (

@@ -667,7 +667,7 @@ const GoogleMapsPolyLinedLocation = ({
             wrapperClassName="mb-3"
             className="bg-white text-sm rounded-xl w-full"
             type="search"
-            placeholder="بحث ..."
+            placeholder={t("searchPlaceholder")}
             startIcon={<Search className="w-6 h-6" />}
           />
           {predictions.length > 0 && (
