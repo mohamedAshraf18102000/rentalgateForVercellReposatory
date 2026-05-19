@@ -196,6 +196,7 @@ const StepThree = ({ control, errors }: StepThreeProps) => {
               );
               return (
                 <SelectableServiceCard
+                  rentalDays={Number(formdata.rentalDays) || 1}
                   key={service.serviceId}
                   service={{ ...service, price: calculatedPrice }}
                   selected={!!selectedServiceIds?.includes(id)}

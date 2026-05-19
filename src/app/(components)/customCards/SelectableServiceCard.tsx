@@ -5,6 +5,7 @@ import { SaudiRiyal } from "lucide-react";
 import { useLocale } from "next-intl";
 
 interface SelectableServiceCardProps {
+  rentalDays?: number;
   service: CompanyService;
   selected: boolean;
   onToggle: () => void;
@@ -12,6 +13,7 @@ interface SelectableServiceCardProps {
 }
 
 const SelectableServiceCard = ({
+  rentalDays,
   service,
   selected,
   onToggle,
@@ -20,10 +22,6 @@ const SelectableServiceCard = ({
   const locale = useLocale();
   const isRTL = locale === "ar";
   const checkboxId = `service-card-${service.csId ?? Math.random()}`;
-  const hasDiscount = service.percentage > 0;
-  const originalPrice = hasDiscount
-    ? (service.price / (1 - service.percentage / 100)).toFixed(2)
-    : null;
   const serviceName =
     locale === "ar"
       ? service.serviceArabicName
@@ -76,25 +74,30 @@ const SelectableServiceCard = ({
             )}
           </div>
 
-          <div className={`order-2 min-w-0 flex-1 ${isRTL ? "text-right" : "text-left"}`}>
+          <div
+            className={`order-2 min-w-0 flex-1 ${isRTL ? "text-right" : "text-left"}`}
+          >
             <p className="text-sm font-bold leading-tight text-gray-900 sm:text-base">
               {serviceName}
             </p>
             <p className="mt-1 line-clamp-2 text-xs font-medium leading-relaxed text-gray-500">
               {service.notes}
             </p>
-            <div className="mt-1 flex flex-wrap items-center gap-2">
-              {hasDiscount && (
-                <span className="text-xs text-gray-400 line-through">
-                  {originalPrice}
-                </span>
-              )}
-              <div className="flex items-baseline gap-1">
+            <div className="mt-1 flex flex-wrap items-center gap-1">
+              <div className="flex gap-1">
                 <span className="text-sm font-black text-gray-900 sm:text-base">
                   {service.price}
                 </span>
-                <SaudiRiyal className="h-4 w-4 text-gray-900" />
+                <SaudiRiyal className="h-5 w-5 text-gray-900 p-0WS" />
               </div>
+              {service.csType === "everyday" && (
+                <>
+                  <span>/</span>
+                  <span className="text-sm font-bold">
+                    {rentalDays} {locale === "ar" ? "يوم" : "day"}
+                  </span>
+                </>
+              )}
             </div>
           </div>
         </div>
