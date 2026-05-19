@@ -18,13 +18,18 @@ const HomeTrainLocations = () => {
     const selectedStation = trainStationsData?.content?.find(
       (station) => station.stationId.toString() === id,
     );
+    const selectedStationName = selectedStation
+      ? locale === "ar"
+        ? selectedStation.arabicName
+        : selectedStation.englishName
+      : "";
 
     setFormData({
       pickupType: "TRAIN_STATION",
       pickupTrainId: Number(id),
       pickupAirportId: null,
       pickupId: null,
-      pickupName: selectedStation?.arabicName || "",
+      pickupName: selectedStationName,
       pickupLat: null,
       pickupLong: null,
     });

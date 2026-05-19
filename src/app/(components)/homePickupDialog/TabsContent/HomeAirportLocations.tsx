@@ -19,13 +19,18 @@ const HomeAirportLocations = () => {
     const selectedAirport = airportsData?.content?.find(
       (airport) => airport.airportId.toString() === id,
     );
+    const selectedAirportName = selectedAirport
+      ? locale === "ar"
+        ? selectedAirport.arabicName
+        : selectedAirport.englishName
+      : "";
 
     setFormData({
       pickupType: "AIRPORT",
       pickupAirportId: Number(id),
       pickupTrainId: null,
       pickupId: null,
-      pickupName: selectedAirport?.arabicName || "",
+      pickupName: selectedAirportName,
       pickupLat: null,
       pickupLong: null,
     });
