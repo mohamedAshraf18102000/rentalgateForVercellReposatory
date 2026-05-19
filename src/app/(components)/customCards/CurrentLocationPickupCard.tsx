@@ -24,7 +24,7 @@ const CurrentLocationPickupCard = ({
 
   return (
     <div className="w-full px-4 md:px-0">
-      <div className="bg-white w-full max-w-5xl mt-6 md:mt-10 mx-auto rounded-[18px] grid grid-cols-1 md:grid-cols-2 overflow-hidden shadow-xl border-2 border-white min-h-[350px]">
+      <div className="bg-white w-full max-w-5xl mt-6 mx-auto rounded-[18px] grid grid-cols-1 md:grid-cols-2 overflow-hidden shadow-xl border-2 border-white min-h-[350px]">
         <div className="relative h-48 md:h-full min-h-[250px]">
           <Image src={image} alt="bgApp2" fill className="object-cover" />
         </div>

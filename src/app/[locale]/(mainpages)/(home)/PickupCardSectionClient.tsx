@@ -46,7 +46,7 @@ export default function PickupCardSectionClient({
               onShowResultsClick={handleShowResultsClick}
             />
           ) : (
-            <div className="xl:min-h-[480px]">
+            <div className="xl:min-h-[450px]">
               <PickUpCard
                 title={card.title}
                 description={card.description}
