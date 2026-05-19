@@ -235,7 +235,7 @@ const CarsCard = ({
               <div className="">
                 <Button
                   variant="secondary"
-                  className=" bg-white font-bold text-base"
+                  className=" bg-white font-bold text-sm! px-2! py-2! rounded-lg!"
                 >
                   <span className="bg-linear-to-b from-[#BE2326] to-[#581012] bg-clip-text text-transparent">
                     {t("bookNow")}
