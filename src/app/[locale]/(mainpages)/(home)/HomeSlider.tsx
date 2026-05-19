@@ -33,7 +33,7 @@ const HomeSlider = ({ bannersData }: { bannersData: Banner[] }) => {
                     alt={image.bannerName}
                     fill
                     sizes="100vw"
-                    className="object-cover object-center"
+                    className="object-cover object-center bg-Grey100/90"
                     priority={index === 0}
                   />
                 </div>

@@ -21,7 +21,7 @@ const PickUpCard = ({
             src={image}
             alt={title}
             fill
-            className="object-cover border-3 border-white shadow-lg rounded-2xl"
+            className="object-cover border-3 border-white shadow-lg rounded-2xl bg-Grey100/90"
           />
         </div>
         <div className="group-hover:p-2 transition-all duration-300">
