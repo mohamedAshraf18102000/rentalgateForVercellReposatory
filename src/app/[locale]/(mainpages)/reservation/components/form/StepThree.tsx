@@ -11,6 +11,7 @@ import { useCompanyDriversPricing } from "@/hooks/api/useCompanyDriversPricing";
 import { calculateServicePrice } from "@/lib/utils/calculateServicePrice";
 import { useTranslations } from "next-intl";
 import { formatPrice } from "@/lib/utils";
+import { Skeleton } from "@/app/(components)/ui/skeleton";
 
 interface StepThreeProps {
   control: Control<ReservationFormValues>;
@@ -22,7 +23,7 @@ const StepThree = ({ control, errors }: StepThreeProps) => {
   const services = useBookedCarDetailsStore((s) => s.services);
   const formdata = useBookedCarDetailsStore((s) => s.formData);
   const carDetails = useBookedCarDetailsStore((s) => s.carDetails);
-  const { data: companyDriversPricing } = useCompanyDriversPricing(
+  const { data: companyDriversPricing, isPending } = useCompanyDriversPricing(
     formdata.branchId!,
   );
 
@@ -205,49 +206,59 @@ const StepThree = ({ control, errors }: StepThreeProps) => {
               );
             })}
 
-            {visibleDrivers?.map((driver) => {
-              const drvId = driver.cdsId;
-              const isSelected = selectedDriver?.id === drvId;
-              return (
-                <SelectableServiceDriverCard
-                  key={driver.cdsId}
-                  driver={driver}
-                  selected={isSelected}
-                  onToggle={() => toggleService(drvId, "driver")}
-                  badge={
-                    driver.cdsType === "in"
-                      ? t("reservation.stepThree.driverInsideCity")
-                      : t("reservation.stepThree.driverOutsideCity")
-                  }
-                  hoursPerDay={driverHours[drvId] ?? selectedDriver?.hours ?? 1}
-                  numberOfDays={driverDays[drvId] ?? selectedDriver?.days ?? 1}
-                  onHoursChange={(h) => {
-                    setDriverHours((prev) => ({ ...prev, [drvId]: h }));
-                    if (isSelected) {
-                      const next = {
-                        ...selectedDriver,
-                        hours: h,
-                        type: driver.cdsType as "in" | "out",
-                      };
-                      onChangeDriver(next);
-                      setFormData({ driver: next });
-                    }
-                  }}
-                  onDaysChange={(d) => {
-                    setDriverDays((prev) => ({ ...prev, [drvId]: d }));
-                    if (isSelected) {
-                      const next = {
-                        ...selectedDriver,
-                        days: d,
-                        type: driver.cdsType as "in" | "out",
-                      };
-                      onChangeDriver(next);
-                      setFormData({ driver: next });
-                    }
-                  }}
-                />
-              );
-            })}
+            {isPending ? (
+              <Skeleton className="bg-Grey200 w-full h-[200px] rounded-md" />
+            ) : (
+              <>
+                {visibleDrivers?.map((driver) => {
+                  const drvId = driver.cdsId;
+                  const isSelected = selectedDriver?.id === drvId;
+                  return (
+                    <SelectableServiceDriverCard
+                      key={driver.cdsId}
+                      driver={driver}
+                      selected={isSelected}
+                      onToggle={() => toggleService(drvId, "driver")}
+                      badge={
+                        driver.cdsType === "in"
+                          ? t("reservation.stepThree.driverInsideCity")
+                          : t("reservation.stepThree.driverOutsideCity")
+                      }
+                      hoursPerDay={
+                        driverHours[drvId] ?? selectedDriver?.hours ?? 1
+                      }
+                      numberOfDays={
+                        driverDays[drvId] ?? selectedDriver?.days ?? 1
+                      }
+                      onHoursChange={(h) => {
+                        setDriverHours((prev) => ({ ...prev, [drvId]: h }));
+                        if (isSelected) {
+                          const next = {
+                            ...selectedDriver,
+                            hours: h,
+                            type: driver.cdsType as "in" | "out",
+                          };
+                          onChangeDriver(next);
+                          setFormData({ driver: next });
+                        }
+                      }}
+                      onDaysChange={(d) => {
+                        setDriverDays((prev) => ({ ...prev, [drvId]: d }));
+                        if (isSelected) {
+                          const next = {
+                            ...selectedDriver,
+                            days: d,
+                            type: driver.cdsType as "in" | "out",
+                          };
+                          onChangeDriver(next);
+                          setFormData({ driver: next });
+                        }
+                      }}
+                    />
+                  );
+                })}
+              </>
+            )}
           </div>
         </>
       )}
