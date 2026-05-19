@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Control, FieldErrors, useController } from "react-hook-form";
 import { ReservationFormValues } from "@/lib/validations/reservationSchema";
 import { useBookedCarDetailsStore } from "@/lib/stores/useBookedCarDetailsStore";
@@ -52,14 +52,60 @@ const StepThree = ({ control, errors }: StepThreeProps) => {
   });
 
   const {
-    field: { onChange: onChangeExtraKmApplied },
+    field: { value: extraKmApplied, onChange: onChangeExtraKmApplied },
   } = useController({
     name: "extraKmApplied",
     control,
     defaultValue: false,
   });
 
+  const {
+    field: { value: extraKmQuotaId, onChange: onChangeExtraKmQuotaId },
+  } = useController({
+    name: "extraKmQuotaId",
+    control,
+    defaultValue: null,
+  });
+
   const setFormData = useBookedCarDetailsStore((s) => s.setFormData);
+
+  const selectQuota = (quotaId: number) => {
+    if (extraKmType === "QUOTA" && extraKmQuotaId === quotaId) return;
+
+    onChangeExtraKmType("QUOTA");
+    onChangeExtraKmApplied(true);
+    onChangeExtraKmQuotaId(quotaId);
+    setFormData({
+      extraKmType: "QUOTA",
+      extraKmApplied: true,
+      extraKmQuotaId: quotaId,
+    });
+  };
+
+  const selectUnlimited = () => {
+    if (extraKmType === "UNLIMITED") return;
+
+    onChangeExtraKmType("UNLIMITED");
+    onChangeExtraKmApplied(true);
+    onChangeExtraKmQuotaId(null);
+    setFormData({
+      extraKmType: "UNLIMITED",
+      extraKmApplied: true,
+      extraKmQuotaId: null,
+    });
+  };
+
+  useEffect(() => {
+    if (extraKmApplied) return;
+
+    const packages = carDetails?.kilometerPackages;
+    if (packages?.length) {
+      selectQuota(packages[0].cceId);
+    } else if (formdata.carDetails?.unlimitedKmPrice !== 0) {
+      selectUnlimited();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [carDetails?.kilometerPackages, extraKmApplied]);
 
   // Lifted state: keyed by drvId
   const [driverHours, setDriverHours] = useState<Record<number, number>>({});
@@ -95,12 +141,7 @@ const StepThree = ({ control, errors }: StepThreeProps) => {
         setFormData({ driver: nextDriver });
       }
     } else if (type === "unlimited") {
-      const next: "UNLIMITED" | "QUOTA" =
-        extraKmType === "UNLIMITED" ? "QUOTA" : "UNLIMITED";
-      const isApplied = next === "UNLIMITED";
-      onChangeExtraKmType(next);
-      onChangeExtraKmApplied(isApplied);
-      setFormData({ extraKmType: next, extraKmApplied: isApplied });
+      selectUnlimited();
     }
   };
 
@@ -139,23 +180,22 @@ const StepThree = ({ control, errors }: StepThreeProps) => {
         </div>
       ) : (
         <>
-          <div className="bg-Grey100 p-2 rounded-md">
-            <span className="bg-red-700 w-full p-2 rounded-lg text-white mb-2! block">
-              Not Applied Yet need the key for reservation from backend
-            </span>
+          <div className="">
             {carDetails?.kilometerPackages.map((km) => (
-              <div key={km.cceId}>
-                <p className="font-bold">عرض كيلوميترات</p>
-                <p className="flex items-center gap-1 mt-1">
-                  <span>احجز</span>
-                  <span className="font-bold">{km.km} كيلومتر</span>
-                  <span>بسعر</span>
-                  <span className="font-bold">{formatPrice(km.price)} </span>
-                  <span>
-                    <SaudiRiyal className="w-4 h-4" />
-                  </span>
-                </p>
-              </div>
+              <SelectableServiceCard
+                key={km.cceId}
+                service={
+                  {
+                    serviceArabicName: "عرض كيلوميترات",
+                    notes: `يمكنك شراء عدد ${km.km} كيلومترات بسعر ${formatPrice(km.price)} ريال`,
+                    price: formatPrice(km.price),
+                  } as any
+                }
+                selected={
+                  extraKmType === "QUOTA" && extraKmQuotaId === km.cceId
+                }
+                onToggle={() => selectQuota(km.cceId)}
+              />
             ))}
           </div>
           <div className="grid grid-cols-1 gap-4">

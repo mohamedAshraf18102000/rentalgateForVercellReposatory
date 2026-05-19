@@ -91,6 +91,7 @@ export const buildInitialReservationValues = ({
     driver: formData.driver || null,
     extraKmType: formData.extraKmType || "QUOTA",
     extraKmApplied: formData.extraKmApplied || false,
+    extraKmQuotaId: formData.extraKmQuotaId ?? null,
   };
 };
 
@@ -122,6 +123,7 @@ export const buildResetReservationValues = (): ReservationFormValues => ({
   driver: null,
   extraKmType: "QUOTA",
   extraKmApplied: false,
+  extraKmQuotaId: null,
 });
 
 export const mapValuesToFormData = (
@@ -169,6 +171,8 @@ export const mapValuesToFormData = (
     update.extraKmType = values.extraKmType as "UNLIMITED" | "QUOTA";
   if (values.extraKmApplied !== undefined)
     update.extraKmApplied = values.extraKmApplied as boolean;
+  if (values.extraKmQuotaId !== undefined)
+    update.extraKmQuotaId = values.extraKmQuotaId as number | null;
   if (values.pickupLat !== undefined) update.pickupLat = values.pickupLat as number | null;
   if (values.pickupLong !== undefined)
     update.pickupLong = values.pickupLong as number | null;

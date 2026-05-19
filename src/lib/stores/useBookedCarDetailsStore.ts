@@ -63,6 +63,7 @@ export interface ReservationFormData {
   } | null;
   extraKmType: "UNLIMITED" | "QUOTA" | null;
   extraKmApplied: boolean;
+  extraKmQuotaId: number | null;
   points: {
     type: "PACKAGE" | "COUPON" | null;
     pointsPkId: number | null;
@@ -124,6 +125,7 @@ const createInitialFormData = (): ReservationFormData => ({
   driver: null,
   extraKmType: "QUOTA",
   extraKmApplied: false,
+  extraKmQuotaId: null,
   points: null,
   carDetails: null,
   pickupType: null,

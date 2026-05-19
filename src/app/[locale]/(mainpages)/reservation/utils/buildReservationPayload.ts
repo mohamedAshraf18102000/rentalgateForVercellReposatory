@@ -74,7 +74,8 @@ export const buildReservationPayload = (formData: any) => {
     extraKm: {
       extraKmApplied: formData.extraKmApplied,
       extraKmType: formData.extraKmType,
-      extraKmQuotaId: null,
+      extraKmQuotaId:
+        formData.extraKmType === "QUOTA" ? formData.extraKmQuotaId ?? null : null,
     },
     reservationForOther: hasReservationForOtherData
       ? {

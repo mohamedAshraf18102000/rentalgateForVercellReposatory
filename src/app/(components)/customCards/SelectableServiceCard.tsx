@@ -1,5 +1,6 @@
 "use client";
 
+import { formatPrice } from "@/lib/utils";
 import { CompanyService } from "@/types/companyCars/carServices";
 import { SaudiRiyal } from "lucide-react";
 import { useLocale } from "next-intl";
@@ -86,7 +87,7 @@ const SelectableServiceCard = ({
             <div className="mt-1 flex flex-wrap items-center gap-1">
               <div className="flex gap-1">
                 <span className="text-sm font-black text-gray-900 sm:text-base">
-                  {service.price}
+                  {formatPrice(Number(service.price))}
                 </span>
                 <SaudiRiyal className="h-5 w-5 text-gray-900 p-0WS" />
               </div>

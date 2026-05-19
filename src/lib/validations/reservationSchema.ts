@@ -97,6 +97,7 @@ export const createReservationSchema = (messages: ReservationSchemaMessages) =>
         .optional(),
       extraKmType: z.enum(["UNLIMITED", "QUOTA"]).optional(),
       extraKmApplied: z.boolean().optional(),
+      extraKmQuotaId: z.number().nullable().optional(),
     })
     .superRefine((data, ctx) => {
       const MIN_RENTAL_MS = 2 * 60 * 60 * 1000;
