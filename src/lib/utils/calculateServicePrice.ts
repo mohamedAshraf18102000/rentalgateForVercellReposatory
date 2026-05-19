@@ -1,6 +1,9 @@
-import { CompanyService } from "@/types/companyCars/carServices";
+import { ServicePriceInput } from "@/types/companyCars/carServices";
 
-export const calculateServicePrice = (service: CompanyService, rentalDays: number) => {
+export const calculateServicePrice = (
+  service: ServicePriceInput,
+  rentalDays: number,
+) => {
   const days = rentalDays || 1;
   
   if (service.csType === "once") {
@@ -15,9 +18,9 @@ export const calculateServicePrice = (service: CompanyService, rentalDays: numbe
     if (service.priceType === "multi") {
       let pricePerDay = 0;
       if (days <= 6) {
-        pricePerDay = service.dailyPrice;
+        pricePerDay = service.dailyPrice ?? 0;
       } else if (days <= 14) {
-        pricePerDay = service.weeklyPrice / 7;
+        pricePerDay = (service.weeklyPrice ?? 0) / 7;
       } else if (days <= 29) {
         pricePerDay = (service.halfMonthly || 0) / 15;
       } else if (days <= 359) {

@@ -184,13 +184,11 @@ const StepThree = ({ control, errors }: StepThreeProps) => {
             {carDetails?.kilometerPackages.map((km) => (
               <SelectableServiceCard
                 key={km.cceId}
-                service={
-                  {
-                    serviceArabicName: "عرض كيلوميترات",
-                    notes: `يمكنك شراء عدد ${km.km} كيلومترات بسعر ${formatPrice(km.price)} ريال`,
-                    price: formatPrice(km.price),
-                  } as any
-                }
+                service={{
+                  serviceArabicName: "عرض كيلوميترات",
+                  notes: `يمكنك شراء عدد ${km.km} كيلومترات بسعر ${formatPrice(km.price)} ريال`,
+                  price: formatPrice(km.price),
+                }}
                 selected={
                   extraKmType === "QUOTA" && extraKmQuotaId === km.cceId
                 }
@@ -201,24 +199,20 @@ const StepThree = ({ control, errors }: StepThreeProps) => {
           <div className="grid grid-cols-1 gap-4">
             {formdata.carDetails?.unlimitedKmPrice !== 0 && (
               <SelectableServiceCard
-                service={
-                  {
-                    serviceArabicName: t(
-                      "reservation.stepThree.unlimitedKmTitle",
-                    ),
-                    notes: t("reservation.stepThree.unlimitedKmNotes"),
-                    price: calculateServicePrice(
-                      {
-                        price: formdata.carDetails?.unlimitedKmPrice || 0,
-                        csType: "everyday",
-                        priceType: "same",
-                      } as any,
-                      formdata.rentalDays || 1,
-                    ),
-                    originalPrice: 0,
-                    percentage: 0,
-                  } as any
-                }
+                service={{
+                  serviceArabicName: t(
+                    "reservation.stepThree.unlimitedKmTitle",
+                  ),
+                  notes: t("reservation.stepThree.unlimitedKmNotes"),
+                  price: calculateServicePrice(
+                    {
+                      price: formdata.carDetails?.unlimitedKmPrice || 0,
+                      csType: "everyday",
+                      priceType: "same",
+                    },
+                    formdata.rentalDays || 1,
+                  ),
+                }}
                 selected={extraKmType === "UNLIMITED"}
                 badge={
                   <p className="text-sm p-2 bg-StatusBrownBG rounded-[8px] text-StatusBrown200 font-bold flex items-center gap-1">

@@ -1,3 +1,4 @@
+import { formatPrice } from "@/lib/utils";
 import Image from "next/image";
 
 interface IUserPointsWalletProps {
@@ -14,7 +15,7 @@ const UserPointsWallet = ({
   return (
     <div className="bg-Grey100 rounded-full flex items-center py-0.5 px-3 gap-1 line-clamp-1 text-ellipsis">
       <Image src={icon} alt="icon" width={20} height={20} />
-      <p className="text-sm">{number}</p>
+      <p className="text-sm">{formatPrice(Number(number))}</p>
       {extraIcon}
     </div>
   );

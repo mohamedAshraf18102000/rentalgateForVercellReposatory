@@ -27,3 +27,15 @@ export interface CompanyService {
 }
 
 export type CompanyServicesResponse = CompanyService[];
+
+/** Fields used by calculateServicePrice — supports partial inputs (e.g. unlimited km). */
+export type ServicePriceInput = Pick<
+  CompanyService,
+  "csType" | "price" | "priceType"
+> &
+  Partial<
+    Pick<
+      CompanyService,
+      "dailyPrice" | "weeklyPrice" | "halfMonthly" | "monthly" | "yearly"
+    >
+  >;

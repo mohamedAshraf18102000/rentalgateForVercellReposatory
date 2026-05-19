@@ -1,25 +1,37 @@
 "use client";
 
 import { formatPrice } from "@/lib/utils";
-import { CompanyService } from "@/types/companyCars/carServices";
 import { SaudiRiyal } from "lucide-react";
 import { useLocale } from "next-intl";
 
-interface SelectableServiceCardProps {
+/** Minimal display fields required by SelectableServiceCard. */
+export interface SelectableServiceBase {
+  csId?: number;
+  serviceArabicName: string;
+  serviceEnglishName?: string;
+  name?: string;
+  notes?: string | null;
+  price: number | string;
+  csType?: string;
+}
+
+interface SelectableServiceCardProps<
+  T extends SelectableServiceBase = SelectableServiceBase,
+> {
   rentalDays?: number;
-  service: CompanyService;
+  service: T;
   selected: boolean;
   onToggle: () => void;
   badge?: React.ReactNode;
 }
 
-const SelectableServiceCard = ({
+function SelectableServiceCard<T extends SelectableServiceBase>({
   rentalDays,
   service,
   selected,
   onToggle,
   badge,
-}: SelectableServiceCardProps) => {
+}: SelectableServiceCardProps<T>) {
   const locale = useLocale();
   const isRTL = locale === "ar";
   const checkboxId = `service-card-${service.csId ?? Math.random()}`;
@@ -109,6 +121,6 @@ const SelectableServiceCard = ({
       </div>
     </label>
   );
-};
+}
 
 export default SelectableServiceCard;
