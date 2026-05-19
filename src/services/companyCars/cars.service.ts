@@ -17,6 +17,7 @@ export interface CarFilters {
   searchType?: string;
   priceType?: string;
   sortBy?: string;
+  name?: string;
   userPhysicalLongitudeFilter?: number;
   userPhysicalLatitudeFilter?: number;
 }
@@ -39,6 +40,7 @@ export const getCompanyCars = async (
       filters.searchType,
       filters.priceType,
       filters.sortBy,
+      filters.name,
       filters.longitude,
       filters.latitude,
     ].some((value) => value !== undefined && value !== null && value !== ""),
@@ -98,6 +100,7 @@ export const getCompanyCars = async (
     addParam("searchType", searchTypeToUse);
     addParam("priceType", filters.priceType ?? "");
     addParam("sortBy", filters.sortBy ?? "");
+    addParam("name", filters.name);
 
     // When searching by airport/train station, backend does not accept lat/lng.
     if (!(hasAirport || hasTrainStation)) {

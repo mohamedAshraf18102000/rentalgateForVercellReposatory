@@ -12,7 +12,7 @@ import PositioningIcon from "@/constants/icons/PositioningIcon";
 import CarRentIcon from "@/constants/icons/CarRentIcon";
 import PaginationDateView from "@/app/(components)/PaginationDateView";
 import { Separator } from "@/app/(components)/ui/separator";
-import FilterDrawer from "./BookCars/FilterDrawer";
+import FilterDrawer from "../FilterDrawer";
 import { useUserPreferedFiltersStore } from "@/lib/stores/useUserPreferedFiltersStore";
 import { useLocationStore } from "@/lib/stores/useLocationStore";
 import { useBookedCarDetailsStore } from "@/lib/stores/useBookedCarDetailsStore";
@@ -22,6 +22,7 @@ import { useGetTrainStations } from "@/hooks/api/useGetTrainStations";
 import { detectPickupCategory } from "@/lib/utils/pickupLocationCategory";
 import { useTranslations } from "next-intl";
 import { useEffect } from "react";
+import SearchDialog from "./SearchDialog";
 
 const CarSearchForm = ({
   control,
@@ -33,6 +34,8 @@ const CarSearchForm = ({
   total,
   priceSort,
   onTogglePriceSort,
+  onCarSearch,
+  appliedCarSearchName,
 }: any) => {
   const t = useTranslations("home");
   const fromDate = watch("fromDate");
@@ -53,6 +56,7 @@ const CarSearchForm = ({
   const setShowPricesWithTax = useBookedCarDetailsStore(
     (state) => state.setShowPricesWithTax,
   );
+
   const hasStorePickupCoordinates =
     filters.pickupLat != null && filters.pickupLng != null;
   const effectivePickupAddress = hasStorePickupCoordinates
@@ -135,7 +139,6 @@ const CarSearchForm = ({
 
   return (
     <>
-      <div className="w-[90%] h-[100px] bg-red-500 absolute top-[10%] translate-x-[50%] right-1/2 z-[9999999999] rounded-2xl"></div>
       <label className="flex flex-wrap cursor-pointer items-center gap-2 hover:bg-Grey100 rounded-lg p-2 w-fit transition-all duration-300">
         <Checkbox
           width={22}
@@ -282,9 +285,7 @@ const CarSearchForm = ({
                 )}
               </button>
               <FilterDrawer />
-              <Button type="submit" className="w-full shrink-0 sm:w-auto">
-                <Search />
-              </Button>
+              <SearchDialog onSearch={onCarSearch} />
             </div>
           </div>
           {shouldShowRestrictedLocationMessage && restrictedLocationMessage && (

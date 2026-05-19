@@ -6,7 +6,7 @@ import { useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import { useUserPreferedFiltersStore } from "@/lib/stores/useUserPreferedFiltersStore";
 import { useCompanyCars } from "../../hooks/useCompanyCars";
-import CarSearchForm from "../CarSearchForm";
+import CarSearchForm from "./carSearchForm/CarSearchForm";
 import CarsGrid from "../CarsGrid";
 import LoadMoreButton from "../LoadMoreButton";
 import { Skeleton } from "@/app/(components)/ui/skeleton";
@@ -26,6 +26,7 @@ const BookCars = () => {
   const [priceSort, setPriceSort] = useState<"price_asc" | "price_desc" | null>(
     null,
   );
+  const [carSearchName, setCarSearchName] = useState<string | undefined>();
   const t = useTranslations("home");
   const { openDialog } = usePickupDialogStore();
   const userPhysical_Address = useLocationStore(
@@ -78,6 +79,7 @@ const BookCars = () => {
           : undefined,
     locationType: appliedFilters.pickupType === "branches" ? "1" : undefined,
     brandId: appliedFilters.brandId || undefined,
+    name: carSearchName || undefined,
     ...(priceSort ? { sortBy: priceSort } : {}),
   };
 
@@ -178,6 +180,10 @@ const BookCars = () => {
               return null;
             })
           }
+          onCarSearch={(name: string) =>
+            setCarSearchName(name.trim() || undefined)
+          }
+          appliedCarSearchName={carSearchName}
         />
       </div>
       {isLoading ? (

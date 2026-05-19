@@ -39,6 +39,7 @@ interface DialogWrapperProps {
   content?: React.ReactNode;
   footer?: React.ReactNode;
   className?: string;
+  overlayClassName?: string;
   contentClassName?: string;
   closeOnOutsideClick?: boolean;
   scrollableContent?: boolean;
@@ -70,6 +71,7 @@ export function DialogWrapper({
   content,
   footer,
   className,
+  overlayClassName,
   contentClassName,
   closeOnOutsideClick = true,
   scrollableContent = false,
@@ -286,6 +288,7 @@ export function DialogWrapper({
 
       <DialogContent
         className={cn(sizeClasses[size], "mt-7", className)}
+        overlayClassName={overlayClassName}
         hideCloseButton={!!header?.mainTitle}
         onInteractOutside={(e) => {
           if (!closeOnOutsideClick) e.preventDefault();
@@ -294,6 +297,9 @@ export function DialogWrapper({
           if (!closeOnOutsideClick) e.preventDefault();
         }}
       >
+        {!header?.mainTitle && !header?.subTitle && (
+          <DialogTitle className="sr-only">Dialog</DialogTitle>
+        )}
         {(header || extraHeader) && (
           <DialogHeader className="text-center space-y-4">
             {renderHeader()}
