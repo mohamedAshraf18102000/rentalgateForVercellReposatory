@@ -330,6 +330,11 @@
       }
     },
     "validation": {
+      "fullNameRequired": "الاسم مطلوب",
+      "emailRequired": "البريد الإلكتروني مطلوب",
+      "emailInvalid": "البريد الإلكتروني غير صالح",
+      "mobileRequired": "رقم الهاتف مطلوب",
+      "mobileInvalid": "رقم الهاتف غير صالح",
       "residenceTypeRequired": "نوع الإقامة مطلوب",
       "nationalityRequired": "الجنسية مطلوبة",
       "identityExpiryDateRequired": "تاريخ انتهاء الهوية مطلوب",

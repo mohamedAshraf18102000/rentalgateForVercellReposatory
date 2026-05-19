@@ -33,6 +33,7 @@ export interface ClientData {
   city?: any;
   residenceType?: any;
   nationality?: any;
+  identityExpiryDate?: string;
   licenseExpirationDate?: any;
   licenseImage?: any;
   profileImage?: any;

@@ -2,15 +2,18 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { uploadImage } from "@/services/uploadImages/uploadImage.service";
 import { Button, DialogWrapper } from "@/app/(components)";
-import { useClientStore } from "@/lib/api/stores/client.store";
-import { updateUserProfile } from "@/services/userProfile/updateUserProfile.service";
 import { UpdateUserProfilePayload } from "@/types/userProfile/updateUserProfile";
 import { formatDateAsLocalDay } from "@/lib/utils/formatLocalDateTime";
+import { mapUserProfileToReservationFormValues } from "@/lib/utils/mapUserProfileToReservationForm";
 import {
+  mergeUpdateUserReservationProfileFormValues,
+  updateUserReservationProfileDefaultValues,
   updateUserReservationProfileSchema,
   UpdateUserReservationProfileFormValues,
 } from "@/lib/validations/updateUserReservationProfileSchema";
-import { useTranslations } from "next-intl";
+import useGetUserProfile from "@/hooks/api/useGetUserProfile";
+import useUpdateUserProfile from "@/hooks/api/useUpdateUserProfile";
+import { useLocale, useTranslations } from "next-intl";
 import { useEffect } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { toast } from "sonner";
@@ -26,7 +29,13 @@ const UpdateUserReservationProfile = ({
   setOpen,
 }: UpdateUserSavedLocationDialogProps) => {
   const t = useTranslations("profile.updateReservationProfileDialog");
-  const { clientData, fetchClientData } = useClientStore();
+  const locale = useLocale();
+  const {
+    data: profileData,
+    isLoading: isProfileLoading,
+    isError: isProfileError,
+  } = useGetUserProfile(open);
+
   const imagesPrefixUrl = process.env.NEXT_PUBLIC_IMAGES_PREFIX_URL?.replace(
     /\/+$/,
     "",
@@ -48,16 +57,7 @@ const UpdateUserReservationProfile = ({
     resolver: zodResolver(updateUserReservationProfileSchema),
     mode: "onChange",
     reValidateMode: "onChange",
-    defaultValues: {
-      idNumber: "0",
-      nationality: "",
-      personalId: "",
-      passportNumber: "",
-      borderNumber: "",
-      identityExpiryDate: undefined,
-      licenseImage: "",
-      licenceExpiryDate: undefined,
-    },
+    defaultValues: updateUserReservationProfileDefaultValues,
   });
 
   const residenceType = useWatch({ control, name: "idNumber" });
@@ -75,96 +75,72 @@ const UpdateUserReservationProfile = ({
       mutationFn: uploadImage,
     });
 
-  const { mutate: patchReservationProfile, isPending } = useMutation({
-    mutationFn: async (values: UpdateUserReservationProfileFormValues) => {
-      const payload: UpdateUserProfilePayload = {
-        fullName: clientData?.clientName || undefined,
-        email: clientData?.email || undefined,
-        mobile: clientData?.mobile || undefined,
-        nationality: values.nationality,
-        residenceType: Number(values.idNumber),
-        identityExpiryDate:
-          formatDateAsLocalDay(values.identityExpiryDate) || undefined,
-        licenseExpirationDate:
-          formatDateAsLocalDay(values.licenceExpiryDate) || undefined,
-        licenseImage: values.licenseImage,
-      };
+  const { mutate: patchReservationProfile, isPending } = useUpdateUserProfile();
 
-      if (values.idNumber === "2")
-        payload.passportNumber = values.passportNumber;
-      else if (values.idNumber === "3")
-        payload.borderNumber = values.borderNumber;
-      else payload.personalId = values.personalId;
+  const buildUpdatePayload = (
+    values: UpdateUserReservationProfileFormValues,
+  ): UpdateUserProfilePayload => {
+    const payload: UpdateUserProfilePayload = {
+      fullName: values.fullName,
+      email: values.email,
+      mobile: values.mobile,
+      nationality: values.nationality,
+      residenceType: Number(values.idNumber),
+      identityExpiryDate:
+        formatDateAsLocalDay(values.identityExpiryDate) || undefined,
+      licenseExpirationDate:
+        formatDateAsLocalDay(values.licenceExpiryDate) || undefined,
+      licenseImage: values.licenseImage,
+    };
 
-      return updateUserProfile(payload);
-    },
-    onSuccess: () => {
-      toast.success(t("toast.updateSuccess"));
-      fetchClientData({ force: true });
-      setOpen(false);
-    },
-    onError: (error: Error) => {
-      toast.error(error.message || t("toast.updateError"));
-    },
-  });
+    if (values.idNumber === "2") payload.passportNumber = values.passportNumber;
+    else if (values.idNumber === "3")
+      payload.borderNumber = values.borderNumber;
+    else payload.personalId = values.personalId;
 
-  const handleAutoFillFromProfile = () => {
-    if (!clientData) {
+    return payload;
+  };
+
+  const applyProfileToForm = () => {
+    if (!profileData) {
       toast.error(t("toast.noProfileData"));
       return;
     }
 
-    const residenceValue =
-      typeof clientData.residenceType === "object"
-        ? String(
-            clientData.residenceType?.residenceTypeId ??
-              clientData.residenceType?.id ??
-              0,
-          )
-        : String(clientData.residenceType ?? 0);
-
-    const nationalityValue =
-      typeof clientData.nationality === "object"
-        ? clientData.nationality?.name ||
-          clientData.nationality?.englishName ||
-          clientData.nationality?.arabicName ||
-          ""
-        : String(clientData.nationality ?? "");
-
-    setValue("idNumber", residenceValue || "0");
-    setValue("nationality", nationalityValue);
-    setValue("personalId", String(clientData.personalId ?? ""));
-    setValue("passportNumber", String(clientData.passportNumber ?? ""));
-    setValue("borderNumber", String(clientData.borderNumber ?? ""));
-    setValue(
-      "identityExpiryDate",
-      clientData.licenseExpirationDate
-        ? new Date(clientData.licenseExpirationDate)
-        : undefined,
+    reset(
+      mergeUpdateUserReservationProfileFormValues(
+        mapUserProfileToReservationFormValues(profileData),
+      ),
     );
-    setValue(
-      "licenceExpiryDate",
-      clientData.licenseExpirationDate
-        ? new Date(clientData.licenseExpirationDate)
-        : undefined,
-    );
-    setValue("licenseImage", String(clientData.licenseImage ?? ""));
   };
 
   const onSubmit = (values: UpdateUserReservationProfileFormValues) => {
-    patchReservationProfile(values);
+    patchReservationProfile(buildUpdatePayload(values), {
+      onSuccess: () => {
+        toast.success(t("toast.updateSuccess"));
+        reset(updateUserReservationProfileDefaultValues);
+        setOpen(false);
+      },
+      onError: (error: Error) => {
+        toast.error(error.message || t("toast.updateError"));
+      },
+    });
   };
 
   useEffect(() => {
     if (!open) {
-      reset();
+      reset(updateUserReservationProfileDefaultValues);
       return;
     }
 
-    handleAutoFillFromProfile();
-    // We only want to auto-fill once when dialog opens.
+    if (profileData) {
+      applyProfileToForm();
+    } else if (isProfileError) {
+      toast.error(t("toast.updateError"));
+    }
+    // Auto-fill when dialog opens and profile data is available.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open, reset]);
+  }, [open, profileData, isProfileError, reset]);
 
   return (
     <DialogWrapper
@@ -174,6 +150,7 @@ const UpdateUserReservationProfile = ({
       closeOnOutsideClick={false}
       scrollableContent={true}
       maxScrollHeight="550px"
+      showScrollbar={true}
       header={{
         mainTitle: (
           <div>
@@ -182,16 +159,19 @@ const UpdateUserReservationProfile = ({
         ),
       }}
       content={
-        <ProfileForm
-          control={control}
-          errors={errors}
-          residenceType={residenceType}
-          licenseImagePreviewUrl={licenseImagePreviewUrl}
-          isUploading={isUploading}
-          uploadLicenseImage={uploadLicenseImage}
-          setValue={setValue}
-          getErrorMessage={getErrorMessage}
-        />
+        <div dir={locale === "ar" ? "rtl" : "ltr"} className="px-3">
+          <ProfileForm
+            control={control}
+            errors={errors}
+            residenceType={residenceType}
+            licenseImagePreviewUrl={licenseImagePreviewUrl}
+            isUploading={isUploading}
+            uploadLicenseImage={uploadLicenseImage}
+            setValue={setValue}
+            getErrorMessage={getErrorMessage}
+            isProfileLoading={isProfileLoading}
+          />
+        </div>
       }
       footer={
         <>
@@ -208,7 +188,7 @@ const UpdateUserReservationProfile = ({
                 className="text-base w-2/3"
                 loading={isPending}
                 onClick={handleSubmit(onSubmit)}
-                disabled={isUploading}
+                disabled={isUploading || isProfileLoading}
               >
                 {t("actions.save")}
               </Button>

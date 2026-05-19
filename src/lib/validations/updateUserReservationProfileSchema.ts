@@ -8,8 +8,21 @@ const isValidDateInput = (val: unknown) => {
   return false;
 };
 
+const phoneRegex = /^\+?[0-9]{8,15}$/;
+
 export const updateUserReservationProfileSchema = z
   .object({
+    fullName: z.string().min(1, "validation.fullNameRequired"),
+    email: z
+      .string()
+      .min(1, "validation.emailRequired")
+      .email("validation.emailInvalid"),
+    mobile: z
+      .string()
+      .min(1, "validation.mobileRequired")
+      .refine((val) => phoneRegex.test(val.trim()), {
+        message: "validation.mobileInvalid",
+      }),
     idNumber: z.string().min(1, "validation.residenceTypeRequired"),
     nationality: z.string().min(1, "validation.nationalityRequired"),
     personalId: z.string().optional(),
@@ -56,3 +69,34 @@ export const updateUserReservationProfileSchema = z
 export type UpdateUserReservationProfileFormValues = z.infer<
   typeof updateUserReservationProfileSchema
 >;
+
+export const updateUserReservationProfileDefaultValues: UpdateUserReservationProfileFormValues =
+  {
+    fullName: "",
+    email: "",
+    mobile: "",
+    idNumber: "0",
+    nationality: "",
+    personalId: "",
+    passportNumber: "",
+    borderNumber: "",
+    identityExpiryDate: undefined,
+    licenseImage: "",
+    licenceExpiryDate: undefined,
+  };
+
+export const mergeUpdateUserReservationProfileFormValues = (
+  values?: Partial<UpdateUserReservationProfileFormValues>,
+): UpdateUserReservationProfileFormValues => ({
+  ...updateUserReservationProfileDefaultValues,
+  ...values,
+  fullName: values?.fullName ?? "",
+  email: values?.email ?? "",
+  mobile: values?.mobile ?? "",
+  idNumber: values?.idNumber ?? "0",
+  nationality: values?.nationality ?? "",
+  personalId: values?.personalId ?? "",
+  passportNumber: values?.passportNumber ?? "",
+  borderNumber: values?.borderNumber ?? "",
+  licenseImage: values?.licenseImage ?? "",
+});

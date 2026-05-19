@@ -91,7 +91,7 @@
       "myBookingsDescription": "View previous bookings",
       "walletTitle": "Wallet",
       "walletDescription": "Redeem earned points",
-      "completeProfileTitle": "Complete profile details",
+      "completeProfileTitle": "User profile details",
       "completeProfileDescription": "Finish your profile information"
     },
     "userReferral": {
@@ -330,6 +330,11 @@
       }
     },
     "validation": {
+      "fullNameRequired": "Full name is required",
+      "emailRequired": "Email is required",
+      "emailInvalid": "Invalid email address",
+      "mobileRequired": "Phone number is required",
+      "mobileInvalid": "Invalid phone number",
       "residenceTypeRequired": "Residence type is required",
       "nationalityRequired": "Nationality is required",
       "identityExpiryDateRequired": "Identity expiry date is required",

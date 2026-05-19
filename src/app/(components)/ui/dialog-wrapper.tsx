@@ -44,6 +44,7 @@ interface DialogWrapperProps {
   closeOnOutsideClick?: boolean;
   scrollableContent?: boolean;
   maxScrollHeight?: string;
+  showScrollbar?: boolean;
   forceDialog?: boolean;
 }
 
@@ -76,6 +77,7 @@ export function DialogWrapper({
   closeOnOutsideClick = true,
   scrollableContent = false,
   maxScrollHeight = "60vh",
+  showScrollbar = false,
   forceDialog = false,
 }: DialogWrapperProps) {
   const isMobile = useIsMobile();
@@ -161,6 +163,11 @@ export function DialogWrapper({
       observer.disconnect();
     };
   }, [scrollableContent, content]);
+
+  const scrollAreaClassName = cn(
+    "overflow-y-auto",
+    showScrollbar ? "custom-scrollbar" : "scrollbar-hide",
+  );
 
   // Responsive sizes
   const sizeClasses = {
@@ -260,7 +267,7 @@ export function DialogWrapper({
                 <div className="relative overflow-hidden rounded-xl">
                   <div
                     ref={scrollRef}
-                    className="overflow-y-auto scrollbar-hide"
+                    className={scrollAreaClassName}
                     style={{ maxHeight: maxScrollHeight }}
                   >
                     <div className={cn(contentClassName)}>{content}</div>
@@ -312,7 +319,7 @@ export function DialogWrapper({
               <div className="relative overflow-hidden rounded-xl">
                 <div
                   ref={scrollRef}
-                  className="overflow-y-auto scrollbar-hide"
+                  className={scrollAreaClassName}
                   style={{ maxHeight: maxScrollHeight }}
                 >
                   <div className={cn(contentClassName)}>{content}</div>

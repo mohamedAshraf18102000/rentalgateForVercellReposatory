@@ -24,6 +24,7 @@ import {
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import InputRequired from "@/app/(components)/InputRequired";
+import UserDetailsForm from "./UserDetailsForm";
 
 interface ProfileFormProps {
   control: Control<UpdateUserReservationProfileFormValues>;
@@ -34,6 +35,7 @@ interface ProfileFormProps {
   uploadLicenseImage: (file: File) => Promise<string>;
   setValue: UseFormSetValue<UpdateUserReservationProfileFormValues>;
   getErrorMessage: (message?: string) => string | undefined;
+  isProfileLoading?: boolean;
 }
 
 const ProfileForm = ({
@@ -45,11 +47,21 @@ const ProfileForm = ({
   uploadLicenseImage,
   setValue,
   getErrorMessage,
+  isProfileLoading,
 }: ProfileFormProps) => {
   const t = useTranslations("profile.updateReservationProfileDialog");
 
   return (
-    <form className="space-y-4" id="update-reservation-profile-form">
+    <form className="space-y-2 mb-5" id="update-reservation-profile-form">
+      <UserDetailsForm
+        control={control}
+        errors={errors}
+        getErrorMessage={getErrorMessage}
+        disabled={isProfileLoading}
+      />
+
+      <Separator className="" />
+
       <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
         <div className="col-span-1">
           <Controller
@@ -62,7 +74,10 @@ const ProfileForm = ({
                   <InputRequired />
                 </Label>
                 <div className="mt-2">
-                  <Select onValueChange={field.onChange} value={field.value}>
+                  <Select
+                    onValueChange={field.onChange}
+                    value={field.value ?? "0"}
+                  >
                     <SelectTrigger className="w-full h-10 px-3 py-2 bg-[#eceef2] border-input rounded-[8px] text-sm">
                       <SelectValue
                         placeholder={t("fields.residenceType.placeholder")}
@@ -100,6 +115,7 @@ const ProfileForm = ({
             render={({ field }) => (
               <Input
                 {...field}
+                value={field.value ?? ""}
                 required
                 label={t("fields.nationality.label")}
                 startIcon={<Globe className="size-4" />}
@@ -120,6 +136,7 @@ const ProfileForm = ({
                   required
                   type="number"
                   {...field}
+                  value={field.value ?? ""}
                   label={t("fields.personalId.label")}
                   startIcon={<IdCard className="size-4" />}
                   placeholder={t("fields.personalId.placeholder")}
@@ -138,8 +155,8 @@ const ProfileForm = ({
               render={({ field }) => (
                 <Input
                   required
-                  type="number"
                   {...field}
+                  value={field.value ?? ""}
                   label={t("fields.passportNumber.label")}
                   startIcon={<IdCard className="size-4" />}
                   placeholder={t("fields.passportNumber.placeholder")}
@@ -160,6 +177,7 @@ const ProfileForm = ({
                   required
                   type="number"
                   {...field}
+                  value={field.value ?? ""}
                   label={t("fields.borderNumber.label")}
                   startIcon={<IdCard className="size-4" />}
                   placeholder={t("fields.borderNumber.placeholder")}
@@ -202,6 +220,7 @@ const ProfileForm = ({
               <InputFileUpload
                 InputAsterisk
                 {...field}
+                value={field.value ?? ""}
                 label={t("fields.licenseImage.label")}
                 placeholder={t("fields.licenseImage.placeholder")}
                 initialPreviewUrl={licenseImagePreviewUrl}
