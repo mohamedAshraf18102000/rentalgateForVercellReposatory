@@ -1,11 +1,10 @@
-import GoogleMapsLocation from "../../mapsLocation/GoogleMapsLocation";
 import useUserAddreses from "@/hooks/api/useUserAddreses";
 import { UserAddress } from "@/types/userProfile/userAddress";
 import { usePickupDialogStore } from "@/lib/stores/usePickupDialogStore";
 import { useBookedCarDetailsStore } from "@/lib/stores/useBookedCarDetailsStore";
 import { useLocationStore } from "@/lib/stores/useLocationStore";
 import { useAuth } from "../../navbar/hooks/useAuth";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { ReverseGeocodeMeta } from "@/lib/utils/reverseGeocode";
 import { useGetTrainStations } from "@/hooks/api/useGetTrainStations";
 import { useGetAirports } from "@/hooks/api/useGetAirports";
@@ -22,6 +21,7 @@ const HomeUserCurrentLocation = () => {
   const commonT = useTranslations("common");
   const { data: userAddresses, isLoading: isLoadingAddresses } =
     useUserAddreses(authenticated);
+  const locale = useLocale();
   const { data: trainStationsData } = useGetTrainStations();
   const { data: airportsData } = useGetAirports();
   const [isAddLocationDialogOpen, setIsAddLocationDialogOpen] = useState(false);
@@ -113,7 +113,9 @@ const HomeUserCurrentLocation = () => {
               className="font-bold text-sm border-2 px-3 py-1.5 rounded-lg flex items-center gap-1 hover:bg-Grey200 transition-colors"
             >
               <span>{t("pickupDialog.addNewAddress")}</span>{" "}
-              <ChevronLeft className="w-4 h-4" />
+              <ChevronLeft
+                className={`w-4 h-4 ${locale === "ar" ? "" : "rotate-180"}`}
+              />
             </button>
           </div>
 

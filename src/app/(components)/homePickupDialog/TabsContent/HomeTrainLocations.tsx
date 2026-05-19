@@ -6,11 +6,13 @@ import { Separator } from "../../ui/separator";
 import { useGetTrainStations } from "@/hooks/api/useGetTrainStations";
 import { Skeleton } from "../../ui/skeleton";
 import { useBookedCarDetailsStore } from "@/lib/stores/useBookedCarDetailsStore";
+import { useLocale, useTranslations } from "next-intl";
 
 const HomeTrainLocations = () => {
   const { data: trainStationsData, isPending } = useGetTrainStations();
   const { setFormData, formData } = useBookedCarDetailsStore();
-
+  const t = useTranslations("home");
+  const locale = useLocale();
   const handleStationSelection = (value: string) => {
     const id = value.replace("station-", "");
     const selectedStation = trainStationsData?.content?.find(
@@ -41,7 +43,7 @@ const HomeTrainLocations = () => {
         </>
       ) : (
         <RadioGroup
-          dir="rtl"
+          dir={locale === "ar" ? "rtl" : "ltr"}
           className="flex flex-col gap-y-2 w-[95%] mx-auto mt-2"
           onValueChange={handleStationSelection}
           value={
@@ -51,7 +53,9 @@ const HomeTrainLocations = () => {
               : ""
           }
         >
-          <p className="text-base font-bold">محطات القطار الأكثر شهرة:</p>
+          <p className="text-base font-bold">
+            {t("pickupDialog.popularLocations.trainStations")}
+          </p>
 
           {trainStationsData?.content?.map((station) => (
             <div
@@ -68,10 +72,16 @@ const HomeTrainLocations = () => {
                     size={20}
                   />
                   <div className="flex flex-col gap-0.5">
-                    <p className="text-sm truncate">{station.arabicName}</p>
-                    {station.arabicName && (
+                    <p className="text-sm truncate">
+                      {locale === "ar"
+                        ? station.arabicName
+                        : station.englishName}
+                    </p>
+                    {station && (
                       <p className="text-xs text-muted-foreground">
-                        {station.arabicName}
+                        {locale === "ar"
+                          ? station.arabicName
+                          : station.englishName}
                       </p>
                     )}
                   </div>

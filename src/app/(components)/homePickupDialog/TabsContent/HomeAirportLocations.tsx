@@ -7,11 +7,13 @@ import { Separator } from "../../ui/separator";
 import { useGetAirports } from "@/hooks/api/useGetAirports";
 import { Skeleton } from "../../ui/skeleton";
 import { useBookedCarDetailsStore } from "@/lib/stores/useBookedCarDetailsStore";
+import { useLocale, useTranslations } from "next-intl";
 
 const HomeAirportLocations = () => {
   const { data: airportsData, isPending } = useGetAirports();
   const { setFormData, formData } = useBookedCarDetailsStore();
-
+  const t = useTranslations("home");
+  const locale = useLocale();
   const handleAirportSelection = (value: string) => {
     const id = value.replace("airport-", "");
     const selectedAirport = airportsData?.content?.find(
@@ -42,7 +44,7 @@ const HomeAirportLocations = () => {
         </>
       ) : (
         <RadioGroup
-          dir="rtl"
+          dir={locale === "ar" ? "rtl" : "ltr"}
           className="flex flex-col gap-y-2 w-[95%] mx-auto mt-2"
           onValueChange={handleAirportSelection}
           value={
@@ -52,7 +54,9 @@ const HomeAirportLocations = () => {
               : ""
           }
         >
-          <p className="text-base font-bold">المطارات الأكثر شهرة:</p>
+          <p className="text-base font-bold">
+            {t("pickupDialog.popularLocations.airports")}
+          </p>
 
           <div className="overflow-y-auto max-h-[360px]">
             {airportsData?.content?.map((airport) => (
