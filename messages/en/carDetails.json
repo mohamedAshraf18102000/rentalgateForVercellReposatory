@@ -14,6 +14,7 @@
   "taxExcluded": "Excludes tax",
   "hangedOfferTop": "Special",
   "hangedOfferBottom": "Offer",
+  "freeDeliveryForDays": "Book {days} Days & Get Free Delivery",
   "forRentalDays": "({days} days)",
   "totalForDays": "Total for {days, plural, one {# day} other {# days}}",
   "pricePerPricingType": "/ {pricingType}",

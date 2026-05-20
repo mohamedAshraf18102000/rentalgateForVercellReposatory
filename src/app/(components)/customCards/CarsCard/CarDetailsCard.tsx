@@ -34,7 +34,7 @@ interface CarDetailsCardProps {
   extraKmPrice: number;
   unlimitedKm: number;
   ccbId: number;
-
+  daysForFreeDelivery?: number | null;
   // ── Shared props (same as CarsCard BaseCardProps) ──
   advancedCard?: boolean;
   extraBadgeTitle?: string;
@@ -71,6 +71,7 @@ const CarDetailsCard = ({
   extraKmPrice,
   unlimitedKm,
   ccbId,
+  daysForFreeDelivery,
   extraBadgeTitle,
   firstBadgeTitle,
   firstBadgeColor,
@@ -207,6 +208,20 @@ const CarDetailsCard = ({
             >
               <HangedOfferIcon />
             </figcaption>
+          )}
+
+          {typeof daysForFreeDelivery === "number" && (
+            <>
+              <RoundedRec className="absolute inset-x-0 bottom-0 z-40 px-10" />
+              <figcaption className="absolute inset-x-0 bottom-0 z-50 flex w-full items-center justify-center gap-1 px-2 py-0.5 sm:gap-2 sm:px-3">
+                <span className="shrink-0">
+                  <ExeclusiveOfferIcon />
+                </span>
+                <span className="min-w-0 text-center text-[10px] font-bold leading-tight text-StatusDarkGreen sm:text-xs md:text-sm">
+                  {t("freeDeliveryForDays", { days: daysForFreeDelivery })}
+                </span>
+              </figcaption>
+            </>
           )}
         </figure>
       </div>

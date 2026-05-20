@@ -276,6 +276,7 @@ const BranchCarsCarousel = ({
                 className="my-2 block h-full w-full sm:my-3"
               >
                 <CarsCard
+                  daysForFreeDelivery={car.daysForFreeDelivery}
                   className="h-full w-full min-w-0"
                   showTax={isShowTax}
                   firstBadgeTitle={offerBadge || undefined}

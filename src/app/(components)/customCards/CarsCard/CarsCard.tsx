@@ -20,8 +20,11 @@ import HangedOfferIcon from "./components/hangedOffer/HangedOfferIcon";
 import RatingStars from "./components/RatingStars";
 import { Button } from "../../ui/button";
 import { cn } from "@/lib/utils";
+import ExeclusiveOfferIcon from "@/constants/icons/ExeclusiveOfferIcon";
+import RoundedRec from "@/constants/icons/RoundedRec";
 
 interface carsCard {
+  daysForFreeDelivery?: number | null;
   advancedCard?: boolean;
   extraBadgeTitle?: string;
   firstBadgeTitle?: string;
@@ -46,6 +49,7 @@ interface carsCard {
 }
 
 const CarsCard = ({
+  daysForFreeDelivery,
   advancedCard,
   extraBadgeTitle,
   extraBadgeColor,
@@ -124,8 +128,21 @@ const CarsCard = ({
               </figcaption>
             </>
           )}
-        </figure>
 
+          {typeof daysForFreeDelivery === "number" && (
+            <>
+              <RoundedRec className="absolute inset-x-0 bottom-0 z-40 px-9" />
+              <figcaption className="absolute inset-x-0 bottom-0 z-50 flex w-full items-center justify-center gap-1 px-2 py-0.5 sm:gap-2 sm:px-3">
+                <span className="shrink-0">
+                  <ExeclusiveOfferIcon />
+                </span>
+                <span className="min-w-0 text-center text-[10px] font-bold leading-tight text-StatusDarkGreen sm:text-xs md:text-sm">
+                  {t("freeDeliveryForDays", { days: daysForFreeDelivery })}
+                </span>
+              </figcaption>
+            </>
+          )}
+        </figure>
         <CardHeader className="mt-5">
           <CardTitle className="font-bold flex justify-between items-start">
             <h3 className="w-3/4 text-sm sm:text-base">{carName}</h3>

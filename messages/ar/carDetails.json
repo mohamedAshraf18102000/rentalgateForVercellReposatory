@@ -14,6 +14,7 @@
   "taxExcluded": "غير شامل الضريبة",
   "hangedOfferTop": "عرض",
   "hangedOfferBottom": "خاص",
+  "freeDeliveryForDays": "توصيل مجاني عند حجز {days} يوم",
   "forRentalDays": "( لـ {days} يوم )",
   "totalForDays": "اجمالي السعر لعدد {days} يوم",
   "pricePerPricingType": "/ {pricingType}",

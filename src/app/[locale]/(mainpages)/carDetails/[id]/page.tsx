@@ -135,43 +135,6 @@ const page = () => {
   }, [data, rentalDays]);
 
   const pricingType = pricing.pricingType;
-  const pricingTypeLabels: Record<PricingType, string> = useMemo(
-    () => ({
-      DAILY: t("pricingType.daily"),
-      WEEKLY: t("pricingType.weekly"),
-      HALF_MONTHLY: t("pricingType.halfMonthly"),
-      MONTHLY: t("pricingType.monthly"),
-      YEARLY: t("pricingType.yearly"),
-    }),
-    [t],
-  );
-
-  const { discountPercentage } = useMemo(
-    () =>
-      calculateDiscount({
-        originalPrice:
-          pricingType === "DAILY"
-            ? (data?.dailyPrice ?? 0)
-            : pricingType === "WEEKLY"
-              ? (data?.weeklyPrice ?? 0)
-              : pricingType === "HALF_MONTHLY"
-                ? (data?.halfMonthPrice ?? 0)
-                : pricingType === "MONTHLY"
-                  ? (data?.monthlyPrice ?? 0)
-                  : (data?.yearlyPrice ?? 0),
-        offerPrice:
-          pricingType === "DAILY"
-            ? (data?.offerDailyPrice ?? 0)
-            : pricingType === "WEEKLY"
-              ? (data?.offerWeeklyPrice ?? 0)
-              : pricingType === "HALF_MONTHLY"
-                ? (data?.offerHalfMonthPrice ?? 0)
-                : pricingType === "MONTHLY"
-                  ? (data?.offerMonthlyPrice ?? 0)
-                  : (data?.offerYearlyPrice ?? 0),
-      }),
-    [pricingType, data],
-  );
 
   if (isLoading || !data)
     return (
@@ -191,10 +154,11 @@ const page = () => {
     );
 
   return (
-    <WrapperContainer exceedNav>
+    <WrapperContainer exceedNav className="w-[75%]">
       <CarsDetailsBreadCrump />
       <div className="mt-10">
         <CarDetailsCard
+          daysForFreeDelivery={data?.daysForFreeDelivery}
           workingTime={data?.workingHours}
           dailyPrice={data?.dailyPrice}
           freeKm={data.allowedKm}
