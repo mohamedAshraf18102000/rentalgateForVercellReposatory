@@ -5,8 +5,8 @@ import {
   getPaymentTerms,
 } from "@/services/termsAndConditions/cancelationTerms.service";
 import { TermItem } from "@/types/termsAndConditions/cancelationTerms";
-import { setRequestLocale } from "next-intl/server";
-import { FileText, Ban, HandCoins } from "lucide-react";
+import { getTranslations, setRequestLocale } from "next-intl/server";
+import { FileText, Ban, HandCoins, Handshake } from "lucide-react";
 import { Separator } from "@/app/(components)/ui/separator";
 import { Badge, Card, HashAnchorScroller } from "@/app/(components)";
 import { CardContent, CardHeader, CardTitle } from "@/app/(components)/ui/card";
@@ -22,20 +22,32 @@ const EmptyState = ({ message }: { message: string }) => (
   </div>
 );
 
-const TermSection = ({ term }: { term: TermItem }) => (
-  <div className="py-4 first:pt-0 last:pb-0">
-    <h3 className="text-sm font-semibold text-foreground mb-1.5">
-      {term.title || term.arabicTitle}
-    </h3>
-    <p className="text-sm text-muted-foreground leading-relaxed whitespace-pre-line">
-      {term.terms || term.arabicTerms}
-    </p>
-  </div>
-);
+const TermSection = ({ term, locale }: { term: TermItem; locale: string }) => {
+  const useArabic = locale === "ar";
+  const titleText = useArabic
+    ? term.arabicTitle || term.title
+    : term.englishTitle || term.title;
+  const termsText = useArabic
+    ? term.arabicTerms || term.terms
+    : term.englishTerms || term.terms;
+
+  return (
+    <div className="py-4 first:pt-0 last:pb-0">
+      <h3 className="text-sm font-semibold text-foreground mb-1.5">
+        {titleText}
+      </h3>
+      <p className="text-sm text-muted-foreground leading-relaxed whitespace-pre-line">
+        {termsText}
+      </p>
+    </div>
+  );
+};
 
 const Page = async ({ params }: Props) => {
   const { locale } = await params;
   setRequestLocale(locale);
+
+  const t = await getTranslations({ locale, namespace: "termsAndConditions" });
 
   let cancelationTerms: TermItem[] = [];
   let bookingTerms: TermItem[] = [];
@@ -73,86 +85,26 @@ const Page = async ({ params }: Props) => {
         <div className="mb-8">
           <div className="flex items-center gap-2 mb-1">
             <FileText className="w-5 h-5 text-primary" />
-            <h1 className="text-2xl font-bold tracking-tight">
-              الشروط والأحكام
-            </h1>
+            <h1 className="text-2xl font-bold tracking-tight">{t("title")}</h1>
           </div>
-          <p className="text-sm text-muted-foreground">
-            يرجى قراءة الشروط والأحكام التالية بعناية قبل استخدام خدماتنا.
-          </p>
+          <p className="text-sm text-muted-foreground">{t("subtitle")}</p>
           <Separator className="mt-4" />
         </div>
 
         <div className="flex flex-col gap-6">
-          <Card id="booking-terms" className="border border-border shadow-sm">
-            <CardHeader className="pb-3">
-              <div className="flex items-center justify-between">
-                <CardTitle className="text-base font-semibold flex items-center gap-2">
-                  <FileText className="w-4 h-4 text-primary" />
-                  شروط الحجز
-                </CardTitle>
-                {bookingTerms.length > 0 && (
-                  <Badge variant="secondary" className="text-xs">
-                    {bookingTerms.length} بند
-                  </Badge>
-                )}
-              </div>
-              <Separator />
-            </CardHeader>
-            <CardContent className="pt-0">
-              {bookingTerms.length > 0 ? (
-                <div className="divide-y divide-border">
-                  {bookingTerms.map((term) => (
-                    <TermSection key={term.termsId} term={term} />
-                  ))}
-                </div>
-              ) : (
-                <EmptyState message="لا توجد شروط متاحة حاليًا." />
-              )}
-            </CardContent>
-          </Card>
-
-          <Card id="payment-terms" className="border border-border shadow-sm">
-            <CardHeader className="pb-3">
-              <div className="flex items-center justify-between">
-                <CardTitle className="text-base font-semibold flex items-center gap-2">
-                  <HandCoins className="w-4 h-4" />
-                  شروط الدفع
-                </CardTitle>
-                {paymentTerms.length > 0 && (
-                  <Badge variant="secondary" className="text-xs">
-                    {cancelationTerms.length} بند
-                  </Badge>
-                )}
-              </div>
-              <Separator />
-            </CardHeader>
-            <CardContent className="pt-0">
-              {paymentTerms.length > 0 ? (
-                <div className="divide-y divide-border">
-                  {paymentTerms.map((term) => (
-                    <TermSection key={term.termsId} term={term} />
-                  ))}
-                </div>
-              ) : (
-                <EmptyState message="لا توجد شروط متاحة حاليًا." />
-              )}
-            </CardContent>
-          </Card>
-
           <Card
-            id="cancelation-terms"
+            id="terms-and-conditions"
             className="border border-border shadow-sm"
           >
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
                 <CardTitle className="text-base font-semibold flex items-center gap-2">
-                  <Ban className="w-4 h-4 text-destructive" />
-                  شروط الإلغاء
+                  <Handshake className="w-4 h-4" />
+                  {t("sections.termsAndConditions")}
                 </CardTitle>
                 {cancelationTerms.length > 0 && (
                   <Badge variant="secondary" className="text-xs">
-                    {cancelationTerms.length} بند
+                    {t("badgeCount", { count: cancelationTerms.length })}
                   </Badge>
                 )}
               </div>
@@ -162,19 +114,86 @@ const Page = async ({ params }: Props) => {
               {cancelationTerms.length > 0 ? (
                 <div className="divide-y divide-border">
                   {cancelationTerms.map((term) => (
-                    <TermSection key={term.termsId} term={term} />
+                    <TermSection
+                      key={term.termsId}
+                      term={term}
+                      locale={locale}
+                    />
                   ))}
                 </div>
               ) : (
-                <EmptyState message="لا توجد شروط متاحة حاليًا." />
+                <EmptyState message={t("empty")} />
               )}
             </CardContent>
           </Card>
+
+          <Card id="booking-terms" className="border border-border shadow-sm">
+            <CardHeader className="pb-3">
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-base font-semibold flex items-center gap-2">
+                  <FileText className="w-4 h-4 text-primary" />
+                  {t("sections.booking")}
+                </CardTitle>
+                {bookingTerms.length > 0 && (
+                  <Badge variant="secondary" className="text-xs">
+                    {t("badgeCount", { count: bookingTerms.length })}
+                  </Badge>
+                )}
+              </div>
+              <Separator />
+            </CardHeader>
+            <CardContent className="pt-0">
+              {bookingTerms.length > 0 ? (
+                <div className="divide-y divide-border">
+                  {bookingTerms.map((term) => (
+                    <TermSection
+                      key={term.termsId}
+                      term={term}
+                      locale={locale}
+                    />
+                  ))}
+                </div>
+              ) : (
+                <EmptyState message={t("empty")} />
+              )}
+            </CardContent>
+          </Card>
+
+          {/* <Card id="payment-terms" className="border border-border shadow-sm">
+            <CardHeader className="pb-3">
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-base font-semibold flex items-center gap-2">
+                  <HandCoins className="w-4 h-4" />
+                  {t("sections.payment")}
+                </CardTitle>
+                {paymentTerms.length > 0 && (
+                  <Badge variant="secondary" className="text-xs">
+                    {t("badgeCount", { count: paymentTerms.length })}
+                  </Badge>
+                )}
+              </div>
+              <Separator />
+            </CardHeader>
+            <CardContent className="pt-0">
+              {paymentTerms.length > 0 ? (
+                <div className="divide-y divide-border">
+                  {paymentTerms.map((term) => (
+                    <TermSection
+                      key={term.termsId}
+                      term={term}
+                      locale={locale}
+                    />
+                  ))}
+                </div>
+              ) : (
+                <EmptyState message={t("empty")} />
+              )}
+            </CardContent>
+          </Card> */}
         </div>
 
         <p className="text-xs text-muted-foreground text-center mt-8">
-          باستخدامك لخدماتنا، فإنك توافق على جميع الشروط والأحكام المذكورة
-          أعلاه.
+          {t("footer")}
         </p>
       </div>
     </WrapperContainer>

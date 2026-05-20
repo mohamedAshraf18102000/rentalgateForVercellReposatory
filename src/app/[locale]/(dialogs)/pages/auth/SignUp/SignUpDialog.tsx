@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Button, Input, DialogWrapper } from "@/ui";
+import { Button, Input, DialogWrapper, Checkbox } from "@/ui";
 import { useDialog } from "../../..";
 import CountryPhone from "@/app/(components)/template/phone/CountryPhone";
 import type { SignUpProps } from "./SignUp.types";
@@ -10,12 +10,11 @@ import type { SignUpPayload } from "./types/api.types";
 import { setShowWelcomePointsFlag } from "@/hooks/useWelcomePoints";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
-import { useParams } from "next/navigation";
+import WarningMessage from "@/app/(components)/WarningMessage";
+import Link from "next/link";
 
 export function SignUpDialog({ onSignUp, onClose, onLogin }: SignUpProps) {
   const { openDialog } = useDialog();
-  const params = useParams();
-  const locale = (params.locale as string) || "ar";
   const [firstName, setFirstName] = React.useState("");
   const [lastName, setLastName] = React.useState("");
   const [mobile, setMobile] = React.useState("");
@@ -24,11 +23,19 @@ export function SignUpDialog({ onSignUp, onClose, onLogin }: SignUpProps) {
   const [confirmPassword, setConfirmPassword] = React.useState("");
   const [isLoading, setIsLoading] = React.useState(false);
   const [isPhoneValid, setIsPhoneValid] = React.useState(false);
+  const [isTermsAccepted, setIsTermsAccepted] = React.useState(false);
 
   const tValidation = useTranslations("validation.AUTH_ERRORS");
   const t = useTranslations("auth.signUp");
 
-  const handleSignUp = async () => {
+  const handleSignUp = async (e?: React.FormEvent) => {
+    e?.preventDefault();
+
+    if (!isTermsAccepted) {
+      toast.error(tValidation("TERMS_MUST_BE_ACCEPTED"));
+      return;
+    }
+
     if (!firstName || !lastName) {
       toast.error(
         tValidation("FIRST_NAME_IS_REQUIRED") || "يرجى إدخال الاسم بالكامل",
@@ -150,7 +157,7 @@ export function SignUpDialog({ onSignUp, onClose, onLogin }: SignUpProps) {
 
   const passwordsMatch = password === confirmPassword;
 
-  const isFormValid =
+  const isBaseFormValid =
     firstName &&
     lastName &&
     password &&
@@ -158,6 +165,8 @@ export function SignUpDialog({ onSignUp, onClose, onLogin }: SignUpProps) {
     email &&
     mobile &&
     isPhoneValid;
+
+  const isFormValid = isBaseFormValid && isTermsAccepted;
 
   return (
     <>
@@ -169,9 +178,14 @@ export function SignUpDialog({ onSignUp, onClose, onLogin }: SignUpProps) {
           mainTitle: t("title"),
         }}
         scrollableContent={true}
+        contentContainerClassName="rounded-none"
         maxScrollHeight="350px"
         content={
-          <div className="grid gap-4">
+          <form
+            id="signup-form"
+            onSubmit={(e) => void handleSignUp(e)}
+            className="grid gap-4"
+          >
             {/* First Name and Last Name */}
             <div className="grid grid-cols-2 gap-4">
               <Input
@@ -239,12 +253,40 @@ export function SignUpDialog({ onSignUp, onClose, onLogin }: SignUpProps) {
                 </p>
               )}
             </div>
-          </div>
+
+            <div className="grid gap-1">
+              <div className="flex items-center gap-2">
+                <Checkbox
+                  id="signup-terms-and-conditions"
+                  checked={isTermsAccepted}
+                  onCheckedChange={(checked) =>
+                    setIsTermsAccepted(checked === true)
+                  }
+                />
+                <label
+                  htmlFor="signup-terms-and-conditions"
+                  className="text-sm text-[#1A1A1A] font-medium leading-[130%] cursor-pointer underline underline-offset-2"
+                >
+                  <Link href={"/terms&conditions#terms-and-conditions"} target="_blank">
+                    {t("form.termsAndConditionsLabel")}
+                  </Link>
+                </label>
+              </div>
+              {isBaseFormValid && !isTermsAccepted && (
+                <WarningMessage
+                  message={t("form.termsRequired")}
+                  removeIcon={true}
+                  className="mx-6 mt-0!"
+                />
+              )}
+            </div>
+          </form>
         }
         footer={
           <div className="w-full space-y-4 mt-8">
             <Button
-              onClick={handleSignUp}
+              type="submit"
+              form="signup-form"
               disabled={!isFormValid || isLoading}
               className="w-full"
               loading={isLoading}

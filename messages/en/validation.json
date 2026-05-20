@@ -35,6 +35,7 @@
     "PASSWORD_IS_REQUIRED": "Please enter your password",
     "PASSWORD_IS_INVALID": "Password must be at least 6 characters",
     "CHANNEL_IS_REQUIRED": "Please select a communication channel",
+    "TERMS_MUST_BE_ACCEPTED": "You must accept the terms and conditions to create an account",
     "YOU_MUST_ADD_EITHER_MOBILE_OR_VALID_MAIL": "You must add a valid mobile number or email",
     "CAN_NOT_SEND_OTP_THROUGH_WHATSAPP_UNLESS_MOBILE_IS_PRESENT": "Cannot send OTP via WhatsApp without mobile number",
     "CAN_NOT_SEND_OTP_THROUGH_EMAIL_UNLESS_EMAIL_IS_PRESENT": "Please enter your email address",

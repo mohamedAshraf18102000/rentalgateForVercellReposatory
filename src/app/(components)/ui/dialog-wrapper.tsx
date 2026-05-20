@@ -46,6 +46,7 @@ interface DialogWrapperProps {
   maxScrollHeight?: string;
   showScrollbar?: boolean;
   forceDialog?: boolean;
+  contentContainerClassName?: string;
 }
 
 // Detect mobile
@@ -79,6 +80,7 @@ export function DialogWrapper({
   maxScrollHeight = "60vh",
   showScrollbar = false,
   forceDialog = false,
+  contentContainerClassName,
 }: DialogWrapperProps) {
   const isMobile = useIsMobile();
   const shouldUseDialog = forceDialog || !isMobile;
@@ -264,7 +266,12 @@ export function DialogWrapper({
           <div className="px-3 pb-2">
             {content &&
               (scrollableContent ? (
-                <div className="relative overflow-hidden rounded-xl">
+                <div
+                  className={cn(
+                    "relative overflow-hidden rounded-xl",
+                    contentContainerClassName,
+                  )}
+                >
                   <div
                     ref={scrollRef}
                     className={scrollAreaClassName}
@@ -316,7 +323,12 @@ export function DialogWrapper({
         <div className="p-4 sm:p-5 pt-2">
           {content &&
             (scrollableContent ? (
-              <div className="relative overflow-hidden rounded-xl">
+              <div
+                className={cn(
+                  "relative overflow-hidden rounded-xl",
+                  contentContainerClassName,
+                )}
+              >
                 <div
                   ref={scrollRef}
                   className={scrollAreaClassName}

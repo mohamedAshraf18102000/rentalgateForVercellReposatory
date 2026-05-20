@@ -169,7 +169,7 @@ function TimePicker({
 
   return (
     <div
-      className="time-picker-scroll bg-Grey100 p-2 rounded-2xl grid grid-cols-3 gap-2 overflow-y-auto max-h-[260px] sm:max-h-[325px] pr-1"
+      className="time-picker-scroll bg-Grey100 p-2 rounded-2xl grid grid-cols-3 auto-rows-min gap-2 content-start overflow-y-auto h-full min-h-0 pr-1"
       style={{ scrollbarWidth: "thin" }}
     >
       {TIME_SLOTS.map((slot) => {
@@ -316,15 +316,14 @@ function DateTimeContent({
       )}
       {title && <hr className="my-3" />}
       <div
+        dir="rtl"
         className={cn(
-          "flex flex-col gap-4 lg:flex-row",
+          "flex flex-col gap-4 lg:flex-row lg:items-stretch",
+          withTime && "lg:h-[400px]",
           locale === "ar" ? "lg:flex-row" : "lg:flex-row-reverse",
         )}
       >
-        <div className="w-full lg:w-auto">
-          <p className="text-sm sm:text-base! mb-2 sm:mb-3">
-            {displayDateLabel}
-          </p>
+        <div className="w-full lg:w-auto shrink-0">
           <CalendarPanel
             selected={selectedDate}
             onSelect={onDateChange}
@@ -335,10 +334,7 @@ function DateTimeContent({
           />
         </div>
         {withTime && (
-          <div className="w-full lg:w-auto">
-            <p className="text-sm sm:text-base! mb-2 sm:mb-3">
-              {displayTimeLabel}
-            </p>
+          <div className="w-full lg:flex-1 lg:min-w-0 flex lg:h-full min-h-0">
             <TimePicker
               selectedDate={selectedDate}
               referenceDate={selectedDate ?? minAllowedDate}

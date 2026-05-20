@@ -5,7 +5,13 @@ import Stepper from "../../../../(components)/rentalStepper/Stepper";
 import CarsCard from "@/app/(components)/customCards/CarsCard/CarsCard";
 import StepContent, { StepContentRef } from "../components/form/StepContent";
 import { Button } from "@/app/(components)";
-import { ChevronLeft, ChevronRight, HandCoins, SaudiRiyal } from "lucide-react";
+import {
+  Check,
+  ChevronLeft,
+  ChevronRight,
+  HandCoins,
+  SaudiRiyal,
+} from "lucide-react";
 import { Separator } from "@/app/(components)/ui/separator";
 import ReservationBreadCrump from "../components/ReservationBreadCrump";
 import { useBookedCarDetailsStore } from "@/lib/stores/useBookedCarDetailsStore";
@@ -29,6 +35,10 @@ import { useCalculateUserProfileComplete } from "@/hooks/api/useCalculateUserPro
 import UpdateUserSavedLocationDialog from "@/app/[locale]/(mainpages)/userProfile/components/userDialog/UpdateUserSavedLocationDialog";
 import { toast } from "sonner";
 import { normalizeImageUrl } from "@/util";
+
+const CheckIcon = () => {
+  return <Check className="text-green-400" />;
+};
 
 const page = () => {
   const router = useRouter();
@@ -174,27 +184,15 @@ const page = () => {
     setFormField("plan", pricingDetails.pricingType);
   }, [pricingDetails.pricingType]);
 
-  const { discountPercentage } = useMemo(
-    () =>
-      calculateDiscount({
-        originalPrice: pricingDetails.originalPricePerDay,
-        offerPrice: pricingDetails.pricePerDay,
-      }),
-    [pricingDetails.originalPricePerDay, pricingDetails.pricePerDay],
-  );
-
   const pricingTypeLabel = pricingDetails.pricingType
     ? t(`pricingType.${pricingDetails.pricingType.toLowerCase()}`)
     : "";
 
-  const discountBadge =
-    discountPercentage > 0
-      ? pricingTypeLabel
-        ? `${t("discountPrefix")} ${discountPercentage}% - ${pricingTypeLabel}`
-        : `${t("discountPrefix")} ${discountPercentage}%`
-      : "";
-
   const handleStepNavigation = async (step: number) => {
+    if (step === 2 && isStepTwoSkipped) {
+      return;
+    }
+
     if (step < activeStep) {
       setActiveStep(step);
       return;
@@ -303,6 +301,10 @@ const page = () => {
   };
 
   const handleStepperClick = async (step: number) => {
+    if (step === 2 && isStepTwoSkipped) {
+      return;
+    }
+
     if (step <= activeStep) {
       await handleStepNavigation(step);
       return;
@@ -399,29 +401,33 @@ const page = () => {
         <PickupDialog title={t("confirm")} />
         <div className="w-full">
           <ReservationBreadCrump carId={carDetails?.ccbId} />
-          <div
-            className={`w-full grid grid-cols-1 gap-3 md:gap-5 ${
-              isStepTwoSkipped ? "md:grid-cols-2" : "md:grid-cols-3"
-            }`}
-          >
+          <div className="w-full grid grid-cols-1 gap-3 md:grid-cols-3 md:gap-5">
             <Stepper
-              stepNum="1"
+              stepNum={activeStep > 1 ? <CheckIcon /> : "1"}
               title={t("reservation.stepper.stepOneTitle")}
               description={`${formData.pickupName} - ${formData.carReturnLocation}`}
               isActive={activeStep === 1}
               onClick={() => handleStepperClick(1)}
             />
-            {!isStepTwoSkipped && (
-              <Stepper
-                stepNum="2"
-                title={t("reservation.stepper.stepTwoTitle")}
-                description={t("reservation.stepper.stepTwoDescription")}
-                isActive={activeStep === 2}
-                onClick={() => handleStepperClick(2)}
-              />
-            )}
             <Stepper
-              stepNum={isStepTwoSkipped ? "2" : "3"}
+              stepNum={isStepTwoSkipped ? <CheckIcon /> : "2"}
+              title={t("reservation.stepper.stepTwoTitle")}
+              description={
+                isStepTwoSkipped
+                  ? ""
+                  : t("reservation.stepper.stepTwoDescription")
+              }
+              secondaryLabel={
+                isStepTwoSkipped
+                  ? t("reservation.stepper.stepTwoSkippedLabel")
+                  : undefined
+              }
+              isActive={activeStep === 2}
+              nonInteractive={isStepTwoSkipped}
+              onClick={() => handleStepperClick(2)}
+            />
+            <Stepper
+              stepNum="3"
               title={t("reservation.stepper.stepThreeTitle")}
               description={t("reservation.stepper.stepThreeDescription")}
               isActive={activeStep === 3}

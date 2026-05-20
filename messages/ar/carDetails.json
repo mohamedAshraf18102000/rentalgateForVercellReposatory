@@ -54,6 +54,7 @@
       "stepOneTitle": "تأكيد مكان و ميعاد الأستلام و التسليم",
       "stepTwoTitle": "تفاصيل المستأجر",
       "stepTwoDescription": "استكمال بيانات المستأجر",
+      "stepTwoSkippedLabel": "تم التخطي — الملف الشخصي مكتمل",
       "stepThreeTitle": "تحديد الخدمات",
       "stepThreeDescription": "تحديد خدمات السيارة"
     },

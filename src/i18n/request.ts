@@ -23,6 +23,7 @@ export default getRequestConfig(async ({ requestLocale }) => {
     auth: (await import(`../../messages/${locale}/auth.json`)).default,
     companyQuotation: (await import(`../../messages/${locale}/companyQuotation.json`)).default,
     schemasLocalization: (await import(`../../messages/${locale}/schemasLocalization.json`)).default,
+    termsAndConditions: (await import(`../../messages/${locale}/termsAndConditions.json`)).default,
   };
 
   return {

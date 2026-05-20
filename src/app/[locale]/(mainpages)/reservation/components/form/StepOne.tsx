@@ -23,6 +23,10 @@ import WarningMessage from "@/app/(components)/WarningMessage";
 import { useRentalDays } from "@/hooks/useCalculateRentalDays";
 import { getBestOffer } from "@/lib/utils/getBestOffer";
 import { formatLocalDateTime } from "@/lib/utils/formatLocalDateTime";
+import {
+  BOOKING_TIME_SLOT_INTERVAL_MINUTES,
+  isBeforeMinimumBookableTime,
+} from "@/lib/utils/minimumBookableDateTime";
 import { WorkingHours } from "@/types/companyCars/carDetails";
 import { useLocale, useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
@@ -45,7 +49,7 @@ const DAY_CONFIG = [
   { key: "sat", dayOfWeek: "SATURDAY" },
 ] as const;
 
-const TIME_SLOT_INTERVAL_MINUTES = 30;
+const TIME_SLOT_INTERVAL_MINUTES = BOOKING_TIME_SLOT_INTERVAL_MINUTES;
 
 const parseTimeToMinutes = (time?: string | null) => {
   if (!time) return null;
@@ -321,8 +325,7 @@ const StepOne = ({ control, errors, watch, setValue }: StepOneProps) => {
       return false;
     }
 
-    const now = new Date();
-    if (date < now) {
+    if (isBeforeMinimumBookableTime(date)) {
       return true;
     }
 

@@ -159,7 +159,7 @@ const CancelConfirmation = ({
                 <label className="text-sm font-bold sm:text-sm">
                   <Link
                     target="_blank"
-                    href="/terms&conditions#cancelation-terms"
+                    href="/terms&conditions#terms-and-conditions"
                     className="underline"
                   >
                     {t("myBookingsDrawer.cancelConfirmation.termsLinkText")}

@@ -1,0 +1,13 @@
+{
+  "title": "Terms and Conditions",
+  "subtitle": "Please read the following terms and conditions carefully before using our services.",
+  "sections": {
+    "termsAndConditions": "Terms and Conditions",
+    "booking": "Booking terms",
+    "payment": "Payment terms",
+    "cancellation": "Cancellation terms"
+  },
+  "badgeCount": "{count, plural, one {# clause} other {# clauses}}",
+  "empty": "No terms are available at the moment.",
+  "footer": "By using our services, you agree to all of the terms and conditions stated above."
+}

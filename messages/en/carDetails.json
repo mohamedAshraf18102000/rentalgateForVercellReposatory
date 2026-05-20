@@ -52,6 +52,7 @@
       "stepOneTitle": "Confirm pickup and drop-off date/time",
       "stepTwoTitle": "Renter details",
       "stepTwoDescription": "Complete renter information",
+      "stepTwoSkippedLabel": "Skipped — profile already complete",
       "stepThreeTitle": "Select services",
       "stepThreeDescription": "Choose car services"
     },

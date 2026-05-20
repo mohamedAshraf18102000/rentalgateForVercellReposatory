@@ -35,6 +35,7 @@
     "PASSWORD_IS_REQUIRED": "الرجاء إدخال كلمة المرور",
     "PASSWORD_IS_INVALID": "يجب أن تكون كلمة المرور 6 أحرف على الأقل",
     "CHANNEL_IS_REQUIRED": "الرجاء اختيار قناة التواصل",
+    "TERMS_MUST_BE_ACCEPTED": "يجب الموافقة على الشروط والأحكام لإنشاء الحساب",
     "YOU_MUST_ADD_EITHER_MOBILE_OR_VALID_MAIL": "يجب إضافة موبايل أو إيميل صحيح",
     "CAN_NOT_SEND_OTP_THROUGH_WHATSAPP_UNLESS_MOBILE_IS_PRESENT": "لا يمكن إرسال OTP عبر الواتساب بدون موبايل",
     "CAN_NOT_SEND_OTP_THROUGH_EMAIL_UNLESS_EMAIL_IS_PRESENT": "الرجاء إدخال البريد الإلكتروني",
