@@ -20,8 +20,8 @@ export interface Reservation {
   carTypeArabicName: string;
   carTypeEnglishName: string;
 
-  carCategoryArabicName: string;
-  carCategoryEnglishName: string;
+  categoryNameAr: string;
+  categoryNameEn: string;
 
   year: number;
 

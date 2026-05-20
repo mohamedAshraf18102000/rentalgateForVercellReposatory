@@ -55,8 +55,8 @@ const BookedCarsDetails = ({ data }: { data: Reservation }) => {
           </p>
           <p className="shrink-0 rounded-lg bg-Grey100 p-2 text-center text-xs font-bold sm:h-full sm:w-1/4 sm:text-sm">
             {locale === "ar"
-              ? data.carCategoryArabicName
-              : data.carCategoryEnglishName}
+              ? data.categoryNameAr
+              : data.categoryNameEn}
           </p>
         </div>
         <Separator className="my-3 sm:my-4" />

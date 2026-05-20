@@ -33,8 +33,8 @@ export const statusTranslations = {
         en: "Cancelled",
     },
     DECLINED: {
-        ar: "مرفوض",
-        en: "Declined",
+        ar: "تم الدفع و في انتظار التأكيد",
+        en: "Paid and Waiting for Confirmation",
     },
     ADMIN_APPROVED: {
         ar: "تم التأكيد",
