@@ -187,6 +187,11 @@
       "redirectCountdown": "Redirecting to your bookings in {seconds} s",
       "redirectGoNow": "Go now",
       "balanceNotEnough": "Insufficient wallet balance",
+      "validation": {
+        "termsRequired": "You must accept the terms and conditions to complete payment",
+        "walletRequired": "Please enable wallet balance to complete payment"
+      },
+      "termsAgreement": "Please read these terms and conditions carefully before using the app. By using the app, you agree to comply with these <link>Terms and Conditions</link>",
       "paymentErrorTitle": "Payment error",
       "paymentErrorDismiss": "OK"
     },

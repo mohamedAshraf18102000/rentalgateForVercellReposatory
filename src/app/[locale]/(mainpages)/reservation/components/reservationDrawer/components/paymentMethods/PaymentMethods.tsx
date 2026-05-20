@@ -1,7 +1,9 @@
 "use client";
 
-import { cn } from "@/lib/utils";
-import { Button } from "@/app/(components)";
+import { cn, formatPrice } from "@/lib/utils";
+import { Button, Checkbox } from "@/app/(components)";
+import WarningMessage from "@/app/(components)/WarningMessage";
+import { toast } from "sonner";
 import WalletBalance from "../WalletBalance";
 import { useWalletInfo } from "@/hooks/api/useWalletInfo";
 import { usePayWithWallet } from "@/hooks/api/payment/usePayWithWallet";
@@ -11,6 +13,8 @@ import { useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/routing";
 import { resetAllStores } from "@/lib/stores/resetAllStores";
 import ReservationSuccessComponent from "../ReservationSuccessComponent";
+import { SaudiRiyal } from "lucide-react";
+import { Link } from "@/i18n/routing";
 
 type PaymentMethodsProps = {
   isRTL?: boolean;
@@ -31,6 +35,8 @@ const PaymentMethods = ({
   const t = useTranslations("carDetails");
   const queryClient = useQueryClient();
   const [useWallet, setUseWallet] = useState(false);
+  const [termsAccepted, setTermsAccepted] = useState(false);
+  const [validationAttempted, setValidationAttempted] = useState(false);
   const { data: wallet, isPending: walletPending } = useWalletInfo();
   const [paymentSucceeded, setPaymentSucceeded] = useState(false);
   const [secondsUntilRedirect, setSecondsUntilRedirect] = useState(
@@ -53,7 +59,7 @@ const PaymentMethods = ({
     walletPending || wallet == null ? null : Number(wallet.balance);
   const balanceInsufficient = balance !== null && amount > balance;
 
-  const canPay =
+  const canPayWithoutTerms =
     useWallet &&
     reservationId != null &&
     reservationId > 0 &&
@@ -62,20 +68,49 @@ const PaymentMethods = ({
     !walletPending &&
     !balanceInsufficient;
 
+  const showTermsError =
+    (canPayWithoutTerms || validationAttempted) && !termsAccepted;
+  const showWalletError = validationAttempted && !useWallet;
+
+  const validatePayment = (): boolean => {
+    setValidationAttempted(true);
+
+    if (!useWallet) {
+      toast.error(t("reservation.wallet.validation.walletRequired"), {
+        position: "top-center",
+      });
+      return false;
+    }
+
+    if (!termsAccepted) {
+      toast.error(t("reservation.wallet.validation.termsRequired"), {
+        position: "top-center",
+      });
+      return false;
+    }
+
+    if (
+      reservationId == null ||
+      reservationId <= 0 ||
+      amount <= 0 ||
+      balanceInsufficient ||
+      walletPending ||
+      isPaying
+    ) {
+      return false;
+    }
+
+    return true;
+  };
+
   const errorMessage =
     error?.message && error.message.toLowerCase().includes("insufficient")
       ? t("reservation.wallet.balanceNotEnough")
       : error?.message;
 
   const handleCompletePayment = () => {
-    if (
-      !useWallet ||
-      reservationId == null ||
-      reservationId <= 0 ||
-      amount <= 0 ||
-      balanceInsufficient
-    )
-      return;
+    if (!validatePayment() || reservationId == null) return;
+
     payWithWalletMutation(
       { reservationId, amount },
       {
@@ -172,15 +207,65 @@ const PaymentMethods = ({
         </div>
       </div>
 
+      <div className="w-full px-5 pb-2">
+        <div
+          className={cn(
+            "flex items-center gap-3 rounded-lg px-3 py-3 text-xs",
+            showTermsError && "border border-StatusRed bg-red-50",
+          )}
+        >
+          <Checkbox
+            width={20}
+            height={20}
+            checked={termsAccepted}
+            onCheckedChange={(checked) => {
+              setTermsAccepted(checked === true);
+              if (checked === true) setValidationAttempted(false);
+            }}
+          />
+          <span>
+            {t.rich("reservation.wallet.termsAgreement", {
+              link: (chunks) => (
+                <Link
+                  href="/terms&conditions#booking-terms"
+                  className="text-blue-500 underline cursor-pointer mx-0.5"
+                  target="_blank"
+                >
+                  {chunks}
+                </Link>
+              ),
+            })}
+          </span>
+        </div>
+        {showTermsError ? (
+          <WarningMessage
+            message={t("reservation.wallet.validation.termsRequired")}
+            removeIcon
+            className="mt-2 px-1"
+          />
+        ) : null}
+        {showWalletError ? (
+          <WarningMessage
+            message={t("reservation.wallet.validation.walletRequired")}
+            removeIcon
+            className="mt-2 px-1"
+          />
+        ) : null}
+      </div>
+
       <div className="sticky bottom-0 shrink-0 border-t-2 bg-background p-5 shadow-[0px_-13px_15px_0px_#01250514]">
         <Button
           className="w-full text-lg! flex items-center justify-center"
           type="button"
           loading={isPaying}
-          disabled={!canPay}
+          disabled={!canPayWithoutTerms}
           onClick={handleCompletePayment}
         >
-          <span>استكمال الدفع</span>
+          <p className="flex items-center gap-1">
+            <span>{t("reservation.drawer.payLabel")}</span>
+            <span>{formatPrice(amount)}</span>
+            <SaudiRiyal className="h-6! w-6!" />
+          </p>
         </Button>
       </div>
     </div>

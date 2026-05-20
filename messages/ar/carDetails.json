@@ -189,6 +189,11 @@
       "redirectCountdown": "جاري التوجيه إلى حجوزاتك خلال {seconds} ثانية",
       "redirectGoNow": "انتقل الآن",
       "balanceNotEnough": "رصيد المحفظة غير كافي",
+      "validation": {
+        "termsRequired": "يجب الموافقة على الشروط والأحكام لإتمام الدفع",
+        "walletRequired": "يرجى تفعيل رصيد المحفظة لإتمام الدفع"
+      },
+      "termsAgreement": "يرجى قراءة هذه الشروط والأحكام بعناية قبل استخدام التطبيق. باستخدامك للتطبيق، فإنك توافق على الالتزام بهذه <link>الشروط والأحكام</link>",
       "paymentErrorTitle": "خطأ في الدفع",
       "paymentErrorDismiss": "حسناً"
     },

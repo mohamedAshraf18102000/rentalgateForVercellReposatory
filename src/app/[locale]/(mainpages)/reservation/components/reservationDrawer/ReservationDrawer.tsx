@@ -138,7 +138,7 @@ const ReservationDrawer = ({
                 disabled={isCreatingReservation || isCalculating}
                 onClick={handlePayClick}
               >
-                <span>{t("reservation.drawer.payLabel")}</span>
+                <span>{t("reservation.drawer.checkoutTitle")}</span>
                 <span className="mx-1">
                   {formatPrice(reservationData?.total || 0)}
                 </span>
