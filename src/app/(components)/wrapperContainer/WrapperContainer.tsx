@@ -13,7 +13,7 @@ const WrapperContainer = ({
 }: WrapperContainerProps) => {
   return (
     <section
-      className={cn("w-[90%] mx-auto", exceedNav && "mt-5 md:mt-25", className)}
+      className={cn("w-[90%] mx-auto", exceedNav && "mt-5 sm:mt-25 md:mt-25", className)}
     >
       {children}
     </section>

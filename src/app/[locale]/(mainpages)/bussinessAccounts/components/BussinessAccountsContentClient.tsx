@@ -114,7 +114,7 @@ const BussinessAccountsContentClient = ({
   return (
     <>
       <div
-        className={`w-full min-w-0 max-w-full grid grid-cols-1 gap-3 sm:gap-4 md:grid-cols-3 md:gap-5 ${
+        className={`w-full min-w-0 max-w-full grid grid-cols-3 gap-3 sm:gap-4 sm:grid-cols-3 md:gap-5 ${
           withOutStepper ? "hidden" : ""
         }`}
       >

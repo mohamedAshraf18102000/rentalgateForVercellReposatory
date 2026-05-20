@@ -1,5 +1,4 @@
 import Image from "next/image";
-import Autoplay from "embla-carousel-autoplay";
 import {
   Carousel,
   CarouselContent,
@@ -11,7 +10,7 @@ import { normalizeImageUrl } from "@/util";
 
 const sliderHeightClass =
   "h-[min(42svh,22rem)] min-h-[12.5rem] " +
-  "sm:h-screen md:h-screen lg:h-screen xl:h-screen 2xl:h-screen";
+  "sm:h-[500px] md:h-screen lg:h-screen xl:h-screen 2xl:h-screen";
 
 const HomeSlider = ({ bannersData }: { bannersData: Banner[] }) => {
   return (

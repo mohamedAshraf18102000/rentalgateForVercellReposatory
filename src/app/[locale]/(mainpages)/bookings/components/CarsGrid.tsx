@@ -212,7 +212,7 @@ const BranchCarsCarousel = ({
   const [api, setApi] = useState<CarouselApi>();
   const [showControls, setShowControls] = useState(false);
   const slideClassName =
-    "basis-[90%] pl-3 sm:basis-[calc(50%-1rem)] sm:pl-4 lg:basis-[350px] xl:basis-[380px]";
+    "basis-[90%] pl-3 sm:basis-[55%] sm:pl-4 lg:basis-[350px] xl:basis-[380px]";
 
   const updateControlVisibility = useCallback((carouselApi: CarouselApi) => {
     if (!carouselApi) {
@@ -244,7 +244,7 @@ const BranchCarsCarousel = ({
         align: "start",
         direction: isRtl ? "rtl" : "ltr",
       }}
-      className="w-full sm:px-12"
+      className="w-full md:px-12"
     >
       <CarouselContent className="-ml-3 py-2 sm:-ml-4 sm:py-3">
         {cars.map((car) => {
@@ -306,11 +306,11 @@ const BranchCarsCarousel = ({
       {showControls ? (
         <>
           <CarouselPrevious
-            className={`absolute top-1/2 z-10 hidden -translate-y-1/2 sm:flex ${isRtl ? "right-0" : "left-0"}`}
+            className={`absolute top-1/2 z-10 hidden -translate-y-1/2 md:flex ${isRtl ? "right-0" : "left-0"}`}
           />
           <CarouselDots className="flex md:hidden" />
           <CarouselNext
-            className={`absolute top-1/2 z-10 hidden -translate-y-1/2 sm:flex ${isRtl ? "left-0" : "right-0"}`}
+            className={`absolute top-1/2 z-10 hidden -translate-y-1/2 md:flex ${isRtl ? "left-0" : "right-0"}`}
           />
         </>
       ) : null}
