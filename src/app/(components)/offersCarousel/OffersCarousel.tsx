@@ -61,7 +61,8 @@ const OffersCarousel = ({
                   >
                     <div className="relative w-full h-full">
                       <Image
-                        src={normalizeImageUrl(offer.image)}
+                        // src={normalizeImageUrl(offer.image)}
+                        src={"https://viganium.co/uploads/1779259010140.png"}
                         alt={offer.arabicName}
                         fill
                         className="object-fill"

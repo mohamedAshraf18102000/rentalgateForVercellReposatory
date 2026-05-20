@@ -285,10 +285,26 @@ const CarouselDots = React.forwardRef<
 >(({ className, ...props }, ref) => {
   const { selectedIndex, scrollSnaps, scrollTo } = useCarousel();
 
+  const getScale = (index: number) => {
+    const distance = Math.abs(index - selectedIndex);
+    if (distance === 0) return "scale-100"; // active
+    if (distance === 1) return "scale-75"; // neighbors
+    if (distance === 2) return "scale-50"; // far neighbors
+    return "scale-[0.3]"; // very far
+  };
+
+  const getOpacity = (index: number) => {
+    const distance = Math.abs(index - selectedIndex);
+    if (distance === 0) return "opacity-100";
+    if (distance === 1) return "opacity-60";
+    if (distance === 2) return "opacity-40";
+    return "opacity-20";
+  };
+
   return (
     <div
       ref={ref}
-      className={cn("flex items-center justify-center gap-2", className)}
+      className={cn("flex items-center justify-center gap-1.5", className)}
       {...props}
     >
       {scrollSnaps.map((_, index) => (
@@ -296,10 +312,10 @@ const CarouselDots = React.forwardRef<
           key={index}
           onClick={() => scrollTo(index)}
           className={cn(
-            "transition-all duration-300 ease-in-out rounded-full",
-            index === selectedIndex
-              ? "w-6 h-2.5 bg-gray-900"
-              : "w-2.5 h-2.5 bg-gray-400 hover:bg-gray-600",
+            "w-2 h-2 rounded-full transition-all duration-300 ease-in-out",
+            "bg-gray-800 dark:bg-white",
+            getScale(index),
+            getOpacity(index),
           )}
           aria-label={`Go to slide ${index + 1}`}
         />
