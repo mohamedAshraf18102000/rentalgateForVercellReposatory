@@ -145,6 +145,8 @@ const DrawerAccordion = () => {
                   );
                   setFilter("pickupType", "airport");
                   setFilter("pickupId", id);
+                  setFilter("pickupAirportId", airport?.airportId);
+                  setFilter("pickupTrainId", undefined);
                   setFilter(
                     "pickupName",
                     locale === "ar"
@@ -196,6 +198,8 @@ const DrawerAccordion = () => {
                   );
                   setFilter("pickupType", "trainStation");
                   setFilter("pickupId", id);
+                  setFilter("pickupTrainId", station?.stationId);
+                  setFilter("pickupAirportId", undefined);
                   setFilter(
                     "pickupName",
                     locale === "ar"

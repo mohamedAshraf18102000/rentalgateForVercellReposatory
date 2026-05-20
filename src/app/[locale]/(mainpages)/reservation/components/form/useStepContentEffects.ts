@@ -1,6 +1,9 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { BookingFilters } from "@/lib/stores/useUserPreferedFiltersStore";
-import { ReservationFormData } from "@/lib/stores/useBookedCarDetailsStore";
+import {
+  ReservationFormData,
+  useBookedCarDetailsStore,
+} from "@/lib/stores/useBookedCarDetailsStore";
 import { ReservationFormValues } from "@/lib/validations/reservationSchema";
 import { isCurrentLocationPlaceholder } from "@/lib/validations/currentLocationLabels";
 import { formatLocalDateTime } from "@/lib/utils/formatLocalDateTime";
@@ -8,6 +11,10 @@ import {
   buildInitialReservationValues,
   mapValuesToFormData,
 } from "./stepContentFormValues";
+import {
+  sessionFiltersToPickupReservationPatch,
+  sessionFiltersToReturnReservationPatch,
+} from "@/lib/booking/sessionFiltersLocationPatch";
 
 const mapFilterLocationTypeToReservationType = (
   type?: BookingFilters["pickupType"] | BookingFilters["carReturnLocationType"],
@@ -34,25 +41,34 @@ interface SyncStoreToFormParams {
 
 export const useHydratedFormReset = ({
   hasHydrated,
-  formData,
   filters,
   isForOtherReservation,
   reset,
+  reconcileFormData,
 }: {
   hasHydrated: boolean;
-  formData: ReservationFormData;
   filters: BookingFilters;
   isForOtherReservation: boolean;
   reset: (
     values: ReservationFormValues,
     options?: { keepErrors?: boolean },
   ) => void;
+  reconcileFormData: () => void;
 }) => {
   useEffect(() => {
     if (!hasHydrated) return;
-    reset(buildInitialReservationValues({ formData, filters, isForOtherReservation }), {
-      keepErrors: false,
-    });
+    // Normalize persisted / partial state before RHF reset (single source: Zustand).
+    reconcileFormData();
+    reset(
+      buildInitialReservationValues({
+        formData: useBookedCarDetailsStore.getState().formData,
+        filters,
+        isForOtherReservation,
+      }),
+      {
+        keepErrors: false,
+      },
+    );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hasHydrated]);
 };
@@ -79,37 +95,54 @@ export const useSyncStoreToForm = ({
       }
     }
 
-    if (filters.pickupId && filters.pickupId !== getValues("pickupId")) {
-      setValue("pickupId", filters.pickupId);
+    // Only mirror filter ids when the session filter mode matches — avoids resurrecting
+    // airport/train ids after the user switched to another location type in the dialog.
+    if (filters.pickupType === "branches" || filters.pickupType === "currentLocation") {
+      if (filters.pickupId && filters.pickupId !== getValues("pickupId")) {
+        setValue("pickupId", filters.pickupId);
+      }
+    }
+    if (filters.pickupType === "airport") {
+      if (
+        (filters.pickupAirportId || null) !== (getValues("pickupAirportId") || null)
+      ) {
+        setValue("pickupAirportId", filters.pickupAirportId || null);
+      }
+    }
+    if (filters.pickupType === "trainStation") {
+      if (
+        (filters.pickupTrainId || null) !== (getValues("pickupTrainId") || null)
+      ) {
+        setValue("pickupTrainId", filters.pickupTrainId || null);
+      }
     }
 
+    const returnTypeFilter = filters.carReturnLocationType;
     if (
-      filters.carReturnLocationId &&
-      filters.carReturnLocationId !== getValues("carReturnLocationId")
+      returnTypeFilter === "branches" ||
+      returnTypeFilter === "currentLocation"
     ) {
-      setValue("carReturnLocationId", filters.carReturnLocationId);
+      if (
+        filters.carReturnLocationId &&
+        filters.carReturnLocationId !== getValues("carReturnLocationId")
+      ) {
+        setValue("carReturnLocationId", filters.carReturnLocationId);
+      }
     }
-
-    if (
-      (filters.pickupTrainId || null) !== (getValues("pickupTrainId") || null)
-    ) {
-      setValue("pickupTrainId", filters.pickupTrainId || null);
+    if (returnTypeFilter === "airport") {
+      if (
+        (filters.carReturnAirportId || null) !==
+        (getValues("returnAirportId") || null)
+      ) {
+        setValue("returnAirportId", filters.carReturnAirportId || null);
+      }
     }
-    if (
-      (filters.pickupAirportId || null) !== (getValues("pickupAirportId") || null)
-    ) {
-      setValue("pickupAirportId", filters.pickupAirportId || null);
-    }
-    if (
-      (filters.carReturnTrainId || null) !== (getValues("returnTrainId") || null)
-    ) {
-      setValue("returnTrainId", filters.carReturnTrainId || null);
-    }
-    if (
-      (filters.carReturnAirportId || null) !==
-      (getValues("returnAirportId") || null)
-    ) {
-      setValue("returnAirportId", filters.carReturnAirportId || null);
+    if (returnTypeFilter === "trainStation") {
+      if (
+        (filters.carReturnTrainId || null) !== (getValues("returnTrainId") || null)
+      ) {
+        setValue("returnTrainId", filters.carReturnTrainId || null);
+      }
     }
   }, [filters, setValue, getValues]);
 };
@@ -202,24 +235,43 @@ export const useSyncFormToStores = ({
   filters: BookingFilters;
   setFilter: <K extends keyof BookingFilters>(key: K, value: BookingFilters[K]) => void;
 }) => {
+  const didBootstrapLocationTypes = useRef(false);
+
   useEffect(() => {
     if (!hasHydrated) return;
-    const mappedPickupType = mapFilterLocationTypeToReservationType(
-      filters.pickupType,
-    );
-    const mappedReturnType = mapFilterLocationTypeToReservationType(
-      filters.carReturnLocationType,
-    );
+
+    // One-shot: if persisted store has no location types but session filters imply one
+    // (e.g. deep-linked from bookings search), seed types once. Never continuously
+    // overwrite store types from filters — that caused stale filter mode to clobber dialog state.
+    if (!didBootstrapLocationTypes.current) {
+      didBootstrapLocationTypes.current = true;
+      const { formData: fd } = useBookedCarDetailsStore.getState();
+      const mappedPickup = mapFilterLocationTypeToReservationType(
+        filters.pickupType,
+      );
+      const mappedReturn = mapFilterLocationTypeToReservationType(
+        filters.carReturnLocationType,
+      );
+      const patch: Partial<ReservationFormData> = {};
+      if (!fd.pickupType && mappedPickup) patch.pickupType = mappedPickup;
+      if (!fd.returnType && mappedReturn) patch.returnType = mappedReturn;
+      if (Object.keys(patch).length > 0) {
+        setFormData(patch);
+      }
+    }
 
     setFormData({
       ...mapValuesToFormData(getValues()),
-      // Do not reset store type to null when filter type is unset.
-      pickupType: mappedPickupType || undefined,
-      returnType: mappedReturnType || undefined,
+      ...sessionFiltersToReturnReservationPatch(filters),
+      ...sessionFiltersToPickupReservationPatch(filters),
     });
 
     const subscription = watch((value) => {
-      setFormData(mapValuesToFormData(value));
+      setFormData({
+        ...mapValuesToFormData(value),
+        ...sessionFiltersToReturnReservationPatch(filters),
+        ...sessionFiltersToPickupReservationPatch(filters),
+      });
 
       if (value.fromDate) {
         const formattedFromDate = formatLocalDateTime(value.fromDate);

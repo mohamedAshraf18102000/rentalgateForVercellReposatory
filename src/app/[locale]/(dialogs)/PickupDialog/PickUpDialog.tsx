@@ -21,7 +21,8 @@ export function PickupDialog({ title }: { title?: string }) {
     setIsUnsavedMapLocation,
   } = usePickupDialogStore();
   const { filters, setFilter } = useUserPreferedFiltersStore();
-  const { carDetails, setFormData } = useBookedCarDetailsStore();
+  const carDetails = useBookedCarDetailsStore((s) => s.carDetails);
+  const setFormData = useBookedCarDetailsStore((s) => s.setFormData);
   const [showSaveDialog, setShowSaveDialog] = useState(false);
   const t = useTranslations("home");
 
@@ -42,6 +43,13 @@ export function PickupDialog({ title }: { title?: string }) {
           returnLat: carDetails.latitude,
           returnLong: carDetails.longitude,
         });
+        setFilter("carReturnLocationType", "branches");
+        setFilter("carReturnLocationId", String(carDetails.branchId));
+        setFilter("carReturnLocation", carDetails.branchName);
+        setFilter("carReturnLocationLat", carDetails.latitude);
+        setFilter("carReturnLocationLng", carDetails.longitude);
+        setFilter("carReturnAirportId", undefined);
+        setFilter("carReturnTrainId", undefined);
       } else {
         setFormData({
           pickupId: carDetails.branchId.toString(),
@@ -55,6 +63,8 @@ export function PickupDialog({ title }: { title?: string }) {
         setFilter("pickupType", "branches");
         setFilter("pickupId", String(carDetails.branchId));
         setFilter("pickupName", carDetails.branchName);
+        setFilter("pickupAirportId", undefined);
+        setFilter("pickupTrainId", undefined);
       }
 
       confirmDialog();
@@ -115,12 +125,34 @@ export function PickupDialog({ title }: { title?: string }) {
             setFilter("carReturnLocationLng", address.longitude);
             setFilter("carReturnLocationType", "currentLocation");
             setFilter("carReturnLocationId", String(address.addressId));
+            setFilter("carReturnAirportId", undefined);
+            setFilter("carReturnTrainId", undefined);
+            setFormData({
+              carReturnLocation: address.addressName,
+              returnLat: address.latitude,
+              returnLong: address.longitude,
+              returnType: "MY_LOCATION",
+              carReturnLocationId: String(address.addressId),
+              returnAirportId: null,
+              returnTrainId: null,
+            });
           } else {
             setFilter("pickupName", address.addressName);
             setFilter("pickupLat", address.latitude);
             setFilter("pickupLng", address.longitude);
             setFilter("pickupType", "currentLocation");
             setFilter("pickupId", String(address.addressId));
+            setFilter("pickupAirportId", undefined);
+            setFilter("pickupTrainId", undefined);
+            setFormData({
+              pickupName: address.addressName,
+              pickupLat: address.latitude,
+              pickupLong: address.longitude,
+              pickupType: "MY_LOCATION",
+              pickupId: String(address.addressId),
+              pickupAirportId: null,
+              pickupTrainId: null,
+            });
           }
           setIsUnsavedMapLocation(false);
           setShowSaveDialog(false);

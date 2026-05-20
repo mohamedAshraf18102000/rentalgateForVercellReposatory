@@ -38,8 +38,13 @@ const StepContent = forwardRef<StepContentRef, StepContentProps>(
     const tSchema = useTranslations("schemasLocalization.reservation");
     const { displayStep, animationClass } = useStepAnimation(activeStep);
     const { filters, setFilter } = useUserPreferedFiltersStore();
-    const { carDetails, formData, setFormData, _hasHydrated } =
-      useBookedCarDetailsStore();
+    const carDetails = useBookedCarDetailsStore((s) => s.carDetails);
+    const formData = useBookedCarDetailsStore((s) => s.formData);
+    const setFormData = useBookedCarDetailsStore((s) => s.setFormData);
+    const _hasHydrated = useBookedCarDetailsStore((s) => s._hasHydrated);
+    const reconcileFormData = useBookedCarDetailsStore(
+      (s) => s.reconcileFormData,
+    );
     const { setClientData } = useClientStore();
 
     const reservationSchema = useMemo(() => {
@@ -92,10 +97,10 @@ const StepContent = forwardRef<StepContentRef, StepContentProps>(
 
     useHydratedFormReset({
       hasHydrated: _hasHydrated,
-      formData,
       filters,
       isForOtherReservation,
       reset,
+      reconcileFormData,
     });
 
     useSyncStoreToForm({ filters, setValue, getValues });

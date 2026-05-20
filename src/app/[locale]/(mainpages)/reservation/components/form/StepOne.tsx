@@ -26,6 +26,7 @@ import { formatLocalDateTime } from "@/lib/utils/formatLocalDateTime";
 import { WorkingHours } from "@/types/companyCars/carDetails";
 import { useLocale, useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
+import { useUserPreferedFiltersStore } from "@/lib/stores/useUserPreferedFiltersStore";
 
 interface StepOneProps {
   control: Control<ReservationFormValues>;
@@ -132,6 +133,7 @@ const StepOne = ({ control, errors, watch, setValue }: StepOneProps) => {
     (state) => state.setIsCurrentLocationTabDisabled,
   );
   const carDetails = useBookedCarDetailsStore((state) => state.carDetails);
+  const filters = useUserPreferedFiltersStore((state) => state.filters);
   const isDeliveryServiceAvailable = Boolean(
     carDetails?.deliveryServiceAvailable,
   );
@@ -147,6 +149,16 @@ const StepOne = ({ control, errors, watch, setValue }: StepOneProps) => {
 
   useEffect(() => {
     if (!shouldDisableCurrentLocationTab || !carDetails) return;
+
+    // Session filters (bookings search / drawer) already selected airport, train, or map —
+    // do not replace with branch pickup/return (delivery unavailable branch fallback).
+    if (
+      filters.pickupType === "airport" ||
+      filters.pickupType === "trainStation" ||
+      filters.pickupType === "currentLocation"
+    ) {
+      return;
+    }
 
     const branchId = String(carDetails.branchId);
     const branchName = carDetails.branchName;
@@ -192,6 +204,7 @@ const StepOne = ({ control, errors, watch, setValue }: StepOneProps) => {
     carDetails,
     formData.pickupType,
     formData.returnType,
+    filters.pickupType,
     setBookedCarFormData,
     setValue,
   ]);

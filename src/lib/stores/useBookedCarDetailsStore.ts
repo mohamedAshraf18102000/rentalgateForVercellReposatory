@@ -8,6 +8,7 @@ import {
 } from "@/types/companyCars/carDetails";
 import { CompanyService } from "@/types/companyCars/carServices";
 import { PricingType } from "@/lib/utils/calculateRentalPrice";
+import { normalizeReservationFormData } from "@/lib/booking/normalizeReservationFormData";
 
 export interface ReservationFormData {
   // Step 1
@@ -168,6 +169,8 @@ export interface BookedCarDetailsState {
   ) => void;
 
   setFormData: (data: Partial<ReservationFormData>) => void;
+  /** Re-runs location normalization on current formData (persist rehydrate, migration). */
+  reconcileFormData: () => void;
   resetForm: () => void;
   /** Clears car context, lists, and form; keeps hydration flag. */
   resetStore: () => void;
@@ -201,19 +204,30 @@ export const useBookedCarDetailsStore = create<BookedCarDetailsState>()(
 
       setFormField: (key, value) =>
         set((state) => ({
-          formData: { ...state.formData, [key]: value },
+          formData: normalizeReservationFormData({
+            ...state.formData,
+            [key]: value,
+          }),
         })),
 
       setShowPricesWithTax: (value) => set({ showPricesWithTax: value }),
 
       setFormData: (data) =>
-        set((state) => ({
-          formData: {
+        set((state) => {
+          const merged = {
             ...state.formData,
             ...Object.fromEntries(
               Object.entries(data).filter(([_, v]) => v !== undefined),
             ),
-          },
+          } as ReservationFormData;
+          return {
+            formData: normalizeReservationFormData(merged),
+          };
+        }),
+
+      reconcileFormData: () =>
+        set((state) => ({
+          formData: normalizeReservationFormData(state.formData),
         })),
 
       resetForm: () => set({ formData: createInitialFormData() }),

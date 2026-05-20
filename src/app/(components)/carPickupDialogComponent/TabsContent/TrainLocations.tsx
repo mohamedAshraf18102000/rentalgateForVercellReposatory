@@ -50,6 +50,13 @@ const TrainLocations = () => {
           returnLat: null,
           returnLong: null,
         });
+        setFilter("carReturnLocationType", "trainStation");
+        setFilter("carReturnTrainId", station.stationId);
+        setFilter("carReturnAirportId", undefined);
+        setFilter("carReturnLocation", selectedStationName);
+        setFilter("carReturnLocationId", String(station.stationId));
+        setFilter("carReturnLocationLat", undefined);
+        setFilter("carReturnLocationLng", undefined);
       } else {
         setFormData({
           pickupTrainId: station.stationId as number,

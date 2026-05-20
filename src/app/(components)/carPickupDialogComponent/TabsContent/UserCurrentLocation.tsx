@@ -2,6 +2,7 @@ import useUserAddreses from "@/hooks/api/useUserAddreses";
 import { UserAddress } from "@/types/userProfile/userAddress";
 import { usePickupDialogStore } from "@/lib/stores/usePickupDialogStore";
 import { useBookedCarDetailsStore } from "@/lib/stores/useBookedCarDetailsStore";
+import { useUserPreferedFiltersStore } from "@/lib/stores/useUserPreferedFiltersStore";
 import { useTranslations } from "next-intl";
 import EmptyLocationContent from "./EmptyLocationContent/EmptyLocationContent";
 import { usePickupRedirect } from "./usePickupRedirect";
@@ -13,7 +14,8 @@ const UserCurrentLocation = () => {
   const { data: userAddresses, isLoading: isLoadingAddresses } =
     useUserAddreses(open);
 
-  const { setFormField, formData, carDetails } = useBookedCarDetailsStore();
+  const { setFormData, carDetails } = useBookedCarDetailsStore();
+  const setFilter = useUserPreferedFiltersStore((s) => s.setFilter);
   const isDeliveryServiceUnavailable =
     carDetails?.deliveryServiceAvailable === false;
 
@@ -28,23 +30,39 @@ const UserCurrentLocation = () => {
     setIsUnsavedMapLocation(false);
     setIsCurrentLocationTabDisabled(false);
     if (target === "return") {
-      // Update BookedCarDetailsStore only
-      setFormField("carReturnLocation", address.addressName);
-      setFormField("returnLat", address.latitude);
-      setFormField("returnLong", address.longitude);
-      setFormField("returnType", "MY_LOCATION");
-      setFormField("carReturnLocationId", String(address.addressId));
-      setFormField("returnAirportId", null);
-      setFormField("returnTrainId", null);
+      setFormData({
+        carReturnLocation: address.addressName,
+        returnLat: address.latitude,
+        returnLong: address.longitude,
+        returnType: "MY_LOCATION",
+        carReturnLocationId: String(address.addressId),
+        returnAirportId: null,
+        returnTrainId: null,
+      });
+      setFilter("carReturnLocationType", "currentLocation");
+      setFilter("carReturnLocation", address.addressName);
+      setFilter("carReturnLocationLat", address.latitude);
+      setFilter("carReturnLocationLng", address.longitude);
+      setFilter("carReturnLocationId", String(address.addressId));
+      setFilter("carReturnAirportId", undefined);
+      setFilter("carReturnTrainId", undefined);
     } else {
-      // Update BookedCarDetailsStore only
-      setFormField("pickupName", address.addressName);
-      setFormField("pickupLat", address.latitude);
-      setFormField("pickupLong", address.longitude);
-      setFormField("pickupType", "MY_LOCATION");
-      setFormField("pickupId", String(address.addressId));
-      setFormField("pickupAirportId", null);
-      setFormField("pickupTrainId", null);
+      setFormData({
+        pickupName: address.addressName,
+        pickupLat: address.latitude,
+        pickupLong: address.longitude,
+        pickupType: "MY_LOCATION",
+        pickupId: String(address.addressId),
+        pickupAirportId: null,
+        pickupTrainId: null,
+      });
+      setFilter("pickupType", "currentLocation");
+      setFilter("pickupName", address.addressName);
+      setFilter("pickupLat", address.latitude);
+      setFilter("pickupLng", address.longitude);
+      setFilter("pickupId", String(address.addressId));
+      setFilter("pickupAirportId", undefined);
+      setFilter("pickupTrainId", undefined);
     }
     confirmDialog();
   };

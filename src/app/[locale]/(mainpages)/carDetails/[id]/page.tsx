@@ -12,6 +12,8 @@ import { Skeleton } from "@/app/(components)/ui/skeleton";
 import { useEffect, useMemo } from "react";
 import { calculateDiscount } from "@/lib/utils/calculateDiscount";
 import { useBookedCarDetailsStore } from "@/lib/stores/useBookedCarDetailsStore";
+import type { ReservationFormData } from "@/lib/stores/useBookedCarDetailsStore";
+import { initialLocationSlice } from "@/lib/booking/normalizeReservationFormData";
 import CarDetailsCard from "@/app/(components)/customCards/CarsCard/CarDetailsCard";
 import { useUserPreferedFiltersStore } from "@/lib/stores/useUserPreferedFiltersStore";
 import {
@@ -48,14 +50,15 @@ const page = () => {
     void addCarToHistory({ ccbId }).catch(() => {});
   }, [id]);
 
-  console.log("data?.deliveryServiceAvailable", data?.deliveryServiceAvailable);
-
   useEffect(() => {
     if (data) {
       setCarDetails(data);
       setAirports(data.airports ?? []);
       setTrainStations(data.trainStations ?? []);
-      setFormData({
+
+      const previousCcbId =
+        useBookedCarDetailsStore.getState().formData.carDetails?.ccbId;
+      const metadata: Partial<ReservationFormData> = {
         company_id: data.company.companyId,
         branchId: data.branchId,
         carDetails: {
@@ -63,7 +66,16 @@ const page = () => {
           unlimitedKmPrice: data.unlimitedKmPrice ?? 0,
           ccbId: data.ccbId,
         },
-      });
+      };
+
+      if (previousCcbId !== data.ccbId) {
+        setFormData({
+          ...metadata,
+          ...initialLocationSlice(),
+        });
+      } else {
+        setFormData(metadata);
+      }
     }
   }, [data, setCarDetails, setFormData, setAirports, setTrainStations]);
 

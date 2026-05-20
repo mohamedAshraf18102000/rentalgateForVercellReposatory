@@ -2,8 +2,16 @@ import {
   formatDateAsLocalDayTime,
   formatLocalDateTime,
 } from "@/lib/utils/formatLocalDateTime";
+import type { ReservationFormData } from "@/lib/stores/useBookedCarDetailsStore";
+import {
+  buildDeliverSegment,
+  buildReceiveSegment,
+} from "@/lib/booking/buildBookingLocationPayload";
+import { warnIfLocationInvariantViolations } from "@/lib/booking/reservationLocationDebug";
 
-export const buildReservationPayload = (formData: any) => {
+export const buildReservationPayload = (formData: ReservationFormData) => {
+  warnIfLocationInvariantViolations(formData, "buildReservationPayload");
+
   const reservationForOther = formData.reservationForOther;
   const hasReservationForOtherData =
     !!reservationForOther?.name ||
@@ -17,44 +25,8 @@ export const buildReservationPayload = (formData: any) => {
     endDate: formatLocalDateTime(formData.toDate),
     promoCode: formData.promoData?.code ?? null,
     referralCode: formData.referalcode ?? null,
-    deliver: {
-      type: formData.pickupType ?? null,
-      ...(formData.pickupType === "TRAIN_STATION" && {
-        trainId: formData.pickupTrainId,
-      }),
-      ...(formData.pickupType === "AIRPORT" && {
-        airportId: formData.pickupAirportId,
-      }),
-      ...(formData.pickupType === "MY_LOCATION" && {
-        latitude: formData.pickupLat ?? null,
-        longitude: formData.pickupLong ?? null,
-        addressId: formData.pickupId ? Number(formData.pickupId) : null,
-      }),
-      ...(formData.pickupType === "BRANCH" && {
-        latitude: formData.pickupLat ?? null,
-        longitude: formData.pickupLong ?? null,
-      }),
-    },
-    receive: {
-      type: formData.returnType ?? null,
-      ...(formData.returnType === "TRAIN_STATION" && {
-        trainId: formData.returnTrainId,
-      }),
-      ...(formData.returnType === "AIRPORT" && {
-        airportId: formData.returnAirportId,
-      }),
-      ...(formData.returnType === "MY_LOCATION" && {
-        latitude: formData.returnLat ?? null,
-        longitude: formData.returnLong ?? null,
-        addressId: formData.carReturnLocationId
-          ? Number(formData.carReturnLocationId)
-          : null,
-      }),
-      ...(formData.returnType === "BRANCH" && {
-        latitude: formData.returnLat ?? null,
-        longitude: formData.returnLong ?? null,
-      }),
-    },
+    deliver: buildDeliverSegment(formData),
+    receive: buildReceiveSegment(formData),
     servicesIds:
       formData.services && formData.services.length > 0
         ? formData.services

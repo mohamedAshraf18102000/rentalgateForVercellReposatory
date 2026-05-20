@@ -46,6 +46,13 @@ const AirportLocations = () => {
           returnLat: null,
           returnLong: null,
         });
+        setFilter("carReturnLocationType", "airport");
+        setFilter("carReturnAirportId", airport.airportId);
+        setFilter("carReturnTrainId", undefined);
+        setFilter("carReturnLocation", selectedAirportName);
+        setFilter("carReturnLocationId", String(airport.airportId));
+        setFilter("carReturnLocationLat", undefined);
+        setFilter("carReturnLocationLng", undefined);
       } else {
         setFormData({
           pickupAirportId: airport.airportId as number,
