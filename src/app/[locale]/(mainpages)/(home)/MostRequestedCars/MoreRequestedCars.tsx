@@ -1,8 +1,4 @@
 "use client";
-
-import { Button } from "@/ui";
-import { ArrowIcon } from "@/icons";
-import { ProtectedLink } from "../../../(components)/ProtectedLink";
 import { useTranslations } from "next-intl";
 import MoreRequestedCarsCarousel from "@/app/(components)/mostRequestedCars/MoreRequestedCarsCarousel";
 import { HomeResponse } from "@/types/home/home";
@@ -34,7 +30,7 @@ export const MostRequestedCars = ({
             <p className="text-gray-500">
               {locale === "ar" ? "لا يوجد سيارات حاليا" : "No cars available"}
             </p>
-        </div>
+          </div>
         </section>
       </section>
     );

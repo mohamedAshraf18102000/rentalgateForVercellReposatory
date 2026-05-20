@@ -64,7 +64,7 @@ const OffersCarousel = ({
                         src={normalizeImageUrl(offer.image)}
                         alt={offer.arabicName}
                         fill
-                        className=""
+                        className="object-fill"
                       />
                       {!withoutDetails && (
                         <div className="absolute w-full h-full bg-black/50 flex items-center">

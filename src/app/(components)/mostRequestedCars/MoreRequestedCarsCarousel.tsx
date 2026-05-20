@@ -42,19 +42,13 @@ const MoreRequestedCarsCarousel = ({
               Boolean(branch.offerDailyPrice) &&
               branch.offerDailyPrice < branch.dailyPrice;
 
-            const { discountPercentage } = calculateDiscount({
-              originalPrice: branch.dailyPrice,
-              offerPrice: branch.offerDailyPrice ?? 0,
-            });
-
-            const discountBadge =
-              hasDiscount && discountPercentage > 0
-                ? `${t("discountPrefix")} ${discountPercentage}% - ${t("pricingType.daily")}`
-                : undefined;
-
             return (
-              <CarouselItem key={item.historyId} className="basis-1/4">
+              <CarouselItem
+                key={item.historyId}
+                className="basis-[90%] sm:basis-1/2 lg:basis-1/3 xl:basis-1/4"
+              >
                 <CarsCard
+                  className="h-full w-full min-w-0"
                   onClick={() => {
                     router.push(`/carDetails/${item.companyCarBranch.ccbId}`);
                   }}
@@ -74,7 +68,7 @@ const MoreRequestedCarsCarousel = ({
             );
           })}
         </CarouselContent>
-        <div className="flex items-center justify-center gap-4 mt-4">
+        <div className="hidden md:flex items-center justify-center gap-4 mt-4">
           <CarouselPrevious />
           <CarouselDots />
           <CarouselNext />
