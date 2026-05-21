@@ -134,7 +134,7 @@
         "insideCity": "داخل",
         "outsideCity": "خارج",
         "hoursPerDayLabel": "عدد الساعات في اليوم:",
-        "minHoursWarning": "خدمة السائق محددة ب {hours} ساعات و إن زادت تكون بتكلفة إضافية أخرى.",
+        "minHoursWarning": "الحد الأدنى لعدد الساعات في اليوم هي {hours} ساعات.",
         "maxHoursWarning": "حد اقصى لعدد ساعات اليوم {hours} ساعة",
         "daysCountLabel": "عدد الأيام:",
         "bookingDuration": "مدة الحجز الخاصة بك هي ({days} أيام)",

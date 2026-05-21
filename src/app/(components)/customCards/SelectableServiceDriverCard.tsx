@@ -34,13 +34,16 @@ const SelectableServiceDriverCard = ({
   const isRTL = locale === "ar";
   const checkboxId = `driver-service-${driver?.cdsId ?? Math.random()}`;
 
-  const minHours = 1;
+  const minHours = driver?.minHours ?? 1;
   const maxHours = driver?.dayNumberHours ?? 24;
 
   const minDays = 1;
   const maxDays = rentalDays ?? minDays;
 
-  const hoursPerDay = hoursPerDayProp ?? 1;
+  const hoursPerDay = Math.min(
+    maxHours,
+    Math.max(minHours, hoursPerDayProp ?? minHours),
+  );
   const numberOfDays = numberOfDaysProp ?? 1;
 
   const handleHoursDecrement = (e: React.MouseEvent) => {
@@ -166,7 +169,7 @@ const SelectableServiceDriverCard = ({
 
             <WarningMessage
               message={t("reservation.stepThree.driverCard.minHoursWarning", {
-                hours: driver?.minHours ?? 0,
+                hours: minHours,
               })}
             />
 

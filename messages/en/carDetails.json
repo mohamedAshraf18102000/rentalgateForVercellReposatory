@@ -132,7 +132,7 @@
         "insideCity": "inside",
         "outsideCity": "outside",
         "hoursPerDayLabel": "Hours per day:",
-        "minHoursWarning": "Driver service is limited to {hours} hours, and any extra time will have an additional cost.",
+        "minHoursWarning": "The minimum number of hours per day is {hours} hours.",
         "maxHoursWarning": "Maximum hours per day is {hours} hour",
         "daysCountLabel": "Number of days:",
         "bookingDuration": "Your booking duration is ({days} days)",

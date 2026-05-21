@@ -142,7 +142,7 @@ const StepThree = ({ control, errors }: StepThreeProps) => {
         const driverInfo = companyDriversPricing?.find((d) => d.cdsId === id);
         const nextDriver = {
           id,
-          hours: driverHours[id] ?? 1,
+          hours: driverHours[id] ?? driverInfo?.minHours ?? 1,
           days: driverDays[id] ?? 1,
           type: driverInfo?.cdsType as "in" | "out",
         };
@@ -269,7 +269,10 @@ const StepThree = ({ control, errors }: StepThreeProps) => {
                         : t("reservation.stepThree.driverOutsideCity")
                     }
                     hoursPerDay={
-                      driverHours[drvId] ?? selectedDriver?.hours ?? 1
+                      driverHours[drvId] ??
+                      selectedDriver?.hours ??
+                      driver.minHours ??
+                      1
                     }
                     numberOfDays={
                       driverDays[drvId] ?? selectedDriver?.days ?? 1

@@ -2,6 +2,7 @@ import { Button, Input } from "@/app/(components)";
 import { DateTimePicker } from "@/app/(components)/ui/dateTime-picker";
 import { useExtendReservation } from "@/hooks/api/booking/useExtendReservation";
 import { formatLocalDateTime } from "@/lib/utils/formatLocalDateTime";
+import type { ReservationDetailsResponse } from "@/types/myBookings/BookingDetails";
 import type {
   ExtendReservationDriverPayload,
   ExtendReservationPayload,
@@ -20,6 +21,7 @@ import {
 
 interface BookingExtendingProps {
   setShowBookingExtending: (show: boolean) => void;
+  onExtendSuccess?: (data: ReservationDetailsResponse) => void;
   reservationId?: number;
   bookingStartDate?: string | Date | null;
   bookingEndDate?: string | Date | null;
@@ -33,6 +35,7 @@ interface BookingExtendingProps {
 
 const BookingExtending = ({
   setShowBookingExtending,
+  onExtendSuccess,
   reservationId,
   bookingStartDate,
   bookingEndDate,
@@ -131,9 +134,7 @@ const BookingExtending = ({
 
     extendReservation(payload, {
       onSuccess: (data) => {
-        console.log("PRICENEEDED", data.total - data.basePrice);
-        toast.success(t("myBookingsDrawer.extendBooking.toast.success"));
-        // setShowBookingExtending(false);
+        onExtendSuccess?.(data);
       },
     });
   };
@@ -187,7 +188,7 @@ const BookingExtending = ({
             </div>
           </div>
         </div>
-        <div className="p-2 rounde-xl"> booking Amount: {amount}</div>
+        <div className="p-2 rounde-xl bg-red-900 text-white mx-6"> booking Amount: {amount}</div>
 
         <SheetFooter className="p-6 border-t mt-auto">
           <Button
@@ -198,6 +199,7 @@ const BookingExtending = ({
           >
             {t("cancel")}
           </Button>
+
           <Button
             type="button"
             className="text-base! w-3/4"

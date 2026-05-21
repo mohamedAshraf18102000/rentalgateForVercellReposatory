@@ -137,6 +137,7 @@
     "uploadText": "أضغط أو قُم بالسحب لأضافة ملف"
   },
   "myBookingsDrawer": {
+    "backToReservations": "العودة إلى الحجوزات",
     "title": "تفاصيل الحجز",
     "rentalDurationLabel": "مدة الإيجار",
     "rentalDays": "( {days} يوم )",
@@ -207,6 +208,12 @@
         "invalidDropoffTimeFormat": "صيغة وقت التسليم غير صالحة",
         "success": "تم تمديد الحجز بنجاح",
         "error": "حدث خطأ أثناء تمديد الحجز"
+      },
+      "complete": {
+        "title": "ملخص التمديد",
+        "description": "راجع تفاصيل التمديد أدناه قبل تأكيد الدفع.",
+        "additionalAmount": "المبلغ الإضافي",
+        "done": "العودة إلى تفاصيل الحجز"
       }
     },
     "paymentDetails": {

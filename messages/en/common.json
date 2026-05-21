@@ -137,6 +137,7 @@
     "uploadText": "Click or drag to upload a file"
   },
   "myBookingsDrawer": {
+    "backToReservations": "Back to my bookings",
     "title": "Booking details",
     "rentalDurationLabel": "Rental duration",
     "rentalDays": "( {days} days )",
@@ -207,6 +208,12 @@
         "invalidDropoffTimeFormat": "Invalid drop-off time format",
         "success": "Booking extended successfully",
         "error": "An error occurred while extending the booking"
+      },
+      "complete": {
+        "title": "Extension summary",
+        "description": "Review the extension details below before confirming payment.",
+        "additionalAmount": "Additional amount",
+        "done": "Back to booking details"
       }
     },
     "paymentDetails": {

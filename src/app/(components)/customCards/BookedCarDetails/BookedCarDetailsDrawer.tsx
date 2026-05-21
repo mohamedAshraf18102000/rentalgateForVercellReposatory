@@ -26,8 +26,9 @@ import {
   Star,
   User,
 } from "lucide-react";
-import { ReservationDetailsResponse } from "@/types/myBookings/BookingDetails";
+import type { ReservationDetailsResponse } from "@/types/myBookings/BookingDetails";
 import { useLocale, useTranslations } from "next-intl";
+import { useRouter } from "@/i18n/routing";
 import type { ExtendReservationDriverPayload } from "@/services/mybookings/extendReservation.service";
 
 import { format } from "date-fns";
@@ -58,6 +59,11 @@ const BookingExtending = dynamic(
   { ssr: false },
 );
 
+const BookingExtendComplete = dynamic(
+  () => import("./DrawerSections/DrawerLocation/BookingExtendComplete"),
+  { ssr: false },
+);
+
 const BookingComplement = dynamic(
   () => import("./DrawerSections/DrawerLocation/BookingComplement"),
   { ssr: false },
@@ -68,6 +74,8 @@ interface BookedCarDetailsDrawerProps {
   data?: ReservationDetailsResponse;
   onOpen?: () => void;
 }
+
+const CANCELLABLE_STATUSES = ["PAID", "DECLINED", "ADMIN_APPROVED"] as const;
 
 const LocationFromToSkeleton = () => {
   return (
@@ -86,15 +94,19 @@ const BookedCarDetailsDrawer = ({
 }: BookedCarDetailsDrawerProps) => {
   const getStatusLabel = useStatusLabel();
   const t = useTranslations("common");
+  const router = useRouter();
   const locale = useLocale();
   const isRTL = locale === "ar";
   const DateArrowIcon = isRTL ? ArrowLeft : ArrowRight;
   const dateLocale = locale === "ar" ? ar : enUS;
+  const [extendQuoteData, setExtendQuoteData] =
+    useState<ReservationDetailsResponse | null>(null);
   const [activeView, setActiveView] = useState<
     | "booking-details"
     | "cancel-booking"
     | "location-details"
     | "booking-extending"
+    | "booking-extend-complete"
     | "booking-complement"
     | "rating"
   >("booking-details");
@@ -271,6 +283,7 @@ const BookedCarDetailsDrawer = ({
           return;
         }
         setActiveView("booking-details");
+        setExtendQuoteData(null);
       }}
     >
       {trigger && <SheetTrigger asChild>{trigger}</SheetTrigger>}
@@ -493,16 +506,35 @@ const BookedCarDetailsDrawer = ({
                 {data && <BookingPaymentDetailsCollapseLazy data={data} />}
               </div>
               <SheetFooter className="mt-auto flex-col gap-3 border-t p-6 sm:flex-row">
-                {data?.reservationStatus !== "FINISHED" && (
-                  <Button
-                    type="button"
-                    variant="destructive"
-                    className="text-base! w-full border-2 border-StatusRed bg-transparent text-StatusRed sm:w-1/4"
-                    onClick={() => setActiveView("cancel-booking")}
-                  >
-                    {t("cancelBooking")}
-                  </Button>
-                )}
+                {data?.reservationStatus &&
+                  CANCELLABLE_STATUSES.includes(
+                    data.reservationStatus as (typeof CANCELLABLE_STATUSES)[number],
+                  ) && (
+                    <Button
+                      type="button"
+                      variant="destructive"
+                      className="text-base! w-full border-2 border-StatusRed bg-transparent text-StatusRed sm:w-1/4"
+                      onClick={() => setActiveView("cancel-booking")}
+                    >
+                      {t("cancelBooking")}
+                    </Button>
+                  )}
+                {data?.reservationStatus &&
+                  !CANCELLABLE_STATUSES.includes(
+                    data.reservationStatus as (typeof CANCELLABLE_STATUSES)[number],
+                  ) && (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className="text-base! w-full border-2 border-Grey400 bg-transparent sm:w-1/4"
+                      onClick={() => {
+                        setIsDrawerOpen(false);
+                        router.push("/myBookings");
+                      }}
+                    >
+                      {t("myBookingsDrawer.backToReservations")}
+                    </Button>
+                  )}
                 {data?.reservationStatus === "FINISHED" && (
                   <Button
                     type="button"
@@ -549,6 +581,19 @@ const BookedCarDetailsDrawer = ({
                     : "booking-details",
                 )
               }
+              onExtendSuccess={(quoteData) => {
+                setExtendQuoteData(quoteData);
+                setActiveView("booking-extend-complete");
+              }}
+            />
+          ) : activeView === "booking-extend-complete" ? (
+            <BookingExtendComplete
+              extendData={extendQuoteData}
+              onBack={() => setActiveView("booking-extending")}
+              onDone={() => {
+                setExtendQuoteData(null);
+                setActiveView("booking-details");
+              }}
             />
           ) : activeView === "booking-complement" ? (
             <BookingComplement
