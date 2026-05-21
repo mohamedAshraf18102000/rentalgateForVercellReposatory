@@ -188,7 +188,7 @@ const BookingExtending = ({
             </div>
           </div>
         </div>
-        <div className="p-2 rounde-xl bg-red-900 text-white mx-6"> booking Amount: {amount}</div>
+        {/* <div className="p-2 rounde-xl bg-red-900 text-white mx-6"> booking Amount: {amount}</div> */}
 
         <SheetFooter className="p-6 border-t mt-auto">
           <Button
