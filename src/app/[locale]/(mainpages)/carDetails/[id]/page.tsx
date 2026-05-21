@@ -192,8 +192,8 @@ const page = () => {
             key="full-insurance"
             service={{
               price: data.insuranceWithDeductible,
-              serviceArabicName: t("fullInsuranceWithDeductibleAr"),
-              serviceEnglishName: t("fullInsuranceWithDeductibleEn"),
+              serviceArabicName: t("fullInsuranceWithDeductible"),
+              serviceEnglishName: t("fullInsuranceWithDeductible"),
             }}
             showTax={showPricesWithTax}
             extraIcon={
