@@ -37,7 +37,7 @@ const BookedCarsDetails = ({ data }: { data: Reservation }) => {
         <Image
           src={normalizeImageUrl(data.carImage)}
           alt="img"
-          className="pointer-events-none scale-120 object-contain"
+          className="pointer-events-none object-contain"
           fill
         />
         <Badge

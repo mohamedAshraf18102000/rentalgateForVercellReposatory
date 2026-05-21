@@ -63,7 +63,7 @@ const SearchDialog = ({ onSearch }: SearchDialogProps) => {
             type="button"
             onClick={handleSearch}
             aria-label="بحث"
-            className="w-10 h-10 bg-black text-white rounded-[8px] p-0.5 cursor-pointer flex items-center justify-center"
+            className="w-10 h-10 bg-black text-white rounded-xl p-0.5 cursor-pointer flex items-center justify-center"
           >
             <Search className="w-7 h-7" />
           </button>

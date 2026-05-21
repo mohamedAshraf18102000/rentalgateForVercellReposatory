@@ -70,7 +70,7 @@
     "languageTitle": "تغيير اللغة",
     "languageDescription": "تغيير اللغة الخاصة بك",
     "deleteAccountTitle": "حذف الحساب",
-    "deleteAccountDescription": "إيقاف حسابك",
+    "deleteAccountDescription": "حذف الحساب الخاص بك",
     "supportTitle": "الدعم و المقترحات",
     "supportDescription": "لا تتردد بالتواصل معنا إذا كان لديك مقترح أو إذا واجهتك مشكلة"
   },
@@ -79,7 +79,7 @@
     "emailLabel": "البريد الالكتروني:",
     "phoneLabel": "رقم الهاتف:",
     "pointsLabel": "نقطة",
-    "greeting": "أهلاً {name}",
+    "greeting": "حياك الله {name}",
     "personalDataTitle": "البيانات الشخصية:",
     "otherDataTitle": "البيانات الأخرى:",
     "otherDetailsActions": {

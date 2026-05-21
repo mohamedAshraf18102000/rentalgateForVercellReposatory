@@ -2,7 +2,7 @@
 import { SaudiRiyal } from "lucide-react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
-import { cn } from "@/lib/utils";
+import { cn, formatPrice } from "@/lib/utils";
 
 interface Points_WalletCardProps {
   icon: string;
@@ -61,7 +61,7 @@ const Points_WalletCard = ({
       </div>
 
       <div className="flex shrink-0 items-center gap-1 text-base sm:text-lg">
-        <p className="tabular-nums">{valueINRial}</p>
+        <p className="tabular-nums">{formatPrice(valueINRial ?? 0)}</p>
         <SaudiRiyal className="w-5 h-5 sm:w-6 sm:h-6" />
       </div>
     </div>

@@ -87,7 +87,7 @@ const Page = () => {
                 )}
                 avatarKey={"profileImage"}
               />
-              <h2 className="min-w-0 wrap-break-word text-base font-bold leading-snug sm:text-lg lg:text-xl">
+              <h2 className="min-w-0 wrap-break-word text-base font-bold leading-snug sm:text-lg">
                 {t("greeting", {
                   name: storeUserData?.clientName || "",
                 })}
