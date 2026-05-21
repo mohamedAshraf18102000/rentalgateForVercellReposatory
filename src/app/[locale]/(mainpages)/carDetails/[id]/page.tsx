@@ -10,16 +10,12 @@ import { useParams } from "next/navigation";
 import { getCarServices } from "@/services/companyCars/carServices.service";
 import { Skeleton } from "@/app/(components)/ui/skeleton";
 import { useEffect, useMemo } from "react";
-import { calculateDiscount } from "@/lib/utils/calculateDiscount";
 import { useBookedCarDetailsStore } from "@/lib/stores/useBookedCarDetailsStore";
 import type { ReservationFormData } from "@/lib/stores/useBookedCarDetailsStore";
 import { initialLocationSlice } from "@/lib/booking/normalizeReservationFormData";
 import CarDetailsCard from "@/app/(components)/customCards/CarsCard/CarDetailsCard";
 import { useUserPreferedFiltersStore } from "@/lib/stores/useUserPreferedFiltersStore";
-import {
-  calculateRentalPrice,
-  PricingType,
-} from "@/lib/utils/calculateRentalPrice";
+import { calculateRentalPrice } from "@/lib/utils/calculateRentalPrice";
 import DriverCard from "@/app/(components)/customCards/DriverCard";
 import { useTranslations } from "next-intl";
 import OffersCard from "@/app/(components)/customCards/OffersCard";
@@ -185,18 +181,17 @@ const page = () => {
       </div>
 
       <div className="my-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <h3 className="col-span-1 my-4 text-xl font-bold sm:col-span-2 lg:col-span-4 lg:text-2xl">
-          {t("providedServices")}
-        </h3>
+        {services && services.length > 0 && (
+          <h3 className="col-span-1 my-4 text-xl font-bold sm:col-span-2 lg:col-span-4 lg:text-2xl">
+            {t("providedServices")}
+          </h3>
+        )}
 
-        <div className="bg-red-700">
-          <p className="text-white text-center">
-            NEED THE BACKEND RETURN THE INSURANCE SERVICE DETAILS
-          </p>
+        {data.insuranceWithDeductible && data.insuranceWithDeductible > 0 && (
           <ServiceCard
             key="full-insurance"
             service={{
-              price: 5,
+              price: data.insuranceWithDeductible,
               serviceArabicName: t("fullInsuranceWithDeductibleAr"),
               serviceEnglishName: t("fullInsuranceWithDeductibleEn"),
             }}
@@ -205,7 +200,7 @@ const page = () => {
               <Info className="stroke-2 stroke-primary  rounded-full fill-[#FFC971] w-15 h-15" />
             }
           />
-        </div>
+        )}
 
         {services?.map((service) => (
           <ServiceCard

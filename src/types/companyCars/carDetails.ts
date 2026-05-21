@@ -2,6 +2,7 @@ export interface CarDetailsResponse {
   ccbId: number;
   car: Car;
   company: Company;
+  insuranceWithDeductible: number | null
 
   updateDate: string;
 
