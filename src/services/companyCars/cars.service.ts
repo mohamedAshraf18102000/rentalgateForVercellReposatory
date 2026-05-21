@@ -81,12 +81,6 @@ export const getCompanyCars = async (
       filters.trainStationId !== null &&
       filters.trainStationId !== "";
 
-    const searchTypeToUse = hasAirport
-      ? "airport"
-      : hasTrainStation
-        ? "train"
-        : filters.searchType ?? "location";
-
     addParam("maxPrice", filters.maxPrice);
     addParam("minPrice", filters.minPrice);
     addParam("categoryId", filters.categoryId);
@@ -95,7 +89,14 @@ export const getCompanyCars = async (
     addParam("brandId", filters.brandId);
     addParam("typeId", filters.typeId);
     addParam("locationType", filters.locationType);
-    addParam("searchType", searchTypeToUse);
+
+    if (hasAirport) {
+      addParam("searchType", "airport");
+    } else if (hasTrainStation) {
+      addParam("searchType", "train");
+    } else if (filters.searchType) {
+      addParam("searchType", filters.searchType);
+    }
     addParam("priceType", filters.priceType ?? "");
     addParam("sortBy", filters.sortBy ?? "");
     addParam("name", filters.name);

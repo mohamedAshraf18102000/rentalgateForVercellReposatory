@@ -212,8 +212,10 @@
       "complete": {
         "title": "Extension summary",
         "description": "Review the extension details below before confirming payment.",
+        "bookingDetailsTitle": "Booking details",
         "additionalAmount": "Additional amount",
-        "done": "Back to booking details"
+        "done": "Back to booking details",
+        "amountDetailsHeader": "Amount details:"
       }
     },
     "paymentDetails": {

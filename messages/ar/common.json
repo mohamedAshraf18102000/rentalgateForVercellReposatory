@@ -212,8 +212,10 @@
       "complete": {
         "title": "ملخص التمديد",
         "description": "راجع تفاصيل التمديد أدناه قبل تأكيد الدفع.",
+        "bookingDetailsTitle": "تفاصيل الحجز",
         "additionalAmount": "المبلغ الإضافي",
-        "done": "العودة إلى تفاصيل الحجز"
+        "done": "العودة إلى تفاصيل الحجز",
+        "amountDetailsHeader": "تفاصيل المبلغ:"
       }
     },
     "paymentDetails": {

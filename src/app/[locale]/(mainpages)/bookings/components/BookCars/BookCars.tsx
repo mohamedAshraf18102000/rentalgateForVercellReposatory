@@ -72,11 +72,7 @@ const BookCars = () => {
         ? appliedFilters.pickupId || undefined
         : undefined,
     searchType:
-      appliedFilters.pickupType === "branches"
-        ? "branch"
-        : appliedFilters.pickupType === "currentLocation"
-          ? "location"
-          : undefined,
+      appliedFilters.pickupType === "branches" ? "branch" : undefined,
     locationType: appliedFilters.pickupType === "branches" ? "1" : undefined,
     brandId: appliedFilters.brandId || undefined,
     name: carSearchName || undefined,
