@@ -258,6 +258,7 @@ const StepThree = ({ control, errors }: StepThreeProps) => {
                 const isSelected = selectedDriver?.id === drvId;
                 return (
                   <SelectableServiceDriverCard
+                    rentalDays={Number(formdata.rentalDays) || 1}
                     key={driver.cdsId}
                     driver={driver}
                     selected={isSelected}

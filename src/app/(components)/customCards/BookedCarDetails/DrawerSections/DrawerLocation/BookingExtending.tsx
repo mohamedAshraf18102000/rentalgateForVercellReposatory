@@ -191,15 +191,16 @@ const BookingExtending = ({
 
         <SheetFooter className="p-6 border-t mt-auto">
           <Button
+            variant="ghost"
             type="button"
-            className="text-base! w-1/2 bg-transparent text-black border-2 border-Grey400 hover:bg-transparent"
+            className="text-base! w-1/4 bg-transparent text-black border-2 border-Grey400 hover:bg-transparent"
             onClick={() => setShowBookingExtending(false)}
           >
             {t("cancel")}
           </Button>
           <Button
             type="button"
-            className="text-base! w-1/2"
+            className="text-base! w-3/4"
             onClick={handleExtendReservation}
             disabled={!toDate || isExtendingReservation}
           >

@@ -7,6 +7,7 @@ import WarningMessage from "../WarningMessage";
 import { useLocale, useTranslations } from "next-intl";
 
 interface SelectableServiceDriverCardProps {
+  rentalDays?: number;
   driver?: CompanyService;
   selected?: boolean;
   onToggle?: () => void;
@@ -18,6 +19,7 @@ interface SelectableServiceDriverCardProps {
 }
 
 const SelectableServiceDriverCard = ({
+  rentalDays,
   driver,
   selected,
   onToggle,
@@ -34,6 +36,9 @@ const SelectableServiceDriverCard = ({
 
   const minHours = 1;
   const maxHours = driver?.dayNumberHours ?? 24;
+
+  const minDays = 1;
+  const maxDays = rentalDays ?? minDays;
 
   const hoursPerDay = hoursPerDayProp ?? 1;
   const numberOfDays = numberOfDaysProp ?? 1;
@@ -55,14 +60,14 @@ const SelectableServiceDriverCard = ({
   const handleDaysDecrement = (e: React.MouseEvent) => {
     e.stopPropagation();
     e.preventDefault();
-    const next = Math.max(1, numberOfDays - 1);
+    const next = Math.max(minDays, numberOfDays - 1);
     onDaysChange?.(next);
   };
 
   const handleDaysIncrement = (e: React.MouseEvent) => {
     e.stopPropagation();
     e.preventDefault();
-    const next = numberOfDays + 1;
+    const next = Math.min(maxDays, numberOfDays + 1);
     onDaysChange?.(next);
   };
 
@@ -112,7 +117,9 @@ const SelectableServiceDriverCard = ({
             )}
           </div>
 
-          <div className={`order-2 min-w-0 flex-1 ${isRTL ? "text-right" : "text-left"}`}>
+          <div
+            className={`order-2 min-w-0 flex-1 ${isRTL ? "text-right" : "text-left"}`}
+          >
             <p className="text-sm font-bold leading-tight text-gray-900 sm:text-base">
               {t("reservation.stepThree.driverCard.title")}
               <span className="mx-1 text-sm font-normal sm:text-base">
@@ -177,7 +184,7 @@ const SelectableServiceDriverCard = ({
                 <button
                   type="button"
                   onClick={handleDaysDecrement}
-                  disabled={numberOfDays <= 1}
+                  disabled={numberOfDays <= minDays}
                   className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg bg-gray-100 p-2 font-bold transition duration-300 hover:bg-red-200 disabled:cursor-not-allowed disabled:opacity-40"
                 >
                   <Minus className="h-4 w-4" />
@@ -188,7 +195,8 @@ const SelectableServiceDriverCard = ({
                 <button
                   type="button"
                   onClick={handleDaysIncrement}
-                  className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg bg-gray-100 p-2 font-bold transition duration-300 hover:bg-green-200"
+                  disabled={numberOfDays >= maxDays}
+                  className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg bg-gray-100 p-2 font-bold transition duration-300 hover:bg-green-200 disabled:cursor-not-allowed disabled:opacity-40"
                 >
                   <Plus className="h-4 w-4" />
                 </button>
@@ -201,7 +209,9 @@ const SelectableServiceDriverCard = ({
             />
 
             <div className="mt-2 flex w-fit items-center gap-1 rounded-lg">
-              <p className="text-base font-bold sm:text-lg">{driver?.dailyPrice}</p>
+              <p className="text-base font-bold sm:text-lg">
+                {driver?.dailyPrice}
+              </p>
               <SaudiRiyal className="h-4 w-4 sm:h-5 sm:w-5" />
               <p>/</p>
               <p>{t("reservation.stepThree.driverCard.dayUnit")}</p>
