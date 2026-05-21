@@ -24,6 +24,8 @@ import DriverCard from "@/app/(components)/customCards/DriverCard";
 import { useTranslations } from "next-intl";
 import OffersCard from "@/app/(components)/customCards/OffersCard";
 import KMPackageCard from "@/app/(components)/customCards/KMPackageCard";
+import type { ServiceCardBase } from "@/types/companyCars/carServices";
+import { Info } from "lucide-react";
 
 const page = () => {
   const t = useTranslations("carDetails");
@@ -186,6 +188,25 @@ const page = () => {
         <h3 className="col-span-1 my-4 text-xl font-bold sm:col-span-2 lg:col-span-4 lg:text-2xl">
           {t("providedServices")}
         </h3>
+
+        <div className="bg-red-700">
+          <p className="text-white text-center">
+            NEED THE BACKEND RETURN THE INSURANCE SERVICE DETAILS
+          </p>
+          <ServiceCard
+            key="full-insurance"
+            service={{
+              price: 5,
+              serviceArabicName: t("fullInsuranceWithDeductibleAr"),
+              serviceEnglishName: t("fullInsuranceWithDeductibleEn"),
+            }}
+            showTax={showPricesWithTax}
+            extraIcon={
+              <Info className="stroke-2 stroke-primary  rounded-full fill-[#FFC971] w-15 h-15" />
+            }
+          />
+        </div>
+
         {services?.map((service) => (
           <ServiceCard
             showTax={showPricesWithTax}

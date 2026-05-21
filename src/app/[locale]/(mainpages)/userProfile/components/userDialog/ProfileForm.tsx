@@ -13,8 +13,17 @@ import {
   SelectValue,
 } from "@/app/(components)";
 import { formatDateAsLocalDay } from "@/lib/utils/formatLocalDateTime";
+import {
+  isReservationProfileFieldLocked,
+  type LockedReservationProfileFields,
+  type ReservationProfileLockableField,
+} from "@/lib/utils/mapUserProfileToReservationForm";
 import { UpdateUserReservationProfileFormValues } from "@/lib/validations/updateUserReservationProfileSchema";
 import { Globe, IdCard } from "lucide-react";
+import {
+  PROFILE_IDENTITY_FIELD_CONFIG,
+  shouldShowProfileIdentityField,
+} from "./profileFormIdentityFields";
 import {
   Controller,
   Control,
@@ -36,6 +45,7 @@ interface ProfileFormProps {
   setValue: UseFormSetValue<UpdateUserReservationProfileFormValues>;
   getErrorMessage: (message?: string) => string | undefined;
   isProfileLoading?: boolean;
+  lockedFields?: LockedReservationProfileFields;
 }
 
 const ProfileForm = ({
@@ -48,8 +58,11 @@ const ProfileForm = ({
   setValue,
   getErrorMessage,
   isProfileLoading,
+  lockedFields = {},
 }: ProfileFormProps) => {
   const t = useTranslations("profile.updateReservationProfileDialog");
+  const isFieldLocked = (field: ReservationProfileLockableField) =>
+    isReservationProfileFieldLocked(lockedFields, field);
 
   return (
     <form className="space-y-2 mb-5" id="update-reservation-profile-form">
@@ -77,8 +90,12 @@ const ProfileForm = ({
                   <Select
                     onValueChange={field.onChange}
                     value={field.value ?? "0"}
+                    disabled={isFieldLocked("idNumber")}
                   >
-                    <SelectTrigger className="w-full h-10 px-3 py-2 bg-[#eceef2] border-input rounded-[8px] text-sm">
+                    <SelectTrigger
+                      disabled={isFieldLocked("idNumber")}
+                      className="w-full h-10 px-3 py-2 bg-[#eceef2] border-input rounded-[8px] text-sm"
+                    >
                       <SelectValue
                         placeholder={t("fields.residenceType.placeholder")}
                       />
@@ -117,6 +134,7 @@ const ProfileForm = ({
                 {...field}
                 value={field.value ?? ""}
                 required
+                disabled={isFieldLocked("nationality")}
                 label={t("fields.nationality.label")}
                 startIcon={<Globe className="size-4" />}
                 placeholder={t("fields.nationality.placeholder")}
@@ -126,67 +144,35 @@ const ProfileForm = ({
           />
         </div>
 
-        {(residenceType === "0" || residenceType === "1") && (
-          <div className="col-span-1">
-            <Controller
-              name="personalId"
-              control={control}
-              render={({ field }) => (
-                <Input
-                  required
-                  type="number"
-                  {...field}
-                  value={field.value ?? ""}
-                  label={t("fields.personalId.label")}
-                  startIcon={<IdCard className="size-4" />}
-                  placeholder={t("fields.personalId.placeholder")}
-                  errorMessage={getErrorMessage(errors.personalId?.message)}
-                />
-              )}
-            />
-          </div>
-        )}
+        {PROFILE_IDENTITY_FIELD_CONFIG.map((config) => {
+          if (!shouldShowProfileIdentityField(config, residenceType)) {
+            return null;
+          }
 
-        {residenceType === "2" && (
-          <div className="col-span-1">
-            <Controller
-              name="passportNumber"
-              control={control}
-              render={({ field }) => (
-                <Input
-                  required
-                  {...field}
-                  value={field.value ?? ""}
-                  label={t("fields.passportNumber.label")}
-                  startIcon={<IdCard className="size-4" />}
-                  placeholder={t("fields.passportNumber.placeholder")}
-                  errorMessage={getErrorMessage(errors.passportNumber?.message)}
-                />
-              )}
-            />
-          </div>
-        )}
-
-        {residenceType === "3" && (
-          <div className="col-span-1">
-            <Controller
-              name="borderNumber"
-              control={control}
-              render={({ field }) => (
-                <Input
-                  required
-                  type="number"
-                  {...field}
-                  value={field.value ?? ""}
-                  label={t("fields.borderNumber.label")}
-                  startIcon={<IdCard className="size-4" />}
-                  placeholder={t("fields.borderNumber.placeholder")}
-                  errorMessage={getErrorMessage(errors.borderNumber?.message)}
-                />
-              )}
-            />
-          </div>
-        )}
+          return (
+            <div key={config.name} className="col-span-1">
+              <Controller
+                name={config.name}
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    required
+                    type={config.inputType}
+                    {...field}
+                    value={field.value ?? ""}
+                    disabled={isFieldLocked(config.name)}
+                    label={t(config.labelKey as never)}
+                    startIcon={<IdCard className="size-4" />}
+                    placeholder={t(config.placeholderKey as never)}
+                    errorMessage={getErrorMessage(
+                      errors[config.name]?.message,
+                    )}
+                  />
+                )}
+              />
+            </div>
+          );
+        })}
 
         <div className="col-span-1">
           <Controller

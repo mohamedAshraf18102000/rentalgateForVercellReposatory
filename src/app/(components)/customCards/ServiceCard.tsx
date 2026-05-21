@@ -1,5 +1,8 @@
 import { useBookedCarDetailsStore } from "@/lib/stores/useBookedCarDetailsStore";
-import { CompanyService } from "@/types/companyCars/carServices";
+import {
+  ServiceCardBase,
+  ServicePriceInput,
+} from "@/types/companyCars/carServices";
 import { SaudiRiyal } from "lucide-react";
 import Image from "next/image";
 import { useMemo } from "react";
@@ -8,32 +11,51 @@ import { calculateServicePrice } from "@/lib/utils/calculateServicePrice";
 import { getPriceWithoutTax } from "@/lib/utils/getPriceWithoutTax";
 import { useLocale, useTranslations } from "next-intl";
 
-interface ServiceCardProps {
-  service: CompanyService;
+interface ServiceCardProps<T extends ServiceCardBase = ServiceCardBase> {
+  extraIcon?: React.ReactNode | null;
+  service: T;
   showTax: boolean;
 }
 
-const ServiceCard = ({ service, showTax }: ServiceCardProps) => {
+function ServiceCard<T extends ServiceCardBase>({
+  service,
+  showTax,
+  extraIcon = null,
+}: ServiceCardProps<T>) {
   const locale = useLocale();
   const t = useTranslations("carDetails");
   const rentalDays =
     useBookedCarDetailsStore((state) => state.formData.rentalDays) || 1;
 
-  const calculatedPrice = useMemo(
-    () => calculateServicePrice(service, rentalDays),
-    [service, rentalDays],
-  );
+  const calculatedPrice = useMemo(() => {
+    if ("csType" in service && "priceType" in service) {
+      return calculateServicePrice(service as ServicePriceInput, rentalDays);
+    }
+    return service.price;
+  }, [service, rentalDays]);
+
+  const serviceName =
+    locale === "ar" ? service.serviceArabicName : service.serviceEnglishName;
 
   return (
     <div className="relative flex min-h-[92px] overflow-hidden rounded-2xl border-2 border-white">
-      <div className="relative w-[30%] min-w-[90px] sm:min-w-[110px]">
-        <Image src={"/cars/car1.png"} fill alt="" className="object-contain " />
-      </div>
+      {extraIcon === null ? (
+        <div className="relative w-[30%] min-w-[90px] sm:min-w-[110px]">
+          <Image
+            src={"/cars/services/serviceIcon.webp"}
+            fill
+            alt=""
+            className="object-fill"
+          />
+        </div>
+      ) : (
+        <div className="relative w-[30%] min-w-[90px] sm:min-w-[110px] flex items-center justify-center">
+          {extraIcon}
+        </div>
+      )}
       <div className="w-[70%] bg-white p-2 sm:p-3">
         <div className="">
-          <p className="text-sm font-extrabold sm:text-base">
-            {locale === "ar" ? service.serviceArabicName : service.serviceEnglishName}
-          </p>
+          <p className="text-sm font-extrabold sm:text-base">{serviceName}</p>
           <div className="mt-2 flex flex-wrap items-center sm:mt-3">
             <span className="text-base font-bold sm:text-lg">
               {showTax
@@ -43,7 +65,7 @@ const ServiceCard = ({ service, showTax }: ServiceCardProps) => {
             <span className="mx-1">
               <SaudiRiyal />
             </span>
-            {service.csType === "everyday" && (
+            {"csType" in service && service.csType === "everyday" && (
               <span className="text-sm text-Grey500">
                 {rentalDays > 1
                   ? t("forRentalDays", { days: rentalDays })
@@ -55,6 +77,6 @@ const ServiceCard = ({ service, showTax }: ServiceCardProps) => {
       </div>
     </div>
   );
-};
+}
 
 export default ServiceCard;

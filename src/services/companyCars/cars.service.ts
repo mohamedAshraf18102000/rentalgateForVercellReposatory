@@ -22,11 +22,8 @@ export interface CarFilters {
   userPhysicalLatitudeFilter?: number;
 }
 
-export const getCompanyCars = async (
-  page: number = 1,
-  filters?: CarFilters,
-): Promise<CarApiResponse> => {
-  const hasAppliedFilters = Boolean(
+const hasAppliedFilters = (filters?: CarFilters): boolean =>
+  Boolean(
     filters &&
     [
       filters.minPrice,
@@ -46,31 +43,35 @@ export const getCompanyCars = async (
     ].some((value) => value !== undefined && value !== null && value !== ""),
   );
 
-  if (!hasAppliedFilters) {
-    const latitude = filters?.userPhysicalLatitudeFilter ?? "";
-    const longitude = filters?.userPhysicalLongitudeFilter ?? "";
-    const pageToUse = filters?.page ?? page;
-    const sizeToUse = filters?.size ?? 20;
-
-    return fetcher<CarApiResponse>(
-      `/company-cars?latitude=${latitude}&longitude=${longitude}&page=${pageToUse}&size=${sizeToUse}`,
-    );
-  }
-
+export const getCompanyCars = async (
+  page: number = 1,
+  filters?: CarFilters,
+): Promise<CarApiResponse> => {
   const query: string[] = [];
 
-  // required params
   query.push(`page=${filters?.page ?? page}`);
   query.push(`size=${filters?.size ?? 20}`);
 
-  // helper function
-  const addParam = (key: string, value?: string | number) => {
-    if (value !== undefined && value !== null && value !== "") {
-      query.push(`${key}=${value}`);
-    }
-  };
+  if (!hasAppliedFilters(filters)) {
+    const latitude =
+      filters?.userPhysicalLatitudeFilter ?? filters?.latitude;
+    const longitude =
+      filters?.userPhysicalLongitudeFilter ?? filters?.longitude;
 
-  if (filters) {
+    if (latitude != null) {
+      query.push(`latitude=${latitude}`);
+    }
+
+    if (longitude != null) {
+      query.push(`longitude=${longitude}`);
+    }
+  } else if (filters) {
+    const addParam = (key: string, value?: string | number) => {
+      if (value !== undefined && value !== null && value !== "") {
+        query.push(`${key}=${value}`);
+      }
+    };
+
     const hasAirport =
       filters.airportId !== undefined &&
       filters.airportId !== null &&
@@ -80,7 +81,6 @@ export const getCompanyCars = async (
       filters.trainStationId !== null &&
       filters.trainStationId !== "";
 
-    // Backend expects different searchType based on the active location.
     const searchTypeToUse = hasAirport
       ? "airport"
       : hasTrainStation
@@ -95,14 +95,11 @@ export const getCompanyCars = async (
     addParam("brandId", filters.brandId);
     addParam("typeId", filters.typeId);
     addParam("locationType", filters.locationType);
-
-    // params إضافية
     addParam("searchType", searchTypeToUse);
     addParam("priceType", filters.priceType ?? "");
     addParam("sortBy", filters.sortBy ?? "");
     addParam("name", filters.name);
 
-    // When searching by airport/train station, backend does not accept lat/lng.
     if (!(hasAirport || hasTrainStation)) {
       const latitudeToUse =
         filters.latitude ?? filters.userPhysicalLatitudeFilter;

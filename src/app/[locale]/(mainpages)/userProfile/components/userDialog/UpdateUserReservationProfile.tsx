@@ -4,7 +4,10 @@ import { uploadImage } from "@/services/uploadImages/uploadImage.service";
 import { Button, DialogWrapper } from "@/app/(components)";
 import { UpdateUserProfilePayload } from "@/types/userProfile/updateUserProfile";
 import { formatDateAsLocalDay } from "@/lib/utils/formatLocalDateTime";
-import { mapUserProfileToReservationFormValues } from "@/lib/utils/mapUserProfileToReservationForm";
+import {
+  getLockedReservationProfileFields,
+  mapUserProfileToReservationFormValues,
+} from "@/lib/utils/mapUserProfileToReservationForm";
 import {
   mergeUpdateUserReservationProfileFormValues,
   updateUserReservationProfileDefaultValues,
@@ -61,6 +64,7 @@ const UpdateUserReservationProfile = ({
   });
 
   const residenceType = useWatch({ control, name: "idNumber" });
+  const lockedFields = getLockedReservationProfileFields(profileData);
   const licenseImageValue = useWatch({ control, name: "licenseImage" });
   const licenseImagePreviewUrl = licenseImageValue
     ? licenseImageValue.startsWith("http")
@@ -170,6 +174,7 @@ const UpdateUserReservationProfile = ({
             setValue={setValue}
             getErrorMessage={getErrorMessage}
             isProfileLoading={isProfileLoading}
+            lockedFields={lockedFields}
           />
         </div>
       }

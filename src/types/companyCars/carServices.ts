@@ -39,3 +39,10 @@ export type ServicePriceInput = Pick<
       "dailyPrice" | "weeklyPrice" | "halfMonthly" | "monthly" | "yearly"
     >
   >;
+
+/** Minimal display + pricing fields required by ServiceCard. */
+export interface ServiceCardBase {
+  serviceArabicName: string;
+  serviceEnglishName: string;
+  price: number;
+}

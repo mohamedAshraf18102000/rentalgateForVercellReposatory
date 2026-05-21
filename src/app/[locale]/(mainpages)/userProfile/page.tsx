@@ -30,19 +30,6 @@ const Page = () => {
 
   const router = useRouter();
 
-  const profileImageRaw = storeUserData?.profileImage;
-  const computedAvatarSrc = profileImageRaw?.trim()
-    ? normalizeImageUrl(String(profileImageRaw).trim())
-    : "/profile/userFallbackImage.webp";
-
-  /** Increments when the profile picture is saved so the image URL changes and caches refresh. */
-  const [profileImageNonce, setProfileImageNonce] = useState(0);
-
-  const avatarSrcResolved =
-    profileImageNonce === 0
-      ? computedAvatarSrc
-      : `${computedAvatarSrc}${computedAvatarSrc.includes("?") ? "&" : "?"}rev=${profileImageNonce}`;
-
   useEffect(() => {
     if (isClient && !authenticated) {
       router.replace("/");
@@ -94,9 +81,11 @@ const Page = () => {
           <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
             <div className="flex min-w-0 items-center gap-3 sm:gap-4">
               <UserImage
-                avatarSrc={avatarSrcResolved}
-                avatarKey={`${String(profileImageRaw ?? "")}-${profileImageNonce}`}
-                onProfileImageSaved={() => setProfileImageNonce((n) => n + 1)}
+                avatarSrc={normalizeImageUrl(
+                  storeUserData?.profileImage,
+                  "/profile/userFallbackImage.webp",
+                )}
+                avatarKey={"profileImage"}
               />
               <h2 className="min-w-0 wrap-break-word text-base font-bold leading-snug sm:text-lg lg:text-xl">
                 {t("greeting", {
