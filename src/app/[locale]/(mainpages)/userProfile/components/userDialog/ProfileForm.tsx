@@ -71,6 +71,7 @@ const ProfileForm = ({
         errors={errors}
         getErrorMessage={getErrorMessage}
         disabled={isProfileLoading}
+        lockedFields={lockedFields}
       />
 
       <Separator className="" />

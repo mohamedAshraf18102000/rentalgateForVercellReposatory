@@ -129,19 +129,20 @@ const CarsCard = ({
             </>
           )}
 
-          {typeof daysForFreeDelivery === "number" && (
-            <>
-              <RoundedRec className="absolute inset-x-0 bottom-0 z-40 px-9" />
-              <figcaption className="absolute inset-x-0 bottom-0 z-50 flex w-full items-center justify-center gap-1 px-2 py-0.5 sm:gap-2 sm:px-3">
-                <span className="shrink-0">
-                  <ExeclusiveOfferIcon />
-                </span>
-                <span className="min-w-0 text-center text-[10px] font-bold leading-tight text-StatusDarkGreen sm:text-xs md:text-sm">
-                  {t("freeDeliveryForDays", { days: daysForFreeDelivery })}
-                </span>
-              </figcaption>
-            </>
-          )}
+          {typeof daysForFreeDelivery === "number" &&
+            daysForFreeDelivery > 0 && (
+              <>
+                <RoundedRec className="absolute inset-x-0 bottom-0 z-40 px-9" />
+                <figcaption className="absolute inset-x-0 bottom-0 z-50 flex w-full items-center justify-center gap-1 px-2 py-0.5 sm:gap-2 sm:px-3">
+                  <span className="shrink-0">
+                    <ExeclusiveOfferIcon />
+                  </span>
+                  <span className="min-w-0 text-center text-[10px] font-bold leading-tight text-StatusDarkGreen sm:text-xs md:text-sm">
+                    {t("freeDeliveryForDays", { days: daysForFreeDelivery })}
+                  </span>
+                </figcaption>
+              </>
+            )}
         </figure>
         <CardHeader className="mt-5">
           <CardTitle className="font-bold flex justify-between items-start">

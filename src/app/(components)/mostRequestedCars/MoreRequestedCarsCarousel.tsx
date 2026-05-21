@@ -48,6 +48,7 @@ const MoreRequestedCarsCarousel = ({
                 className="basis-[90%] sm:basis-1/2 lg:basis-1/3 xl:basis-1/4"
               >
                 <CarsCard
+                  daysForFreeDelivery={branch.daysForFreeDelivery}
                   className="h-full w-full min-w-0"
                   onClick={() => {
                     router.push(`/carDetails/${item.companyCarBranch.ccbId}`);

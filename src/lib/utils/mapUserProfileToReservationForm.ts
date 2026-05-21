@@ -3,7 +3,14 @@ import type { UpdateUserReservationProfileFormValues } from "@/lib/validations/u
 
 export type ReservationProfileLockableField = keyof Pick<
   UpdateUserReservationProfileFormValues,
-  "idNumber" | "nationality" | "personalId" | "passportNumber" | "borderNumber"
+  | "fullName"
+  | "email"
+  | "mobile"
+  | "idNumber"
+  | "nationality"
+  | "personalId"
+  | "passportNumber"
+  | "borderNumber"
 >;
 
 export type LockedReservationProfileFields = Partial<
@@ -51,6 +58,14 @@ const RESERVATION_PROFILE_LOCK_CHECKS: {
   field: ReservationProfileLockableField;
   hasExisting: (profile: ClientData) => boolean;
 }[] = [
+  {
+    field: "email",
+    hasExisting: (profile) => hasExistingProfileStringValue(profile.email),
+  },
+  {
+    field: "mobile",
+    hasExisting: (profile) => hasExistingProfileStringValue(profile.mobile),
+  },
   {
     field: "idNumber",
     hasExisting: (profile) => hasExistingResidenceType(profile.residenceType),
