@@ -370,7 +370,7 @@ const CarsGrid = ({ cars, isLoading, rentalDays }: CarsGridProps) => {
                       {companyHeading ??
                         t("branchIdLabel", { id: group.branchId })}
                       {branchHeading ? (
-                        <span className="mx-1 text-sm font-normal text-muted-foreground">
+                        <span className="mx-1 text-[15px] font-normal text-muted-foreground">
                           ({branchHeading})
                         </span>
                       ) : null}
