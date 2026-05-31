@@ -24,8 +24,8 @@
       "description": ""
     },
     "currentLocation": {
-      "title": "استلام من أي موقع أينما كنت",
-      "description": "أينما تكن، سياراتك ستكون في انتظارك",
+      "title": "توصيل لمكانك اينما تكن",
+      "description": "",
       "formLabel": "موقع استلام السيارة:",
       "placeholder": "أدخل العنوان..."
     }

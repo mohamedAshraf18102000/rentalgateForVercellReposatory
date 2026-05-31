@@ -24,8 +24,8 @@
       "description": "Lorem Ipsum has been and remains the standard placeholder text"
     },
     "currentLocation": {
-      "title": "Pickup from any location",
-      "description": "Wherever you are, your car will be waiting for you",
+      "title": "Delivery to your location wherever you are",
+      "description": "",
       "formLabel": "Car pickup location:",
       "placeholder": "Enter address..."
     }
