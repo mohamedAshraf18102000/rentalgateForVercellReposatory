@@ -24,6 +24,7 @@ export default getRequestConfig(async ({ requestLocale }) => {
     companyQuotation: (await import(`../../messages/${locale}/companyQuotation.json`)).default,
     schemasLocalization: (await import(`../../messages/${locale}/schemasLocalization.json`)).default,
     termsAndConditions: (await import(`../../messages/${locale}/termsAndConditions.json`)).default,
+    seo: (await import(`../../messages/${locale}/seo.json`)).default,
   };
 
   return {

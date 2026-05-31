@@ -10,7 +10,6 @@ import { Separator } from "../ui/separator";
 import { LanguageSwitcher } from "./components";
 import { cn } from "@/lib/utils";
 import ClearData from "./ClearData";
-import RentalGateName from "./components/RentalGateName";
 
 export default async function Header() {
   const t = await getTranslations("common");
@@ -40,10 +39,14 @@ export default async function Header() {
             {/* Left Section */}
             <div className={NAVBAR_STYLES.leftSection}>
               {/* Center Section - Logo */}
-              <div className={cn(NAVBAR_STYLES.centerSection, "")}>
-                <Logo href="/" src="/logo-rental.png" alt="logo" />
-                <RentalGateName />
+              <div className={cn("w-[150px]")}>
+                <Logo
+                  href="/"
+                  src="/RentalGateNewLogo.webp"
+                  alt="rental gate logo"
+                />
               </div>
+
               <HomeLink
                 href="/"
                 label={translations.home}
@@ -72,7 +75,7 @@ export default async function Header() {
               <LanguageSwitcher />
             </div>
 
-            <ClearData />
+            {/* <ClearData /> */}
 
             {/* Right Section */}
             <div className={NAVBAR_STYLES.rightSection}>

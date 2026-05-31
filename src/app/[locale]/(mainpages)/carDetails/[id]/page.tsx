@@ -187,11 +187,11 @@ const page = () => {
           </h3>
         )}
 
-        {data.insuranceWithDeductible && data.insuranceWithDeductible > 0 && (
+        {(data.insuranceWithDeductible ?? 0) > 0 && (
           <ServiceCard
             key="full-insurance"
             service={{
-              price: data.insuranceWithDeductible,
+              price: data.insuranceWithDeductible ?? 0,
               serviceArabicName: t("fullInsuranceWithDeductible"),
               serviceEnglishName: t("fullInsuranceWithDeductible"),
             }}
@@ -225,9 +225,12 @@ const page = () => {
       </div>
 
       <div className="flex flex-col gap-1 mt-4">
-        <h3 className="col-span-1 my-4 text-xl font-bold sm:col-span-2 lg:col-span-4 lg:text-xl">
-          {t("reservation.stepOne.offersTitle")}
-        </h3>
+        {(data.offerPackages.length > 0 ||
+          data.kilometerPackages.length > 0) && (
+          <h3 className="col-span-1 my-4 text-xl font-bold sm:col-span-2 lg:col-span-4 lg:text-xl">
+            {t("reservation.stepOne.offersTitle")}
+          </h3>
+        )}
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 3xl:grid-cols-4!">
           {data.offerPackages.map((offer) => (
             <OffersCard key={offer.ccoId} offerPackage={offer} />

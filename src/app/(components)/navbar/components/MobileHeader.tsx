@@ -11,6 +11,8 @@ import {
   LocationTrigger,
   type LocationTriggerTranslations,
 } from "./LocationTrigger";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 interface MobileHeaderProps {
   translations: LocationTriggerTranslations;
@@ -18,7 +20,7 @@ interface MobileHeaderProps {
 
 export const MobileHeader: React.FC<MobileHeaderProps> = ({ translations }) => {
   const locale = useLocale();
-
+  const router = useRouter();
   return (
     <header className="md:hidden fixed top-0 left-0 right-0 z-50 h-[60px]">
       {/* Main Header */}
@@ -26,22 +28,18 @@ export const MobileHeader: React.FC<MobileHeaderProps> = ({ translations }) => {
         {/* Center - Title and Logo */}
         <div className={`flex items-center gap-3`}>
           {/* Logo */}
-          <div className="w-[45px] bg-white h-[45px] flex items-center justify-center   z-10 rounded-full navbar-logo-shadow-mobile">
-            <Logo
-              href="/"
-              src="/logo-rental.png"
-              alt="logo"
-              className="w-full h-full bg-white p-1.5 rounded-full"
+          <div
+            onClick={() => router.push("/")}
+            className=" flex! items-center! justify-center! z-10 rounded-full overflow-hidden"
+          >
+            <Image
+              src="/RentalGateNewLogo.webp"
+              alt="rental gate logo"
+              width={150}
+              height={150}
+              className="object-contain scale-80"
             />
           </div>
-          <Link href="/" className="flex flex-col items-start">
-            <h1 className="text-[#1A1A1A] font-bold text-sm leading-tight">
-              {locale === "ar" ? "رينتال جيت" : "Rental Gate"}
-            </h1>
-            <p className="text-[#1A1A1A]/80 text-xs leading-tight">
-              {locale === "ar" ? "لتأجير السيارات" : "Car Rental"}
-            </p>
-          </Link>
         </div>
         <LocationTrigger
           translations={translations}

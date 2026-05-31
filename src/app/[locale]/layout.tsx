@@ -35,39 +35,28 @@ const fontAlmarai = Almarai({
   variable: "--font-almarai",
 });
 
-const metadataMessages = {
-  ar: {
-    common: arCommonMessages,
-    home: arHomeMessages,
-  },
-  en: {
-    common: enCommonMessages,
-    home: enHomeMessages,
-  },
-} as const;
+// function getLocaleMetadata(locale: string) {
+//   const normalizedLocale = locale === "en" ? "en" : "ar";
+//   const { common, home } = metadataMessages[normalizedLocale];
+//   const isArabic = normalizedLocale === "ar";
+//   const siteName = isArabic ? "رينتال جيت" : "Rental Gate";
+//   const title = isArabic
+//     ? `${home.title || "مرحباً بك في رينتال جيت"} - ${common.companyName || "رينتال جيت"}`
+//     : `${home.title || "Welcome to Rental Gate"} - ${common.companyName || "Rental Gate"}`;
+//   const description = isArabic
+//     ? home.description ||
+//       "منصتك الموثوقة لتأجير السيارات في المملكة العربية السعودية"
+//     : home.description ||
+//       "Your trusted platform for car rental in Saudi Arabia";
 
-function getLocaleMetadata(locale: string) {
-  const normalizedLocale = locale === "en" ? "en" : "ar";
-  const { common, home } = metadataMessages[normalizedLocale];
-  const isArabic = normalizedLocale === "ar";
-  const siteName = isArabic ? "رينتال جيت" : "Rental Gate";
-  const title = isArabic
-    ? `${home.title || "مرحباً بك في رينتال جيت"} - ${common.companyName || "رينتال جيت"}`
-    : `${home.title || "Welcome to Rental Gate"} - ${common.companyName || "Rental Gate"}`;
-  const description = isArabic
-    ? home.description ||
-      "منصتك الموثوقة لتأجير السيارات في المملكة العربية السعودية"
-    : home.description ||
-      "Your trusted platform for car rental in Saudi Arabia";
-
-  return {
-    locale: normalizedLocale,
-    isArabic,
-    siteName,
-    title,
-    description,
-  };
-}
+//   return {
+//     locale: normalizedLocale,
+//     isArabic,
+//     siteName,
+//     title,
+//     description,
+//   };
+// }
 
 async function getBaseUrl() {
   const headerStore = await headers();
@@ -94,80 +83,29 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
-  const {
-    locale: normalizedLocale,
-    isArabic,
-    siteName,
-    title,
-    description,
-  } = getLocaleMetadata(locale);
 
   const baseUrl = await getBaseUrl();
-  const url = `${baseUrl}/${normalizedLocale}`;
 
   return {
     metadataBase: new URL(baseUrl),
-    keywords: isArabic
-      ? ["تأجير سيارات", "رينتال جيت", "تأجير", "سيارات", "السعودية", "الرياض"]
-      : [
-          "car rental",
-          "Rental Gate",
-          "rental",
-          "cars",
-          "Saudi Arabia",
-          "Riyadh",
-        ],
-    authors: [{ name: siteName }],
-    creator: "Viganium",
-    publisher: "Viganium",
-    formatDetection: {
-      email: false,
-      address: false,
-      telephone: false,
+
+    title: {
+      default: locale === "ar" ? "رينتال جيت" : "Rental Gate",
+      template: locale === "ar" ? "%s | رينتال جيت" : "%s | Rental Gate",
     },
-    openGraph: {
-      type: "website",
-      locale: normalizedLocale === "ar" ? "ar_SA" : "en_US",
-      url,
-      siteName,
-      title,
-      description,
-      images: [
-        {
-          url: "/logo.png",
-          width: 1200,
-          height: 630,
-          alt: siteName,
-        },
-      ],
-    },
-    twitter: {
-      card: "summary_large_image",
-      title,
-      description,
-      images: ["/logo.png"],
-      creator: "@almqam",
-    },
+
     robots: {
       index: true,
       follow: true,
-      googleBot: {
-        index: true,
-        follow: true,
-        "max-video-preview": -1,
-        "max-image-preview": "large",
-        "max-snippet": -1,
-      },
     },
+
+    openGraph: {
+      siteName: locale === "ar" ? "رينتال جيت" : "Rental Gate",
+    },
+
     icons: {
-      icon: [{ url: "/logo-rental.png", type: "image/png" }],
-      apple: [{ url: "/logo-rental.png", type: "image/png" }],
-      shortcut: "/logo-rental.png",
-    },
-    manifest: "/manifest.json",
-    verification: {
-      // يمكن إضافة Google Search Console verification code هنا
-      // google: 'your-verification-code',
+      icon: [{ url: "/logo-rental.png" }],
+      apple: [{ url: "/logo-rental.png" }],
     },
   };
 }
@@ -203,13 +141,13 @@ export default async function LocaleLayout({
     redirect(ensureLocalizedPathname(pathname, preferredLocale));
   }
 
-  const {
-    locale: normalizedLocale,
-    title,
-    description,
-  } = getLocaleMetadata(locale);
+  // const {
+  //   locale: normalizedLocale,
+  //   title,
+  //   description,
+  // } = getLocaleMetadata(locale);
   const baseUrl = await getBaseUrl();
-  const canonicalUrl = `${baseUrl}/${normalizedLocale}`;
+  // const canonicalUrl = `${baseUrl}/${normalizedLocale}`;
 
   // Enable static rendering
   setRequestLocale(locale);
@@ -221,34 +159,8 @@ export default async function LocaleLayout({
     <html
       lang={locale}
       dir={locale === "ar" ? "rtl" : "ltr"}
-      // className={` ${fontAlmarai.variable} ${fontZain.variable}`}
       className={` ${fontAlmarai.variable}`}
     >
-      <head>
-        <title>{title}</title>
-        <meta name="description" content={description} />
-        <link rel="canonical" href={canonicalUrl} />
-        <link rel="alternate" hrefLang="ar" href={`${baseUrl}/ar`} />
-        <link rel="alternate" hrefLang="en" href={`${baseUrl}/en`} />
-        <link rel="alternate" hrefLang="x-default" href={`${baseUrl}/en`} />
-
-        {/* Favicon */}
-        <link rel="icon" href="/logo-rental.png" type="image/png" />
-        <link rel="apple-touch-icon" href="/logo-rental.png" />
-        <link rel="manifest" href="/manifest.json" />
-
-        {/* DNS Prefetch for external resources */}
-        <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
-        <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
-
-        {/* Preconnect to Google Fonts for faster font loading */}
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link
-          rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossOrigin="anonymous"
-        />
-      </head>
       <body
         style={{ fontFamily: fontAlmarai.style.fontFamily }}
         className="flex flex-col min-h-screen"

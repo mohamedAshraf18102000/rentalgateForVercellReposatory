@@ -1,0 +1,10 @@
+{
+  "home": {
+    "title": "Home",
+    "description": "Find the best car rental deals."
+  },
+  "bookings": {
+    "title": "Browse & Book Cars",
+    "description": "Search our rental fleet by pickup location, dates, and filters."
+  }
+}

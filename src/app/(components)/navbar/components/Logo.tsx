@@ -19,9 +19,9 @@ export const Logo: React.FC<LogoProps> = ({ href, src, alt, className }) => (
     <Image
       src={src}
       alt={alt}
-      width={50}
-      height={50}
-      className="w-full h-full object-contain rounded-full"
+      width={150}
+      height={150}
+      className="object-contain"
     />
   </Link>
 );
