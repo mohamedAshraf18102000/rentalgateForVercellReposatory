@@ -38,6 +38,9 @@ import { ReservationStatus } from "@/types/myBookings/myBookings";
 import { reverseGeocode } from "@/lib/utils/reverseGeocode";
 import LocationFrom_To from "./DrawerSections/locationFrom_To/LocationFrom_To";
 import Rating from "./DrawerSections/Rating/Rating";
+import RatingContainer from "./DrawerSections/Rating/RatingContainer";
+import { normalizeImageUrl } from "@/util";
+import MaintenanceIcon from "../../../../../public/extraSVGIcons/MaintenanceIcon";
 
 const CancelConfirmation = dynamic(
   () => import("./DrawerSections/DrawerLocation/CancelConfirmation"),
@@ -77,12 +80,27 @@ interface BookedCarDetailsDrawerProps {
 
 const CANCELLABLE_STATUSES = ["PAID", "DECLINED", "ADMIN_APPROVED"] as const;
 
-const LocationFromToSkeleton = () => {
+const BookedCarDetailsDrawerSkeleton = () => {
   return (
-    <div className="flex flex-col gap-3 min-w-[260px]">
-      <Skeleton className="h-4 w-56 bg-Grey200" />
-      <Skeleton className="h-4 w-14 mr-8 bg-Grey200" />
-      <Skeleton className="h-4 w-56 bg-Grey200" />
+    <div className="flex flex-col gap-3">
+      <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center">
+        <Skeleton className="h-34 w-full rounded-2xl sm:w-[40%] bg-Grey200" />
+        <div className="flex w-full flex-col gap-y-2">
+          <Skeleton className="h-10 w-28 rounded-lg bg-Grey200" />
+          <Skeleton className="h-5 w-44 bg-Grey200" />
+          <Skeleton className="h-5 w-36 bg-Grey200" />
+        </div>
+      </div>
+      <Separator className="my-3" />
+      <Skeleton className="h-20 w-full rounded-2xl bg-Grey200" />
+      <Separator className="my-3" />
+      <Skeleton className="h-24 w-full rounded-2xl bg-Grey200" />
+      <Separator className="my-3" />
+      <div className="flex items-center justify-between gap-3">
+        <Skeleton className="h-5 w-24 bg-Grey200" />
+        <Skeleton className="h-6 w-16 bg-Grey200" />
+      </div>
+      <Skeleton className="h-10 w-full rounded-lg bg-Grey200" />
     </div>
   );
 };
@@ -259,10 +277,7 @@ const BookedCarDetailsDrawer = ({
     data?.locationChanges?.deliverLongitude,
     isDrawerOpen,
   ]);
-  const isNormalLocationLoading =
-    !data || isNormalReceiveAddressLoading || isNormalDeliverAddressLoading;
-  const isChangedLocationLoading =
-    isChangedReceiveAddressLoading || isChangedDeliverAddressLoading;
+  const isDrawerContentLoading = !data;
   const extendReservationMeta = data as
     | (ReservationDetailsResponse & {
         driver?: ExtendReservationDriverPayload | null;
@@ -300,254 +315,274 @@ const BookedCarDetailsDrawer = ({
               </SheetHeader>
 
               <div className="mx-auto min-h-0 w-full flex-1 overflow-y-auto px-3 sm:w-[95%]">
-                <div className="bg-[#F2F2F2] p-2 my-2 text-center flex flex-col gap-2 items-center rounded-xl">
-                  <Image
-                    src="/ratingIcon.webp"
-                    alt="star"
-                    width={50}
-                    height={50}
-                  />
-                  <p className="text-base font-bold">يسعدنا معرفة تقييمك</p>
-                  <p className="text-sm text-Grey700">
-                    تقييمك يساعدنا على معرفة مستوانا لتحسين الخدمه المقدمة لك
-                  </p>
-                  <Separator className="my-3" />
-                  <Button
-                    variant="outline"
-                    className="bg-white text-base flex gap-2 border-2!"
-                    onClick={() => setActiveView("rating")}
-                  >
-                    <Star className="w-4! h-4!" />
-                    <span className="px-2">أضافة تقييم</span>
-                  </Button>
-                </div>
-
-                <div className="">
-                  <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center">
-                    <div className="relative h-34 w-full overflow-hidden rounded-2xl sm:w-[40%]">
-                      <Image src="/Card_Cars.png" fill alt="img" />
-                    </div>
-                    <div className="flex w-full flex-col gap-y-2">
-                      <div>
-                        <Badge
-                          className={`rounded-lg p-3 mb-2 text-xs font-bold sm:p-4 sm:text-sm ${data?.reservationStatus === "STARTED" ? "bg-StatusGreen text-StatusDarkGreen" : "bg-StatusBrownBG text-StatusBrown200"}`}
-                        >
-                          {getStatusLabel(
-                            data?.reservationStatus as ReservationStatus,
+                {isDrawerContentLoading ? (
+                  <BookedCarDetailsDrawerSkeleton />
+                ) : (
+                  <>
+                    {data?.reservationStatus === "FINISHED" && (
+                      <RatingContainer
+                        setActiveView={(view) =>
+                          setActiveView(
+                            view as
+                              | "booking-details"
+                              | "cancel-booking"
+                              | "location-details"
+                              | "booking-extending"
+                              | "booking-extend-complete"
+                              | "booking-complement"
+                              | "rating",
+                          )
+                        }
+                      />
+                    )}
+                    <div className="">
+                      <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center">
+                        <div className="relative h-34 w-full overflow-hidden border border-Grey200 rounded-2xl sm:w-[40%]">
+                          <Image
+                            src={normalizeImageUrl(data?.carImage)}
+                            fill
+                            alt="img"
+                            className="object-contain"
+                          />
+                        </div>
+                        <div className="flex w-full flex-col gap-y-2">
+                          <div>
+                            <Badge
+                              className={`rounded-lg p-3 mb-2 text-xs font-bold sm:p-4 sm:text-sm ${data?.reservationStatus === "STARTED" ? "bg-StatusGreen text-StatusDarkGreen" : "bg-StatusBrownBG text-StatusBrown200"}`}
+                            >
+                              {getStatusLabel(
+                                data?.reservationStatus as ReservationStatus,
+                              )}
+                            </Badge>
+                            <br />
+                            <span className="mx-2">{t("bookingNumber")}:</span>
+                            <span className="font-bold text-lg">
+                              {data?.reservationId}
+                            </span>
+                          </div>
+                          {data?.reservationStatus === "STARTED" && (
+                            <Button
+                              startIcon={
+                                <MaintenanceIcon className="w-6! h-6!" />
+                              }
+                              className="border-2 text-base font-semibold p-2!"
+                              variant="outline"
+                            >
+                              {t("myBookingsDrawer.requestMaintenance")}
+                            </Button>
                           )}
-                        </Badge>
-                        <br />
-                        <span className="mx-2">{t("bookingNumber")}:</span>
-                        <span className="font-bold text-lg">
-                          {data?.reservationId}
-                        </span>
+
+                          <p className="font-bold">{data?.carName}</p>
+                        </div>
+                      </div>
+                    </div>
+                    <Separator className="my-3" />
+                    <div className="bg-Grey100 flex flex-col gap-3 rounded-2xl p-3 sm:flex-row sm:items-center sm:justify-between">
+                      <div>
+                        <div className="text-base flex items-center gap-2">
+                          <CarRentIcon />
+                          <span>
+                            {t("myBookingsDrawer.rentalDurationLabel")}:
+                          </span>
+                          <span className="text-Grey700">
+                            {t("myBookingsDrawer.rentalDays", {
+                              days: data?.days ?? 0,
+                            })}
+                          </span>
+                        </div>
+
+                        <div className="text-base flex items-center gap-2 mt-3">
+                          <span className="text-black">
+                            {data?.startDate &&
+                              format(
+                                new Date(data?.startDate),
+                                "yyyy/MM/dd | hh:mm a",
+                                {
+                                  locale: dateLocale,
+                                },
+                              )}
+                          </span>
+
+                          <DateArrowIcon />
+
+                          <span className="text-black">
+                            {data?.endDate &&
+                              format(
+                                new Date(data?.endDate),
+                                "yyyy/MM/dd | hh:mm a",
+                                {
+                                  locale: dateLocale,
+                                },
+                              )}
+                          </span>
+                        </div>
                       </div>
 
-                      <p className="font-bold">{data?.carName}</p>
+                      {data?.reservationStatus === "STARTED" && (
+                        <div className="self-end sm:self-auto">
+                          <Button
+                            className="p-3"
+                            onClick={() => setActiveView("booking-extending")}
+                          >
+                            <SquarePen className="text-white w-5! h-5!" />
+                          </Button>
+                        </div>
+                      )}
                     </div>
-                  </div>
-                </div>
-                <Separator className="my-3" />
-                <div className="bg-Grey100 flex flex-col gap-3 rounded-2xl p-3 sm:flex-row sm:items-center sm:justify-between">
-                  <div>
-                    <div className="text-base flex items-center gap-2">
-                      <CarRentIcon />
-                      <span>{t("myBookingsDrawer.rentalDurationLabel")}:</span>
-                      <span className="text-Grey700">
-                        {t("myBookingsDrawer.rentalDays", {
-                          days: data?.days ?? 0,
-                        })}
-                      </span>
-                    </div>
+                    <Separator className="my-3" />
+                    <div className="bg-Grey100 flex flex-col gap-3 rounded-2xl p-3 sm:flex-row sm:items-center sm:justify-between">
+                      <div className="flex flex-col gap-3 w-full">
+                        <LocationFrom_To
+                          receiveLocationName={data?.receiveLocationName}
+                          deliverLocationName={data?.deliverLocationName}
+                          receiveAddress={normalReceiveAddress}
+                          deliverAddress={normalDeliverAddress}
+                          showPhysicalAddress={true}
+                        />
 
-                    <div className="text-base flex items-center gap-2 mt-3">
-                      <span className="text-black">
-                        {data?.startDate &&
-                          format(
-                            new Date(data?.startDate),
-                            "yyyy/MM/dd | hh:mm a",
-                            {
-                              locale: dateLocale,
-                            },
-                          )}
-                      </span>
-
-                      <DateArrowIcon />
-
-                      <span className="text-black">
-                        {data?.endDate &&
-                          format(
-                            new Date(data?.endDate),
-                            "yyyy/MM/dd | hh:mm a",
-                            {
-                              locale: dateLocale,
-                            },
-                          )}
-                      </span>
-                    </div>
-                  </div>
-
-                  {data?.reservationStatus === "STARTED" && (
-                    <div className="self-end sm:self-auto">
-                      <Button
-                        className="p-3"
-                        onClick={() => setActiveView("booking-extending")}
-                      >
-                        <SquarePen className="text-white w-5! h-5!" />
-                      </Button>
-                    </div>
-                  )}
-                </div>
-                <Separator className="my-3" />
-                <div className="bg-Grey100 flex flex-col gap-3 rounded-2xl p-3 sm:flex-row sm:items-center sm:justify-between">
-                  {isNormalLocationLoading ? (
-                    <LocationFromToSkeleton />
-                  ) : (
-                    <div className="flex flex-col gap-3 w-full">
-                      <LocationFrom_To
-                        receiveLocationName={data?.receiveLocationName}
-                        deliverLocationName={data?.deliverLocationName}
-                        receiveAddress={normalReceiveAddress}
-                        deliverAddress={normalDeliverAddress}
-                      />
-
-                      {data?.locationChanges && (
-                        <>
-                          <Separator className="w-[90%]! mx-auto!" />
-                          <div className="">
-                            <p className="text-StatusRedBG">
-                              <span>*</span>
-                              {t("myBookingsDrawer.locationChangedNotice")}
-                            </p>
-                            {isChangedLocationLoading ? (
-                              <LocationFromToSkeleton />
-                            ) : (
+                        {data?.locationChanges && (
+                          <>
+                            <Separator className="w-[90%]! mx-auto!" />
+                            <div className="">
+                              <p className="text-StatusRedBG">
+                                <span>*</span>
+                                {t("myBookingsDrawer.locationChangedNotice")}
+                              </p>
                               <LocationFrom_To
                                 receiveLocationName={""}
                                 deliverLocationName={""}
                                 receiveAddress={changedReceiveAddress}
                                 deliverAddress={changedDeliverAddress}
+                                showPhysicalAddress={false}
                               />
-                            )}
+                            </div>
+                          </>
+                        )}
+                      </div>
+
+                      {data?.receiveType === "MY_LOCATION" &&
+                        data?.deliverType === "MY_LOCATION" && (
+                          <div className="self-end sm:self-auto">
+                            <Button
+                              className="p-3"
+                              onClick={() => setActiveView("location-details")}
+                            >
+                              <SquarePen className="text-white w-5! h-5!" />
+                            </Button>
+                          </div>
+                        )}
+                    </div>
+
+                    {data &&
+                      data?.reservationServices &&
+                      data?.reservationServices.length > 0 && (
+                        <>
+                          <Separator className="my-3" />
+                          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                            {data?.reservationServices.map((service) => (
+                              <div
+                                key={service.serviceId}
+                                className="bg-StatusGreen border-StatusDarkGreen flex items-center rounded-xl border-2 p-2 font-bold"
+                              >
+                                <span className="text-StatusDarkGreen mx-1">
+                                  {isRTL
+                                    ? service.arabicName
+                                    : service.englishName}
+                                </span>
+                                <span>{service.price}</span>
+                                <SaudiRiyalIcon />
+                              </div>
+                            ))}
                           </div>
                         </>
                       )}
-                    </div>
-                  )}
+                    {data?.driverName && data?.driverMobile && (
+                      <div className="w-full flex flex-col mt-2 bg-Grey100 p-4 rounded-xl">
+                        <p>{t("myBookingsDrawer.driverDetailsTitle")}</p>
+                        <div className="mt-2 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                          <div className="flex items-center gap-2 break-all">
+                            <User className="w-5! h-5!" />
+                            <p>{data?.driverName}</p>
+                          </div>
 
-                  {data?.locationChanges === null &&
-                    data?.receiveType === "MY_LOCATION" &&
-                    data?.deliverType === "MY_LOCATION" &&
-                    (data.reservationStatus === "PAID" ||
-                      data.reservationStatus === "IN_PROGRESS") && (
-                      <div className="self-end sm:self-auto">
-                        <Button
-                          className="p-3"
-                          onClick={() => setActiveView("location-details")}
-                        >
-                          <SquarePen className="text-white w-5! h-5!" />
-                        </Button>
+                          <a
+                            className="bg-Grey200 w-10 h-10 flex items-center justify-center rounded-lg hover:scale-110 transition-all duration-300"
+                            href={`tel:${data?.driverMobile}`}
+                          >
+                            <PhoneCall className="w-5! h-5! text-StatusDarkGreen" />
+                          </a>
+                        </div>
                       </div>
                     )}
-                </div>
 
-                {data &&
-                  data?.reservationServices &&
-                  data?.reservationServices.length > 0 && (
-                    <>
-                      <Separator className="my-3" />
-                      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-                        {data?.reservationServices.map((service) => (
-                          <div
-                            key={service.serviceId}
-                            className="bg-StatusGreen border-StatusDarkGreen flex items-center rounded-xl border-2 p-2 font-bold"
-                          >
-                            <span className="text-StatusDarkGreen mx-1">
-                              {isRTL ? service.arabicName : service.englishName}
-                            </span>
-                            <span>{service.price}</span>
-                            <SaudiRiyalIcon />
-                          </div>
-                        ))}
+                    <Separator className="my-3" />
+                    <div className="flex items-center justify-between gap-3">
+                      <div>
+                        <p className="font-bold text-base">
+                          {t("myBookingsDrawer.totalCostLabel")}:
+                        </p>
                       </div>
-                    </>
-                  )}
-                {data?.driverName && data?.driverMobile && (
-                  <div className="w-full flex flex-col mt-2 bg-Grey100 p-4 rounded-xl">
-                    <p>{t("myBookingsDrawer.driverDetailsTitle")}</p>
-                    <div className="mt-2 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                      <div className="flex items-center gap-2 break-all">
-                        <User className="w-5! h-5!" />
-                        <p>{data?.driverName}</p>
+                      <div className="flex items-center">
+                        <span className="text-xl font-bold">{data?.total}</span>
+                        <SaudiRiyal className="w-6! h-6!" />
                       </div>
-
-                      <a
-                        className="bg-Grey200 w-10 h-10 flex items-center justify-center rounded-lg hover:scale-110 transition-all duration-300"
-                        href={`tel:${data?.driverMobile}`}
-                      >
-                        <PhoneCall className="w-5! h-5! text-StatusDarkGreen" />
-                      </a>
                     </div>
-                  </div>
+                    {data && <BookingPaymentDetailsCollapseLazy data={data} />}
+                  </>
                 )}
-
-                <Separator className="my-3" />
-                <div className="flex items-center justify-between gap-3">
-                  <div>
-                    <p className="font-bold text-base">
-                      {t("myBookingsDrawer.totalCostLabel")}:
-                    </p>
-                  </div>
-                  <div className="flex items-center">
-                    <span className="text-xl font-bold">{data?.total}</span>
-                    <SaudiRiyal className="w-6! h-6!" />
-                  </div>
-                </div>
-                {data && <BookingPaymentDetailsCollapseLazy data={data} />}
               </div>
               <SheetFooter className="mt-auto flex-col gap-3 border-t p-6 sm:flex-row">
-                {data?.reservationStatus &&
-                  CANCELLABLE_STATUSES.includes(
-                    data.reservationStatus as (typeof CANCELLABLE_STATUSES)[number],
-                  ) && (
-                    <Button
-                      type="button"
-                      variant="destructive"
-                      className="text-base! w-full border-2 border-StatusRed bg-transparent text-StatusRed sm:w-1/4"
-                      onClick={() => setActiveView("cancel-booking")}
-                    >
-                      {t("cancelBooking")}
+                {isDrawerContentLoading ? (
+                  <>
+                    <Skeleton className="h-11 w-full rounded-lg bg-Grey200 sm:w-1/4" />
+                    <Skeleton className="h-11 w-full rounded-lg bg-Grey200 sm:w-3/4" />
+                  </>
+                ) : (
+                  <>
+                    {data?.reservationStatus &&
+                      CANCELLABLE_STATUSES.includes(
+                        data.reservationStatus as (typeof CANCELLABLE_STATUSES)[number],
+                      ) && (
+                        <Button
+                          type="button"
+                          variant="destructive"
+                          className="text-base! w-full border-2 border-StatusRed bg-transparent text-StatusRed sm:w-1/4"
+                          onClick={() => setActiveView("cancel-booking")}
+                        >
+                          {t("cancelBooking")}
+                        </Button>
+                      )}
+                    {data?.reservationStatus &&
+                      !CANCELLABLE_STATUSES.includes(
+                        data.reservationStatus as (typeof CANCELLABLE_STATUSES)[number],
+                      ) && (
+                        <Button
+                          type="button"
+                          variant="outline"
+                          className="text-base! w-full border-2 border-Grey400 bg-transparent sm:w-1/4"
+                          onClick={() => {
+                            setIsDrawerOpen(false);
+                            router.push("/myBookings");
+                          }}
+                        >
+                          {t("myBookingsDrawer.backToReservations")}
+                        </Button>
+                      )}
+                    {data?.reservationStatus === "FINISHED" && (
+                      <Button
+                        type="button"
+                        variant="destructive"
+                        className="text-base! w-full border-2 border-StatusRed bg-transparent text-StatusRed sm:w-1/4"
+                        onClick={() => setActiveView("booking-complement")}
+                      >
+                        ارسال شكوي
+                      </Button>
+                    )}
+                    <Button className={`text-base! w-full sm:w-3/4`}>
+                      {t("myBookings")}
                     </Button>
-                  )}
-                {data?.reservationStatus &&
-                  !CANCELLABLE_STATUSES.includes(
-                    data.reservationStatus as (typeof CANCELLABLE_STATUSES)[number],
-                  ) && (
-                    <Button
-                      type="button"
-                      variant="outline"
-                      className="text-base! w-full border-2 border-Grey400 bg-transparent sm:w-1/4"
-                      onClick={() => {
-                        setIsDrawerOpen(false);
-                        router.push("/myBookings");
-                      }}
-                    >
-                      {t("myBookingsDrawer.backToReservations")}
-                    </Button>
-                  )}
-                {data?.reservationStatus === "FINISHED" && (
-                  <Button
-                    type="button"
-                    variant="destructive"
-                    className="text-base! w-full border-2 border-StatusRed bg-transparent text-StatusRed sm:w-1/4"
-                    onClick={() => setActiveView("booking-complement")}
-                  >
-                    ارسال شكوي
-                  </Button>
+                  </>
                 )}
-                <Button className={`text-base! w-full sm:w-3/4`}>
-                  {t("myBookings")}
-                </Button>
               </SheetFooter>
             </>
           ) : activeView === "location-details" ? (

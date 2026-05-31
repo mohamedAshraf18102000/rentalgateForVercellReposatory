@@ -123,6 +123,8 @@
       "unlimitedKmTitle": "Unlimited kilometers",
       "unlimitedKmNotes": "With unlimited kilometers, explore more and travel farther without worrying about the meter.",
       "unlimitedKmBadge": "Unlimited driving",
+      "kmPackageTitle": "Kilometer package",
+      "kmPackageNotes": "You can purchase {km} kilometers for {price} SAR",
       "driverInsideCity": "Inside city",
       "driverOutsideCity": "Outside city",
       "driverCard": {
@@ -147,6 +149,8 @@
       "phonePlaceholder": "Enter phone number",
       "personalIdLabel": "ID number",
       "personalIdPlaceholder": "Enter ID number",
+      "identityExpiryLabel": "Identity expiry date",
+      "identityExpiryPlaceholder": "Enter identity expiry date",
       "licenseImageLabel": "License image",
       "licenseImagePlaceholder": "Upload license image",
       "uploadingImage": "Uploading image...",
@@ -334,6 +338,12 @@
   "loadingMap": "Loading map...",
   "cannotAccessCurrentLocation": "Cannot access current location",
   "geolocationNotSupported": "Geolocation not supported",
+  "kmPackageCard": {
+    "badgeKmOffer": "Kilometer package offer",
+    "bookPrefix": "Book",
+    "kmCount": "{count, plural, one {{count} kilometer} other {{count} kilometers}}",
+    "pricePrefix": "for"
+  },
   "offersCard": {
     "imageAlt": "Offer",
     "badgeExtraDays": "{count, plural, one {{count} day free} other {{count} days free}}",

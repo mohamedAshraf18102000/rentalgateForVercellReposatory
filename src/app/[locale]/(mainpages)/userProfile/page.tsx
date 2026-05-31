@@ -110,7 +110,7 @@ const Page = () => {
                 containerClassName="bg-[linear-gradient(180deg,#626060_0%,#050101_100%)] cursor-pointer"
                 icon="/profile/actionIcons/wallet.webp"
                 valueINRial={Number(wallet?.balance?.toFixed(2) ?? 0)}
-                pointsTitle="رصيد المحفظة"
+                pointsTitle={t("walletBalanceLabel")}
                 onClick={() => router.push("/wallet")}
               />
             </div>

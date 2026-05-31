@@ -27,7 +27,6 @@ import { useLocale, useTranslations } from "next-intl";
 import useUserAddreses from "@/hooks/api/useUserAddreses";
 import { useLocationStore } from "@/lib/stores/useLocationStore";
 import { addAddress } from "@/services/userProfile/addAddress.service";
-import { deleteAddress } from "@/services/userProfile/useDeleteAddress.service";
 import {
   createUserSavedLocationSchema,
   UserSavedLocationFormValues,
@@ -264,7 +263,7 @@ const DrawerLocationChange = ({
               <div className="w-full flex justify-end mb-3">
                 <Button
                   type="button"
-                  className="bg-transparent border-2 border-Grey200 hover:bg-transparent text-black text-sm!"
+                  className="bg-transparent border-2 border-Grey200 text-white! hover:bg-transparent  text-sm!"
                   startIcon={<MapPinPlusInside className="w-5! h-5!" />}
                   onClick={() => setShowAddForm(true)}
                 >
@@ -485,13 +484,15 @@ const DrawerLocationChange = ({
         </div>
 
         <SheetFooter className="p-6 border-t mt-auto">
-          <Button
-            type="button"
-            className="text-base! w-1/2 bg-transparent text-black border-2 border-Grey400 hover:bg-transparent"
-            onClick={() => setShowLocationDetails(false)}
-          >
-            {t("myBookings")}
-          </Button>
+          {!showAddForm && (
+            <Button
+              type="button"
+              className="text-base! w-1/2 bg-transparent text-white! border-2 border-Grey400 hover:bg-transparent"
+              onClick={() => setShowLocationDetails(false)}
+            >
+              {t("myBookings")}
+            </Button>
+          )}
           {showAddForm ? (
             <Button
               type="button"

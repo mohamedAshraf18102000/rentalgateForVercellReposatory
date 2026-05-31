@@ -169,6 +169,7 @@ function TimePicker({
 
   return (
     <div
+      dir={locale === "ar" ? "rtl" : "ltr"}
       className="time-picker-scroll bg-Grey100 p-2 rounded-2xl grid grid-cols-3 auto-rows-min gap-2 content-start overflow-y-auto h-full min-h-0 pr-1"
       style={{ scrollbarWidth: "thin" }}
     >
@@ -246,9 +247,9 @@ function CalendarPanel({
 
   return (
     <DayPicker
+      dir={locale === "ar" ? "rtl" : "ltr"}
       className="cal-root bg-Grey100 p-2 rounded-2xl w-full max-w-full overflow-hidden"
       mode="single"
-      selected={selected ?? undefined}
       defaultMonth={defaultMonth ?? undefined}
       onSelect={onSelect}
       locale={dayPickerLocale}

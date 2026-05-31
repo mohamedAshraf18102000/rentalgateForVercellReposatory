@@ -6,6 +6,7 @@ interface LocationFromToProps {
   deliverLocationName?: string;
   receiveAddress?: string | null;
   deliverAddress?: string | null;
+  showPhysicalAddress?: boolean;
 }
 
 const LocationFrom_To = ({
@@ -13,6 +14,7 @@ const LocationFrom_To = ({
   deliverLocationName,
   receiveAddress,
   deliverAddress,
+  showPhysicalAddress = true,
 }: LocationFromToProps) => {
   const t = useTranslations("common");
 
@@ -22,7 +24,7 @@ const LocationFrom_To = ({
         <Dot className=" w-8 h-8 mx-2" />
         <span>{t("myBookingsDrawer.locationChange.fromLabel")}</span>
         <span title={receiveLocationName} className="mx-2 line-clamp-1">
-          {receiveAddress ?? receiveLocationName}
+          {showPhysicalAddress ? receiveLocationName : receiveAddress}
         </span>
       </div>
       <div className="flex items-center">
@@ -32,7 +34,7 @@ const LocationFrom_To = ({
         <MapPin className=" w-6 h-6 mx-3" />
         <span>{t("myBookingsDrawer.locationChange.toLabel")}</span>
         <span title={deliverLocationName} className="mx-2 line-clamp-1">
-          {deliverAddress ?? deliverLocationName}
+          {showPhysicalAddress ? deliverLocationName : deliverAddress}
         </span>
       </div>
     </div>

@@ -45,7 +45,8 @@
     "popularLocations": {
       "airports": "Most popular airports:",
       "trainStations": "Most popular train stations:",
-      "airportsCarOnlyNotice": "These airports are available for booking with this car only and do not apply to other cars."
+      "airportsCarOnlyNotice": "These airports are available for booking with this car only and do not apply to other cars.",
+      "trainStationsCarOnlyNotice": "These train stations are available for booking with this car only and do not apply to other cars."
     },
     "tabs": {
       "currentLocation": "Your location",

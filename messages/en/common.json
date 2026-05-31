@@ -218,6 +218,13 @@
         "amountDetailsHeader": "Amount details:"
       }
     },
+    "rating": {
+      "iconAlt": "Rating",
+      "containerTitle": "We'd love to hear your feedback",
+      "containerDescription": "Your rating helps us understand our performance and improve the service we provide to you",
+      "addRatingButton": "Add rating"
+    },
+    "requestMaintenance": "Request maintenance",
     "paymentDetails": {
       "detailsButton": "Details",
       "rentalDurationCostHeader": "Rental duration cost:",

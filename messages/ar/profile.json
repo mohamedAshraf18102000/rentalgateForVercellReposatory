@@ -79,6 +79,7 @@
     "emailLabel": "البريد الالكتروني:",
     "phoneLabel": "رقم الهاتف:",
     "pointsLabel": "نقطة",
+    "walletBalanceLabel": "رصيد المحفظة",
     "greeting": "حياك الله {name}",
     "personalDataTitle": "البيانات الشخصية:",
     "otherDataTitle": "البيانات الأخرى:",

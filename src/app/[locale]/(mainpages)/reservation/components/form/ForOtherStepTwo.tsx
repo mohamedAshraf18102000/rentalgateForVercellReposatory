@@ -125,8 +125,10 @@ const StepTwo = ({ control, errors, setValue }: StepTwoProps) => {
               <DateTimePicker
                 required
                 {...field}
-                placeholder={"ادخل تاريخ انتهاء الهوية"}
-                label={"تاريخ انتهاء الهوية"}
+                placeholder={t(
+                  "reservation.forOtherStepTwo.identityExpiryPlaceholder",
+                )}
+                label={t("reservation.forOtherStepTwo.identityExpiryLabel")}
               />
             )}
           />

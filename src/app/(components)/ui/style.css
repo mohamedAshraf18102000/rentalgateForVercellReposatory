@@ -78,9 +78,7 @@
 }
 
 .rdp .rdp-dropdowns .rdp-dropdown_root,
-.rdp .rdp-dropdowns .rdp-dropdown,
-.cal-root .rdp-dropdown_root,
-.cal-root .rdp-dropdown {
+.rdp .rdp-dropdowns .rdp-dropdown {
   padding: 5px 10px 5px 10px !important;
   border-radius: 8px !important;
   cursor: pointer !important;
@@ -103,6 +101,8 @@
   border-radius: 10px !important;
   min-width: 110px;
   height: 36px;
+  padding: 0px 8px !important;
+  overflow: hidden;
   transition:
     border-color 0.2s ease,
     background-color 0.2s ease;
@@ -120,11 +120,13 @@
   background: transparent;
   cursor: pointer !important;
   outline: none;
-  padding: 0 2rem 0 0.75rem !important;
+  padding-block: 0 !important;
+  padding-inline: 0.75rem 2rem !important;
   font-size: 14px;
   font-weight: 500;
   color: #1f2937;
   appearance: none;
+  box-sizing: border-box;
 }
 
 .cal-root .rdp-dropdown:focus,
@@ -147,26 +149,17 @@
   display: none;
 }
 
-[dir="rtl"] .cal-root .rdp-dropdown {
-  padding: 0 0.75rem 0 2rem !important;
-}
-
 .cal-root .rdp-dropdown_root::after {
   content: "";
   position: absolute;
   top: 50%;
-  right: 0.75rem;
+  inset-inline-end: 0.75rem;
   width: 0.45rem;
   height: 0.45rem;
   border-right: 1.5px solid #6b7280;
   border-bottom: 1.5px solid #6b7280;
   transform: translateY(-62%) rotate(45deg);
   pointer-events: none;
-}
-
-[dir="rtl"] .cal-root .rdp-dropdown_root::after {
-  right: auto;
-  left: 0.75rem;
 }
 
 @media (max-width: 420px) {
@@ -181,6 +174,6 @@
 
   .cal-root .rdp-dropdown {
     font-size: 13px;
-    padding: 0 1.75rem 0 0.65rem !important;
+    padding-inline: 0.65rem 1.75rem !important;
   }
 }

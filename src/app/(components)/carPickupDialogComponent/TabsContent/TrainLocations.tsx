@@ -91,8 +91,7 @@ const TrainLocations = () => {
           </p>
           <p className="w-full text-[12px] text-StatusRed flex items-center gap-2">
             <Info className="size-4" />
-            هذه المحطات متاحة للحجز مع هذه السيارة فقط ولا تنطبق على باقي
-            السيارات.
+            {t("pickupDialog.popularLocations.trainStationsCarOnlyNotice")}
           </p>
 
           {trainStations?.map((station) => {

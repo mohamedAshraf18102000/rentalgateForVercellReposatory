@@ -218,6 +218,13 @@
         "amountDetailsHeader": "تفاصيل المبلغ:"
       }
     },
+    "rating": {
+      "iconAlt": "تقييم",
+      "containerTitle": "يسعدنا معرفة تقييمك",
+      "containerDescription": "تقييمك يساعدنا على معرفة مستوانا لتحسين الخدمه المقدمة لك",
+      "addRatingButton": "أضافة تقييم"
+    },
+    "requestMaintenance": "طلب صيانة",
     "paymentDetails": {
       "detailsButton": "التفاصيل",
       "rentalDurationCostHeader": "تكلفة مدة الإيجار:",

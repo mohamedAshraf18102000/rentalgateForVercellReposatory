@@ -194,8 +194,11 @@ const StepThree = ({ control, errors }: StepThreeProps) => {
               <SelectableServiceCard
                 key={km.cceId}
                 service={{
-                  serviceArabicName: "عرض كيلوميترات",
-                  notes: `يمكنك شراء عدد ${km.km} كيلومترات بسعر ${formatPrice(km.price)} ريال`,
+                  serviceArabicName: t("reservation.stepThree.kmPackageTitle"),
+                  notes: t("reservation.stepThree.kmPackageNotes", {
+                    km: km.km,
+                    price: formatPrice(km.price),
+                  }),
                   price: formatPrice(km.price),
                 }}
                 selected={

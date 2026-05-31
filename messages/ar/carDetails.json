@@ -125,6 +125,8 @@
       "unlimitedKmTitle": "عدد كيلومترات لا نهائي",
       "unlimitedKmNotes": "مع الكيلومترات غير المحدودة، استكشف أكثر وسافر أبعد بدون قلق من العداد.",
       "unlimitedKmBadge": "قيادة بلا نهاية",
+      "kmPackageTitle": "عرض كيلوميترات",
+      "kmPackageNotes": "يمكنك شراء عدد {km} كيلومترات بسعر {price} ريال",
       "driverInsideCity": "داخل المدينة",
       "driverOutsideCity": "خارج المدينة",
       "driverCard": {
@@ -149,6 +151,8 @@
       "phonePlaceholder": "أدخل الهاتف",
       "personalIdLabel": "رقم الهوية",
       "personalIdPlaceholder": "أدخل رقم الهوية",
+      "identityExpiryLabel": "تاريخ انتهاء الهوية",
+      "identityExpiryPlaceholder": "ادخل تاريخ انتهاء الهوية",
       "licenseImageLabel": "صورة الرخصة",
       "licenseImagePlaceholder": "أدخل صورة الرخصة",
       "uploadingImage": "جاري رفع الصورة...",
@@ -337,6 +341,12 @@
   "loadingMap": "جاري تحميل الخريطة...",
   "cannotAccessCurrentLocation": "لا يمكن الوصول إلى الموقع الحالي",
   "geolocationNotSupported": "الموقع الجغرافي غير مدعوم",
+  "kmPackageCard": {
+    "badgeKmOffer": "عرض علي الكيلومترات",
+    "bookPrefix": "احجز",
+    "kmCount": "{count, plural, one {{count} كيلومتر} other {{count} كيلومتر}}",
+    "pricePrefix": "بسعر"
+  },
   "offersCard": {
     "imageAlt": "عرض",
     "badgeExtraDays": "{count, plural, one {{count} يوم مجاناً} other {{count} أيام مجاناً}}",

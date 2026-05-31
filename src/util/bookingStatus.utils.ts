@@ -41,8 +41,8 @@ export const statusTranslations = {
         en: "Approved",
     },
     AUTOMATICALLY_EXTENDED: {
-        ar: "تم التمديد تلقائيًا",
-        en: "Auto Extended",
+        ar: "نشط الأن",
+        en: "Active Now",
     },
     WALLET_PAID: {
         ar: "مدفوع من المحفظة",

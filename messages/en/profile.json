@@ -79,6 +79,7 @@
     "emailLabel": "Email:",
     "phoneLabel": "Phone Number:",
     "pointsLabel": "points",
+    "walletBalanceLabel": "Wallet balance",
     "greeting": "Hello {name}",
     "personalDataTitle": "Personal information:",
     "otherDataTitle": "Other information:",
