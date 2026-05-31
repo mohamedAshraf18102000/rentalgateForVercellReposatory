@@ -14,7 +14,7 @@ export const statusTranslations = {
     },
     IN_PROGRESS: {
         ar: "تم التأكيد",
-        en: "In Progress",
+        en: "Confirmed",
     },
     HOLD: {
         ar: "قيد الانتظار",
@@ -52,8 +52,19 @@ export const statusTranslations = {
         ar: "تم تغيير الموقع وفى انتظار الدفع",
         en: "Location Changed and Waiting for Payment",
     },
+    FINISHED_BY_DRIVER: {
+        ar: "منهي",
+        en: "Finished",
+    },
 } as const;
 
 export type Status = keyof typeof statusTranslations;
 export type Lang = "ar" | "en";
+
+const ACTIVE_RESERVATION_STATUSES = ["STARTED", "AUTOMATICALLY_EXTENDED"] as const;
+
+export const isActiveReservationStatus = (status: string) =>
+    ACTIVE_RESERVATION_STATUSES.includes(
+        status as (typeof ACTIVE_RESERVATION_STATUSES)[number],
+    );
 

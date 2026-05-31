@@ -1,4 +1,6 @@
-export type ReservationStatus = "STARTED" | "PAID";
+import type { Status } from "@/util/bookingStatus";
+
+export type ReservationStatus = Status;
 
 export type ReceiveType =
   | "AIRPORT"

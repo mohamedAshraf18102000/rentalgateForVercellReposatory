@@ -1,6 +1,6 @@
 "use client";
 
-import { Lang, Status, statusTranslations } from "@/util/bookingStatus.utils";
+import { Lang, Status, statusTranslations } from "@/util/bookingStatus";
 import { useParams } from "next/navigation";
 
 export const useStatusLabel = () => {

@@ -15,6 +15,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { useGetUserReservationById } from "@/hooks/api/useGetUserReservationById";
 import { useStatusLabel } from "@/hooks/useBookingStatusLabel";
 import { normalizeImageUrl } from "@/util";
+import { isActiveReservationStatus } from "@/util/bookingStatus";
 
 const BookedCarsDetails = ({ data }: { data: Reservation }) => {
   const getStatusLabel = useStatusLabel();
@@ -43,7 +44,7 @@ const BookedCarsDetails = ({ data }: { data: Reservation }) => {
         <Badge
           className={`absolute top-0 max-w-[calc(100%-0.5rem)] whitespace-normal wrap-break-word rounded-none p-3 text-xs leading-tight font-bold sm:p-4 sm:text-sm ${
             isRTL ? "-right-2 rounded-bl-2xl" : "-left-2 rounded-br-2xl"
-          } ${data.reservationStatus === "STARTED" ? "bg-StatusGreen text-StatusDarkGreen" : "bg-StatusBrownBG text-StatusBrown200"}`}
+          } ${isActiveReservationStatus(data.reservationStatus) ? "bg-StatusGreen text-StatusDarkGreen" : "bg-StatusBrownBG text-StatusBrown200"}`}
         >
           {getStatusLabel(data.reservationStatus)}
         </Badge>
@@ -54,9 +55,7 @@ const BookedCarsDetails = ({ data }: { data: Reservation }) => {
             {locale === "ar" ? data.carNameAr : data.carNameEn}
           </p>
           <p className="shrink-0 rounded-lg bg-Grey100 p-2 text-center text-xs font-bold sm:h-full sm:w-1/4 sm:text-sm">
-            {locale === "ar"
-              ? data.categoryNameAr
-              : data.categoryNameEn}
+            {locale === "ar" ? data.categoryNameAr : data.categoryNameEn}
           </p>
         </div>
         <Separator className="my-3 sm:my-4" />
@@ -67,9 +66,13 @@ const BookedCarsDetails = ({ data }: { data: Reservation }) => {
               <span className="text-sm">{t("pickupTime")}:</span>
             </div>
             <span className="min-w-0 wrap-break-word text-end text-xs sm:text-sm">
-              {format(new Date(data.startDate), "yyyy/MM/dd | hh:mm a", {
-                locale: dateLocale,
-              })}
+              {format(
+                new Date(data.startDate),
+                `${locale === "ar" ? "yyyy/MM/dd" : "dd/MM/yyyy"} | hh:mm a`,
+                {
+                  locale: dateLocale,
+                },
+              )}
             </span>
           </div>
 
@@ -79,9 +82,13 @@ const BookedCarsDetails = ({ data }: { data: Reservation }) => {
               <span className="text-sm">{t("dropoffTime")}:</span>
             </div>
             <span className="min-w-0 wrap-break-word text-end text-xs sm:text-sm">
-              {format(new Date(data.endDate), "yyyy/MM/dd | hh:mm a", {
-                locale: dateLocale,
-              })}
+              {format(
+                new Date(data.endDate),
+                `${locale === "ar" ? "yyyy/MM/dd" : "dd/MM/yyyy"} | hh:mm a`,
+                {
+                  locale: dateLocale,
+                },
+              )}
             </span>
           </div>
 

@@ -41,6 +41,8 @@ import Rating from "./DrawerSections/Rating/Rating";
 import RatingContainer from "./DrawerSections/Rating/RatingContainer";
 import { normalizeImageUrl } from "@/util";
 import MaintenanceIcon from "../../../../../public/extraSVGIcons/MaintenanceIcon";
+import { LocationType } from "@/util/locationType";
+import { isActiveReservationStatus } from "@/util/bookingStatus";
 
 const CancelConfirmation = dynamic(
   () => import("./DrawerSections/DrawerLocation/CancelConfirmation"),
@@ -348,7 +350,7 @@ const BookedCarDetailsDrawer = ({
                         <div className="flex w-full flex-col gap-y-2">
                           <div>
                             <Badge
-                              className={`rounded-lg p-3 mb-2 text-xs font-bold sm:p-4 sm:text-sm ${data?.reservationStatus === "STARTED" ? "bg-StatusGreen text-StatusDarkGreen" : "bg-StatusBrownBG text-StatusBrown200"}`}
+                              className={`rounded-lg p-3 mb-2 text-xs font-bold sm:p-4 sm:text-sm ${isActiveReservationStatus(data?.reservationStatus ?? "") || data?.reservationStatus === "LOCATION_CHANGED" ? "bg-StatusGreen text-StatusDarkGreen" : "bg-StatusBrownBG text-StatusBrown200"}`}
                             >
                               {getStatusLabel(
                                 data?.reservationStatus as ReservationStatus,
@@ -396,7 +398,7 @@ const BookedCarDetailsDrawer = ({
                             {data?.startDate &&
                               format(
                                 new Date(data?.startDate),
-                                "yyyy/MM/dd | hh:mm a",
+                                `${locale === "ar" ? "yyyy/MM/dd" : "dd/MM/yyyy"} | hh:mm a`,
                                 {
                                   locale: dateLocale,
                                 },
@@ -409,7 +411,7 @@ const BookedCarDetailsDrawer = ({
                             {data?.endDate &&
                               format(
                                 new Date(data?.endDate),
-                                "yyyy/MM/dd | hh:mm a",
+                                `${locale === "ar" ? "yyyy/MM/dd" : "dd/MM/yyyy"} | hh:mm a`,
                                 {
                                   locale: dateLocale,
                                 },
@@ -433,6 +435,8 @@ const BookedCarDetailsDrawer = ({
                     <div className="bg-Grey100 flex flex-col gap-3 rounded-2xl p-3 sm:flex-row sm:items-center sm:justify-between">
                       <div className="flex flex-col gap-3 w-full">
                         <LocationFrom_To
+                          LocReceiveType={data?.receiveType as LocationType}
+                          LocDeliverType={data?.deliverType as LocationType}
                           receiveLocationName={data?.receiveLocationName}
                           deliverLocationName={data?.deliverLocationName}
                           receiveAddress={normalReceiveAddress}
