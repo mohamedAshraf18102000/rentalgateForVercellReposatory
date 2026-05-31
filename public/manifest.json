@@ -1,6 +1,6 @@
 {
-  "name": "رينتال جيت - Rental Gate",
-  "short_name": "رينتال جيت",
+  "name": "بوابة التأجير - Rental Gate",
+  "short_name": "بوابة التأجير",
   "description": "منصتك الموثوقة لتأجير السيارات في المملكة العربية السعودية - Your trusted platform for car rental in Saudi Arabia",
   "start_url": "/",
   "display": "standalone",

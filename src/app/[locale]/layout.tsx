@@ -90,8 +90,8 @@ export async function generateMetadata({
     metadataBase: new URL(baseUrl),
 
     title: {
-      default: locale === "ar" ? "رينتال جيت" : "Rental Gate",
-      template: locale === "ar" ? "%s | رينتال جيت" : "%s | Rental Gate",
+      default: locale === "ar" ? "بوابة التأجير" : "Rental Gate",
+      template: locale === "ar" ? "%s | بوابة التأجير" : "%s | Rental Gate",
     },
 
     robots: {
@@ -100,12 +100,12 @@ export async function generateMetadata({
     },
 
     openGraph: {
-      siteName: locale === "ar" ? "رينتال جيت" : "Rental Gate",
+      siteName: locale === "ar" ? "بوابة التأجير" : "Rental Gate",
     },
 
     icons: {
-      icon: [{ url: "/logo-rental.png" }],
-      apple: [{ url: "/logo-rental.png" }],
+      icon: [{ url: "/RentalGateNewLogo.webp" }],
+      apple: [{ url: "/RentalGateNewLogo.webp" }],
     },
   };
 }
