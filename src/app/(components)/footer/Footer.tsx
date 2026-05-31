@@ -52,7 +52,7 @@ export default function Footer() {
           <div className="flex flex-col items-center gap-3">
             <Link href="/" className="flex items-center gap-3">
               <Image
-                src="/Logo-rentalGate.png"
+                src="/RentalGateNewLogo.webp"
                 alt="Rental Gate"
                 width={150}
                 height={150}
