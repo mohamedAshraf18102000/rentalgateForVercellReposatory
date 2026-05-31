@@ -104,8 +104,8 @@ export async function generateMetadata({
     },
 
     icons: {
-      icon: [{ url: "/RentalGateNewLogo.webp" }],
-      apple: [{ url: "/RentalGateNewLogo.webp" }],
+      icon: [{ url: "/logo-rental.png" }],
+      apple: [{ url: "/logo-rental.png" }],
     },
   };
 }
