@@ -41,7 +41,7 @@ export default async function Header() {
             {/* Left Section */}
             <div className={NAVBAR_STYLES.leftSection}>
               {/* Center Section - Logo */}
-              <div className={cn("w-[150px]")}>
+              <div className={cn("w-[150px] h-[40px]")}>
                 <Logo
                   href="/"
                   src="/RentalGateNewLogo.webp"
