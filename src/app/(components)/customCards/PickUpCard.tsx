@@ -21,6 +21,7 @@ const PickUpCard = ({
             src={image}
             alt={title}
             fill
+            sizes="(max-width: 768px) calc(100vw - 32px), 33vw"
             className="object-cover border-3 border-white shadow-lg rounded-2xl bg-Grey100/90"
           />
         </div>

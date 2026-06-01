@@ -47,7 +47,7 @@ export const PageLoader = () => {
 
       {/* Decorative footer line */}
       <div className="absolute bottom-10 left-1/2 -translate-x-1/2 overflow-hidden w-40 h-px bg-gray-100">
-        <div className="h-full bg-linear-to-r from-transparent via-[#f5a600] to-transparent animate-[shimmer_2s_infinite]"></div>
+        <div className="h-full bg-linear-to-r from-transparent via-[#C62028] to-transparent animate-[shimmer_2s_infinite]"></div>
       </div>
     </div>
   );
