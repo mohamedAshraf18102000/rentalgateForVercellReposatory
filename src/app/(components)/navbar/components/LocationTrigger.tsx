@@ -33,8 +33,10 @@ export function LocationTrigger({
   labelClassName,
 }: LocationTriggerProps) {
   const pathname = usePathname();
-  const [isLocationPermissionGranted, setIsLocationPermissionGranted] =
-    useState(false);
+  const [permissionState, setPermissionState] = useState<
+    "loading" | "granted" | "denied"
+  >("loading");
+
   const userPhysical_Address = useLocationStore(
     (state) => state.userPhysical_Address,
   );
@@ -51,7 +53,9 @@ export function LocationTrigger({
     let permissionStatus: PermissionStatus | undefined;
 
     const syncPermissionState = () => {
-      setIsLocationPermissionGranted(permissionStatus?.state === "granted");
+      setPermissionState(
+        permissionStatus?.state === "granted" ? "granted" : "denied",
+      );
     };
 
     void navigator.permissions
@@ -102,30 +106,27 @@ export function LocationTrigger({
     <button
       type="button"
       className={cn(
-        "flex items-center gap-1 cursor-pointer hover:bg-Grey100 p-1 rounded-xl transition duration-200",
-        hasAddress && "underline underline-offset-1",
+        "flex items-center gap-1 cursor-pointer hover:bg-Grey100 p-1 rounded-xl transition duration-200  underline underline-offset-1",
         className,
       )}
       title={userPhysical_Address?.toString()}
       onClick={handleOpenLocationDialog}
     >
-      {isDetectingUserLocation ? (
-        <span title={translations.detectingLocation}>
+      <span className="flex items-center justify-center w-5 h-5 shrink-0">
+        {isDetectingUserLocation ? (
           <Spinner className="size-4" />
-        </span>
-      ) : isLocationPermissionGranted ? (
-        <span title={translations.locationPermissionGranted}>
+        ) : permissionState === "loading" ? (
+          <div className="size-5" />
+        ) : permissionState === "granted" ? (
           <MapPinCheck className="size-5 text-StatusDarkGreen" />
-        </span>
-      ) : (
-        <span title={translations.selectPickupLocation}>
+        ) : (
           <MapPinOff className="size-5 text-StatusRed" />
-        </span>
-      )}
+        )}
+      </span>
 
-      {hasAddress ? (
-        <span className={cn("truncate", labelClassName)}>
-          {displayedAddress}
+      {/* {hasAddress ? (
+        <span className={cn("truncate inline-block w-[140px]", labelClassName)}>
+          {displayedAddress || translations.selectPickupLocation}
         </span>
       ) : (
         <span
@@ -136,7 +137,10 @@ export function LocationTrigger({
         >
           {translations.selectPickupLocation}
         </span>
-      )}
+      )} */}
+      <span className={cn("truncate max-w-26 text-sm", labelClassName)}>
+        {displayedAddress || translations.selectPickupLocation}
+      </span>
       <ChevronDown className="w-4 h-4 shrink-0" />
     </button>
   );

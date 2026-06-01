@@ -335,7 +335,7 @@ const CustomCarouselDots = React.forwardRef<
     <div
       ref={ref}
       className={cn(
-        "flex flex-wrap items-center justify-center gap-1.5 sm:gap-2",
+        "flex min-h-3 min-w-[120px] items-center justify-center gap-1.5 sm:gap-2",
         className,
       )}
       {...props}

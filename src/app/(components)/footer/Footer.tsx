@@ -49,13 +49,13 @@ export default function Footer() {
       <div className="container mx-auto px-4 md:px-6 py-6 md:py-8">
         <div className="flex flex-col md:flex-row items-center justify-between gap-6 md:gap-4">
           {/* Brand - Right in RTL */}
-          <div className="flex flex-col items-center gap-3">
+          <div className="flex flex-col items-center gap-3 w-[150px] h-[40px]">
             <Link href="/" className="flex items-center gap-3">
               <Image
                 src="/RentalGateNewLogo.webp"
                 alt="Rental Gate"
                 width={150}
-                height={150}
+                height={40}
                 className="object-contain brightness-0 invert"
               />
             </Link>
@@ -63,7 +63,7 @@ export default function Footer() {
 
           {/* Nav Links - Center */}
           <nav
-            className="flex flex-wrap items-center justify-center gap-4 md:gap-6 order-2 md:order-2"
+            className="flex flex-wrap items-center justify-center gap-4 md:gap-6 order-2 md:order-2 whitespace-nowrap"
             aria-label="Footer navigation"
           >
             {footerNav.map(({ href, key }) => (

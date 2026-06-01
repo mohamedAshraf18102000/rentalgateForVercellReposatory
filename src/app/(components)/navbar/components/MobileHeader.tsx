@@ -4,9 +4,6 @@
 
 "use client";
 
-import { Link } from "@/i18n/routing";
-import { useLocale } from "next-intl";
-import { Logo } from "./Logo";
 import {
   LocationTrigger,
   type LocationTriggerTranslations,
@@ -19,7 +16,6 @@ interface MobileHeaderProps {
 }
 
 export const MobileHeader: React.FC<MobileHeaderProps> = ({ translations }) => {
-  const locale = useLocale();
   const router = useRouter();
   return (
     <header className="md:hidden fixed top-0 left-0 right-0 z-50 h-[60px]">
@@ -43,7 +39,7 @@ export const MobileHeader: React.FC<MobileHeaderProps> = ({ translations }) => {
         </div>
         <LocationTrigger
           translations={translations}
-          className="max-w-42 text-black"
+          className="w-[140px] text-black"
           labelClassName="max-w-[6.5rem] text-xs"
         />
       </div>

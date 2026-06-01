@@ -40,7 +40,7 @@ const HomeSlider = ({ bannersData }: { bannersData: Banner[] }) => {
               </CarouselItem>
             ))}
           </CarouselContent>
-          <div className="flex items-center justify-center gap-4 absolute bottom-7 left-0 w-full">
+          <div className="absolute bottom-7 left-0 w-full h-8 flex items-center justify-center">
             <CustomCarouselDots className="py-2" />
           </div>
         </Carousel>
