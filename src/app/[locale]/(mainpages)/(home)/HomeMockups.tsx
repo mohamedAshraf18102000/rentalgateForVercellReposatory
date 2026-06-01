@@ -30,11 +30,11 @@ function HomeMockups() {
             <div className="flex justify-center">
               <div className="drop-shadow-2xl w-[200px] sm:w-[240px]">
                 <Image
-                  src="/shared/Mockup.png"
+                  src="/shared/Mockup.webp"
                   alt="App Mockup"
                   width={350}
                   height={757}
-                  quality={100}
+                  sizes="(max-width: 1024px) 320px, 350px"
                   className="w-full h-auto object-contain"
                   priority
                 />
@@ -127,11 +127,11 @@ function HomeMockups() {
             <div className="col-span-5 flex justify-center md:justify-center">
               <div className="drop-shadow-2xl w-[320px] lg:w-[350px] pointer-events-none select-none!">
                 <Image
-                  src="/shared/Mockup.png"
+                  src="/shared/Mockup.webp"
                   alt="App Mockup"
-                  width={350}
-                  height={757}
-                  quality={100}
+                  width={200}
+                  height={230}
+                  sizes="(max-width: 640px) 200px, 240px"
                   className="w-full h-auto object-contain"
                   priority
                 />

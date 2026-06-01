@@ -160,7 +160,7 @@ const BussinessAccountsContentClient = ({
           }`}
         >
           <div
-            className={`flex min-h-0 flex-1 flex-col ${isRtl ? "bg-[url(/bussinesAccounts/img1.png)]" : "bg-[url(/bussinesAccounts/img1_LTR.png)]"} bg-cover bg-center bg-no-repeat p-4 sm:p-5 md:p-6`}
+            className={`flex min-h-0 flex-1 flex-col ${isRtl ? "bg-[url(/bussinesAccounts/img1.webp)]" : "bg-[url(/bussinesAccounts/img1_LTR.webp)]"} bg-cover bg-center bg-no-repeat p-4 sm:p-5 md:p-6`}
           >
             <h6 className="text-balance font-bold text-lg sm:text-xl md:text-2xl">
               {copy.hero.title}
