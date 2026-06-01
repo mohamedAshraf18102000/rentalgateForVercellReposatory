@@ -33,7 +33,8 @@ const HomeSlider = ({ bannersData }: { bannersData: Banner[] }) => {
                     fill
                     sizes="100vw"
                     className="object-cover object-center bg-Grey100/90"
-                    priority={index === 0}
+                    priority
+                    fetchPriority="high"
                   />
                 </div>
               </CarouselItem>
