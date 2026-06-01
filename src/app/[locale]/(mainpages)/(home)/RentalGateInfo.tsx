@@ -9,19 +9,19 @@ const RentalGateInfo = async () => {
       key: "flexibleRental",
       title: t("rentalInfo.flexibleRental.title"),
       description: t("rentalInfo.flexibleRental.description"),
-      image: "/rentalInfo/Group.png",
+      image: "/rentalInfo/Group.webp",
     },
     {
       key: "customerService",
       title: t("rentalInfo.customerService.title"),
       description: t("rentalInfo.customerService.description"),
-      image: "/rentalInfo/Group.png",
+      image: "/rentalInfo/Group2.webp",
     },
     {
       key: "locations",
       title: t("rentalInfo.locations.title"),
       description: t("rentalInfo.locations.description"),
-      image: "/rentalInfo/Group3.png",
+      image: "/rentalInfo/Group3.webp",
     },
   ];
 
