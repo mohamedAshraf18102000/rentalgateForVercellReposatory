@@ -6,5 +6,39 @@
   "bookings": {
     "title": "Browse & Book Cars",
     "description": "Search our rental fleet by pickup location, dates, and filters."
+  },
+  "carDetails": {
+    "title": "{carName}",
+    "fallbackTitle": "Car Details",
+    "description": "View rental details, pricing, and services for {carName}."
+  },
+  "reservation": {
+    "title": "Book {carName}",
+    "fallbackTitle": "Car Booking",
+    "description": "Complete your rental reservation for {carName}. Choose pickup and drop-off, add services, and confirm your booking.",
+    "fallbackDescription": "Complete your car rental reservation. Select dates, locations, and services to confirm your booking."
+  },
+  "bussinessAccounts": {
+    "title": "Business Account",
+    "description": "Register your company for a Rental Gate business account. Get tailored fleet rental solutions for businesses across Saudi Arabia."
+  },
+  "userProfile": {
+    "title": "My Profile",
+    "description": "Manage your personal information, wallet balance, loyalty points, license details, and bookings on Rental Gate."
+  },
+  "myBookings": {
+    "title": "My Bookings",
+    "description": "View and manage your current and past car rental reservations on Rental Gate."
+  },
+  "wallet": {
+    "title": "Wallet",
+    "description": "Check your wallet balance, view transaction history, and manage earned offers on Rental Gate."
+  },
+  "offeredCars": {
+    "title": "{offerLabel}",
+    "fallbackTitle": "Rental Gate Offers",
+    "description": "Browse rental cars in the {offerLabel} offer. Compare prices and book your car on Rental Gate.",
+    "descriptionWithCount": "Browse {count} rental cars in the {offerLabel} offer. Compare prices and book on Rental Gate.",
+    "fallbackDescription": "Browse cars included in special rental offers. Compare prices and book on Rental Gate."
   }
 }

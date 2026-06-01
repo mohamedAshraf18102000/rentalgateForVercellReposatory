@@ -8,6 +8,10 @@ import { SEO_KEYS, type SeoKey } from "@/config/seo";
 export const SEO_ROUTE_MAP: Record<string, SeoKey> = {
   "": SEO_KEYS.HOME,
   bookings: SEO_KEYS.BOOKINGS,
+  bussinessAccounts: SEO_KEYS.BUSINESS_ACCOUNTS,
+  userProfile: SEO_KEYS.USER_PROFILE,
+  myBookings: SEO_KEYS.MY_BOOKINGS,
+  wallet: SEO_KEYS.WALLET,
 };
 
 export function stripLocaleFromPathname(pathname: string): string {

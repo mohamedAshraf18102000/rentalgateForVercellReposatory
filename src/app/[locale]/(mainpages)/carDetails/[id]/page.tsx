@@ -152,97 +152,99 @@ const page = () => {
     );
 
   return (
-    <WrapperContainer exceedNav className="w-[75%]">
-      <CarsDetailsBreadCrump />
-      <div className="mt-10">
-        <CarDetailsCard
-          daysForFreeDelivery={data?.daysForFreeDelivery}
-          workingTime={data?.workingHours}
-          dailyPrice={data?.dailyPrice}
-          freeKm={data.allowedKm}
-          car={data?.car}
-          company={data?.company}
-          specifications={data.specifications ?? []}
-          extraKmPrice={data?.extraKmPrice}
-          unlimitedKm={data?.unlimitedKm}
-          unlimitedKmPrice={data?.unlimitedKmPrice ?? 0}
-          ccbId={data.ccbId}
-          carPrice={pricing.pricePerDay}
-          priceBeforeOffer={originalPricing.pricePerDay}
-          originalPrice={originalPricing.pricePerDay}
-          pricingType={pricingType}
-          totalPrice={pricing.totalPrice}
-          originalTotalPrice={originalPricing.totalPrice}
-          rentalDays={rentalDays}
-          showRating={data.showRating}
-          rate={data.rate}
-          showTax={showPricesWithTax}
-        />
-      </div>
-
-      <div className="my-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {services && services.length > 0 && (
-          <h3 className="col-span-1 my-4 text-xl font-bold sm:col-span-2 lg:col-span-4 lg:text-2xl">
-            {t("providedServices")}
-          </h3>
-        )}
-
-        {(data.insuranceWithDeductible ?? 0) > 0 && (
-          <ServiceCard
-            key="full-insurance"
-            service={{
-              price: data.insuranceWithDeductible ?? 0,
-              serviceArabicName: t("fullInsuranceWithDeductible"),
-              serviceEnglishName: t("fullInsuranceWithDeductible"),
-            }}
+    <>
+      <WrapperContainer exceedNav className="w-[75%]">
+        <CarsDetailsBreadCrump />
+        <div className="mt-10">
+          <CarDetailsCard
+            daysForFreeDelivery={data?.daysForFreeDelivery}
+            workingTime={data?.workingHours}
+            dailyPrice={data?.dailyPrice}
+            freeKm={data.allowedKm}
+            car={data?.car}
+            company={data?.company}
+            specifications={data.specifications ?? []}
+            extraKmPrice={data?.extraKmPrice}
+            unlimitedKm={data?.unlimitedKm}
+            unlimitedKmPrice={data?.unlimitedKmPrice ?? 0}
+            ccbId={data.ccbId}
+            carPrice={pricing.pricePerDay}
+            priceBeforeOffer={originalPricing.pricePerDay}
+            originalPrice={originalPricing.pricePerDay}
+            pricingType={pricingType}
+            totalPrice={pricing.totalPrice}
+            originalTotalPrice={originalPricing.totalPrice}
+            rentalDays={rentalDays}
+            showRating={data.showRating}
+            rate={data.rate}
             showTax={showPricesWithTax}
-            extraIcon={
-              <Info className="stroke-2 stroke-primary  rounded-full fill-[#FFC971] w-15 h-15" />
-            }
           />
-        )}
-
-        {services?.map((service) => (
-          <ServiceCard
-            showTax={showPricesWithTax}
-            key={service.csId}
-            service={service}
-          />
-        ))}
-        <DriverCard
-          image={"/driver/driverImage.png"}
-          serviceName={t("driverService")}
-          status={data?.company?.driverServiceOutside === "active"}
-          badgeTitle={t("driverOutsideCity")}
-        />
-
-        <DriverCard
-          image={"/driver/driverImage.png"}
-          serviceName={t("driverService")}
-          status={data?.company?.driverService === "active"}
-          badgeTitle={t("driverInsideCity")}
-        />
-      </div>
-
-      <div className="flex flex-col gap-1 mt-4">
-        {(data.offerPackages.length > 0 ||
-          data.kilometerPackages.length > 0) && (
-          <h3 className="col-span-1 my-4 text-xl font-bold sm:col-span-2 lg:col-span-4 lg:text-xl">
-            {t("reservation.stepOne.offersTitle")}
-          </h3>
-        )}
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 3xl:grid-cols-4!">
-          {data.offerPackages.map((offer) => (
-            <OffersCard key={offer.ccoId} offerPackage={offer} />
-          ))}
-          {data.kilometerPackages.map((pack) => (
-            <KMPackageCard key={pack.cceId} kilometerPackage={pack} />
-          ))}
         </div>
-      </div>
 
-      <Panner />
-    </WrapperContainer>
+        <div className="my-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {services && services.length > 0 && (
+            <h3 className="col-span-1 my-4 text-xl font-bold sm:col-span-2 lg:col-span-4 lg:text-2xl">
+              {t("providedServices")}
+            </h3>
+          )}
+
+          {(data.insuranceWithDeductible ?? 0) > 0 && (
+            <ServiceCard
+              key="full-insurance"
+              service={{
+                price: data.insuranceWithDeductible ?? 0,
+                serviceArabicName: t("fullInsuranceWithDeductible"),
+                serviceEnglishName: t("fullInsuranceWithDeductible"),
+              }}
+              showTax={showPricesWithTax}
+              extraIcon={
+                <Info className="stroke-2 stroke-primary  rounded-full fill-[#FFC971] w-15 h-15" />
+              }
+            />
+          )}
+
+          {services?.map((service) => (
+            <ServiceCard
+              showTax={showPricesWithTax}
+              key={service.csId}
+              service={service}
+            />
+          ))}
+          <DriverCard
+            image={"/driver/driverImage.png"}
+            serviceName={t("driverService")}
+            status={data?.company?.driverServiceOutside === "active"}
+            badgeTitle={t("driverOutsideCity")}
+          />
+
+          <DriverCard
+            image={"/driver/driverImage.png"}
+            serviceName={t("driverService")}
+            status={data?.company?.driverService === "active"}
+            badgeTitle={t("driverInsideCity")}
+          />
+        </div>
+
+        <div className="flex flex-col gap-1 mt-4">
+          {(data.offerPackages.length > 0 ||
+            data.kilometerPackages.length > 0) && (
+            <h3 className="col-span-1 my-4 text-xl font-bold sm:col-span-2 lg:col-span-4 lg:text-xl">
+              {t("reservation.stepOne.offersTitle")}
+            </h3>
+          )}
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 3xl:grid-cols-4!">
+            {data.offerPackages.map((offer) => (
+              <OffersCard key={offer.ccoId} offerPackage={offer} />
+            ))}
+            {data.kilometerPackages.map((pack) => (
+              <KMPackageCard key={pack.cceId} kilometerPackage={pack} />
+            ))}
+          </div>
+        </div>
+
+        <Panner />
+      </WrapperContainer>
+    </>
   );
 };
 
