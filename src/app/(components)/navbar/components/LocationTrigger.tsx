@@ -109,9 +109,20 @@ export function LocationTrigger({
       title={userPhysical_Address?.toString()}
       onClick={handleOpenLocationDialog}
     >
-      <span className="scale-90 shrink-0">
-        <PositioningIcon />
-      </span>
+      {isDetectingUserLocation ? (
+        <span title={translations.detectingLocation}>
+          <Spinner className="size-4" />
+        </span>
+      ) : isLocationPermissionGranted ? (
+        <span title={translations.locationPermissionGranted}>
+          <MapPinCheck className="size-5 text-StatusDarkGreen" />
+        </span>
+      ) : (
+        <span title={translations.selectPickupLocation}>
+          <MapPinOff className="size-5 text-StatusRed" />
+        </span>
+      )}
+
       {hasAddress ? (
         <span className={cn("truncate", labelClassName)}>
           {displayedAddress}
@@ -127,19 +138,6 @@ export function LocationTrigger({
         </span>
       )}
       <ChevronDown className="w-4 h-4 shrink-0" />
-      {isDetectingUserLocation ? (
-        <span title={translations.detectingLocation}>
-          <Spinner className="size-4" />
-        </span>
-      ) : isLocationPermissionGranted ? (
-        <span title={translations.locationPermissionGranted}>
-          <MapPinCheck className="size-4 text-StatusDarkGreen" />
-        </span>
-      ) : (
-        <span title={translations.selectPickupLocation}>
-          <MapPinOff className="size-4 text-StatusRed" />
-        </span>
-      )}
     </button>
   );
 }
