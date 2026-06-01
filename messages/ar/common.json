@@ -9,6 +9,8 @@
   "updateLocationLink": "للصفحة السابقة",
   "updateLocationSuffix": "لتحديث الموقع",
   "selectPickupLocation": "حدد مكان الاستلام",
+  "locationPermissionGranted": "تم السماح",
+  "detectingLocation": "جارٍ تحديد موقعك…",
   "login": "تسجيل الدخول",
   "getStarted": "ابدأ الآن",
   "learnMore": "اعرف المزيد",

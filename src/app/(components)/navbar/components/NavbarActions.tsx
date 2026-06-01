@@ -22,6 +22,8 @@ interface NavbarActionsProps {
     updateLocationLink: string;
     updateLocationSuffix: string;
     selectPickupLocation: string;
+    locationPermissionGranted: string;
+    detectingLocation: string;
   };
 }
 

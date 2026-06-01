@@ -34,6 +34,14 @@
     "pickupTitle": "Pickup Location",
     "returnTitle": "Return Location",
     "currentLocationTitle": "Your current location",
+    "detectingLocation": "Detecting your location…",
+    "geolocationErrors": {
+      "unsupported": "Location detection is not supported in this browser.",
+      "permission_denied": "Location access was denied. You can still pick a location on the map.",
+      "position_unavailable": "Your location could not be determined. Showing your last saved location if available.",
+      "timeout": "Location detection timed out. You can still pick a location on the map.",
+      "unknown": "Could not detect your location. You can still pick a location on the map."
+    },
     "close": "Close",
     "save": "Save",
     "showResults": "Show results",

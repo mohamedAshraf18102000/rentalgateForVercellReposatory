@@ -69,6 +69,8 @@ const HomeUserCurrentLocation = () => {
       address.latitude,
       address.longitude,
       address.addressName,
+      address.addressId,
+      { isSessionManual: true },
     );
     setIsUnsavedMapLocation(false);
     setIsCurrentLocationTabDisabled(false);

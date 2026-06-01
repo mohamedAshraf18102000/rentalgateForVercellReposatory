@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ChevronDown } from "lucide-react";
+import { useEffect, useState } from "react";
+import { ChevronDown, MapPinCheck, MapPinOff } from "lucide-react";
 import PositioningIcon from "@/constants/icons/PositioningIcon";
 import { useLocationStore } from "@/lib/stores/useLocationStore";
 import { cn } from "@/lib/utils";
@@ -10,12 +11,14 @@ import {
   emitApiErrorDialog,
   emitCloseDialog,
 } from "@/lib/utils/errorDialogEvents";
-
+import { Spinner } from "../../ui/spinner";
 export interface LocationTriggerTranslations {
   updateLocationPrefix: string;
   updateLocationLink: string;
   updateLocationSuffix: string;
   selectPickupLocation: string;
+  locationPermissionGranted: string;
+  detectingLocation: string;
 }
 
 interface LocationTriggerProps {
@@ -30,10 +33,40 @@ export function LocationTrigger({
   labelClassName,
 }: LocationTriggerProps) {
   const pathname = usePathname();
+  const [isLocationPermissionGranted, setIsLocationPermissionGranted] =
+    useState(false);
   const userPhysical_Address = useLocationStore(
     (state) => state.userPhysical_Address,
   );
+  const isDetectingUserLocation = useLocationStore(
+    (state) => state.isDetectingUserLocation,
+  );
   const openLocationDialog = useLocationStore((state) => state.openDialog);
+
+  useEffect(() => {
+    if (typeof navigator === "undefined" || !navigator.permissions?.query) {
+      return;
+    }
+
+    let permissionStatus: PermissionStatus | undefined;
+
+    const syncPermissionState = () => {
+      setIsLocationPermissionGranted(permissionStatus?.state === "granted");
+    };
+
+    void navigator.permissions
+      .query({ name: "geolocation" })
+      .then((status) => {
+        permissionStatus = status;
+        syncPermissionState();
+        status.addEventListener("change", syncPermissionState);
+      })
+      .catch(() => {});
+
+    return () => {
+      permissionStatus?.removeEventListener("change", syncPermissionState);
+    };
+  }, []);
 
   const DialogError = () => {
     return (
@@ -80,11 +113,13 @@ export function LocationTrigger({
         <PositioningIcon />
       </span>
       {hasAddress ? (
-        <span className={cn("truncate", labelClassName)}>{displayedAddress}</span>
+        <span className={cn("truncate", labelClassName)}>
+          {displayedAddress}
+        </span>
       ) : (
         <span
           className={cn(
-            "text-sm underline underline-offset-3 truncate",
+            "text-sm underline underline-offset-3 truncate flex items-center gap-2",
             labelClassName,
           )}
         >
@@ -92,6 +127,19 @@ export function LocationTrigger({
         </span>
       )}
       <ChevronDown className="w-4 h-4 shrink-0" />
+      {isDetectingUserLocation ? (
+        <span title={translations.detectingLocation}>
+          <Spinner className="size-4" />
+        </span>
+      ) : isLocationPermissionGranted ? (
+        <span title={translations.locationPermissionGranted}>
+          <MapPinCheck className="size-4 text-StatusDarkGreen" />
+        </span>
+      ) : (
+        <span title={translations.selectPickupLocation}>
+          <MapPinOff className="size-4 text-StatusRed" />
+        </span>
+      )}
     </button>
   );
 }

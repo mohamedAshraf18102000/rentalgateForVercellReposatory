@@ -28,6 +28,8 @@ export default async function Header() {
     updateLocationLink: t("updateLocationLink"),
     updateLocationSuffix: t("updateLocationSuffix"),
     selectPickupLocation: t("selectPickupLocation"),
+    locationPermissionGranted: t("locationPermissionGranted"),
+    detectingLocation: t("detectingLocation"),
   };
 
   return (
@@ -75,7 +77,7 @@ export default async function Header() {
               <LanguageSwitcher />
             </div>
 
-            {/* <ClearData /> */}
+            <ClearData />
 
             {/* Right Section */}
             <div className={NAVBAR_STYLES.rightSection}>

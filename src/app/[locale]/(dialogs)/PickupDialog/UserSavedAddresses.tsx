@@ -8,6 +8,7 @@ import { Separator } from "@/app/(components)/ui/separator";
 import { MapPinPlus } from "lucide-react";
 import { useAuth } from "@/app/(components)/navbar/hooks/useAuth";
 import { useTranslations } from "next-intl";
+import { findNearestSavedAddress } from "@/lib/utils/matchSavedAddress";
 
 type TempLocation = {
   lat: number;
@@ -22,28 +23,6 @@ interface UserSavedAddressesProps {
   setTempLocation: (location: NonNullable<TempLocation>) => void;
   onAddressAdded?: (address: UserAddress) => void;
 }
-
-const AUTO_SELECT_DISTANCE_KM = 0.2;
-
-const toRadians = (value: number) => (value * Math.PI) / 180;
-
-const getDistanceInKm = (
-  lat1: number,
-  lng1: number,
-  lat2: number,
-  lng2: number,
-) => {
-  const earthRadiusKm = 6371;
-  const dLat = toRadians(lat2 - lat1);
-  const dLng = toRadians(lng2 - lng1);
-  const a =
-    Math.sin(dLat / 2) ** 2 +
-    Math.cos(toRadians(lat1)) *
-      Math.cos(toRadians(lat2)) *
-      Math.sin(dLng / 2) ** 2;
-
-  return earthRadiusKm * (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)));
-};
 
 export function UserSavedAddresses({
   userAddresses,
@@ -61,39 +40,26 @@ export function UserSavedAddresses({
       return;
     }
 
-    const nearestAddress = userAddresses.reduce<{
-      address: UserAddress;
-      distance: number;
-    } | null>((nearest, currentAddress) => {
-      const distance = getDistanceInKm(
-        tempLocation.lat,
-        tempLocation.lng,
-        currentAddress.latitude,
-        currentAddress.longitude,
-      );
-
-      if (!nearest || distance < nearest.distance) {
-        return { address: currentAddress, distance };
-      }
-
-      return nearest;
-    }, null);
+    const matchedSaved = findNearestSavedAddress(
+      tempLocation.lat,
+      tempLocation.lng,
+      userAddresses,
+    );
 
     if (
-      !nearestAddress ||
-      nearestAddress.distance > AUTO_SELECT_DISTANCE_KM ||
-      (tempLocation.lat === nearestAddress.address.latitude &&
-        tempLocation.lng === nearestAddress.address.longitude &&
-        tempLocation.address === nearestAddress.address.addressName)
+      !matchedSaved ||
+      (tempLocation.lat === matchedSaved.latitude &&
+        tempLocation.lng === matchedSaved.longitude &&
+        tempLocation.address === matchedSaved.addressName)
     ) {
       return;
     }
 
     setTempLocation({
-      lat: nearestAddress.address.latitude,
-      lng: nearestAddress.address.longitude,
-      address: nearestAddress.address.addressName,
-      addressId: nearestAddress.address.addressId,
+      lat: matchedSaved.latitude,
+      lng: matchedSaved.longitude,
+      address: matchedSaved.addressName,
+      addressId: matchedSaved.addressId,
     });
   }, [tempLocation, userAddresses, setTempLocation]);
 

@@ -26,6 +26,7 @@ const GoogleMapsLocation = ({
   selectedLng,
   hideSearch = false,
   hideUserLocation = false,
+  disableInitialGeolocation = false,
   containerHeight = "400px",
   className = "",
 }: {
@@ -44,6 +45,8 @@ const GoogleMapsLocation = ({
   selectedLng?: number;
   hideSearch?: boolean;
   hideUserLocation?: boolean;
+  /** Parent handles browser geolocation (e.g. location dialog auto-detect). */
+  disableInitialGeolocation?: boolean;
   containerHeight?: string;
   className?: string;
 }) => {
@@ -59,11 +62,17 @@ const GoogleMapsLocation = ({
     lng: initialLng || userPhysical_Longitude || defaultLocation.lng,
   });
 
-  const [locationLoading, setLocationLoading] = useState(
-    !(initialLat && initialLng) &&
+  const [locationLoading, setLocationLoading] = useState(() => {
+    if (disableInitialGeolocation) {
+      return selectedLat == null || selectedLng == null;
+    }
+
+    return (
+      !(initialLat && initialLng) &&
       !userPhysical_Latitude &&
-      !userPhysical_Longitude,
-  );
+      !userPhysical_Longitude
+    );
+  });
   const [mapLoading, setMapLoading] = useState(true);
   const [isLocating, setIsLocating] = useState(false);
   const mapRef = useRef<google.maps.Map | null>(null);
@@ -114,12 +123,36 @@ const GoogleMapsLocation = ({
   };
 
   useEffect(() => {
+    if (!disableInitialGeolocation) {
+      return;
+    }
+
+    if (selectedLat != null && selectedLng != null) {
+      setLocationLoading(false);
+    }
+  }, [disableInitialGeolocation, selectedLat, selectedLng]);
+
+  useEffect(() => {
     const setup = async () => {
       if (initialLat && initialLng) {
         await initializeLocation(initialLat, initialLng);
-      } else if (userPhysical_Latitude && userPhysical_Longitude) {
+        return;
+      }
+
+      if (!storeless && userPhysical_Latitude && userPhysical_Longitude) {
         await initializeLocation();
-      } else if (navigator.geolocation) {
+        return;
+      }
+
+      if (disableInitialGeolocation) {
+        if (selectedLat != null && selectedLng != null) {
+          setCurrentLocation({ lat: selectedLat, lng: selectedLng });
+        }
+        setLocationLoading(false);
+        return;
+      }
+
+      if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
           async (pos) => {
             await initializeLocation(pos.coords.latitude, pos.coords.longitude);
@@ -136,11 +169,15 @@ const GoogleMapsLocation = ({
 
     setup();
   }, [
-    userPhysical_Latitude,
-    userPhysical_Longitude,
+    disableInitialGeolocation,
     initialLat,
     initialLng,
+    selectedLat,
+    selectedLng,
+    storeless,
     userPhysical_Address,
+    userPhysical_Latitude,
+    userPhysical_Longitude,
   ]);
 
   useEffect(() => {
@@ -157,29 +194,83 @@ const GoogleMapsLocation = ({
     mapRef.current?.panTo(newPos);
   }, [selectedLat, selectedLng]);
 
-  const handleLocateUser = () => {
-    if (!navigator.geolocation) return;
-    setIsLocating(true);
-    navigator.geolocation.getCurrentPosition(
-      async (pos) => {
-        const newPos = { lat: pos.coords.latitude, lng: pos.coords.longitude };
-        setCurrentLocation(newPos);
-        mapRef.current?.panTo(newPos);
-        const details = await reverseGeocodeWithDetails(newPos.lat, newPos.lng);
-        handleSetLocation(
-          newPos.lat,
-          newPos.lng,
-          details?.address ?? null,
-          true,
-          details?.meta,
+  const handleLocateUser = async () => {
+    try {
+      if (!navigator.geolocation) {
+        console.error("Geolocation is not supported");
+        return;
+      }
+
+      const permission = await navigator.permissions.query({
+        name: "geolocation",
+      });
+
+      if (permission.state === "denied") {
+        alert(
+          "Location access is blocked. Please enable it from your browser settings.",
         );
-        setIsLocating(false);
-      },
-      (err) => {
-        console.error(err);
-        setIsLocating(false);
-      },
-    );
+        return;
+      }
+
+      setIsLocating(true);
+
+      navigator.geolocation.getCurrentPosition(
+        async (pos) => {
+          const newPos = {
+            lat: pos.coords.latitude,
+            lng: pos.coords.longitude,
+          };
+
+          setCurrentLocation(newPos);
+          mapRef.current?.panTo(newPos);
+
+          const details = await reverseGeocodeWithDetails(
+            newPos.lat,
+            newPos.lng,
+          );
+
+          handleSetLocation(
+            newPos.lat,
+            newPos.lng,
+            details?.address ?? null,
+            true,
+            details?.meta,
+          );
+
+          setIsLocating(false);
+        },
+        (err) => {
+          console.error(err);
+
+          switch (err.code) {
+            case err.PERMISSION_DENIED:
+              alert("Location permission was denied.");
+              break;
+
+            case err.POSITION_UNAVAILABLE:
+              alert("Location information is unavailable.");
+              break;
+
+            case err.TIMEOUT:
+              alert("Location request timed out.");
+              break;
+
+            default:
+              alert("Failed to get your location.");
+          }
+
+          setIsLocating(false);
+        },
+        {
+          enableHighAccuracy: true,
+          timeout: 10000,
+          maximumAge: 0,
+        },
+      );
+    } catch (error) {
+      console.error(error);
+      setIsLocating(false);
+    }
   };
 
   const [inputValue, setInputValue] = useState("");

@@ -19,7 +19,7 @@ type Props = {
   params: Promise<{ locale: string }>;
 };
 
-export default async function HomePage({ params }: Props) {
+const page = async ({ params }: Props) => {
   const { locale } = await params;
 
   setRequestLocale(locale);
@@ -31,7 +31,6 @@ export default async function HomePage({ params }: Props) {
   } catch (error) {
     console.error("Error fetching home data:", error);
   }
-
   return (
     <main>
       <RemoveCacheWhenUserRefresh />
@@ -54,4 +53,6 @@ export default async function HomePage({ params }: Props) {
       </WrapperContainer>
     </main>
   );
-}
+};
+
+export default page;

@@ -16,6 +16,7 @@ import enHomeMessages from "../../../messages/en/home.json";
 import "../../globals.css";
 import { RouteGuard } from "./(components)/RouteGuard";
 import SideToChat from "../(components)/sideToChat/SideToChat";
+import { AutoLocationOnVisit } from "./(dialogs)/PickupDialog/AutoLocationOnVisit";
 import { CurrentLocationDialog } from "./(dialogs)/PickupDialog/CurrentLocationDialog";
 import ReactQueryProvider from "@/provider/ReactQueryProvider";
 import ReservationStateResetWatcher from "./(components)/ReservationStateResetWatcher";
@@ -171,6 +172,7 @@ export default async function LocaleLayout({
               <DialogProvider>
                 <RouteGuard />
                 <ReservationStateResetWatcher />
+                <AutoLocationOnVisit />
                 <CurrentLocationDialog />
                 <Header />
                 <SideToChat />

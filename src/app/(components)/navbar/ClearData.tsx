@@ -1,13 +1,18 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import {
+  LEGACY_LOCATION_STORAGE_KEY,
+  SESSION_LOCATION_STORAGE_KEY,
+} from "@/lib/stores/useLocationStore";
 
 const ClearData = () => {
   const router = useRouter();
   const handleClearData = () => {
     router.push("/");
     localStorage.removeItem("booked-car-details-storage");
-    localStorage.removeItem("user-location-storage");
+    localStorage.removeItem(LEGACY_LOCATION_STORAGE_KEY);
+    sessionStorage.removeItem(SESSION_LOCATION_STORAGE_KEY);
     sessionStorage.removeItem("hasClosedLocationDialog");
     sessionStorage.removeItem("user-prefered-filters-storage");
     setTimeout(() => {

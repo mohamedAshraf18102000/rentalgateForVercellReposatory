@@ -1,9 +1,16 @@
 "use client";
 
-import { Suspense, useEffect, useState } from "react";
-import { Button, DialogWrapper } from "@/app/(components)";
+import { Suspense, useEffect, useRef, useState } from "react";
+import { DialogWrapper } from "@/app/(components)";
 import GoogleMapsLocation from "@/app/(components)/mapsLocation/GoogleMapsLocation";
 import { useLocationStore } from "@/lib/stores/useLocationStore";
+import {
+  GeolocationError,
+  GeolocationFailureReason,
+  getBrowserPosition,
+} from "@/lib/utils/geolocation";
+import { findNearestSavedAddress } from "@/lib/utils/matchSavedAddress";
+import { reverseGeocodeWithDetails } from "@/lib/utils/reverseGeocode";
 import { LocateFixed } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { getUserAddress } from "@/services/userProfile/getUserAddress.service";
@@ -29,6 +36,7 @@ function CurrentLocationDialogContent() {
     userPhysical_Longitude,
     userPhysical_Address,
     userPhysical_AddressId,
+    isSessionManualLocation,
     isDialogOpen,
     dialogOpenSource,
     openDialog,
@@ -41,6 +49,10 @@ function CurrentLocationDialogContent() {
     useState<TempLocation | null>(null);
   const [dialogTempLocation, setDialogTempLocation] =
     useState<TempLocation | null>(null);
+  const [geolocationError, setGeolocationError] =
+    useState<GeolocationFailureReason | null>(null);
+  const [isAutoDetecting, setIsAutoDetecting] = useState(false);
+  const hasManualMapEditRef = useRef(false);
   const pathname = usePathname();
   const isTermsPage = pathname.includes("/terms&conditions");
   const setFilter = useUserPreferedFiltersStore((state) => state.setFilter);
@@ -55,7 +67,7 @@ function CurrentLocationDialogContent() {
     }
     const hasClosed = sessionStorage.getItem("hasClosedLocationDialog");
     if (!hasClosed) {
-      const timer = setTimeout(() => openDialog("auto"), 3000);
+      const timer = setTimeout(() => openDialog("auto"), 30_000);
       return () => clearTimeout(timer);
     }
   }, [isTermsPage, openDialog]);
@@ -125,24 +137,103 @@ function CurrentLocationDialogContent() {
       return;
     }
 
-    if (
-      userPhysical_Latitude !== null &&
-      userPhysical_Longitude !== null &&
-      userPhysical_Address
-    ) {
-      setDialogTempLocation({
-        lat: userPhysical_Latitude,
-        lng: userPhysical_Longitude,
-        address: userPhysical_Address,
-        addressId: userPhysical_AddressId ?? undefined,
-      });
+    hasManualMapEditRef.current = false;
+    setGeolocationError(null);
+
+    const loadSessionLocation = (): boolean => {
+      if (
+        userPhysical_Latitude !== null &&
+        userPhysical_Longitude !== null &&
+        userPhysical_Address
+      ) {
+        setDialogTempLocation({
+          lat: userPhysical_Latitude,
+          lng: userPhysical_Longitude,
+          address: userPhysical_Address,
+          addressId: userPhysical_AddressId ?? undefined,
+        });
+        return true;
+      }
+
+      setDialogTempLocation(null);
+      return false;
+    };
+
+    if (isSessionManualLocation) {
+      loadSessionLocation();
       return;
     }
 
-    setDialogTempLocation(null);
+    let isCancelled = false;
+
+    const applyDetectedLocation = async (lat: number, lng: number) => {
+      const matchedSaved = findNearestSavedAddress(lat, lng, userAddresses);
+
+      if (matchedSaved) {
+        if (isCancelled) {
+          return;
+        }
+
+        setDialogTempLocation({
+          lat: matchedSaved.latitude,
+          lng: matchedSaved.longitude,
+          address: matchedSaved.addressName,
+          addressId: matchedSaved.addressId,
+        });
+        return;
+      }
+
+      const details = await reverseGeocodeWithDetails(lat, lng);
+      if (isCancelled) {
+        return;
+      }
+
+      setDialogTempLocation({
+        lat,
+        lng,
+        address: details?.address ?? "",
+      });
+    };
+
+    const detectLocation = async () => {
+      loadSessionLocation();
+      setIsAutoDetecting(true);
+      useLocationStore.getState().setIsDetectingUserLocation(true);
+
+      try {
+        const coords = await getBrowserPosition();
+        if (isCancelled) {
+          return;
+        }
+
+        await applyDetectedLocation(coords.latitude, coords.longitude);
+      } catch (error) {
+        if (isCancelled) {
+          return;
+        }
+
+        if (error instanceof GeolocationError) {
+          setGeolocationError(error.reason);
+        } else {
+          setGeolocationError("unknown");
+        }
+
+        loadSessionLocation();
+      } finally {
+        setIsAutoDetecting(false);
+        useLocationStore.getState().setIsDetectingUserLocation(false);
+      }
+    };
+
+    void detectLocation();
+
+    return () => {
+      isCancelled = true;
+    };
   }, [
     dialogOpenSource,
     isDialogOpen,
+    isSessionManualLocation,
     userPhysical_Address,
     userPhysical_AddressId,
     userPhysical_Latitude,
@@ -158,6 +249,8 @@ function CurrentLocationDialogContent() {
   };
 
   const handleClose = () => {
+    hasManualMapEditRef.current = false;
+    setGeolocationError(null);
     setFilterTempLocation(null);
     setDialogTempLocation(null);
     closeDialog();
@@ -190,16 +283,25 @@ function CurrentLocationDialogContent() {
       closeDialog();
       sessionStorage.setItem("hasClosedLocationDialog", "true");
     } else {
+      const shouldMarkSessionManual =
+        hasManualMapEditRef.current ||
+        typeof dialogTempLocation?.addressId === "number";
+
       setUserPhysical_Location(
         dialogTempLocation?.lat ?? null,
         dialogTempLocation?.lng ?? null,
         dialogTempLocation?.address ?? null,
         dialogTempLocation?.addressId ?? null,
+        { isSessionManual: shouldMarkSessionManual },
       );
       closeDialog();
       sessionStorage.setItem("hasClosedLocationDialog", "true");
     }
   };
+
+  const geolocationErrorMessage = geolocationError
+    ? t(`pickupDialog.geolocationErrors.${geolocationError}`)
+    : null;
 
   const isFilterDialog = dialogOpenSource === "filterComponent";
   const displayedAddress = isFilterDialog
@@ -227,20 +329,42 @@ function CurrentLocationDialogContent() {
           className="overflow-hidden relative"
           data-open-source={dialogOpenSource ?? undefined}
         >
-          <div className="flex p-2 gap-2">
-            <LocateFixed />
-            {displayedAddress}
+          <div className="flex flex-col gap-1 p-2">
+            <div className="flex gap-2">
+              <LocateFixed className="shrink-0" />
+              <span>
+                {isAutoDetecting && !displayedAddress
+                  ? t("pickupDialog.detectingLocation")
+                  : displayedAddress}
+              </span>
+            </div>
+            {geolocationErrorMessage && !isFilterDialog ? (
+              <p className="text-sm text-Grey600 ps-8">{geolocationErrorMessage}</p>
+            ) : null}
           </div>
           <GoogleMapsLocation
             storeless
+            disableInitialGeolocation
             selectedLat={selectedLat}
             selectedLng={selectedLng}
-            onLocationChange={(lat, lng, addr) => {
+            onLocationChange={(lat, lng, addr, isManual) => {
+              if (isManual) {
+                hasManualMapEditRef.current = true;
+              }
+
               if (isFilterDialog) {
                 setFilterTempLocation({ lat, lng, address: addr });
                 return;
               }
-              setDialogTempLocation({ lat, lng, address: addr });
+
+              setDialogTempLocation({
+                lat,
+                lng,
+                address: addr,
+                addressId: isManual
+                  ? undefined
+                  : dialogTempLocation?.addressId,
+              });
             }}
           />
           {isAuthenticated ? (
@@ -263,6 +387,11 @@ function CurrentLocationDialogContent() {
                   setFilterTempLocation(location);
                   return;
                 }
+
+                if (typeof location.addressId === "number") {
+                  hasManualMapEditRef.current = true;
+                }
+
                 setDialogTempLocation(location);
               }}
             />

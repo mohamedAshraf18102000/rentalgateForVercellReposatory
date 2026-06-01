@@ -9,6 +9,8 @@
   "updateLocationLink": "the previous page",
   "updateLocationSuffix": "to update your location",
   "selectPickupLocation": "Select pickup location",
+  "locationPermissionGranted": "Location allowed",
+  "detectingLocation": "Detecting your location…",
   "login": "Login",
   "getStarted": "Get Started",
   "learnMore": "Learn More",
