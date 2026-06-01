@@ -20,9 +20,9 @@ export const MobileHeader: React.FC<MobileHeaderProps> = ({ translations }) => {
   return (
     <header className="md:hidden fixed top-0 left-0 right-0 z-50 h-[60px]">
       {/* Main Header */}
-      <div className="flex items-center justify-between px-4 h-14 py-8 bg-white text-white relative shadow-sm">
+      <div className="flex items-center justify-between h-14 py-8 bg-white text-white relative shadow-sm">
         {/* Center - Title and Logo */}
-        <div className={`flex items-center gap-3`}>
+        <div className={`flex items-center`}>
           {/* Logo */}
           <div
             onClick={() => router.push("/")}
@@ -39,7 +39,7 @@ export const MobileHeader: React.FC<MobileHeaderProps> = ({ translations }) => {
         </div>
         <LocationTrigger
           translations={translations}
-          className="w-[140px] text-black"
+          className="w-[100px] text-black"
           labelClassName="max-w-[6.5rem] text-xs"
         />
       </div>
