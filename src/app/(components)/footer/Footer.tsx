@@ -1,5 +1,3 @@
-"use client";
-
 import { Link } from "@/i18n/routing";
 import { Facebook, Instagram, Linkedin } from "lucide-react";
 import { useTranslations } from "next-intl";
