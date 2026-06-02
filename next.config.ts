@@ -7,7 +7,8 @@ const nextConfig: NextConfig = {
 
   output: "standalone",
   images: {
-    qualities: [75, 100],
+    deviceSizes: [64, 128, 256, 384, 440, 512, 640, 768, 1024, 1280],
+    qualities: [60, 65, 70, 75, 100],
     remotePatterns: [
       {
         protocol: "https",

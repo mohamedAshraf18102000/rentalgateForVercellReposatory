@@ -13,7 +13,13 @@ const RentalInfoCard = ({
     <div className="bg-white flex flex-row items-center rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
       <div className="w-1/4 sm:w-[22%] md:w-1/4 p-2 flex items-center justify-center">
         <div className="relative aspect-square w-full">
-          <Image src={image} alt={title} fill className="object-contain" />
+          <Image
+            src={image}
+            alt={title}
+            fill
+            className="object-contain"
+            sizes="(max-width: 640px) 22vw, 25vw"
+          />
         </div>
       </div>
       <div className="w-3/4 sm:w-[78%] md:w-3/4 p-3 md:p-4">

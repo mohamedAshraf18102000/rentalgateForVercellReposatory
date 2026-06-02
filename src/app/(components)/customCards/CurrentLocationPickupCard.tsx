@@ -30,6 +30,7 @@ const CurrentLocationPickupCard = ({
             src={image}
             alt="bgApp2"
             fill
+            sizes="(max-width: 768px) 100vw, 50vw"
             className="object-cover bg-Grey100/90"
           />
         </div>

@@ -1,10 +1,6 @@
-"use client";
-
-import { useLocale } from "next-intl";
 import Image from "next/image";
 
 export const PageLoader = () => {
-  const locale = useLocale();
   return (
     <div className="fixed inset-0 z-9999 flex flex-col items-center justify-center bg-white/95 backdrop-blur-sm">
       <div className="relative flex flex-col items-center justify-center gap-10">
@@ -30,7 +26,7 @@ export const PageLoader = () => {
         <div className="flex flex-col items-center gap-6">
           <div className="flex flex-col items-center gap-2">
             <span className="font-zain text-2xl font-bold tracking-wide text-primary-hover">
-            بوابة التأجير
+              بوابة التأجير
             </span>
             <span className="font-almarai text-xs font-semibold tracking-[0.3em] text-[#C62028] uppercase">
               RENTAL GATE

@@ -15,12 +15,15 @@ interface LogoProps {
 }
 
 export const Logo: React.FC<LogoProps> = ({ href, src, alt, className }) => (
-  <Link href={href} className={className || BUTTON_STYLES.logo}>
+  <Link
+    href={href}
+    className={`${className || BUTTON_STYLES.logo} relative inline-block`}
+  >
     <Image
       src={src}
       alt={alt}
-      width={150}
-      height={150}
+      fill
+      sizes="100px"
       loading="lazy"
       fetchPriority="high"
       className="object-contain"

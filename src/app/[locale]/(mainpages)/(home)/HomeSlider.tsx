@@ -35,6 +35,7 @@ const HomeSlider = ({ bannersData }: { bannersData: Banner[] }) => {
                     className="object-cover object-center bg-Grey100/90"
                     priority
                     fetchPriority="high"
+                    quality={70}
                   />
                 </div>
               </CarouselItem>

@@ -48,6 +48,7 @@ export default function PickupCardSectionClient({
           ) : (
             <div className="xl:min-h-[450px]">
               <PickUpCard
+              
                 title={card.title}
                 description={card.description}
                 image={card.image}

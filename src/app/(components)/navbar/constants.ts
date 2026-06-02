@@ -28,7 +28,7 @@ export const BUTTON_STYLES = {
   homeLinkActive:
     "bg-[#ECEEF2] border-1 border-primary rounded-[12px] flex items-center justify-center font-bold!",
   homeLinkInactive: "hover:bg-gray-100",
-  logo: "w-[100px] h-[40px]",
+  logo: "w-[130px] h-[40px]",
   userButton:
     "bg-primary h-[40px] text-white py-[7.5px] px-[14px] font-medium whitespace-nowrap border-0  transition-all rounded-[12px] flex items-center gap-2 hover:opacity-90",
 } as const;

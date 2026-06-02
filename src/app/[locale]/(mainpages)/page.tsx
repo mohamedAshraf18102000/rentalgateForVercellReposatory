@@ -32,7 +32,7 @@ const page = async ({ params }: Props) => {
     console.error("Error fetching home data:", error);
   }
   return (
-    <main>
+    <>
       <RemoveCacheWhenUserRefresh />
       <HomeSlider bannersData={homeData?.banners ?? []} />
       <PickUpArea />
@@ -51,7 +51,7 @@ const page = async ({ params }: Props) => {
       <WrapperContainer>
         <BussinessAccountsContent withOutStepper />
       </WrapperContainer>
-    </main>
+    </>
   );
 };
 

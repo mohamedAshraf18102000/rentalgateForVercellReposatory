@@ -27,6 +27,7 @@ const FavCategoryComponent = ({
           src="/rentalSearch/img2.webp"
           alt="bgApp2"
           fill
+          sizes="(max-width: 768px) 100vw, 50vw"
           className="object-cover scale-120"
         />
       </div>
