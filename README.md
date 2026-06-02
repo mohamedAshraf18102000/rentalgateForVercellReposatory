@@ -22,7 +22,7 @@ A modern Next.js application with full internationalization (i18n) support for A
 ## Project Structure
 
 ```
-almqam-web/
+rentalgate-web/
 ├── src/
 │   ├── app/
 │   │   ├── (components)/     # Shared components
