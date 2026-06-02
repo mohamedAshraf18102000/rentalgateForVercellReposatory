@@ -9,6 +9,7 @@ export const SEO_KEYS = {
     MY_BOOKINGS: "myBookings",
     WALLET: "wallet",
     OFFERED_CARS: "offeredCars",
+    TERMS_AND_CONDITIONS: "termsAndConditions",
 } as const;
 
 export type SeoKey = (typeof SEO_KEYS)[keyof typeof SEO_KEYS];

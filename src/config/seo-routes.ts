@@ -12,6 +12,7 @@ export const SEO_ROUTE_MAP: Record<string, SeoKey> = {
   userProfile: SEO_KEYS.USER_PROFILE,
   myBookings: SEO_KEYS.MY_BOOKINGS,
   wallet: SEO_KEYS.WALLET,
+  "terms&conditions": SEO_KEYS.TERMS_AND_CONDITIONS,
 };
 
 export function stripLocaleFromPathname(pathname: string): string {

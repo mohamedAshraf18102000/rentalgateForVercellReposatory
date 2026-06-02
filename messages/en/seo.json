@@ -40,5 +40,9 @@
     "description": "Browse rental cars in the {offerLabel} offer. Compare prices and book your car on Rental Gate.",
     "descriptionWithCount": "Browse {count} rental cars in the {offerLabel} offer. Compare prices and book on Rental Gate.",
     "fallbackDescription": "Browse cars included in special rental offers. Compare prices and book on Rental Gate."
+  },
+  "termsAndConditions": {
+    "title": "Terms and Conditions",
+    "description": "View the terms and conditions for Rental Gate. Learn about your rights and obligations as a user or business on Rental Gate."
   }
 }
