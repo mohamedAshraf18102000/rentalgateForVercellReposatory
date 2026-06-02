@@ -106,7 +106,7 @@ export function LocationTrigger({
     <button
       type="button"
       className={cn(
-        "flex items-center gap-1 cursor-pointer hover:bg-Grey100 p-1 rounded-xl transition duration-200  underline underline-offset-1 w-32 justify-center",
+        "flex items-center gap-1 cursor-pointer hover:bg-Grey100 p-1 rounded-xl transition duration-200  underline underline-offset-1 w-38 justify-center",
         className,
       )}
       title={userPhysical_Address?.toString()}
