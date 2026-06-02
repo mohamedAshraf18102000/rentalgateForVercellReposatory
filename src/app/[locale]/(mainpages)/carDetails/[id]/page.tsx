@@ -153,7 +153,7 @@ const page = () => {
 
   return (
     <>
-      <WrapperContainer exceedNav className="w-[75%]">
+      <WrapperContainer exceedNav className="sm:w-[75%]">
         <CarsDetailsBreadCrump />
         <div className="mt-10">
           <CarDetailsCard
