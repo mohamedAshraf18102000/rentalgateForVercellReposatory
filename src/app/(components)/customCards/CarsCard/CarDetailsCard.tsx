@@ -26,7 +26,12 @@ import { useMemo } from "react";
 import SpecificationsDialog from "./SpecificationsDialog";
 import WorkingTimes from "./WorkingTimes";
 import { normalizeImageUrl } from "@/util";
-import HangedOfferIcon from "./components/hangedOffer/HangedOfferIcon";
+import dynamic from "next/dynamic";
+
+const HangedOfferIcon = dynamic(
+  () => import("./components/hangedOffer/HangedOfferIcon"),
+  { ssr: false },
+);
 
 interface CarDetailsCardProps {
   car: Car;

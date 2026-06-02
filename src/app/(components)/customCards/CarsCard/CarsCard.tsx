@@ -16,7 +16,12 @@ import { formatPrice } from "@/lib/utils/formatPrice";
 import { getPriceWithoutTax } from "@/lib/utils/getPriceWithoutTax";
 import { useTranslations } from "next-intl";
 import { normalizeImageUrl } from "@/util";
-import HangedOfferIcon from "./components/hangedOffer/HangedOfferIcon";
+import dynamic from "next/dynamic";
+
+const HangedOfferIcon = dynamic(
+  () => import("./components/hangedOffer/HangedOfferIcon"),
+  { ssr: false },
+);
 import RatingStars from "./components/RatingStars";
 import { Button } from "../../ui/button";
 import { cn } from "@/lib/utils";
