@@ -21,6 +21,8 @@ export const Logo: React.FC<LogoProps> = ({ href, src, alt, className }) => (
       alt={alt}
       width={150}
       height={150}
+      loading="lazy"
+      fetchPriority="high"
       className="object-contain"
     />
   </Link>
