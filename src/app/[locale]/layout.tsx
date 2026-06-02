@@ -164,7 +164,7 @@ export default async function LocaleLayout({
     >
       <body
         style={{ fontFamily: fontAlmarai.style.fontFamily }}
-        className="flex min-h-[1500px] flex-col overflow-y-scroll"
+        className="flex flex-col overflow-y-scroll"
       >
         <NextIntlClientProvider messages={messages}>
           <TooltipProvider>
