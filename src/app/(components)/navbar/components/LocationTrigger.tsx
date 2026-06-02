@@ -106,7 +106,7 @@ export function LocationTrigger({
     <button
       type="button"
       className={cn(
-        "flex items-center gap-1 cursor-pointer hover:bg-Grey100 p-1 rounded-xl transition duration-200  underline underline-offset-1",
+        "flex items-center gap-1 cursor-pointer hover:bg-Grey100 p-1 rounded-xl transition duration-200  underline underline-offset-1 w-32 justify-center",
         className,
       )}
       title={userPhysical_Address?.toString()}
@@ -138,7 +138,7 @@ export function LocationTrigger({
           {translations.selectPickupLocation}
         </span>
       )} */}
-      <span className={cn("truncate max-w-26 text-sm", labelClassName)}>
+      <span className={cn("truncate text-sm ", labelClassName)}>
         {displayedAddress || translations.selectPickupLocation}
       </span>
       <ChevronDown className="w-4 h-4 shrink-0" />

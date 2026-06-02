@@ -39,7 +39,7 @@ export const MobileHeader: React.FC<MobileHeaderProps> = ({ translations }) => {
         </div>
         <LocationTrigger
           translations={translations}
-          className="w-[100px] text-black"
+          className="w-32 text-black"
           labelClassName="max-w-[6.5rem] text-xs"
         />
       </div>
