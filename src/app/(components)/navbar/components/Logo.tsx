@@ -26,7 +26,7 @@ export const Logo: React.FC<LogoProps> = ({ href, src, alt, className }) => (
       sizes="100px"
       loading="lazy"
       fetchPriority="high"
-      className="object-contain"
+      className="object-contain pointer-events-none"
     />
   </Link>
 );

@@ -47,13 +47,16 @@ export default function Footer() {
       <div className="container mx-auto px-4 md:px-6 py-6 md:py-8">
         <div className="flex flex-col md:flex-row items-center justify-between gap-6 md:gap-4">
           {/* Brand - Right in RTL */}
-          <Link href="/" className="relative block w-[150px] h-[40px] shrink-0">
+          <Link
+            href="/"
+            className="relative block w-[150px] h-[40px] shrink-0"
+          >
             <Image
               src="/RentalGateNewLogo.webp"
               alt="Rental Gate"
               fill
               sizes="150px"
-              className="object-contain brightness-0 invert"
+              className="object-contain brightness-0 invert pointer-events-none"
             />
           </Link>
 
