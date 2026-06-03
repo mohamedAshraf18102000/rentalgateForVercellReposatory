@@ -153,7 +153,16 @@ const CarSearchForm = ({
                     >
                       <p className="text-sm line-clamp-1">
                         {resolvedPickupName ? (
-                          <span>{resolvedPickupName}</span>
+                          <span>
+                            {filters.pickupType === "branches" && (
+                              <span>
+                                {filters.pickupType === "branches" &&
+                                  t("bookings.searchForm.branchPickup")}
+                                <span className="px-0.5">-</span>
+                              </span>
+                            )}
+                            {resolvedPickupName}
+                          </span>
                         ) : (
                           <span className="text-gray-500">
                             {t("bookings.searchForm.selectPickupLocation")}
