@@ -32,7 +32,7 @@ export const FavCategoryTabs: React.FC<PeriodSearchProps> = ({
             className="login-tab-trigger flex-1 h-auto p-0 bg-transparent data-[state=active]:bg-transparent"
           >
             <div className="h-fit p-2 flex flex-col gap-1 items-center">
-              <div className="w-full p-1 bg-[url(/cars/carCateforyBG.png)] bg-cover bg-center bg-no-repeat rounded-2xl">
+              <div className="w-full p-1 bg-[url(/cars/carCategoryBG.png)] bg-cover bg-center bg-no-repeat rounded-2xl">
                 <Image
                   src={normalizeImageUrl(category.icon)}
                   alt={category.name}

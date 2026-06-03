@@ -7,8 +7,8 @@ const Panner = () => {
   const t = useTranslations("carDetails");
   const backgroundImage =
     locale === "ar"
-      ? "bg-[url(/Panners/CarDetails/panner.png)]"
-      : "bg-[url(/Panners/CarDetails/pannerLTR.png)]";
+      ? "md:bg-[url(/Panners/CarDetails/panner.png)] bg-[url(/cars/carCategoryBG.png)]"
+      : "md:bg-[url(/Panners/CarDetails/pannerLTR.png)]";
 
   return (
     <div
