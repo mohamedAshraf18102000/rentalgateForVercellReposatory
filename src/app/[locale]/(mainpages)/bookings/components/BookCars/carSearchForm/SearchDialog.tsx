@@ -1,6 +1,7 @@
 "use client";
 import { Button, DialogWrapper, Input } from "@/app/(components)";
 import { Search, X } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 
 type SearchDialogProps = {
@@ -8,6 +9,7 @@ type SearchDialogProps = {
 };
 
 const SearchDialog = ({ onSearch }: SearchDialogProps) => {
+  const t = useTranslations("home");
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
 
@@ -42,7 +44,7 @@ const SearchDialog = ({ onSearch }: SearchDialogProps) => {
         <div className="flex items-center justify-between gap-2 rounded-lg! bg-Grey100 px-2 py-1">
           <Input
             type="text"
-            placeholder="بحث عن سيارة..."
+            placeholder={t("bookings.searchForm.carSearchPlaceholder")}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             onKeyDown={(e) => {
@@ -62,7 +64,7 @@ const SearchDialog = ({ onSearch }: SearchDialogProps) => {
           <button
             type="button"
             onClick={handleSearch}
-            aria-label="بحث"
+            aria-label={t("bookings.searchForm.search")}
             className="w-10 h-10 bg-black text-white rounded-xl p-0.5 cursor-pointer flex items-center justify-center"
           >
             <Search className="w-7 h-7" />

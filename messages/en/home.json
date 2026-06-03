@@ -117,6 +117,8 @@
       "sortPriceInactive": "Sort by price",
       "sortPriceAscending": "Sort by price: lowest first",
       "sortPriceDescending": "Sort by price: highest first",
+      "carSearchPlaceholder": "Search for a car...",
+      "search": "Search",
       "restrictedAirportLocation": "Your current address is an airport. Please choose from the available airports.",
       "restrictedTrainStationLocation": "Your current address is a train station. Please choose from the available train stations."
     },

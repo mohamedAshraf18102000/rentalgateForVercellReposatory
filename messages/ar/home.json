@@ -117,6 +117,8 @@
       "sortPriceInactive": "ترتيب حسب السعر",
       "sortPriceAscending": "ترتيب السعر: من الأقل للأعلى",
       "sortPriceDescending": "ترتيب السعر: من الأعلى للأقل",
+      "carSearchPlaceholder": "بحث عن سيارة...",
+      "search": "بحث",
       "restrictedAirportLocation": "عنوانك الحالي هو مطار يرجي اختيار من المطارات المتاحة",
       "restrictedTrainStationLocation": "عنوانك الحالي هو محطة قطار يرجي اختيار من محطات القطار المتاحة"
     },
