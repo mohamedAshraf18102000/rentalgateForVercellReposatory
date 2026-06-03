@@ -288,6 +288,26 @@ const StepOne = ({ control, errors, watch, setValue }: StepOneProps) => {
       );
       setValue("returnTrainId", updatedFormData.returnTrainId || null);
       setValue("returnAirportId", updatedFormData.returnAirportId || null);
+
+      setBookedCarFormData({
+        carReturnLocation: locationName,
+        returnLat:
+          updatedFormData.returnType === "MY_LOCATION" &&
+          (!updatedFormData.returnLat ||
+            updatedFormData.carReturnLocation === currentLocationLabel)
+            ? userPhysical_Latitude
+            : updatedFormData.returnLat || null,
+        returnLong:
+          updatedFormData.returnType === "MY_LOCATION" &&
+          (!updatedFormData.returnLong ||
+            updatedFormData.carReturnLocation === currentLocationLabel)
+            ? userPhysical_Longitude
+            : updatedFormData.returnLong || null,
+        carReturnLocationId: updatedFormData.carReturnLocationId || null,
+        returnTrainId: updatedFormData.returnTrainId || null,
+        returnAirportId: updatedFormData.returnAirportId || null,
+        returnType: updatedFormData.returnType,
+      });
     });
     setIsCurrentLocationTabDisabled(shouldDisableCurrentLocationTab);
   };
@@ -463,6 +483,16 @@ const StepOne = ({ control, errors, watch, setValue }: StepOneProps) => {
       setValue("pickupId", updatedFormData.pickupId || null);
       setValue("pickupTrainId", updatedFormData.pickupTrainId || null);
       setValue("pickupAirportId", updatedFormData.pickupAirportId || null);
+
+      setBookedCarFormData({
+        pickupName: locationName,
+        pickupLat: pickupLatValue,
+        pickupLong: pickupLongValue,
+        pickupId: updatedFormData.pickupId || null,
+        pickupTrainId: updatedFormData.pickupTrainId || null,
+        pickupAirportId: updatedFormData.pickupAirportId || null,
+        pickupType: updatedFormData.pickupType,
+      });
 
       if (!isDropoffManuallyChanged) {
         const syncedReturnType = inferLocationType({

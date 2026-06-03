@@ -67,6 +67,8 @@ const page = () => {
 
   const calculateUserQoutePayload = buildReservationPayload(formData);
 
+  console.log(carDetails?.latitude, carDetails?.longitude);
+
   const {
     mutate: calculateQuotePrice,
     mutateAsync: calculateQuotePriceAsync,

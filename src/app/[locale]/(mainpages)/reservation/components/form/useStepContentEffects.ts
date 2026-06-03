@@ -12,6 +12,7 @@ import {
   mapValuesToFormData,
 } from "./stepContentFormValues";
 import {
+  enrichBranchCoordinatesFromCar,
   sessionFiltersToPickupReservationPatch,
   sessionFiltersToReturnReservationPatch,
 } from "@/lib/booking/sessionFiltersLocationPatch";
@@ -260,18 +261,27 @@ export const useSyncFormToStores = ({
       }
     }
 
-    setFormData({
-      ...mapValuesToFormData(getValues()),
-      ...sessionFiltersToReturnReservationPatch(filters),
-      ...sessionFiltersToPickupReservationPatch(filters),
-    });
+    const syncFormToStore = (
+      values: Partial<Record<keyof ReservationFormValues, unknown>>,
+    ) => {
+      const { formData: currentFormData, carDetails } =
+        useBookedCarDetailsStore.getState();
+      const patch = enrichBranchCoordinatesFromCar(
+        {
+          ...mapValuesToFormData(values),
+          ...sessionFiltersToReturnReservationPatch(filters),
+          ...sessionFiltersToPickupReservationPatch(filters),
+        },
+        carDetails,
+        currentFormData,
+      );
+      setFormData(patch);
+    };
+
+    syncFormToStore(getValues());
 
     const subscription = watch((value) => {
-      setFormData({
-        ...mapValuesToFormData(value),
-        ...sessionFiltersToReturnReservationPatch(filters),
-        ...sessionFiltersToPickupReservationPatch(filters),
-      });
+      syncFormToStore(value);
 
       if (value.fromDate) {
         const formattedFromDate = formatLocalDateTime(value.fromDate);

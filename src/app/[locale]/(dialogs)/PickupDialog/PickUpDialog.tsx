@@ -63,6 +63,8 @@ export function PickupDialog({ title }: { title?: string }) {
         setFilter("pickupType", "branches");
         setFilter("pickupId", String(carDetails.branchId));
         setFilter("pickupName", carDetails.branchName);
+        setFilter("pickupLat", carDetails.latitude);
+        setFilter("pickupLng", carDetails.longitude);
         setFilter("pickupAirportId", undefined);
         setFilter("pickupTrainId", undefined);
       }
