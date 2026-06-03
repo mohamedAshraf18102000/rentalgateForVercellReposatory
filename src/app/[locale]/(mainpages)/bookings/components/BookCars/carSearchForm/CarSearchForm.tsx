@@ -14,14 +14,12 @@ import PaginationDateView from "@/app/(components)/PaginationDateView";
 import { Separator } from "@/app/(components)/ui/separator";
 import FilterDrawer from "../FilterDrawer";
 import { useUserPreferedFiltersStore } from "@/lib/stores/useUserPreferedFiltersStore";
-import { useLocationStore } from "@/lib/stores/useLocationStore";
 import { useBookedCarDetailsStore } from "@/lib/stores/useBookedCarDetailsStore";
 import { usePickupDialogStore } from "@/lib/stores/usePickupDialogStore";
 import { useGetAirports } from "@/hooks/api/useGetAirports";
 import { useGetTrainStations } from "@/hooks/api/useGetTrainStations";
 import { detectPickupCategory } from "@/lib/utils/pickupLocationCategory";
 import { useTranslations } from "next-intl";
-import { useEffect } from "react";
 import SearchDialog from "./SearchDialog";
 
 const CarSearchForm = ({
@@ -39,12 +37,7 @@ const CarSearchForm = ({
   const t = useTranslations("home");
   const fromDate = watch("fromDate");
   const toDate = watch("toDate");
-  const { filters, setFilter } = useUserPreferedFiltersStore();
-  const {
-    userPhysical_Address,
-    userPhysical_Latitude,
-    userPhysical_Longitude,
-  } = useLocationStore();
+  const { filters } = useUserPreferedFiltersStore();
   const { openDialog, setIsCurrentLocationTabDisabled } =
     usePickupDialogStore();
   const { data: airportsData } = useGetAirports();
@@ -56,18 +49,17 @@ const CarSearchForm = ({
     (state) => state.setShowPricesWithTax,
   );
 
-  const hasStorePickupCoordinates =
-    filters.pickupLat != null && filters.pickupLng != null;
-  const effectivePickupAddress = hasStorePickupCoordinates
-    ? filters.pickupName || userPhysical_Address
-    : userPhysical_Address;
-  const effectivePickupLatitude = hasStorePickupCoordinates
-    ? filters.pickupLat
-    : userPhysical_Latitude;
-  const effectivePickupLongitude = hasStorePickupCoordinates
-    ? filters.pickupLng
-    : userPhysical_Longitude;
+  const hasExplicitPickupSelection = Boolean(
+    filters.pickupType ||
+    filters.pickupName?.trim() ||
+    filters.pickupLat != null ||
+    filters.pickupLng != null,
+  );
+  const effectivePickupAddress = filters.pickupName?.trim() || "";
+  const effectivePickupLatitude = filters.pickupLat ?? null;
+  const effectivePickupLongitude = filters.pickupLng ?? null;
   const detectedCurrentLocationCategory =
+    hasExplicitPickupSelection &&
     effectivePickupAddress &&
     effectivePickupLatitude != null &&
     effectivePickupLongitude != null
@@ -93,24 +85,6 @@ const CarSearchForm = ({
     : isTrainStationLocation
       ? t("bookings.searchForm.restrictedTrainStationLocation")
       : null;
-
-  useEffect(() => {
-    // Keep pickup label in sync when the global current-location changes.
-    if (
-      userPhysical_Address &&
-      filters.pickupType === "currentLocation" &&
-      !hasStorePickupCoordinates &&
-      filters.pickupName !== userPhysical_Address
-    ) {
-      setFilter("pickupName", userPhysical_Address);
-    }
-  }, [
-    userPhysical_Address,
-    filters.pickupName,
-    filters.pickupType,
-    hasStorePickupCoordinates,
-    setFilter,
-  ]);
 
   const handleOpenLocationDialog = () => {
     const appliedTabMap: Record<

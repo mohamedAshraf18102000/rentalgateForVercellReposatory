@@ -34,12 +34,9 @@ const hasAppliedFilters = (filters?: CarFilters): boolean =>
       filters.trainStationId,
       filters.brandId,
       filters.typeId,
-      filters.searchType,
       filters.priceType,
       filters.sortBy,
       filters.name,
-      filters.longitude,
-      filters.latitude,
     ].some((value) => value !== undefined && value !== null && value !== ""),
   );
 
@@ -64,6 +61,10 @@ export const getCompanyCars = async (
 
     if (longitude != null) {
       query.push(`longitude=${longitude}`);
+    }
+
+    if (filters?.searchType) {
+      query.push(`searchType=${filters.searchType}`);
     }
   } else if (filters) {
     const addParam = (key: string, value?: string | number) => {

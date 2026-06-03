@@ -78,6 +78,7 @@ const GoogleMapsLocation = ({
   const mapRef = useRef<google.maps.Map | null>(null);
   const onLocationChangeRef = useRef(onLocationChange);
   const hasCalledInitialChange = useRef(false);
+  const hasCompletedInitialSetup = useRef(false);
 
   useEffect(() => {
     onLocationChangeRef.current = onLocationChange;
@@ -133,6 +134,10 @@ const GoogleMapsLocation = ({
   }, [disableInitialGeolocation, selectedLat, selectedLng]);
 
   useEffect(() => {
+    if (hasCompletedInitialSetup.current) {
+      return;
+    }
+
     const setup = async () => {
       if (initialLat && initialLng) {
         await initializeLocation(initialLat, initialLng);
@@ -167,15 +172,14 @@ const GoogleMapsLocation = ({
       }
     };
 
-    setup();
+    void setup().finally(() => {
+      hasCompletedInitialSetup.current = true;
+    });
   }, [
     disableInitialGeolocation,
     initialLat,
     initialLng,
-    selectedLat,
-    selectedLng,
     storeless,
-    userPhysical_Address,
     userPhysical_Latitude,
     userPhysical_Longitude,
   ]);

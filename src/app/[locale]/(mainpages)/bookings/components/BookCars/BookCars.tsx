@@ -50,6 +50,19 @@ const BookCars = () => {
     appliedFilters.pickupLng != null,
   );
 
+  const pickupLatitude =
+    appliedFilters.pickupLat ??
+    (appliedFilters.pickupType === "currentLocation"
+      ? userPhysical_Latitude
+      : null) ??
+    undefined;
+  const pickupLongitude =
+    appliedFilters.pickupLng ??
+    (appliedFilters.pickupType === "currentLocation"
+      ? userPhysical_Longitude
+      : null) ??
+    undefined;
+
   const apiFilters = {
     userPhysicalLongitudeFilter: hasAppliedPickupFilter
       ? undefined
@@ -58,8 +71,8 @@ const BookCars = () => {
       ? undefined
       : (userPhysical_Latitude ?? undefined),
 
-    longitude: appliedFilters.pickupLng ?? undefined,
-    latitude: appliedFilters.pickupLat ?? undefined,
+    longitude: pickupLongitude,
+    latitude: pickupLatitude,
     minPrice: appliedFilters.priceMin || undefined,
     maxPrice: appliedFilters.priceTo || undefined,
     categoryId: appliedFilters.categoryId || undefined,
@@ -72,7 +85,11 @@ const BookCars = () => {
         ? appliedFilters.pickupId || undefined
         : undefined,
     searchType:
-      appliedFilters.pickupType === "branches" ? "branch" : undefined,
+      appliedFilters.pickupType === "branches"
+        ? "branch"
+        : appliedFilters.pickupType === "currentLocation"
+          ? "location"
+          : undefined,
     locationType: appliedFilters.pickupType === "branches" ? "1" : undefined,
     brandId: appliedFilters.brandId || undefined,
     name: carSearchName || undefined,

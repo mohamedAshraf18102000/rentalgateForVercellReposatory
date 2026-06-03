@@ -11,7 +11,7 @@ import {
 } from "@/lib/utils/geolocation";
 import { findNearestSavedAddress } from "@/lib/utils/matchSavedAddress";
 import { reverseGeocodeWithDetails } from "@/lib/utils/reverseGeocode";
-import { LocateFixed } from "lucide-react";
+import { LocateFixed, MapPinOff } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { getUserAddress } from "@/services/userProfile/getUserAddress.service";
 import { UserAddress } from "@/types/userProfile/userAddress";
@@ -19,6 +19,7 @@ import { UserSavedAddresses } from "./UserSavedAddresses";
 import { useUserPreferedFiltersStore } from "@/lib/stores/useUserPreferedFiltersStore";
 import { getAuthToken } from "@/util/auth";
 import { useTranslations } from "next-intl";
+import { Spinner } from "@/app/(components)/ui/spinner";
 
 type TempLocation = {
   lat: number;
@@ -52,7 +53,10 @@ function CurrentLocationDialogContent() {
   const [geolocationError, setGeolocationError] =
     useState<GeolocationFailureReason | null>(null);
   const [isAutoDetecting, setIsAutoDetecting] = useState(false);
+  const [locationDetectAttempt, setLocationDetectAttempt] = useState(0);
   const hasManualMapEditRef = useRef(false);
+  const geolocationErrorRef = useRef(geolocationError);
+  geolocationErrorRef.current = geolocationError;
   const pathname = usePathname();
   const isTermsPage = pathname.includes("/terms&conditions");
   const setFilter = useUserPreferedFiltersStore((state) => state.setFilter);
@@ -67,7 +71,7 @@ function CurrentLocationDialogContent() {
     }
     const hasClosed = sessionStorage.getItem("hasClosedLocationDialog");
     if (!hasClosed) {
-      const timer = setTimeout(() => openDialog("auto"), 30_000);
+      const timer = setTimeout(() => openDialog("auto"), 3000);
       return () => clearTimeout(timer);
     }
   }, [isTermsPage, openDialog]);
@@ -131,6 +135,65 @@ function CurrentLocationDialogContent() {
     filters.pickupName,
     isDialogOpen,
   ]);
+
+  useEffect(() => {
+    if (
+      !isDialogOpen ||
+      dialogOpenSource === "filterComponent" ||
+      isSessionManualLocation
+    ) {
+      return;
+    }
+
+    if (typeof navigator === "undefined" || !navigator.permissions?.query) {
+      return;
+    }
+
+    let permissionStatus: PermissionStatus | undefined;
+
+    const retryDetectionIfGranted = () => {
+      if (
+        permissionStatus?.state === "granted" &&
+        geolocationErrorRef.current
+      ) {
+        setLocationDetectAttempt((attempt) => attempt + 1);
+      }
+    };
+
+    const checkPermissionAfterReturn = () => {
+      void navigator.permissions
+        ?.query({ name: "geolocation" })
+        .then((status) => {
+          if (status.state === "granted" && geolocationErrorRef.current) {
+            setLocationDetectAttempt((attempt) => attempt + 1);
+          }
+        })
+        .catch(() => {});
+    };
+
+    void navigator.permissions
+      .query({ name: "geolocation" })
+      .then((status) => {
+        permissionStatus = status;
+        status.addEventListener("change", retryDetectionIfGranted);
+      })
+      .catch(() => {});
+
+    const onVisibilityChange = () => {
+      if (document.visibilityState === "visible") {
+        checkPermissionAfterReturn();
+      }
+    };
+
+    window.addEventListener("focus", checkPermissionAfterReturn);
+    document.addEventListener("visibilitychange", onVisibilityChange);
+
+    return () => {
+      permissionStatus?.removeEventListener("change", retryDetectionIfGranted);
+      window.removeEventListener("focus", checkPermissionAfterReturn);
+      document.removeEventListener("visibilitychange", onVisibilityChange);
+    };
+  }, [dialogOpenSource, isDialogOpen, isSessionManualLocation]);
 
   useEffect(() => {
     if (!isDialogOpen || dialogOpenSource === "filterComponent") {
@@ -207,6 +270,7 @@ function CurrentLocationDialogContent() {
         }
 
         await applyDetectedLocation(coords.latitude, coords.longitude);
+        setGeolocationError(null);
       } catch (error) {
         if (isCancelled) {
           return;
@@ -234,6 +298,7 @@ function CurrentLocationDialogContent() {
     dialogOpenSource,
     isDialogOpen,
     isSessionManualLocation,
+    locationDetectAttempt,
     userPhysical_Address,
     userPhysical_AddressId,
     userPhysical_Latitude,
@@ -331,16 +396,31 @@ function CurrentLocationDialogContent() {
         >
           <div className="flex flex-col gap-1 p-2">
             <div className="flex gap-2">
-              <LocateFixed className="shrink-0" />
+              {geolocationError === "permission_denied" && !displayedAddress ? (
+                <MapPinOff className="shrink-0 text-StatusRed" />
+              ) : (
+                <LocateFixed className="shrink-0" />
+              )}
               <span>
-                {isAutoDetecting && !displayedAddress
-                  ? t("pickupDialog.detectingLocation")
-                  : displayedAddress}
+                {isAutoDetecting && !displayedAddress ? (
+                  <span className="flex items-center gap-2">
+                    {t("pickupDialog.detectingLocation")}
+                    <Spinner className="size-4" />{" "}
+                  </span>
+                ) : (
+                  displayedAddress
+                )}
               </span>
+              {geolocationErrorMessage &&
+              !isFilterDialog &&
+              !displayedAddress ? (
+                <p
+                  className={`text-sm text-Grey600 ${geolocationError === "permission_denied" ? "text-StatusRed" : ""}`}
+                >
+                  {geolocationErrorMessage}
+                </p>
+              ) : null}
             </div>
-            {geolocationErrorMessage && !isFilterDialog ? (
-              <p className="text-sm text-Grey600 ps-8">{geolocationErrorMessage}</p>
-            ) : null}
           </div>
           <GoogleMapsLocation
             storeless
@@ -361,9 +441,7 @@ function CurrentLocationDialogContent() {
                 lat,
                 lng,
                 address: addr,
-                addressId: isManual
-                  ? undefined
-                  : dialogTempLocation?.addressId,
+                addressId: isManual ? undefined : dialogTempLocation?.addressId,
               });
             }}
           />

@@ -9,9 +9,9 @@ import { getUserAddress } from "@/services/userProfile/getUserAddress.service";
 import { UserAddress } from "@/types/userProfile/userAddress";
 
 const HomeBranchesLocations = () => {
-  const { setFormData } = useBookedCarDetailsStore();
-  const { setFilter } = useUserPreferedFiltersStore();
-  const { setIsUnsavedMapLocation } = usePickupDialogStore();
+  const { setFormData, formData } = useBookedCarDetailsStore();
+  const { setFilter, filters } = useUserPreferedFiltersStore();
+  const { setIsUnsavedMapLocation, setActiveTab } = usePickupDialogStore();
   const [userAddresses, setUserAddresses] = useState<UserAddress[]>([]);
   const [tempLocation, setTempLocationState] = useState<{
     lat: number;
@@ -43,6 +43,7 @@ const HomeBranchesLocations = () => {
     lng: number,
     address: string,
   ) => {
+    setActiveTab("branches");
     setFormData({
       pickupType: "BRANCH",
       branchId: null,
@@ -71,10 +72,18 @@ const HomeBranchesLocations = () => {
     handleBranchMapSelection(location.lat, location.lng, location.address);
   };
 
+  const initialLat =
+    tempLocation?.lat ?? formData.pickupLat ?? filters.pickupLat ?? undefined;
+  const initialLng =
+    tempLocation?.lng ?? formData.pickupLong ?? filters.pickupLng ?? undefined;
+
   return (
     <div className="relative p-2">
       <GoogleMapsLocation
         storeless
+        disableInitialGeolocation={initialLat != null && initialLng != null}
+        initialLat={initialLat}
+        initialLng={initialLng}
         selectedLat={tempLocation?.lat}
         selectedLng={tempLocation?.lng}
         onLocationChange={(lat, lng, address) => setTempLocation({ lat, lng, address })}

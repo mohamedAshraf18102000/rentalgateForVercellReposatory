@@ -2,7 +2,6 @@ import useUserAddreses from "@/hooks/api/useUserAddreses";
 import { UserAddress } from "@/types/userProfile/userAddress";
 import { usePickupDialogStore } from "@/lib/stores/usePickupDialogStore";
 import { useBookedCarDetailsStore } from "@/lib/stores/useBookedCarDetailsStore";
-import { useLocationStore } from "@/lib/stores/useLocationStore";
 import { useAuth } from "../../navbar/hooks/useAuth";
 import { useLocale, useTranslations } from "next-intl";
 import { ReverseGeocodeMeta } from "@/lib/utils/reverseGeocode";
@@ -14,6 +13,7 @@ import UpdateUserSavedLocationDialog from "@/app/[locale]/(mainpages)/userProfil
 import { useState } from "react";
 import { useDialog } from "@/app/[locale]/(dialogs)";
 import { Skeleton } from "../../ui/skeleton";
+import { useUserPreferedFiltersStore } from "@/lib/stores/useUserPreferedFiltersStore";
 
 const HomeUserCurrentLocation = () => {
   const { authenticated } = useAuth();
@@ -27,17 +27,14 @@ const HomeUserCurrentLocation = () => {
   const [isAddLocationDialogOpen, setIsAddLocationDialogOpen] = useState(false);
 
   const { setFormField, formData } = useBookedCarDetailsStore();
+  const setFilter = useUserPreferedFiltersStore((state) => state.setFilter);
   const {
     target,
     closeDialog,
     setIsUnsavedMapLocation,
-    setActiveTab,
     setIsCurrentLocationTabDisabled,
   } = usePickupDialogStore();
   const { openDialog } = useDialog();
-  const setUserPhysical_Location = useLocationStore(
-    (state) => state.setUserPhysical_Location,
-  );
 
   const isAirport =
     target === "return"
@@ -65,17 +62,9 @@ const HomeUserCurrentLocation = () => {
         : formData.pickupLong || undefined;
 
   const handleSelectAddress = (address: UserAddress) => {
-    setUserPhysical_Location(
-      address.latitude,
-      address.longitude,
-      address.addressName,
-      address.addressId,
-      { isSessionManual: true },
-    );
     setIsUnsavedMapLocation(false);
     setIsCurrentLocationTabDisabled(false);
     if (target === "return") {
-      // Update BookedCarDetailsStore only
       setFormField("carReturnLocation", address.addressName);
       setFormField("returnLat", address.latitude);
       setFormField("returnLong", address.longitude);
@@ -83,8 +72,14 @@ const HomeUserCurrentLocation = () => {
       setFormField("carReturnLocationId", String(address.addressId));
       setFormField("returnAirportId", null);
       setFormField("returnTrainId", null);
+      setFilter("carReturnLocationType", "currentLocation");
+      setFilter("carReturnLocation", address.addressName);
+      setFilter("carReturnLocationLat", address.latitude);
+      setFilter("carReturnLocationLng", address.longitude);
+      setFilter("carReturnLocationId", String(address.addressId));
+      setFilter("carReturnAirportId", undefined);
+      setFilter("carReturnTrainId", undefined);
     } else {
-      // Update BookedCarDetailsStore only
       setFormField("pickupName", address.addressName);
       setFormField("pickupLat", address.latitude);
       setFormField("pickupLong", address.longitude);
@@ -92,6 +87,13 @@ const HomeUserCurrentLocation = () => {
       setFormField("pickupId", String(address.addressId));
       setFormField("pickupAirportId", null);
       setFormField("pickupTrainId", null);
+      setFilter("pickupType", "currentLocation");
+      setFilter("pickupName", address.addressName);
+      setFilter("pickupLat", address.latitude);
+      setFilter("pickupLng", address.longitude);
+      setFilter("pickupId", String(address.addressId));
+      setFilter("pickupAirportId", undefined);
+      setFilter("pickupTrainId", undefined);
     }
   };
 

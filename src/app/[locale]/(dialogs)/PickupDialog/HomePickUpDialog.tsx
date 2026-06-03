@@ -184,7 +184,7 @@ export function HomePickUpDialog({ title }: { title?: string }) {
         }}
         content={<HomePickupDialogTabs customDefaultValue={activeTab} />}
         footer={
-          <div className="mt-2 flex justify-end gap-2 sm:flex-row sm:items-center sm:justify-end">
+          <div className="mt-2 flex justify-end gap-2 sm:flex-row sm:items-center sm:justify-end md:w-full">
             <button
               onClick={closeDialog}
               className="w-fit px-2 py-3 text-center font-normal text-primary underline underline-offset-3 sm:w-fit "

@@ -1,7 +1,6 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import WrapperContainer from "../wrapperContainer/WrapperContainer";
 import { usePickupDialogStore } from "@/lib/stores/usePickupDialogStore";
-import { useUserPreferedFiltersStore } from "@/lib/stores/useUserPreferedFiltersStore";
 import HomeUserCurrentLocation from "./TabsContent/HomeUserCurrentLocation";
 import HomeAirportLocations from "./TabsContent/HomeAirportLocations";
 import HomeTrainLocations from "./TabsContent/HomeTrainLocations";
@@ -13,9 +12,8 @@ const HomePickupDialogTabs = ({
 }: {
   customDefaultValue: string;
 }) => {
-  const { isCurrentLocationTabDisabled, target, activeTab, setActiveTab } =
+  const { isCurrentLocationTabDisabled, activeTab, setActiveTab } =
     usePickupDialogStore();
-  const { filters, setFilter } = useUserPreferedFiltersStore();
   const t = useTranslations("home");
   const locale = useLocale();
   const dir = locale === "ar" ? "rtl" : "ltr";
@@ -29,17 +27,6 @@ const HomePickupDialogTabs = ({
       defaultValue={customDefaultValue}
       onValueChange={(value) => {
         setActiveTab(value as "currentLocation" | "airport" | "trainStation" | "branches");
-        if (target === "return") {
-          setFilter(
-            "carReturnLocationType",
-            value as "currentLocation" | "airport" | "trainStation" | "branches",
-          );
-        } else {
-          setFilter(
-            "pickupType",
-            value as "currentLocation" | "airport" | "trainStation" | "branches",
-          );
-        }
       }}
     >
       <WrapperContainer className="w-full">
