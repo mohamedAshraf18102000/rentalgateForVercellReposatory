@@ -20,6 +20,7 @@ export type CarCategory = {
 
 export type Company = {
   id: number;
+  averageRating: number;
   englishName: string;
   arabicName: string;
   countryId: number;
@@ -138,6 +139,7 @@ export type Client = {
 
 export type LastSeenCompany = {
   companyId: number;
+  averageRating: number;
   englishName: string;
   arabicName: string;
   logo: string;

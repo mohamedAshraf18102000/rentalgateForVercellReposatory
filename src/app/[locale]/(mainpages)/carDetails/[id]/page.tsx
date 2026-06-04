@@ -41,6 +41,8 @@ const page = () => {
     queryFn: () => getCompanyCarsByID(Number(id)),
   });
 
+  console.log("data", data);
+
   useEffect(() => {
     if (id == null || id === "") return;
     const ccbId = Number(id);
@@ -158,6 +160,7 @@ const page = () => {
         <div className="mt-10">
           <CarDetailsCard
             daysForFreeDelivery={data?.daysForFreeDelivery}
+            rate={data?.company?.averageRating ?? 0}
             workingTime={data?.workingHours}
             dailyPrice={data?.dailyPrice}
             freeKm={data.allowedKm}
@@ -176,7 +179,6 @@ const page = () => {
             originalTotalPrice={originalPricing.totalPrice}
             rentalDays={rentalDays}
             showRating={data.showRating}
-            rate={data.rate}
             showTax={showPricesWithTax}
           />
         </div>

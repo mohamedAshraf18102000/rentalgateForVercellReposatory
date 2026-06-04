@@ -112,6 +112,7 @@ export interface OfferedCar {
 // ─────────────────────────────
 export interface Company {
     companyId: number;
+    averageRating: number;
     englishName: string;
     arabicName: string;
     logo: string;

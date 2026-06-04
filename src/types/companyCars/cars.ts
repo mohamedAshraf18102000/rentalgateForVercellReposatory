@@ -1,5 +1,6 @@
 export interface CarContent {
   ccbId: number;
+  companyAverageRating: number;
   carNameEn: string
   carNameAr: string
   companyName: string;

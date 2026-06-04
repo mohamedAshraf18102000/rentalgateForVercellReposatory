@@ -11,7 +11,6 @@ import CarsCard from "../customCards/CarsCard/CarsCard";
 import { useRouter } from "next/navigation";
 import { type LastSeen } from "@/types/home/home";
 import { normalizeImageUrl } from "@/util";
-import { calculateDiscount } from "@/lib/utils/calculateDiscount";
 
 interface MoreRequestedCarsCarouselProps {
   data: LastSeen[];
@@ -48,6 +47,7 @@ const MoreRequestedCarsCarousel = ({
                 className="basis-[90%] sm:basis-1/2 lg:basis-1/3 xl:basis-1/4"
               >
                 <CarsCard
+                  rate={branch.company.averageRating}
                   daysForFreeDelivery={branch.daysForFreeDelivery}
                   className="h-full w-full min-w-0"
                   onClick={() => {

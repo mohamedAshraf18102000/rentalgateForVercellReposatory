@@ -14,6 +14,7 @@ const mapOfferCarToCarContent = (
   offerValue: number | null,
 ): CarContent => ({
   ccbId: car.ccbId,
+  companyAverageRating: car.company.averageRating,
   carNameEn:
     `${car.car.brandNameEnglish} ${car.car.typeNameEnglish} ${car.car.year}`.trim() ||
     car.car.carName,

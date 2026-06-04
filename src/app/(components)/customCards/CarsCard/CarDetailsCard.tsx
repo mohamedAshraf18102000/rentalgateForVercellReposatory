@@ -40,6 +40,7 @@ interface CarDetailsCardProps {
   unlimitedKm: number;
   ccbId: number;
   daysForFreeDelivery?: number | null;
+  rate: number;
   // ── Shared props (same as CarsCard BaseCardProps) ──
   advancedCard?: boolean;
   extraBadgeTitle?: string;
@@ -63,7 +64,6 @@ interface CarDetailsCardProps {
   originalTotalPrice?: number;
   rentalDays?: number;
   showRating?: boolean;
-  rate?: number;
   dailyPrice?: number;
   showTax?: boolean;
   specifications?: Specification[];
@@ -96,6 +96,8 @@ const CarDetailsCard = ({
   specifications = [],
   workingTime,
 }: CarDetailsCardProps) => {
+  console.log("rate",rate);
+
   const router = useRouter();
   const locale = useLocale();
   const t = useTranslations("carDetails");
@@ -199,7 +201,7 @@ const CarDetailsCard = ({
 
             {showRating && (
               <div className="flex items-center gap-1">
-                <data value="4.2" className="text-sm sm:text-base">
+                <data value={String(rate)} className="text-sm sm:text-base">
                   {rate}
                 </data>
                 <StarIcon />

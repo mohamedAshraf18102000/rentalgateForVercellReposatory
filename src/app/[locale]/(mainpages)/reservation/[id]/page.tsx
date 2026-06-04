@@ -511,6 +511,7 @@ const page = () => {
             <div className="w-full lg:w-1/4">
               <div className="">
                 <CarsCard
+                  rate={carDetails?.company?.averageRating ?? 0}
                   showTax={isShowTax}
                   freeKm={carDetails?.allowedKm}
                   carName={carDetails?.car.carName}

@@ -122,7 +122,7 @@ export interface Car {
 
 export interface Company {
   companyId: number;
-
+  averageRating: number;
   englishName: string;
   arabicName: string;
 

@@ -29,6 +29,7 @@ import ExeclusiveOfferIcon from "@/constants/icons/ExeclusiveOfferIcon";
 import RoundedRec from "@/constants/icons/RoundedRec";
 
 interface carsCard {
+  rate: number;
   daysForFreeDelivery?: number | null;
   advancedCard?: boolean;
   extraBadgeTitle?: string;
@@ -54,6 +55,7 @@ interface carsCard {
 }
 
 const CarsCard = ({
+  rate,
   daysForFreeDelivery,
   advancedCard,
   extraBadgeTitle,
@@ -88,8 +90,6 @@ const CarsCard = ({
     hasDisplayedPrice &&
     typeof priceBeforeOffer === "number" &&
     priceBeforeOffer > displayedPrice;
-
-  const rate = 4.2;
 
   return (
     <article>
@@ -173,15 +173,19 @@ const CarsCard = ({
               </div>
 
               <div className="flex items-center gap-1">
-                <data
-                  value={String(rate)}
-                  className="text-sm font-bold sm:text-base"
-                >
-                  {rate}
-                </data>
-                <div className="flex items-center" aria-hidden>
-                  <RatingStars rating={rate} />
-                </div>
+                {rate && (
+                  <>
+                    <data
+                      value={String(rate)}
+                      className="text-sm font-bold sm:text-base"
+                    >
+                      {rate}
+                    </data>
+                    <div className="flex items-center" aria-hidden>
+                      <RatingStars rating={rate} />
+                    </div>
+                  </>
+                )}
               </div>
             </div>
           </CardContent>
