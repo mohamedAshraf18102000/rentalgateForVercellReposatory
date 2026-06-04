@@ -5,61 +5,40 @@ import {
   SheetTitle,
 } from "@/app/(components)/ui/sheet";
 import { ArrowLeft, ArrowRight, Car, UserStar } from "lucide-react";
-import { useState } from "react";
 import { useLocale } from "next-intl";
 import RComponent from "./RComponent";
 import { Textarea } from "@/app/(components)/ui/textarea";
 import { Label } from "@/app/(components)/ui/label";
 import TextAreaIcon from "@/constants/icons/profile/TextAreaIcon";
-import { useCreateRating } from "@/hooks/api/booking/useCreateRating";
-import { toast } from "sonner";
-
+import ServiceRateIcon from "../../../../../../../public/extraSVGIcons/ServiceRateIcon";
+import { Controller } from "react-hook-form";
+import CompanyRateIcon from "../../../../../../../public/extraSVGIcons/CompanyRateIcon";
+import { useRating } from "./RatingExtras/useRating";
 interface RatingProps {
   onBack?: () => void;
   reservationId?: number | null;
+  reservation_deliver_type?: string;
+  reservation_receive_type?: string;
+  driver_price?: number;
 }
-
-const Rating = ({ onBack, reservationId }: RatingProps) => {
+const Rating = ({
+  onBack,
+  reservationId,
+  reservation_deliver_type,
+  reservation_receive_type,
+  driver_price,
+}: RatingProps) => {
   const locale = useLocale();
   const isRTL = locale === "ar";
   const BackIcon = isRTL ? ArrowRight : ArrowLeft;
-  const [driverRating, setDriverRating] = useState(5);
-  const [carRating, setCarRating] = useState(5);
-  const [comments, setComments] = useState("");
-  const { mutate: createRating, isPending: isCreatingRating } =
-    useCreateRating();
-
-  const handleSubmitRating = () => {
-    if (!reservationId) {
-      toast.error("لا يوجد رقم حجز صالح", {
-        position: "top-center",
-      });
-      return;
-    }
-
-    createRating(
-      {
-        reservationId,
-        rate: carRating,
-        companyRate: driverRating,
-        comments: comments.trim(),
-      },
-      {
-        onSuccess: () => {
-          toast.success("تم ارسال التقييم بنجاح", {
-            position: "top-center",
-          });
-          onBack?.();
-        },
-        onError: (error) => {
-          toast.error(
-            error instanceof Error ? error.message : "فشل في ارسال التقييم",
-          );
-        },
-      },
-    );
-  };
-
+  const { control, handleSubmit, onSubmit, isCreatingRating, visibility } =
+    useRating({
+      onBack,
+      reservationId,
+      reservation_deliver_type,
+      reservation_receive_type,
+      driver_price,
+    });
   return (
     <div
       className="absolute inset-0 z-10 flex flex-col bg-background animate-in fade-in slide-in-from-right duration-300"
@@ -78,41 +57,136 @@ const Rating = ({ onBack, reservationId }: RatingProps) => {
         </Button>
         <SheetTitle className="text-start text-xl">أضافة تقييم</SheetTitle>
       </SheetHeader>
-
-      <div className="flex min-h-0 flex-1 flex-col overflow-y-auto px-6 pt-6">
-        <RComponent
-          title="تقييمك للشركة"
-          description="ساعدنا على معرفة مستوى الشركة لتحسين الخدمه المقدمة لك"
-          rating={driverRating}
-          onRating={setDriverRating}
-          icon={<UserStar className="w-8 h-8" />}
+      <form
+        id="rating-form"
+        className="flex min-h-0 flex-1 flex-col overflow-y-auto px-6 pt-6"
+        onSubmit={handleSubmit(onSubmit)}
+      >
+        <Controller
+          name="companyRate"
+          control={control}
+          render={({ field }) => (
+            <RComponent
+              title="تقييمك للشركة"
+              description="ساعدنا على معرفة مستوى الشركة لتحسين الخدمه المقدمة لك"
+              value={field.value}
+              onChange={field.onChange}
+              icon={<CompanyRateIcon />}
+            />
+          )}
         />
-
-        <RComponent
-          title="تقييمك للسيارة"
-          description="ساعدنا على معرفة مستوى السيارات لتحسين الخدمه المقدمة لك"
-          rating={carRating}
-          onRating={setCarRating}
-          icon={<Car className="w-8 h-8" />}
+        <Controller
+          name="rate"
+          control={control}
+          render={({ field }) => (
+            <RComponent
+              title="تقييمك للسيارة"
+              description="ساعدنا على معرفة مستوى السيارات لتحسين الخدمه المقدمة لك"
+              value={field.value}
+              onChange={field.onChange}
+              icon={<Car className="w-8 h-8" />}
+            />
+          )}
         />
-
-        <Label className="text-base text-Grey700 font-bold! my-2">
-          ملاحظات:
-        </Label>
-        <Textarea
-          startIcon={<TextAreaIcon />}
-          name="message"
-          value={comments}
-          onChange={(event) => setComments(event.target.value)}
-          placeholder="اكتب تقييمك للسيارة"
-          required
-          disabled={isCreatingRating}
-          className="min-h-28 text-base! bg-Grey100 border-2 pt-4"
+        {visibility.showDeliveryDriver && (
+          <Controller
+            name="deliveryDriverRate"
+            control={control}
+            render={({ field }) => (
+              <Controller
+                name="deliveryDriverComments"
+                control={control}
+                render={({ field: commentField }) => (
+                  <RComponent
+                    title=" تقييمك للسائق (تسليم)"
+                    description="ساعدنا على معرفة مستوى السائق لتحسين الخدمه المقدمة لك"
+                    value={field.value}
+                    onChange={field.onChange}
+                    icon={<UserStar className="w-8 h-8" />}
+                    includeComment
+                    commentValue={commentField.value}
+                    onCommentChange={commentField.onChange}
+                    commentDisabled={isCreatingRating}
+                  />
+                )}
+              />
+            )}
+          />
+        )}
+        {visibility.showPickupDriver && (
+          <Controller
+            name="pickupDriverRate"
+            control={control}
+            render={({ field }) => (
+              <Controller
+                name="pickupDriverComments"
+                control={control}
+                render={({ field: commentField }) => (
+                  <RComponent
+                    title=" تقييمك للسائق (استلام)"
+                    description="ساعدنا على معرفة مستوى السائق لتحسين الخدمه المقدمة لك"
+                    value={field.value}
+                    onChange={field.onChange}
+                    icon={<UserStar className="w-8 h-8" />}
+                    includeComment
+                    commentValue={commentField.value}
+                    onCommentChange={commentField.onChange}
+                    commentDisabled={isCreatingRating}
+                  />
+                )}
+              />
+            )}
+          />
+        )}
+        {visibility.showServiceDriver && (
+          <Controller
+            name="serviceDriverRate"
+            control={control}
+            render={({ field }) => (
+              <Controller
+                name="serviceDriverComments"
+                control={control}
+                render={({ field: commentField }) => (
+                  <RComponent
+                    title="تقييمك للخدمة"
+                    description="ساعدنا على معرفة مستوى الخدمة لتحسين الخدمه المقدمة لك"
+                    value={field.value}
+                    onChange={field.onChange}
+                    icon={<ServiceRateIcon />}
+                    includeComment
+                    commentValue={commentField.value}
+                    onCommentChange={commentField.onChange}
+                    commentDisabled={isCreatingRating}
+                  />
+                )}
+              />
+            )}
+          />
+        )}
+        <Controller
+          name="comments"
+          control={control}
+          render={({ field }) => (
+            <>
+              <Label className="text-base text-Grey700 font-bold! my-2">
+                ملاحظات اخري:
+              </Label>
+              <Textarea
+                startIcon={<TextAreaIcon />}
+                name="message"
+                value={field.value}
+                onChange={field.onChange}
+                placeholder="اكتب ملاحظاتك"
+                disabled={isCreatingRating}
+                className="min-h-28 text-base! bg-Grey100 border-2 pt-4"
+              />
+            </>
+          )}
         />
-      </div>
-
+      </form>
       <SheetFooter className="mt-auto flex-col gap-3 border-t p-6 sm:flex-row">
         <Button
+          variant={"ghost"}
           type="button"
           className="text-base! w-full sm:w-1/2 bg-transparent text-black border-2 border-Grey400 hover:bg-transparent"
           onClick={onBack}
@@ -121,9 +195,9 @@ const Rating = ({ onBack, reservationId }: RatingProps) => {
           رجوع
         </Button>
         <Button
-          type="button"
+          type="submit"
+          form="rating-form"
           className="text-base! w-full sm:w-1/2"
-          onClick={handleSubmitRating}
           loading={isCreatingRating}
           disabled={!reservationId || isCreatingRating}
         >
@@ -133,5 +207,4 @@ const Rating = ({ onBack, reservationId }: RatingProps) => {
     </div>
   );
 };
-
 export default Rating;

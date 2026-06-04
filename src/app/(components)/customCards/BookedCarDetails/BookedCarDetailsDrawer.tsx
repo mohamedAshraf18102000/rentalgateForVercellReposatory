@@ -43,6 +43,7 @@ import { normalizeImageUrl } from "@/util";
 import MaintenanceIcon from "../../../../../public/extraSVGIcons/MaintenanceIcon";
 import { LocationType } from "@/util/locationType";
 import { isActiveReservationStatus } from "@/util/bookingStatus";
+import BookedCarDetailsDrawerSkeleton from "./DrawerSections/BookedCarDetailsDrawerSkeleton";
 
 const CancelConfirmation = dynamic(
   () => import("./DrawerSections/DrawerLocation/CancelConfirmation"),
@@ -81,31 +82,6 @@ interface BookedCarDetailsDrawerProps {
 }
 
 const CANCELLABLE_STATUSES = ["PAID", "DECLINED", "ADMIN_APPROVED"] as const;
-
-const BookedCarDetailsDrawerSkeleton = () => {
-  return (
-    <div className="flex flex-col gap-3">
-      <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center">
-        <Skeleton className="h-34 w-full rounded-2xl sm:w-[40%] bg-Grey200" />
-        <div className="flex w-full flex-col gap-y-2">
-          <Skeleton className="h-10 w-28 rounded-lg bg-Grey200" />
-          <Skeleton className="h-5 w-44 bg-Grey200" />
-          <Skeleton className="h-5 w-36 bg-Grey200" />
-        </div>
-      </div>
-      <Separator className="my-3" />
-      <Skeleton className="h-20 w-full rounded-2xl bg-Grey200" />
-      <Separator className="my-3" />
-      <Skeleton className="h-24 w-full rounded-2xl bg-Grey200" />
-      <Separator className="my-3" />
-      <div className="flex items-center justify-between gap-3">
-        <Skeleton className="h-5 w-24 bg-Grey200" />
-        <Skeleton className="h-6 w-16 bg-Grey200" />
-      </div>
-      <Skeleton className="h-10 w-full rounded-lg bg-Grey200" />
-    </div>
-  );
-};
 
 const BookedCarDetailsDrawer = ({
   trigger,
@@ -316,7 +292,7 @@ const BookedCarDetailsDrawer = ({
                 <SheetTitle>{t("myBookingsDrawer.title")}</SheetTitle>
               </SheetHeader>
 
-              <div className="mx-auto min-h-0 w-full flex-1 overflow-y-auto px-3 sm:w-[95%]">
+              <div className="mx-auto min-h-0 w-full flex-1 overflow-y-auto px-3 sm:w-[95%] mt-5">
                 {isDrawerContentLoading ? (
                   <BookedCarDetailsDrawerSkeleton />
                 ) : (
@@ -642,6 +618,9 @@ const BookedCarDetailsDrawer = ({
             />
           ) : activeView === "rating" ? (
             <Rating
+              reservation_receive_type={data?.receiveType}
+              reservation_deliver_type={data?.deliverType}
+              driver_price={data?.driverPrice}
               reservationId={data?.reservationId}
               onBack={() => setActiveView("booking-details")}
             />

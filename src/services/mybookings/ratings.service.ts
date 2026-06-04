@@ -2,9 +2,15 @@ import { fetcher } from "../api";
 
 export type CreateRatingPayload = {
   reservationId: number;
-  rate: number;
   companyRate: number;
+  rate: number;
+  deliveryDriverRate?: number;
+  pickupDriverRate?: number;
+  deliveryDriverComments?: string;
+  pickupDriverComments?: string;
   comments: string;
+  serviceDriverRate?: number;
+  serviceDriverComments?: string;
 };
 
 export const createRating = (payload: CreateRatingPayload) => {
