@@ -44,6 +44,7 @@ import MaintenanceIcon from "../../../../../public/extraSVGIcons/MaintenanceIcon
 import { LocationType } from "@/util/locationType";
 import { isActiveReservationStatus } from "@/util/bookingStatus";
 import BookedCarDetailsDrawerSkeleton from "./DrawerSections/BookedCarDetailsDrawerSkeleton";
+import MaintenanceContent from "./DrawerSections/MaintenanceRequest/MaintenanceContent";
 
 const CancelConfirmation = dynamic(
   () => import("./DrawerSections/DrawerLocation/CancelConfirmation"),
@@ -105,6 +106,7 @@ const BookedCarDetailsDrawer = ({
     | "booking-extend-complete"
     | "booking-complement"
     | "rating"
+    | "request-maintenance"
   >("booking-details");
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [normalReceiveAddress, setNormalReceiveAddress] = useState<
@@ -119,14 +121,6 @@ const BookedCarDetailsDrawer = ({
   const [changedDeliverAddress, setChangedDeliverAddress] = useState<
     string | null
   >(null);
-  const [isNormalReceiveAddressLoading, setIsNormalReceiveAddressLoading] =
-    useState(false);
-  const [isNormalDeliverAddressLoading, setIsNormalDeliverAddressLoading] =
-    useState(false);
-  const [isChangedReceiveAddressLoading, setIsChangedReceiveAddressLoading] =
-    useState(false);
-  const [isChangedDeliverAddressLoading, setIsChangedDeliverAddressLoading] =
-    useState(false);
 
   useEffect(() => {
     if (!isDrawerOpen) return;
@@ -136,17 +130,14 @@ const BookedCarDetailsDrawer = ({
 
     if (typeof lat !== "number" || typeof lng !== "number") {
       setNormalReceiveAddress(null);
-      setIsNormalReceiveAddressLoading(false);
       return;
     }
 
-    setIsNormalReceiveAddressLoading(true);
     let isMounted = true;
     const timeoutId = window.setTimeout(async () => {
       const address = await reverseGeocode(lat, lng);
       if (isMounted) {
         setNormalReceiveAddress(address);
-        setIsNormalReceiveAddressLoading(false);
       }
     }, 250);
 
@@ -168,17 +159,14 @@ const BookedCarDetailsDrawer = ({
 
     if (typeof lat !== "number" || typeof lng !== "number") {
       setNormalDeliverAddress(null);
-      setIsNormalDeliverAddressLoading(false);
       return;
     }
 
-    setIsNormalDeliverAddressLoading(true);
     let isMounted = true;
     const timeoutId = window.setTimeout(async () => {
       const address = await reverseGeocode(lat, lng);
       if (isMounted) {
         setNormalDeliverAddress(address);
-        setIsNormalDeliverAddressLoading(false);
       }
     }, 250);
 
@@ -200,17 +188,14 @@ const BookedCarDetailsDrawer = ({
 
     if (typeof lat !== "number" || typeof lng !== "number") {
       setChangedReceiveAddress(null);
-      setIsChangedReceiveAddressLoading(false);
       return;
     }
 
-    setIsChangedReceiveAddressLoading(true);
     let isMounted = true;
     const timeoutId = window.setTimeout(async () => {
       const address = await reverseGeocode(lat, lng);
       if (isMounted) {
         setChangedReceiveAddress(address);
-        setIsChangedReceiveAddressLoading(false);
       }
     }, 250);
 
@@ -232,17 +217,14 @@ const BookedCarDetailsDrawer = ({
 
     if (typeof lat !== "number" || typeof lng !== "number") {
       setChangedDeliverAddress(null);
-      setIsChangedDeliverAddressLoading(false);
       return;
     }
 
-    setIsChangedDeliverAddressLoading(true);
     let isMounted = true;
     const timeoutId = window.setTimeout(async () => {
       const address = await reverseGeocode(lat, lng);
       if (isMounted) {
         setChangedDeliverAddress(address);
-        setIsChangedDeliverAddressLoading(false);
       }
     }, 250);
 
@@ -308,7 +290,8 @@ const BookedCarDetailsDrawer = ({
                               | "booking-extending"
                               | "booking-extend-complete"
                               | "booking-complement"
-                              | "rating",
+                              | "rating"
+                              | "request-maintenance",
                           )
                         }
                       />
@@ -340,11 +323,15 @@ const BookedCarDetailsDrawer = ({
                           </div>
                           {data?.reservationStatus === "STARTED" && (
                             <Button
+                              type="button"
                               startIcon={
                                 <MaintenanceIcon className="w-6! h-6!" />
                               }
                               className="border-2 text-base font-semibold p-2!"
                               variant="outline"
+                              onClick={() =>
+                                setActiveView("request-maintenance")
+                              }
                             >
                               {t("myBookingsDrawer.requestMaintenance")}
                             </Button>
@@ -526,7 +513,7 @@ const BookedCarDetailsDrawer = ({
                         <Button
                           type="button"
                           variant="destructive"
-                          className="text-base! w-full border-2 border-StatusRed bg-transparent text-StatusRed sm:w-1/4"
+                          className="text-base! w-full border-2 border-StatusRed bg-transparent text-StatusRed sm:w-1/2"
                           onClick={() => setActiveView("cancel-booking")}
                         >
                           {t("cancelBooking")}
@@ -539,10 +526,9 @@ const BookedCarDetailsDrawer = ({
                         <Button
                           type="button"
                           variant="outline"
-                          className="text-base! w-full border-2 border-Grey400 bg-transparent sm:w-1/4"
+                          className="text-base! w-full border-2 border-Grey400 bg-transparent sm:w-1/2"
                           onClick={() => {
                             setIsDrawerOpen(false);
-                            router.push("/myBookings");
                           }}
                         >
                           {t("myBookingsDrawer.backToReservations")}
@@ -558,7 +544,7 @@ const BookedCarDetailsDrawer = ({
                         ارسال شكوي
                       </Button>
                     )}
-                    <Button className={`text-base! w-full sm:w-3/4`}>
+                    <Button className={`text-base! w-full sm:w-1/2`}>
                       {t("myBookings")}
                     </Button>
                   </>
@@ -624,6 +610,13 @@ const BookedCarDetailsDrawer = ({
               reservationId={data?.reservationId}
               onBack={() => setActiveView("booking-details")}
             />
+          ) : activeView === "request-maintenance" ? (
+            <>
+              <MaintenanceContent
+                reservationId={data?.reservationId}
+                onBack={() => setActiveView("booking-details")}
+              />
+            </>
           ) : (
             <CancelConfirmation
               setShowCancelBooking={(showCancelBooking) =>

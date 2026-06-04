@@ -227,6 +227,8 @@
       "addRatingButton": "أضافة تقييم"
     },
     "requestMaintenance": "طلب صيانة",
+    "maintenanceSuccess": "تم استلام طلب الصيانة بنجاح",
+    "maintenanceRedirectCountdown": "سيتم العودة إلى تفاصيل الحجز خلال {seconds} ثانية",
     "paymentDetails": {
       "detailsButton": "التفاصيل",
       "rentalDurationCostHeader": "تكلفة مدة الإيجار:",

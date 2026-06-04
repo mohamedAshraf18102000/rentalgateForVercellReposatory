@@ -227,6 +227,8 @@
       "addRatingButton": "Add rating"
     },
     "requestMaintenance": "Request maintenance",
+    "maintenanceSuccess": "Your maintenance request was received successfully",
+    "maintenanceRedirectCountdown": "Returning to booking details in {seconds} s",
     "paymentDetails": {
       "detailsButton": "Details",
       "rentalDurationCostHeader": "Rental duration cost:",
