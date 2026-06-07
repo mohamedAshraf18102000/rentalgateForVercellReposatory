@@ -2,8 +2,8 @@ import { fetcher } from "../api";
 
 export type CreateRatingPayload = {
   reservationId: number;
-  companyRate: number;
-  rate: number;
+  companyRate?: number;
+  rate?: number;
   deliveryDriverRate?: number;
   pickupDriverRate?: number;
   deliveryDriverComments?: string;

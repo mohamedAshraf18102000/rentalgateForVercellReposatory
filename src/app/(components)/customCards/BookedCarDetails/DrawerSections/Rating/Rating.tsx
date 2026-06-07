@@ -31,8 +31,14 @@ const Rating = ({
   const locale = useLocale();
   const isRTL = locale === "ar";
   const BackIcon = isRTL ? ArrowRight : ArrowLeft;
-  const { control, handleSubmit, onSubmit, isCreatingRating, visibility } =
-    useRating({
+  const {
+    control,
+    handleSubmit,
+    onSubmit,
+    isCreatingRating,
+    visibility,
+    canSubmit,
+  } = useRating({
       onBack,
       reservationId,
       reservation_deliver_type,
@@ -199,7 +205,7 @@ const Rating = ({
           form="rating-form"
           className="text-base! w-full sm:w-1/2"
           loading={isCreatingRating}
-          disabled={!reservationId || isCreatingRating}
+          disabled={!reservationId || isCreatingRating || !canSubmit}
         >
           ارسال التقييم
         </Button>

@@ -6,14 +6,14 @@ import type {
 } from "./rating.types";
 
 export const RATING_FORM_DEFAULT_VALUES: RatingFormValues = {
-  companyRate: 5,
-  rate: 5,
-  deliveryDriverRate: 5,
-  pickupDriverRate: 5,
+  companyRate: 0,
+  rate: 0,
+  deliveryDriverRate: 0,
+  pickupDriverRate: 0,
   deliveryDriverComments: "",
   pickupDriverComments: "",
   comments: "",
-  serviceDriverRate: 5,
+  serviceDriverRate: 0,
   serviceDriverComments: "",
 };
 
@@ -27,6 +27,29 @@ export function getRatingSectionVisibility(
   };
 }
 
+export function hasAtLeastOneRating(
+  values: RatingFormValues,
+  visibility: RatingSectionVisibility,
+): boolean {
+  if (values.companyRate > 0 || values.rate > 0) {
+    return true;
+  }
+
+  if (visibility.showDeliveryDriver && values.deliveryDriverRate > 0) {
+    return true;
+  }
+
+  if (visibility.showPickupDriver && values.pickupDriverRate > 0) {
+    return true;
+  }
+
+  if (visibility.showServiceDriver && values.serviceDriverRate > 0) {
+    return true;
+  }
+
+  return false;
+}
+
 export function buildCreateRatingPayload(
   reservationId: number,
   values: RatingFormValues,
@@ -34,22 +57,28 @@ export function buildCreateRatingPayload(
 ): CreateRatingPayload {
   const payload: CreateRatingPayload = {
     reservationId,
-    companyRate: values.companyRate,
-    rate: values.rate,
     comments: values.comments,
   };
 
-  if (visibility.showDeliveryDriver) {
+  if (values.companyRate > 0) {
+    payload.companyRate = values.companyRate;
+  }
+
+  if (values.rate > 0) {
+    payload.rate = values.rate;
+  }
+
+  if (visibility.showDeliveryDriver && values.deliveryDriverRate > 0) {
     payload.deliveryDriverRate = values.deliveryDriverRate;
     payload.deliveryDriverComments = values.deliveryDriverComments;
   }
 
-  if (visibility.showPickupDriver) {
+  if (visibility.showPickupDriver && values.pickupDriverRate > 0) {
     payload.pickupDriverRate = values.pickupDriverRate;
     payload.pickupDriverComments = values.pickupDriverComments;
   }
 
-  if (visibility.showServiceDriver) {
+  if (visibility.showServiceDriver && values.serviceDriverRate > 0) {
     payload.serviceDriverRate = values.serviceDriverRate;
     payload.serviceDriverComments = values.serviceDriverComments;
   }

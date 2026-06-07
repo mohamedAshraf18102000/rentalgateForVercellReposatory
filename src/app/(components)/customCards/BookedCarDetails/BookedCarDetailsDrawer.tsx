@@ -519,32 +519,23 @@ const BookedCarDetailsDrawer = ({
                           {t("cancelBooking")}
                         </Button>
                       )}
-                    {data?.reservationStatus &&
-                      !CANCELLABLE_STATUSES.includes(
-                        data.reservationStatus as (typeof CANCELLABLE_STATUSES)[number],
-                      ) && (
-                        <Button
-                          type="button"
-                          variant="outline"
-                          className="text-base! w-full border-2 border-Grey400 bg-transparent sm:w-1/2"
-                          onClick={() => {
-                            setIsDrawerOpen(false);
-                          }}
-                        >
-                          {t("myBookingsDrawer.backToReservations")}
-                        </Button>
-                      )}
+                    
                     {data?.reservationStatus === "FINISHED" && (
                       <Button
                         type="button"
                         variant="destructive"
-                        className="text-base! w-full border-2 border-StatusRed bg-transparent text-StatusRed sm:w-1/4"
+                        className="text-base! w-full border-2 border-StatusRed bg-transparent text-StatusRed sm:w-1/2"
                         onClick={() => setActiveView("booking-complement")}
                       >
                         ارسال شكوي
                       </Button>
                     )}
-                    <Button className={`text-base! w-full sm:w-1/2`}>
+                    <Button
+                      className={`text-base! w-full sm:w-1/2`}
+                      onClick={() => {
+                        setIsDrawerOpen(false);
+                      }}
+                    >
                       {t("myBookings")}
                     </Button>
                   </>

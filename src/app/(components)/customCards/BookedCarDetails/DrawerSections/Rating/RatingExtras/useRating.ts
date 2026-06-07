@@ -8,6 +8,7 @@ import type { RatingFormValues, RatingReservationContext } from "./rating.types"
 import {
   buildCreateRatingPayload,
   getRatingSectionVisibility,
+  hasAtLeastOneRating,
   RATING_FORM_DEFAULT_VALUES,
 } from "./rating.utils";
 
@@ -36,13 +37,23 @@ export function useRating({
     [reservation_deliver_type, reservation_receive_type, driver_price],
   );
 
-  const { control, handleSubmit } = useForm<RatingFormValues>({
+  const { control, handleSubmit, watch } = useForm<RatingFormValues>({
     defaultValues: RATING_FORM_DEFAULT_VALUES,
   });
+
+  const values = watch();
+  const canSubmit = hasAtLeastOneRating(values, visibility);
 
   const onSubmit = (values: RatingFormValues) => {
     if (!reservationId) {
       toast.error("لا يوجد رقم حجز صالح", {
+        position: "top-center",
+      });
+      return;
+    }
+
+    if (!hasAtLeastOneRating(values, visibility)) {
+      toast.error("يجب إضافة تقييم واحد على الأقل", {
         position: "top-center",
       });
       return;
@@ -67,5 +78,6 @@ export function useRating({
     onSubmit,
     isCreatingRating,
     visibility,
+    canSubmit,
   };
 }
