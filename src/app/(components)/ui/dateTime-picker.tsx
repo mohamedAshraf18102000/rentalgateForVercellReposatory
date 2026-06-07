@@ -170,7 +170,7 @@ function TimePicker({
   return (
     <div
       dir={locale === "ar" ? "rtl" : "ltr"}
-      className="time-picker-scroll bg-Grey100 p-2 rounded-2xl grid grid-cols-3 auto-rows-min gap-2 content-start overflow-y-auto h-full min-h-0 pr-1"
+      className="time-picker-scroll bg-Grey100 p-2 rounded-2xl grid grid-cols-4 md:grid-cols-3 auto-rows-min gap-2 content-start overflow-y-auto h-full min-h-0 pr-1"
       style={{ scrollbarWidth: "thin" }}
     >
       {TIME_SLOTS.map((slot) => {
@@ -309,7 +309,7 @@ function DateTimeContent({
   }
 
   return (
-    <div className="p-3 sm:p-4 rounded-2xl">
+    <div className="mt-2 sm:p-4 rounded-2xl w-full">
       {title && (
         <div className="text-[15px] sm:text-[16px] font-semibold mb-2">
           {title}
@@ -335,7 +335,7 @@ function DateTimeContent({
           />
         </div>
         {withTime && (
-          <div className="w-full lg:flex-1 lg:min-w-0 flex lg:h-full min-h-0">
+          <div className="w-full lg:flex-1 lg:min-w-0 flex lg:h-full min-h-0 max-h-[300px]! overflow-y-auto">
             <TimePicker
               selectedDate={selectedDate}
               referenceDate={selectedDate ?? minAllowedDate}
@@ -442,6 +442,8 @@ function PickerShell({
         <DialogWrapper
           open={open}
           onOpenChange={onOpenChange}
+          className="z-110001"
+          overlayClassName="z-110001"
           header={title ? { mainTitle: title } : undefined}
           content={pickerContent}
           scrollableContent

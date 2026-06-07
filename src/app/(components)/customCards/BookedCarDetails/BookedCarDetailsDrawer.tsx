@@ -346,101 +346,107 @@ const BookedCarDetailsDrawer = ({
                     </div>
                     <Separator className="my-3" />
                     <div className="bg-Grey100 flex flex-col gap-3 rounded-2xl p-3 sm:flex-row sm:items-center sm:justify-between">
-                      <div>
-                        <div className="text-base flex items-center gap-2">
-                          <CarRentIcon />
-                          <span>
-                            {t("myBookingsDrawer.rentalDurationLabel")}:
-                          </span>
-                          <span className="text-Grey700">
-                            {t("myBookingsDrawer.rentalDays", {
-                              days: data?.days ?? 0,
-                            })}
-                          </span>
+                      <div className="flex w-full items-center justify-between">
+                        <div>
+                          <div className="text-sm md:text-base flex items-center gap-2">
+                            <CarRentIcon />
+                            <span>
+                              {t("myBookingsDrawer.rentalDurationLabel")}:
+                            </span>
+                            <span className="text-Grey700">
+                              {t("myBookingsDrawer.rentalDays", {
+                                days: data?.days ?? 0,
+                              })}
+                            </span>
+                          </div>
+
+                          <div className="text-sm md:text-base flex flex-col md:flex-row items-start md:items-center gap-1 md:gap-2 mt-3">
+                            <span className="text-black">
+                              {data?.startDate &&
+                                format(
+                                  new Date(data?.startDate),
+                                  `${locale === "ar" ? "yyyy/MM/dd" : "dd/MM/yyyy"} | hh:mm a`,
+                                  {
+                                    locale: dateLocale,
+                                  },
+                                )}
+                            </span>
+
+                            <DateArrowIcon className="w-4! h-4! md:w-5! md:h-5! -rotate-90 md:rotate-0" />
+
+                            <span className="text-black">
+                              {data?.endDate &&
+                                format(
+                                  new Date(data?.endDate),
+                                  `${locale === "ar" ? "yyyy/MM/dd" : "dd/MM/yyyy"} | hh:mm a`,
+                                  {
+                                    locale: dateLocale,
+                                  },
+                                )}
+                            </span>
+                          </div>
                         </div>
 
-                        <div className="text-base flex items-center gap-2 mt-3">
-                          <span className="text-black">
-                            {data?.startDate &&
-                              format(
-                                new Date(data?.startDate),
-                                `${locale === "ar" ? "yyyy/MM/dd" : "dd/MM/yyyy"} | hh:mm a`,
-                                {
-                                  locale: dateLocale,
-                                },
-                              )}
-                          </span>
-
-                          <DateArrowIcon />
-
-                          <span className="text-black">
-                            {data?.endDate &&
-                              format(
-                                new Date(data?.endDate),
-                                `${locale === "ar" ? "yyyy/MM/dd" : "dd/MM/yyyy"} | hh:mm a`,
-                                {
-                                  locale: dateLocale,
-                                },
-                              )}
-                          </span>
-                        </div>
-                      </div>
-
-                      {data?.reservationStatus === "STARTED" && (
-                        <div className="self-end sm:self-auto">
-                          <Button
-                            className="p-3"
-                            onClick={() => setActiveView("booking-extending")}
-                          >
-                            <SquarePen className="text-white w-5! h-5!" />
-                          </Button>
-                        </div>
-                      )}
-                    </div>
-                    <Separator className="my-3" />
-                    <div className="bg-Grey100 flex flex-col gap-3 rounded-2xl p-3 sm:flex-row sm:items-center sm:justify-between">
-                      <div className="flex flex-col gap-3 w-full">
-                        <LocationFrom_To
-                          LocReceiveType={data?.receiveType as LocationType}
-                          LocDeliverType={data?.deliverType as LocationType}
-                          receiveLocationName={data?.receiveLocationName}
-                          deliverLocationName={data?.deliverLocationName}
-                          receiveAddress={normalReceiveAddress}
-                          deliverAddress={normalDeliverAddress}
-                          showPhysicalAddress={true}
-                        />
-
-                        {data?.locationChanges && (
-                          <>
-                            <Separator className="w-[90%]! mx-auto!" />
-                            <div className="">
-                              <p className="text-StatusRedBG">
-                                <span>*</span>
-                                {t("myBookingsDrawer.locationChangedNotice")}
-                              </p>
-                              <LocationFrom_To
-                                receiveLocationName={""}
-                                deliverLocationName={""}
-                                receiveAddress={changedReceiveAddress}
-                                deliverAddress={changedDeliverAddress}
-                                showPhysicalAddress={false}
-                              />
-                            </div>
-                          </>
-                        )}
-                      </div>
-
-                      {data?.receiveType === "MY_LOCATION" &&
-                        data?.deliverType === "MY_LOCATION" && (
-                          <div className="self-end sm:self-auto">
+                        {data?.reservationStatus === "STARTED" && (
+                          <div className="">
                             <Button
                               className="p-3"
-                              onClick={() => setActiveView("location-details")}
+                              onClick={() => setActiveView("booking-extending")}
                             >
                               <SquarePen className="text-white w-5! h-5!" />
                             </Button>
                           </div>
                         )}
+                      </div>
+                    </div>
+                    <Separator className="my-3" />
+                    <div className="bg-Grey100 flex flex-col gap-3 rounded-2xl p-3 sm:flex-row sm:items-center sm:justify-between">
+                      <div className="flex items-center justify-between w-full">
+                        <div className="flex flex-col gap-3 w-full">
+                          <LocationFrom_To
+                            LocReceiveType={data?.receiveType as LocationType}
+                            LocDeliverType={data?.deliverType as LocationType}
+                            receiveLocationName={data?.receiveLocationName}
+                            deliverLocationName={data?.deliverLocationName}
+                            receiveAddress={normalReceiveAddress}
+                            deliverAddress={normalDeliverAddress}
+                            showPhysicalAddress={true}
+                          />
+
+                          {data?.locationChanges && (
+                            <>
+                              <Separator className="w-[90%]! mx-auto!" />
+                              <div className="">
+                                <p className="text-StatusRedBG">
+                                  <span>*</span>
+                                  {t("myBookingsDrawer.locationChangedNotice")}
+                                </p>
+                                <LocationFrom_To
+                                  receiveLocationName={""}
+                                  deliverLocationName={""}
+                                  receiveAddress={changedReceiveAddress}
+                                  deliverAddress={changedDeliverAddress}
+                                  showPhysicalAddress={false}
+                                />
+                              </div>
+                            </>
+                          )}
+                        </div>
+
+                        {data?.receiveType === "MY_LOCATION" &&
+                          data?.deliverType === "MY_LOCATION" && (
+                            <div className="">
+                              <Button
+                                className="p-3"
+                                onClick={() =>
+                                  setActiveView("location-details")
+                                }
+                              >
+                                <SquarePen className="text-white w-5! h-5!" />
+                              </Button>
+                            </div>
+                          )}
+                      </div>
                     </div>
 
                     {data &&
@@ -469,7 +475,7 @@ const BookedCarDetailsDrawer = ({
                     {data?.driverName && data?.driverMobile && (
                       <div className="w-full flex flex-col mt-2 bg-Grey100 p-4 rounded-xl">
                         <p>{t("myBookingsDrawer.driverDetailsTitle")}</p>
-                        <div className="mt-2 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                        <div className="mt-2 flex w-full justify-between gap-3 sm:flex-row sm:items-center sm:justify-between">
                           <div className="flex items-center gap-2 break-all">
                             <User className="w-5! h-5!" />
                             <p>{data?.driverName}</p>
@@ -488,12 +494,14 @@ const BookedCarDetailsDrawer = ({
                     <Separator className="my-3" />
                     <div className="flex items-center justify-between gap-3">
                       <div>
-                        <p className="font-bold text-base">
+                        <p className="font-bold text-sm md:text-base">
                           {t("myBookingsDrawer.totalCostLabel")}:
                         </p>
                       </div>
                       <div className="flex items-center">
-                        <span className="text-xl font-bold">{data?.total}</span>
+                        <span className="text-base md:text-xl font-bold">
+                          {data?.total}
+                        </span>
                         <SaudiRiyal className="w-6! h-6!" />
                       </div>
                     </div>

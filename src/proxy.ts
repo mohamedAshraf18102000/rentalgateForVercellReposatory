@@ -61,7 +61,16 @@ export default function proxy(request: NextRequest) {
     }
   }
 
-  const response = intlMiddleware(request);
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.set("x-pathname", pathname);
+
+  if (hasLocalePrefix(pathname)) {
+    requestHeaders.set("x-locale", pathname.split("/").filter(Boolean)[0]);
+  }
+
+  const response = intlMiddleware(
+    new NextRequest(request, { headers: requestHeaders }),
+  );
   response.headers.set("x-pathname", pathname);
   return response;
 }

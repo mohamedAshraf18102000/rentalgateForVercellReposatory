@@ -1,9 +1,30 @@
-import { NextRequest } from "next/server";
 import { routing } from "@/i18n/routing";
+import { hasLocale } from "next-intl";
+import { headers } from "next/headers";
+import { NextRequest } from "next/server";
 
 const LOCALE_COOKIE = "NEXT_LOCALE";
 
 type AppLocale = (typeof routing.locales)[number];
+
+/** Resolve document locale from middleware-injected request headers. */
+export async function getServerDocumentLocale(): Promise<AppLocale> {
+  const headerList = await headers();
+  const headerLocale = headerList.get("x-locale");
+
+  if (hasLocale(routing.locales, headerLocale)) {
+    return headerLocale;
+  }
+
+  const pathname = headerList.get("x-pathname") ?? "";
+  const segment = pathname.split("/").filter(Boolean)[0];
+
+  if (hasLocale(routing.locales, segment)) {
+    return segment;
+  }
+
+  return routing.defaultLocale;
+}
 
 function isAppLocale(value: string | undefined | null): value is AppLocale {
   return routing.locales.includes(value as AppLocale);

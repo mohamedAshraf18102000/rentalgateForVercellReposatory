@@ -253,6 +253,7 @@ export function DialogWrapper({
 
         <DrawerContent
           className={cn("max-h-[100dvh] rounded-t-2xl", className)}
+          overlayClassName={overlayClassName}
         >
           {!header?.mainTitle && !header?.subTitle && (
             <DrawerTitle className="sr-only">Dialog</DrawerTitle>

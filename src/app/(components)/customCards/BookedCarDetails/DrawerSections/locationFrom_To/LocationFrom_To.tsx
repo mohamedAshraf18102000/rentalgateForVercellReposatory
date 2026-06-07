@@ -29,7 +29,7 @@ const LocationFrom_To = ({
   const locale = useLocale();
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col text-sm md:text-base">
       <div className="flex items-center">
         <Dot className=" w-8 h-8 mx-2" />
         {/* Location From Label */}

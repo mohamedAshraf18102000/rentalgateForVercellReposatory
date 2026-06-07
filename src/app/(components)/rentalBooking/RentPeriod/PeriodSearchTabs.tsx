@@ -6,8 +6,8 @@ import React from "react";
 import { Calendar } from "@/app/(components)/ui/calendar";
 import {
   Popover,
+  PopoverAnchor,
   PopoverContent,
-  PopoverTrigger,
 } from "@/app/(components)/ui/popover";
 import { DateRange } from "react-day-picker";
 import { cn } from "@/lib/utils";
@@ -147,8 +147,8 @@ export const PeriodSearchTabs: React.FC<PeriodSearchProps> = ({
 
   return (
     <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
-      <PopoverTrigger asChild>
-        <div>
+      <PopoverAnchor asChild>
+        <div className="w-full">
           <Tabs
             value={value}
             onValueChange={(newValue) => {
@@ -172,7 +172,7 @@ export const PeriodSearchTabs: React.FC<PeriodSearchProps> = ({
             </TabsList>
           </Tabs>
         </div>
-      </PopoverTrigger>
+      </PopoverAnchor>
 
       <PopoverContent align="center" className="w-full p-2 rounded-2xl!">
         <Calendar

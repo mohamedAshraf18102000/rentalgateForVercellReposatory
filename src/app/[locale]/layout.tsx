@@ -1,5 +1,5 @@
 import { routing } from "@/i18n/routing";
-import { DialogProvider, Footer, Header, Toaster } from "@/ui";
+import { DialogProvider, Toaster } from "@/ui";
 import type { Metadata } from "next";
 import { headers } from "next/headers";
 import { NextIntlClientProvider } from "next-intl";
@@ -8,12 +8,7 @@ import { cookies } from "next/headers";
 import { hasLocale } from "next-intl";
 import { redirect } from "next/navigation";
 import { ensureLocalizedPathname } from "@/util/locale-path";
-import arCommonMessages from "../../../messages/ar/common.json";
-import arHomeMessages from "../../../messages/ar/home.json";
-import enCommonMessages from "../../../messages/en/common.json";
-import enHomeMessages from "../../../messages/en/home.json";
 import { RouteGuard } from "./(components)/RouteGuard";
-import SideToChat from "../(components)/sideToChat/SideToChat";
 import { AutoLocationOnVisit } from "./(dialogs)/PickupDialog/AutoLocationOnVisit";
 import { CurrentLocationDialog } from "./(dialogs)/PickupDialog/CurrentLocationDialog";
 import ReactQueryProvider from "@/provider/ReactQueryProvider";
@@ -149,10 +144,7 @@ export default async function LocaleLayout({
             <ReservationStateResetWatcher />
             <AutoLocationOnVisit />
             <CurrentLocationDialog />
-            <Header />
-            <SideToChat />
-            <main className="max-sm:pt-[65px] flex-1">{children}</main>
-            <Footer />
+            {children}
             <Toaster />
           </DialogProvider>
         </ReactQueryProvider>

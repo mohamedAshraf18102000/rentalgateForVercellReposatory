@@ -37,6 +37,7 @@ import { logout } from "@/util/auth";
 import { useClientStore } from "@/lib/api/stores";
 import { useDialog } from "@/app/[locale]/(dialogs)";
 import { ContactUsDialog } from "@/app/(components)/ContactUsDialog";
+import { useHasMounted } from "@/hooks/useHasMounted";
 import {
   Drawer,
   DrawerClose,
@@ -62,6 +63,10 @@ export const MobileBottomNav: React.FC = () => {
   const { openDialog } = useDialog();
   const [contactDialogOpen, setContactDialogOpen] = React.useState(false);
   const [languageDrawerOpen, setLanguageDrawerOpen] = React.useState(false);
+  const mounted = useHasMounted();
+
+  const menuButtonClassName =
+    "flex flex-col items-center justify-center flex-1 h-full transition-colors py-2 text-gray-600";
 
   // Navigation items - order matters for RTL (right to left)
   const navItems: NavItem[] = [
@@ -182,111 +187,130 @@ export const MobileBottomNav: React.FC = () => {
           );
         })}
 
-        {/* Menu Button with Drawer */}
-        <Drawer>
-          <DrawerTrigger asChild>
-            <button className="flex flex-col items-center justify-center flex-1 h-full transition-colors py-2 text-gray-600">
-              <Menu
-                className="w-5 h-5 mb-1 transition-colors text-gray-600 stroke-gray-600"
-                strokeWidth={1.5}
-              />
-              <span className="text-[11px] font-medium leading-tight text-gray-600">
+        {/* Menu Button with Drawer — deferred until mount to avoid Radix id hydration mismatch */}
+        {mounted ? (
+          <Drawer>
+            <DrawerTrigger asChild>
+              <button type="button" className={menuButtonClassName}>
+                <Menu
+                  className="w-5 h-5 mb-1 transition-colors text-gray-600 stroke-gray-600"
+                  strokeWidth={1.5}
+                />
+                <span className="text-[11px] font-medium leading-tight text-gray-600">
+                  {t("menu") || "Menu"}
+                </span>
+              </button>
+            </DrawerTrigger>
+            <DrawerContent>
+              <DrawerTitle className="sr-only">
                 {t("menu") || "Menu"}
-              </span>
-            </button>
-          </DrawerTrigger>
-          <DrawerContent>
-            <DrawerTitle className="sr-only">
-              {t("menu") || "Menu"}
-            </DrawerTitle>
-            {/* Menu Content with white container */}
-            <div className="flex-1 overflow-y-auto bg-white mx-3 mb-3">
-              <div className="py-4 pt-6 px-4">
-                {/* Menu Items */}
-                <div className="flex flex-col">
-                  {allMenuItems
-                    .filter(
-                      (item) =>
-                        !item.showOnlyWhenAuthenticated || authenticated,
-                    )
-                    .map((item) => {
-                      const Icon = item.icon;
-                      const handleClick =
-                        item.onClick || (() => handleNavigation(item.href));
+              </DrawerTitle>
+              {/* Menu Content with white container */}
+              <div className="flex-1 overflow-y-auto bg-white mx-3 mb-3">
+                <div className="py-4 pt-6 px-4">
+                  {/* Menu Items */}
+                  <div className="flex flex-col">
+                    {allMenuItems
+                      .filter(
+                        (item) =>
+                          !item.showOnlyWhenAuthenticated || authenticated,
+                      )
+                      .map((item) => {
+                        const Icon = item.icon;
+                        const handleClick =
+                          item.onClick || (() => handleNavigation(item.href));
 
-                      return (
-                        <React.Fragment key={item.labelKey}>
-                          <DrawerClose asChild>
-                            <button
-                              onClick={handleClick}
-                              className={`w-full flex items-center gap-3 text-sm text-gray-700 hover:text-primary transition-colors py-3  `}
-                            >
-                              <div className="w-5 h-5 shrink-0 text-[#606060]">
-                                <Icon
-                                  className="w-full h-full"
-                                  strokeWidth={1}
-                                />
-                              </div>
-                              <span
-                                className={`flex-1 ${locale === "ar" ? "text-right" : "text-left"}`}
+                        return (
+                          <React.Fragment key={item.labelKey}>
+                            <DrawerClose asChild>
+                              <button
+                                onClick={handleClick}
+                                className={`w-full flex items-center gap-3 text-sm text-gray-700 hover:text-primary transition-colors py-3  `}
                               >
-                                {item.label}
-                              </span>
-                            </button>
-                          </DrawerClose>
-                          <hr className="border-gray-200 my-1" />
-                        </React.Fragment>
-                      );
-                    })}
+                                <div className="w-5 h-5 shrink-0 text-[#606060]">
+                                  <Icon
+                                    className="w-full h-full"
+                                    strokeWidth={1}
+                                  />
+                                </div>
+                                <span
+                                  className={`flex-1 ${locale === "ar" ? "text-right" : "text-left"}`}
+                                >
+                                  {item.label}
+                                </span>
+                              </button>
+                            </DrawerClose>
+                            <hr className="border-gray-200 my-1" />
+                          </React.Fragment>
+                        );
+                      })}
 
-                  {/* Login / Logout */}
-                  {authenticated ? (
-                    <DrawerClose asChild>
-                      <button
-                        onClick={handleLogout}
-                        className={`w-full flex items-center gap-3 text-sm text-gray-700 hover:text-primary transition-colors cursor-pointer py-3 ${locale === "ar" ? "flex-row-reverse" : "flex-row"}`}
-                      >
-                        <span
-                          className={`flex-1 ${locale === "ar" ? "text-right" : "text-left"}`}
+                    {/* Login / Logout */}
+                    {authenticated ? (
+                      <DrawerClose asChild>
+                        <button
+                          onClick={handleLogout}
+                          className={`w-full flex items-center gap-3 text-sm text-gray-700 hover:text-primary transition-colors cursor-pointer py-3 ${locale === "ar" ? "flex-row-reverse" : "flex-row"}`}
                         >
-                          {t("logout")}
-                        </span>
-                        <LogOut className="w-5 h-5 shrink-0 text-[#606060]" />
-                      </button>
-                    </DrawerClose>
-                  ) : (
-                    <DrawerClose asChild>
-                      <button
-                        onClick={handleLogin}
-                        className={`w-full flex items-center gap-3 text-sm text-gray-700 hover:text-primary transition-colors cursor-pointer py-3 ${locale === "ar" ? "flex-row-reverse" : "flex-row"}`}
-                      >
-                        <span
-                          className={`flex-1 ${locale === "ar" ? "text-right" : "text-left"}`}
+                          <span
+                            className={`flex-1 ${locale === "ar" ? "text-right" : "text-left"}`}
+                          >
+                            {t("logout")}
+                          </span>
+                          <LogOut className="w-5 h-5 shrink-0 text-[#606060]" />
+                        </button>
+                      </DrawerClose>
+                    ) : (
+                      <DrawerClose asChild>
+                        <button
+                          onClick={handleLogin}
+                          className={`w-full flex items-center gap-3 text-sm text-gray-700 hover:text-primary transition-colors cursor-pointer py-3 ${locale === "ar" ? "flex-row-reverse" : "flex-row"}`}
                         >
-                          {t("login")}
-                        </span>
-                        <LogIn
-                          className="w-5 h-5 shrink-0 text-[#606060]"
-                          strokeWidth={1}
-                        />
-                      </button>
-                    </DrawerClose>
-                  )}
+                          <span
+                            className={`flex-1 ${locale === "ar" ? "text-right" : "text-left"}`}
+                          >
+                            {t("login")}
+                          </span>
+                          <LogIn
+                            className="w-5 h-5 shrink-0 text-[#606060]"
+                            strokeWidth={1}
+                          />
+                        </button>
+                      </DrawerClose>
+                    )}
+                  </div>
                 </div>
               </div>
-            </div>
-          </DrawerContent>
-        </Drawer>
+            </DrawerContent>
+          </Drawer>
+        ) : (
+          <button
+            type="button"
+            className={menuButtonClassName}
+            aria-label={t("menu") || "Menu"}
+          >
+            <Menu
+              className="w-5 h-5 mb-1 transition-colors text-gray-600 stroke-gray-600"
+              strokeWidth={1.5}
+            />
+            <span className="text-[11px] font-medium leading-tight text-gray-600">
+              {t("menu") || "Menu"}
+            </span>
+          </button>
+        )}
       </div>
 
       {/* Contact Us Dialog */}
-      <ContactUsDialog
-        open={contactDialogOpen}
-        onOpenChange={setContactDialogOpen}
-      />
+      {mounted && (
+        <ContactUsDialog
+          open={contactDialogOpen}
+          onOpenChange={setContactDialogOpen}
+        />
+      )}
 
       {/* Language Selection Drawer */}
-      <Drawer open={languageDrawerOpen} onOpenChange={setLanguageDrawerOpen}>
+      {mounted && (
+        <Drawer open={languageDrawerOpen} onOpenChange={setLanguageDrawerOpen}>
         <DrawerContent>
           <div className="px-4 pb-4">
             <div className="py-4">
@@ -337,7 +361,8 @@ export const MobileBottomNav: React.FC = () => {
             </div>
           </div>
         </DrawerContent>
-      </Drawer>
+        </Drawer>
+      )}
     </nav>
   );
 };

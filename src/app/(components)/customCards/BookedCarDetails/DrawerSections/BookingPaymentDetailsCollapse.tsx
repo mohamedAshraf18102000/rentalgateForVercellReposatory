@@ -36,7 +36,7 @@ const BookingPaymentDetailsCollapse = ({
           <CollapsibleTrigger asChild>
             <Button
               variant="ghost"
-              className="group px-0! text-base! hover:bg-transparent!"
+              className="group px-0! text-sm md:text-base! hover:bg-transparent!"
             >
               {t("myBookingsDrawer.paymentDetails.detailsButton")}
               <ChevronDownIcon className="ml-auto group-data-[state=open]:rotate-180 w-5! h-5!" />
