@@ -29,6 +29,7 @@ const BookedCarsDetails = ({ data }: { data: Reservation }) => {
     data.reservationId,
     false,
   );
+
   return (
     <div
       dir={isRTL ? "rtl" : "ltr"}

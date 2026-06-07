@@ -17,7 +17,7 @@ export interface LocationChanges {
 export type ReservationDetailsResponse = {
   reservationId: number;
   clientId: number;
-
+  rated: boolean;
   startDate: string; // ISO date
   endDate: string; // ISO date
   days: number;

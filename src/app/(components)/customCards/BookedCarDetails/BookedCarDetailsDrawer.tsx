@@ -91,7 +91,6 @@ const BookedCarDetailsDrawer = ({
 }: BookedCarDetailsDrawerProps) => {
   const getStatusLabel = useStatusLabel();
   const t = useTranslations("common");
-  const router = useRouter();
   const locale = useLocale();
   const isRTL = locale === "ar";
   const DateArrowIcon = isRTL ? ArrowLeft : ArrowRight;
@@ -279,23 +278,27 @@ const BookedCarDetailsDrawer = ({
                   <BookedCarDetailsDrawerSkeleton />
                 ) : (
                   <>
-                    {data?.reservationStatus === "FINISHED" && (
-                      <RatingContainer
-                        setActiveView={(view) =>
-                          setActiveView(
-                            view as
-                              | "booking-details"
-                              | "cancel-booking"
-                              | "location-details"
-                              | "booking-extending"
-                              | "booking-extend-complete"
-                              | "booking-complement"
-                              | "rating"
-                              | "request-maintenance",
-                          )
-                        }
-                      />
-                    )}
+                    {data?.reservationStatus === "FINISHED" &&
+                      data.rated === false && (
+                        <>
+                          <RatingContainer
+                            setActiveView={(view) =>
+                              setActiveView(
+                                view as
+                                  | "booking-details"
+                                  | "cancel-booking"
+                                  | "location-details"
+                                  | "booking-extending"
+                                  | "booking-extend-complete"
+                                  | "booking-complement"
+                                  | "rating"
+                                  | "request-maintenance",
+                              )
+                            }
+                          />
+                          ,
+                        </>
+                      )}
                     <div className="">
                       <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center">
                         <div className="relative h-34 w-full overflow-hidden border border-Grey200 rounded-2xl sm:w-[40%]">
@@ -519,7 +522,7 @@ const BookedCarDetailsDrawer = ({
                           {t("cancelBooking")}
                         </Button>
                       )}
-                    
+
                     {data?.reservationStatus === "FINISHED" && (
                       <Button
                         type="button"
