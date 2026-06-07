@@ -194,7 +194,7 @@ const page = () => {
             <ServiceCard
               key="full-insurance"
               service={{
-                price: data.insuranceWithDeductible ?? 0,
+                price: 0,
                 serviceArabicName: t("fullInsuranceWithDeductible"),
                 serviceEnglishName: t("fullInsuranceWithDeductible"),
               }}

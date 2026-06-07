@@ -53,18 +53,22 @@ function ServiceCard<T extends ServiceCardBase>({
           {extraIcon}
         </div>
       )}
-      <div className="w-[70%] bg-white p-2 sm:p-3">
+      <div className="w-[70%] bg-white p-2 sm:p-3 flex items-center">
         <div className="">
           <p className="text-sm font-extrabold sm:text-base">{serviceName}</p>
           <div className="mt-2 flex flex-wrap items-center sm:mt-3">
-            <span className="text-base font-bold sm:text-lg">
-              {showTax
-                ? formatPrice(calculatedPrice)
-                : formatPrice(getPriceWithoutTax(calculatedPrice))}
-            </span>
-            <span className="mx-1">
-              <SaudiRiyal />
-            </span>
+            {service.price !== 0 && (
+              <>
+                <span className="text-base font-bold sm:text-lg">
+                  {showTax
+                    ? formatPrice(calculatedPrice)
+                    : formatPrice(getPriceWithoutTax(calculatedPrice))}
+                </span>
+                <span className="mx-1">
+                  <SaudiRiyal />
+                </span>
+              </>
+            )}
             {"csType" in service && service.csType === "everyday" && (
               <span className="text-sm text-Grey500">
                 {rentalDays > 1
