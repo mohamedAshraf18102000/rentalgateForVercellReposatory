@@ -1,3 +1,4 @@
+import { redirect } from "@/i18n/routing";
 import { setRequestLocale } from "next-intl/server";
 import HomeMockups from "./(home)/HomeMockups";
 import HomeSlider from "./(home)/HomeSlider";
@@ -24,12 +25,12 @@ const page = async ({ params }: Props) => {
 
   setRequestLocale(locale);
 
-  let homeData: HomeResponse | null = null;
+  let homeData: HomeResponse;
   try {
     homeData = await getHomePageDetailsWithAuth();
-    console.log("homeData", homeData);
   } catch (error) {
     console.error("Error fetching home data:", error);
+    return redirect({ href: "/maintenance", locale });
   }
   return (
     <>
