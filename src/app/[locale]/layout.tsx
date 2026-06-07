@@ -4,7 +4,6 @@ import type { Metadata } from "next";
 import { headers } from "next/headers";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages, setRequestLocale } from "next-intl/server";
-import { Almarai, Zain } from "next/font/google";
 import { cookies } from "next/headers";
 import { hasLocale } from "next-intl";
 import { redirect } from "next/navigation";
@@ -13,7 +12,6 @@ import arCommonMessages from "../../../messages/ar/common.json";
 import arHomeMessages from "../../../messages/ar/home.json";
 import enCommonMessages from "../../../messages/en/common.json";
 import enHomeMessages from "../../../messages/en/home.json";
-import "../../globals.css";
 import { RouteGuard } from "./(components)/RouteGuard";
 import SideToChat from "../(components)/sideToChat/SideToChat";
 import { AutoLocationOnVisit } from "./(dialogs)/PickupDialog/AutoLocationOnVisit";
@@ -21,20 +19,6 @@ import { CurrentLocationDialog } from "./(dialogs)/PickupDialog/CurrentLocationD
 import ReactQueryProvider from "@/provider/ReactQueryProvider";
 import ReservationStateResetWatcher from "./(components)/ReservationStateResetWatcher";
 import { TooltipProvider } from "../(components)/ui/tooltip";
-
-// const fontZain = Zain({
-//   subsets: ["arabic", "latin"],
-//   weight: ["400", "200", "300", "700"],
-//   display: "swap",
-//   variable: "--font-zain",
-// });
-
-const fontAlmarai = Almarai({
-  weight: ["400", "700", "800"],
-  subsets: ["arabic", "latin"],
-  display: "swap",
-  variable: "--font-almarai",
-});
 
 // function getLocaleMetadata(locale: string) {
 //   const normalizedLocale = locale === "en" ? "en" : "ar";
@@ -157,33 +141,22 @@ export default async function LocaleLayout({
   const messages = await getMessages();
 
   return (
-    <html
-      lang={locale}
-      dir={locale === "ar" ? "rtl" : "ltr"}
-      className={` ${fontAlmarai.variable}`}
-    >
-      <body
-        style={{ fontFamily: fontAlmarai.style.fontFamily }}
-        className="flex flex-col overflow-y-scroll"
-      >
-        <NextIntlClientProvider messages={messages}>
-          <TooltipProvider>
-            <ReactQueryProvider>
-              <DialogProvider>
-                <RouteGuard />
-                <ReservationStateResetWatcher />
-                <AutoLocationOnVisit />
-                <CurrentLocationDialog />
-                <Header />
-                <SideToChat />
-                <main className="max-sm:pt-[65px] flex-1">{children}</main>
-                <Footer />
-                <Toaster />
-              </DialogProvider>
-            </ReactQueryProvider>
-          </TooltipProvider>
-        </NextIntlClientProvider>
-      </body>
-    </html>
+    <NextIntlClientProvider messages={messages}>
+      <TooltipProvider>
+        <ReactQueryProvider>
+          <DialogProvider>
+            <RouteGuard />
+            <ReservationStateResetWatcher />
+            <AutoLocationOnVisit />
+            <CurrentLocationDialog />
+            <Header />
+            <SideToChat />
+            <main className="max-sm:pt-[65px] flex-1">{children}</main>
+            <Footer />
+            <Toaster />
+          </DialogProvider>
+        </ReactQueryProvider>
+      </TooltipProvider>
+    </NextIntlClientProvider>
   );
 }

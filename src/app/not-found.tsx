@@ -1,6 +1,5 @@
 import Image from "next/image";
 import { Button } from "./(components)";
-import "../globals.css";
 
 const NotFound = () => {
   return (
