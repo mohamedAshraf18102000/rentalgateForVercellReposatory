@@ -20,7 +20,6 @@ import DriverCard from "@/app/(components)/customCards/DriverCard";
 import { useTranslations } from "next-intl";
 import OffersCard from "@/app/(components)/customCards/OffersCard";
 import KMPackageCard from "@/app/(components)/customCards/KMPackageCard";
-import type { ServiceCardBase } from "@/types/companyCars/carServices";
 import { Info } from "lucide-react";
 
 const page = () => {
