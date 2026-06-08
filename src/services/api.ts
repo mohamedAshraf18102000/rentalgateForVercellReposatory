@@ -1,8 +1,13 @@
 import {
+  ApiError,
+  ApiUnavailableError,
+} from "@/lib/api/api-error";
+import {
   getDialogMessage,
 } from "@/lib/utils/errorMessagesHandler";
 import { emitApiErrorDialog } from "@/lib/utils/errorDialogEvents";
 import { getCookie } from "@/util/cookies";
+import { API_BASE_URL } from "@/util/api";
 
 type AppLocale = "ar" | "en";
 
@@ -74,10 +79,16 @@ export async function fetcher<T>(
     requestHeaders.set("Authorization", `Bearer ${token}`);
   }
 
-  const res = await fetch(`https://api.rentalgate.net/api${url}`, {
-    ...options,
-    headers: requestHeaders,
-  });
+  let res: Response;
+
+  try {
+    res = await fetch(`${API_BASE_URL}${url}`, {
+      ...options,
+      headers: requestHeaders,
+    });
+  } catch (error) {
+    throw new ApiUnavailableError(error);
+  }
 
   if (!res.ok) {
     let errorMessage = "API Error";
@@ -88,10 +99,15 @@ export async function fetcher<T>(
       // Not a JSON error or empty body
       console.log("Error fetching data:", e);
     }
+
+    if (res.status >= 500) {
+      throw new ApiUnavailableError(new ApiError(errorMessage, { status: res.status }));
+    }
+
     if (!options?.skipErrorToast) {
       emitApiErrorDialog(getDialogMessage(errorMessage));
     }
-    throw new Error(errorMessage);
+    throw new ApiError(errorMessage, { status: res.status });
   }
 
   return res.json();

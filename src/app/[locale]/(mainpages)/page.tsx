@@ -1,4 +1,4 @@
-import { redirect } from "@/i18n/routing";
+import { redirectIfServerUnavailable } from "@/lib/api/handle-api-error";
 import { setRequestLocale } from "next-intl/server";
 import HomeMockups from "./(home)/HomeMockups";
 import HomeSlider from "./(home)/HomeSlider";
@@ -29,8 +29,7 @@ const page = async ({ params }: Props) => {
   try {
     homeData = await getHomePageDetailsWithAuth();
   } catch (error) {
-    console.error("Error fetching home data:", error);
-    return redirect({ href: "/maintenance", locale });
+    redirectIfServerUnavailable(error, locale);
   }
   return (
     <>
