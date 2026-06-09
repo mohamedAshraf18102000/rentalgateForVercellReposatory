@@ -219,7 +219,8 @@
       "pointsDiscountLabel": "خصم النقاط",
       "amountDetailsHeader": "تفاصيل المبلغ:",
       "totalBeforeTaxLabel": "إجمالي المبلغ (غير شامل الضريبة)",
-      "taxValueLabel": "قيمة الضريبة"
+      "taxValueLabel": "قيمة الضريبة",
+      "withoutTaxLabel": "(غير شامل الضريبة)"
     }
   },
   "rentalDuration": "مدة الإيجار",

@@ -61,7 +61,7 @@ const ReservationFinalDetails = ({
           },
           {
             isAvailable: (reservationData?.servicesPrice ?? 0) !== 0,
-            label: t("reservation.finalDetails.additionalServicesLabel"),
+            label: t("reservation.finalDetails.rentalAgreementFeeLabel"),
             value: formatPrice(reservationData?.servicesPrice || 0),
           },
           {
@@ -71,7 +71,10 @@ const ReservationFinalDetails = ({
           },
           {
             isAvailable: (reservationData?.extraKmPrice ?? 0) !== 0,
-            label: t("reservation.finalDetails.extraKilometersFeeLabel"),
+            label:
+              t("reservation.finalDetails.extraKilometersFeeLabel") +
+              " " +
+              t("reservation.finalDetails.withoutTaxLabel"),
             value: formatPrice(reservationData?.extraKmPrice || 0),
           },
           {

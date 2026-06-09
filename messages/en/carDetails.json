@@ -217,7 +217,8 @@
       "pointsDiscountLabel": "Points discount",
       "amountDetailsHeader": "Amount details:",
       "totalBeforeTaxLabel": "Total amount (excluding tax)",
-      "taxValueLabel": "Tax amount"
+      "taxValueLabel": "Tax amount",
+      "withoutTaxLabel": "(excluding tax)"
     }
   },
   "rentalDuration": "Rental Duration",

@@ -13,7 +13,7 @@ import {
 } from "@/lib/validations/reservationSchema";
 import { useLocale, useTranslations } from "next-intl";
 
-import StepOne from "./StepOne";
+import StepOne from "./stepOne/StepOne";
 import StepTwo from "./StepTwo";
 import ForOtherStepTwo from "./ForOtherStepTwo";
 import StepThree from "./StepThree";
