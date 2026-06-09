@@ -29,7 +29,8 @@ const page = async ({ params }: Props) => {
   try {
     homeData = await getHomePageDetailsWithAuth();
   } catch (error) {
-    redirectIfServerUnavailable(error, locale);
+    await redirectIfServerUnavailable(error, locale);
+    throw error;
   }
   return (
     <>

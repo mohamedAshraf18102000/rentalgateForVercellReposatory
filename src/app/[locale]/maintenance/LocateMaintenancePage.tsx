@@ -1,8 +1,22 @@
 "use client";
+
 import { Button } from "@/app/(components)";
+import { useBackendHealthPolling } from "@/hooks/useBackendHealthPolling";
+import { useLocale, useTranslations } from "next-intl";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 export function LocateMaintenancePage() {
+  const t = useTranslations("common.maintenancePage");
+  const locale = useLocale();
+  const router = useRouter();
+
+  const { checkHealth, isChecking } = useBackendHealthPolling({
+    onHealthy: () => {
+      router.replace(`/${locale}`);
+    },
+  });
+
   return (
     <section className="relative flex flex-col items-center justify-center min-h-screen bg-zinc-950 overflow-hidden px-6">
       <div className="absolute inset-0 pointer-events-none">
@@ -23,23 +37,24 @@ export function LocateMaintenancePage() {
               letterSpacing: "-0.04em",
             }}
           >
-            بوابه التأجير
+            {t("brandName")}
           </p>
 
           <p
             className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-[60%] text-[80px] sm:text-[100px] font-black leading-none text-red-500 tracking-tight"
             style={{ letterSpacing: "-0.04em" }}
           >
-            قريباً
+            {t("comingSoon")}
           </p>
 
           <div className="relative mt-20 w-[320px] sm:w-[400px]">
             <Image
               src="/cars/notFoundCar.webp"
-              alt="Not Found Car"
+              alt={t("imageAlt")}
               width={400}
               height={280}
               className="w-full object-contain drop-shadow-2xl"
+              priority
             />
             <div className="mx-auto mt-1 w-3/4 h-3 bg-red-600/15 blur-xl rounded-full" />
           </div>
@@ -47,11 +62,10 @@ export function LocateMaintenancePage() {
 
         <div className="flex flex-col gap-3 max-w-sm">
           <p className="text-white text-3xl sm:text-4xl font-bold tracking-tight leading-tight">
-            نُجري بعض التحسينات
+            {t("title")}
           </p>
           <p className="text-zinc-400 text-base leading-relaxed">
-            فريقنا يعمل حاليًا على تحديث النظام وإضافة تحسينات جديدة لضمان تجربة
-            أسرع وأكثر كفاءة. سنعود للعمل بكامل طاقتنا قريبًا.
+            {t("description")}
           </p>
         </div>
 
@@ -64,12 +78,12 @@ export function LocateMaintenancePage() {
         <Button
           variant="default"
           size="lg"
-          asChild
+          disabled={isChecking}
           onClick={() => {
-            window.location.reload();
+            void checkHealth();
           }}
         >
-          <span>إعادة المحاولة</span>
+          {isChecking ? t("checking") : t("retry")}
         </Button>
       </div>
     </section>

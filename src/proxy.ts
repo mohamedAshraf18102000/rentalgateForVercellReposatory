@@ -1,6 +1,8 @@
 import createMiddleware from "next-intl/middleware";
 import { NextRequest, NextResponse } from "next/server";
 import { routing } from "./i18n/routing";
+import { getCachedBackendHealth } from "./lib/health/health-cache";
+import { isMaintenancePath } from "./lib/health/paths";
 import { isAuthenticatedOnServer } from "./util/auth-server";
 import {
   ensureLocalizedPathname,
@@ -11,7 +13,7 @@ import { isProtectedPath } from "./util/protected-routes";
 
 const intlMiddleware = createMiddleware(routing);
 
-export default function proxy(request: NextRequest) {
+export default async function proxy(request: NextRequest) {
   const { pathname, search } = request.nextUrl;
 
   if (
@@ -32,8 +34,20 @@ export default function proxy(request: NextRequest) {
     return NextResponse.redirect(redirectUrl);
   }
 
+  const locale = getPreferredLocale(request);
+  const isHealthy = await getCachedBackendHealth();
+
+  if (!isHealthy && !isMaintenancePath(pathname)) {
+    return NextResponse.redirect(
+      new URL(`/${locale}/maintenance${search}`, request.url),
+    );
+  }
+
+  if (isHealthy && isMaintenancePath(pathname)) {
+    return NextResponse.redirect(new URL(`/${locale}${search}`, request.url));
+  }
+
   if (isProtectedPath(pathname) && !isAuthenticatedOnServer(request)) {
-    const locale = getPreferredLocale(request);
     const redirectUrl = new URL(`/${locale}${search}`, request.url);
     redirectUrl.searchParams.set("requireAuth", "true");
     redirectUrl.searchParams.set(

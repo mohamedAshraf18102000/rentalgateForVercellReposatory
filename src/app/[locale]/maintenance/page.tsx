@@ -1,5 +1,5 @@
 import { redirect } from "@/i18n/routing";
-import { checkApiAvailability } from "@/services/health/health.service";
+import { checkBackendHealth } from "@/lib/health";
 import { setRequestLocale } from "next-intl/server";
 import { LocateMaintenancePage } from "./LocateMaintenancePage";
 
@@ -13,7 +13,8 @@ const MaintenancePage = async ({ params }: Props) => {
   const { locale } = await params;
   setRequestLocale(locale);
 
-  if (await checkApiAvailability()) {
+  const { isUp } = await checkBackendHealth();
+  if (isUp) {
     redirect({ href: "/", locale });
   }
 

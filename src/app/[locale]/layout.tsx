@@ -8,6 +8,7 @@ import { cookies } from "next/headers";
 import { hasLocale } from "next-intl";
 import { redirect } from "next/navigation";
 import { ensureLocalizedPathname } from "@/util/locale-path";
+import { BackendHealthWatcher } from "./(components)/BackendHealthWatcher";
 import { RouteGuard } from "./(components)/RouteGuard";
 import { AutoLocationOnVisit } from "./(dialogs)/PickupDialog/AutoLocationOnVisit";
 import { CurrentLocationDialog } from "./(dialogs)/PickupDialog/CurrentLocationDialog";
@@ -141,6 +142,7 @@ export default async function LocaleLayout({
         <ReactQueryProvider>
           <DialogProvider>
             <RouteGuard />
+            <BackendHealthWatcher />
             <ReservationStateResetWatcher />
             <AutoLocationOnVisit />
             <CurrentLocationDialog />

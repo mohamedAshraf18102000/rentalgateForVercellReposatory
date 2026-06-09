@@ -248,6 +248,15 @@
       "taxValueLabel": "Tax amount"
     }
   },
+  "maintenancePage": {
+    "brandName": "Rental Gate",
+    "comingSoon": "Soon",
+    "title": "We're making improvements",
+    "description": "Our team is currently updating the system and adding new enhancements to ensure a faster, more efficient experience. We'll be back at full capacity soon.",
+    "retry": "Try again",
+    "checking": "Checking...",
+    "imageAlt": "Maintenance illustration"
+  },
   "dateTimePicker": {
     "selectDate": "Select date",
     "from": "From:",
