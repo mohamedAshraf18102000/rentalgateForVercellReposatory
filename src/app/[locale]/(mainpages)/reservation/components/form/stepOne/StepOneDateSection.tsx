@@ -12,6 +12,7 @@ import { LucideIcon } from "lucide-react";
 import { DateTimePicker } from "@/app/(components)/ui/dateTime-picker";
 import CarRentIcon from "@/constants/icons/CarRentIcon";
 import { ReservationFormValues } from "@/lib/validations/reservationSchema";
+import { getMinToDate } from "./stepOneDateTimeUtils";
 
 interface StepOneDateSectionProps {
   control: Control<ReservationFormValues>;
@@ -33,10 +34,6 @@ interface StepOneDateSectionProps {
     date: Date | null,
     minBoundary?: Date | null,
   ) => Date | null;
-  isDateLessThanMinimumRental: (
-    startDate: Date | null | undefined,
-    endDate: Date | null | undefined,
-  ) => boolean;
 }
 
 const StepOneDateSection = ({
@@ -53,7 +50,6 @@ const StepOneDateSection = ({
   isDateBlocked,
   isDateTimeBlocked,
   normalizeDateTimeToAvailability,
-  isDateLessThanMinimumRental,
 }: StepOneDateSectionProps) => {
   return (
     <div className="mb-1 flex w-full flex-col items-start gap-3 lg:flex-row lg:items-end">
@@ -83,7 +79,12 @@ const StepOneDateSection = ({
                 }
 
                 field.onChange(nextDate);
-                if (isDateLessThanMinimumRental(nextDate, watch("toDate"))) {
+                const currentToDate = watch("toDate");
+                if (
+                  nextDate &&
+                  currentToDate &&
+                  currentToDate < getMinToDate(nextDate)
+                ) {
                   setValue("toDate", undefined);
                 }
               }}
@@ -110,13 +111,21 @@ const StepOneDateSection = ({
               inputClassName="text-base!"
               withTime
               allowClear
-              minDate={minToDate ?? undefined}
-              isDateDisabled={(date) => isDateBlocked(date, minToDate)}
-              isTimeDisabled={(date) => isDateTimeBlocked(date, minToDate)}
+              minDate={fromDate ? (minToDate ?? undefined) : undefined}
+              isDateDisabled={(date) =>
+                !fromDate || isDateBlocked(date, minToDate)
+              }
+              isTimeDisabled={(date) =>
+                !fromDate || isDateTimeBlocked(date, minToDate)
+              }
               value={field.value}
               onChange={(date: Date | null) => {
                 if (!date) {
                   field.onChange(null);
+                  return;
+                }
+
+                if (!fromDate || !minToDate) {
                   return;
                 }
 
@@ -128,8 +137,8 @@ const StepOneDateSection = ({
                   return;
                 }
 
-                if (isDateLessThanMinimumRental(fromDate, nextDate)) {
-                  field.onChange(minToDate ?? nextDate);
+                if (nextDate < minToDate) {
+                  field.onChange(minToDate);
                   return;
                 }
 

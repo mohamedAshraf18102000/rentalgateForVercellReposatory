@@ -36,7 +36,6 @@ const StepOne = ({ control, errors, watch, setValue }: StepOneProps) => {
     isDateTimeBlocked,
     isDateBlocked,
     normalizeDateTimeToAvailability,
-    isDateLessThanMinimumRental,
     handleOpenPickupLocationDialog,
     handleOpenReturnLocationDialog,
   } = useStepOne({ control, errors, watch, setValue });
@@ -82,7 +81,6 @@ const StepOne = ({ control, errors, watch, setValue }: StepOneProps) => {
         isDateBlocked={isDateBlocked}
         isDateTimeBlocked={isDateTimeBlocked}
         normalizeDateTimeToAvailability={normalizeDateTimeToAvailability}
-        isDateLessThanMinimumRental={isDateLessThanMinimumRental}
       />
 
       <StepOneOffersSection

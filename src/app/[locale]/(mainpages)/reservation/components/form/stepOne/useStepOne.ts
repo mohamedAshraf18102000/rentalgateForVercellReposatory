@@ -15,10 +15,9 @@ import { useUserPreferedFiltersStore } from "@/lib/stores/useUserPreferedFilters
 import { ReservationFormValues } from "@/lib/validations/reservationSchema";
 import { useRentalDays } from "@/hooks/useCalculateRentalDays";
 import { getBestOffer } from "@/app/[locale]/(mainpages)/reservation/components/form/stepOne/getBestOffer";
-import { MIN_RENTAL_MS } from "./stepOneConstants";
 import {
   createDateTimeAvailabilityHelpers,
-  isDateLessThanMinimumRental,
+  getMinToDate,
 } from "./stepOneDateTimeUtils";
 import {
   getLocationDialogInitialTab,
@@ -63,9 +62,7 @@ export const useStepOne = ({
 
   const fromDate = watch("fromDate");
   const toDate = watch("toDate");
-  const minToDate = fromDate
-    ? new Date(fromDate.getTime() + MIN_RENTAL_MS)
-    : null;
+  const minToDate = fromDate ? getMinToDate(fromDate) : null;
 
   const rentalDays = useRentalDays(fromDate, toDate);
   const bestOffer = getBestOffer(offerPackages ?? [], rentalDays);
@@ -320,7 +317,6 @@ export const useStepOne = ({
     isDateTimeBlocked,
     isDateBlocked,
     normalizeDateTimeToAvailability,
-    isDateLessThanMinimumRental,
     handleOpenPickupLocationDialog,
     handleOpenReturnLocationDialog,
   };

@@ -9,6 +9,9 @@ import {
 
 const MS_PER_DAY = 24 * 60 * 60 * 1000;
 
+export const getMinToDate = (fromDate: Date): Date =>
+  new Date(fromDate.getTime() + MS_PER_DAY);
+
 export const getOfferRecommendedEndDate = (
   fromDate: Date | null | undefined,
   offer: OfferPackage,

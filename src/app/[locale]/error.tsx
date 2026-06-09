@@ -21,7 +21,7 @@ export default function LocaleErrorPage({ error }: ErrorPageProps) {
   }
 
   return (
-    <section className="flex min-h-[50vh] flex-col items-center justify-center gap-4 px-6 text-center">
+    <section className="flex min-h-screen flex-col items-center justify-center gap-4 px-6 text-center">
       <h2 className="text-2xl font-bold">حدث خطأ غير متوقع</h2>
       <p className="max-w-md text-muted-foreground">
         يرجى المحاولة مرة أخرى. إذا استمرت المشكلة، تواصل مع الدعم.
