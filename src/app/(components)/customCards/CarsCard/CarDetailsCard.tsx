@@ -19,7 +19,7 @@ import {
 import CarCategoryBadge from "../../carCategoryBadge/CarCategoryBadge";
 import DOMPurify from "dompurify";
 import { PricingType } from "@/lib/utils/calculateRentalPrice";
-import { formatPrice } from "@/lib/utils/formatPrice";
+import { formatPrice, formatRatingValue } from "@/lib/utils/formatPrice";
 import { getPriceWithoutTax } from "@/lib/utils/getPriceWithoutTax";
 import { useLocale, useTranslations } from "next-intl";
 import { useMemo } from "react";
@@ -96,7 +96,7 @@ const CarDetailsCard = ({
   specifications = [],
   workingTime,
 }: CarDetailsCardProps) => {
-  console.log("rate",rate);
+  console.log("rate", rate);
 
   const router = useRouter();
   const locale = useLocale();
@@ -202,7 +202,7 @@ const CarDetailsCard = ({
             {showRating && (
               <div className="flex items-center gap-1">
                 <data value={String(rate)} className="text-sm sm:text-base">
-                  {rate}
+                  {formatRatingValue(rate)}
                 </data>
                 <StarIcon />
               </div>

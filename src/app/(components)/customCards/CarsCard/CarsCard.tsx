@@ -12,7 +12,7 @@ import { SaudiRiyal } from "lucide-react";
 import FreeKmIcon from "../../../../constants/icons/FreeKmIcon";
 
 import { PricingType } from "@/lib/utils/calculateRentalPrice";
-import { formatPrice } from "@/lib/utils/formatPrice";
+import { formatPrice, formatRatingValue } from "@/lib/utils/formatPrice";
 import { getPriceWithoutTax } from "@/lib/utils/getPriceWithoutTax";
 import { useTranslations } from "next-intl";
 import { normalizeImageUrl } from "@/util";
@@ -181,7 +181,7 @@ const CarsCard = ({
                       value={String(rate)}
                       className="text-sm font-bold sm:text-base"
                     >
-                      {rate}
+                      {formatRatingValue(rate)}
                     </data>
                     <div className="flex items-center" aria-hidden>
                       <RatingStars rating={rate} />
