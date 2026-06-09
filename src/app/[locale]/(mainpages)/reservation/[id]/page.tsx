@@ -467,7 +467,7 @@ const page = () => {
                     </div>
                   )}
                 </div>
-                <div className="grid grid-cols-2 items-center gap-2">
+                <div className="flex items-center justify-end gap-3 w-full">
                   <button
                     onClick={handleResetForm}
                     className="text-sm text-Grey500 underline underline-offset-2 cursor-pointer"
@@ -484,7 +484,7 @@ const page = () => {
                       )
                     }
                     onClick={handleNext}
-                    className="w-full text-sm! md:w-auto md:text-base!"
+                    className="w-fit text-sm! md:w-auto md:text-base!"
                     loading={
                       isLoading ||
                       isCalculating ||
@@ -511,6 +511,7 @@ const page = () => {
             <div className="w-full lg:w-1/4">
               <div className="">
                 <CarsCard
+                  removeBookNowButton={true}
                   rate={carDetails?.company?.averageRating ?? 0}
                   showTax={isShowTax}
                   freeKm={carDetails?.allowedKm}

@@ -250,6 +250,7 @@ function CalendarPanel({
       dir={locale === "ar" ? "rtl" : "ltr"}
       className="cal-root bg-Grey100 p-2 rounded-2xl w-full max-w-full overflow-hidden"
       mode="single"
+      selected={selected ?? undefined}
       defaultMonth={defaultMonth ?? undefined}
       onSelect={onSelect}
       locale={dayPickerLocale}

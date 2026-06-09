@@ -51,6 +51,7 @@ interface carsCard {
   totalPrice?: number;
   rentalDays?: number;
   showTax?: boolean;
+  removeBookNowButton?: boolean;
   onClick?: () => void;
 }
 
@@ -76,6 +77,7 @@ const CarsCard = ({
   totalPrice,
   rentalDays,
   onClick,
+  removeBookNowButton = false,
 }: carsCard) => {
   const t = useTranslations("carDetails");
 
@@ -247,28 +249,40 @@ const CarsCard = ({
                         </>
                       ))}
 
-                    <p className="flex items-center text-sm sm:text-base">
-                      <SaudiRiyal className="h-4 w-4 sm:h-5 sm:w-5" />
-                      <span className="mx-1">/</span>
-                      <span>{`${hasSelectedRentalDays ? rentalDays : 1} ${t("days")}`}</span>
-                    </p>
+                    <div className="flex items-center gap-3">
+                      <p className="flex items-center text-sm sm:text-base">
+                        <SaudiRiyal className="h-4 w-4 sm:h-5 sm:w-5" />
+                        <span className="mx-1">/</span>
+                        <span>{`${hasSelectedRentalDays ? rentalDays : 1} ${t("days")}`}</span>
+                      </p>
+
+                      {removeBookNowButton && (
+                        <p className="text-[#CFCFCF] text-[12px] my-2!">
+                          ( {showTax ? t("taxIncluded") : t("taxExcluded")} )
+                        </p>
+                      )}
+                    </div>
                   </div>
                 </div>
-                <p className="text-[#CFCFCF] text-[12px]">
-                  {showTax ? t("taxIncluded") : t("taxExcluded")}
-                </p>
+                {!removeBookNowButton && (
+                  <p className="text-[#CFCFCF] text-[12px]">
+                    {showTax ? t("taxIncluded") : t("taxExcluded")}
+                  </p>
+                )}
               </div>
 
-              <div className="">
-                <Button
-                  variant="secondary"
-                  className=" bg-white font-bold text-sm! px-2! py-2! rounded-lg!"
-                >
-                  <span className="bg-linear-to-b from-[#BE2326] to-[#581012] bg-clip-text text-transparent">
-                    {t("bookNow")}
-                  </span>
-                </Button>
-              </div>
+              {!removeBookNowButton && (
+                <div className="">
+                  <Button
+                    variant="secondary"
+                    className=" bg-white font-bold text-sm! px-2! py-2! rounded-lg!"
+                  >
+                    <span className="bg-linear-to-b from-[#BE2326] to-[#581012] bg-clip-text text-transparent">
+                      {t("bookNow")}
+                    </span>
+                  </Button>
+                </div>
+              )}
             </div>
             {extraContent && (
               <div className="w-full h-full">{extraContent}</div>

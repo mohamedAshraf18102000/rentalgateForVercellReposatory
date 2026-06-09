@@ -288,7 +288,7 @@ const StepOne = ({ control, errors, watch, setValue }: StepOneProps) => {
       );
       setValue("returnTrainId", updatedFormData.returnTrainId || null);
       setValue("returnAirportId", updatedFormData.returnAirportId || null);
-
+  
       setBookedCarFormData({
         carReturnLocation: locationName,
         returnLat:
