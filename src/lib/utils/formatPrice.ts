@@ -14,5 +14,5 @@ export const formatPrice = (price: number | null | undefined): string => {
 };
 
 export const formatRatingValue = (num: number): number => {
-  return Math.ceil(num * 10) / 10;
+  return Math.ceil(num * 100) / 100;
 };
