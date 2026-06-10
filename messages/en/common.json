@@ -217,7 +217,13 @@
         "bookingDetailsTitle": "Booking details",
         "additionalAmount": "Additional amount",
         "done": "Back to booking details",
-        "amountDetailsHeader": "Amount details:"
+        "amountDetailsHeader": "Amount details:",
+        "paymentTitle": "Extension Payment",
+        "completePayment": "Complete Payment",
+        "paymentSuccessTitle": "Extension Confirmed!",
+        "paymentSuccessDescription": "Your booking has been successfully extended.",
+        "paymentRedirectCountdown": "Returning to booking details in {seconds} s",
+        "paymentRedirectGoNow": "Go now"
       }
     },
     "rating": {

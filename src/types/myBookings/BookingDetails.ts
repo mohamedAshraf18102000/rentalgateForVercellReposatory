@@ -14,6 +14,34 @@ export interface LocationChanges {
   receivePrice: number;
 }
 
+
+export interface ReservationExtend {
+  days: number;
+  endDate: string;
+  reservationStatus: string;
+  promoCodeCode: string | null;
+  extendId: number;
+  daysCost: number;
+  servicesCost: number;
+  driverCost: number;
+  driverDays: number;
+  driverHours: number | null;
+  driverExtraHours: number;
+  driverExtraHoursCost: number;
+  promoValue: number;
+  points: number;
+  pointsValue: number;
+  totalBeforeTax: number;
+  taxPercentage: number;
+  taxValue: number;
+  total: number;
+  paymentType: string | null;
+  paymentDate: string | null;
+  carDaysDiscount: number;
+  extraHours: number;
+  extraHoursCost: number;
+}
+
 export type ReservationDetailsResponse = {
   reservationId: number;
   clientId: number;
@@ -79,7 +107,7 @@ export type ReservationDetailsResponse = {
     englishName: string;
     price: number;
   }[];
-  reservationExtends: unknown[]; // refine later if you have structure
+  reservationExtends: ReservationExtend[]; // refine later if you have structure
 
   reservationForOther: unknown | null;
 };

@@ -104,7 +104,7 @@
     }
   },
   "myBookingsPage": {
-    "updateAndSettingsHint": "قُم بتحديث بياناتك الشخضية و ضبط الأعدادات",
+    "updateAndSettingsHint": "قُم بتحديث بياناتك الشخصية و ضبط الأعدادات",
     "title": "حجوزاتي",
     "showAllBookings": "عرض جميع الحجوزات",
     "shownBookingsCount": "عدد الحجوزات المعروضة",

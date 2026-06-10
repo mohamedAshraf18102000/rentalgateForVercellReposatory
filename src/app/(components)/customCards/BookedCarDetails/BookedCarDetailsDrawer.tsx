@@ -29,7 +29,10 @@ import {
 import type { ReservationDetailsResponse } from "@/types/myBookings/BookingDetails";
 import { useLocale, useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/routing";
-import type { ExtendReservationDriverPayload } from "@/services/mybookings/extendReservation.service";
+import type {
+  ExtendReservationDriverPayload,
+  ExtendReservationPayload,
+} from "@/services/mybookings/extendReservation.service";
 
 import { format } from "date-fns";
 import { ar, enUS } from "date-fns/locale";
@@ -97,6 +100,8 @@ const BookedCarDetailsDrawer = ({
   const dateLocale = locale === "ar" ? ar : enUS;
   const [extendQuoteData, setExtendQuoteData] =
     useState<ReservationDetailsResponse | null>(null);
+  const [extendPayload, setExtendPayload] =
+    useState<ExtendReservationPayload | null>(null);
   const [activeView, setActiveView] = useState<
     | "booking-details"
     | "cancel-booking"
@@ -258,6 +263,7 @@ const BookedCarDetailsDrawer = ({
         }
         setActiveView("booking-details");
         setExtendQuoteData(null);
+        setExtendPayload(null);
       }}
     >
       {trigger && <SheetTrigger asChild>{trigger}</SheetTrigger>}
@@ -345,7 +351,7 @@ const BookedCarDetailsDrawer = ({
                       </div>
                     </div>
                     <Separator className="my-3" />
-                    <div className="bg-Grey100 flex flex-col gap-3 rounded-2xl p-3 sm:flex-row sm:items-center sm:justify-between">
+                    <div className="bg-Grey100 flex flex-col gap-3 rounded-2xl p-3 sm:items-center sm:justify-between">
                       <div className="flex w-full items-center justify-between">
                         <div>
                           <div className="text-sm md:text-base flex items-center gap-2">
@@ -398,6 +404,27 @@ const BookedCarDetailsDrawer = ({
                           </div>
                         )}
                       </div>
+                      {data?.reservationExtends?.length > 0 && (
+                        <div className="p-3 rounded-sm w-full">
+                          <span>تاريخ التمديد :</span>
+                          <div className="flex items-center gap-2 mt-2">
+                            <div className="w-2 h-2 bg-black rounded-full" />
+                            <p>
+                              {format(
+                                new Date(data.reservationExtends[0].endDate),
+                                `${locale === "ar" ? "yyyy/MM/dd" : "dd/MM/yyyy"} | hh:mm a`,
+                                {
+                                  locale: dateLocale,
+                                },
+                              )}
+                            </p>
+
+                            <span className="text-sm text-gray-500">
+                              ( {data.reservationExtends[0].days} يوم )
+                            </span>
+                          </div>
+                        </div>
+                      )}
                     </div>
                     <Separator className="my-3" />
                     <div className="bg-Grey100 flex flex-col gap-3 rounded-2xl p-3 sm:flex-row sm:items-center sm:justify-between">
@@ -572,6 +599,7 @@ const BookedCarDetailsDrawer = ({
               reservationId={data?.reservationId}
               bookingStartDate={data?.startDate}
               bookingEndDate={data?.endDate}
+              reservationExtends={data?.reservationExtends}
               driver={extendReservationMeta?.driver}
               points={extendReservationMeta?.points}
               promoCode={extendReservationMeta?.promoCode}
@@ -584,17 +612,20 @@ const BookedCarDetailsDrawer = ({
                     : "booking-details",
                 )
               }
-              onExtendSuccess={(quoteData) => {
+              onExtendSuccess={(quoteData, payload) => {
                 setExtendQuoteData(quoteData);
+                setExtendPayload(payload);
                 setActiveView("booking-extend-complete");
               }}
             />
           ) : activeView === "booking-extend-complete" ? (
             <BookingExtendComplete
               extendData={extendQuoteData}
+              originalPayload={extendPayload}
               onBack={() => setActiveView("booking-extending")}
               onDone={() => {
                 setExtendQuoteData(null);
+                setExtendPayload(null);
                 setActiveView("booking-details");
               }}
             />

@@ -2,7 +2,10 @@ import { Button, Input } from "@/app/(components)";
 import { DateTimePicker } from "@/app/(components)/ui/dateTime-picker";
 import { useExtendReservation } from "@/hooks/api/booking/useExtendReservation";
 import { formatLocalDateTime } from "@/lib/utils/formatLocalDateTime";
-import type { ReservationDetailsResponse } from "@/types/myBookings/BookingDetails";
+import type {
+  ReservationDetailsResponse,
+  ReservationExtend,
+} from "@/types/myBookings/BookingDetails";
 import type {
   ExtendReservationDriverPayload,
   ExtendReservationPayload,
@@ -21,10 +24,14 @@ import {
 
 interface BookingExtendingProps {
   setShowBookingExtending: (show: boolean) => void;
-  onExtendSuccess?: (data: ReservationDetailsResponse) => void;
+  onExtendSuccess?: (
+    data: ReservationDetailsResponse,
+    payload: ExtendReservationPayload,
+  ) => void;
   reservationId?: number;
   bookingStartDate?: string | Date | null;
   bookingEndDate?: string | Date | null;
+  reservationExtends?: ReservationExtend[];
   driver?: ExtendReservationDriverPayload | null;
   points?: Record<string, unknown> | null;
   promoCode?: string | null;
@@ -39,6 +46,7 @@ const BookingExtending = ({
   reservationId,
   bookingStartDate,
   bookingEndDate,
+  reservationExtends,
   driver,
   points,
   promoCode,
@@ -87,8 +95,29 @@ const BookingExtending = ({
     () => parseDate(bookingStartDate) ?? new Date(),
     [bookingStartDate],
   );
-  const [toDate, setToDate] = useState<Date | null>(() =>
-    parseDate(bookingEndDate),
+
+  const getLastExtendEndDate = (
+    extendsList?: ReservationExtend[],
+  ): Date | null => {
+    if (!extendsList?.length) return null;
+
+    return extendsList.reduce<Date | null>((latest, extend) => {
+      const extendEndDate = parseDate(extend.endDate);
+      if (!extendEndDate) return latest;
+      if (!latest || extendEndDate.getTime() > latest.getTime()) {
+        return extendEndDate;
+      }
+      return latest;
+    }, null);
+  };
+
+  const lastExtendEndDate = useMemo(
+    () => getLastExtendEndDate(reservationExtends),
+    [reservationExtends],
+  );
+
+  const [toDate, setToDate] = useState<Date | null>(
+    () => getLastExtendEndDate(reservationExtends) ?? parseDate(bookingEndDate),
   );
   const normalizedDriver: ExtendReservationDriverPayload = driver ?? {
     driverRequested: false,
@@ -134,7 +163,7 @@ const BookingExtending = ({
 
     extendReservation(payload, {
       onSuccess: (data) => {
-        onExtendSuccess?.(data);
+        onExtendSuccess?.(data, payload);
       },
     });
   };
@@ -181,7 +210,7 @@ const BookingExtending = ({
                 inputClassName="text-base!"
                 withTime
                 allowClear
-                minDate={fromDate}
+                minDate={lastExtendEndDate ?? fromDate}
                 value={toDate}
                 onChange={setToDate}
               />
