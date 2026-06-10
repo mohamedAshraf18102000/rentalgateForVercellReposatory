@@ -12,6 +12,7 @@ export function LocateMaintenancePage() {
   const router = useRouter();
 
   const { checkHealth, isChecking } = useBackendHealthPolling({
+    enabled: false,
     onHealthy: () => {
       router.replace(`/${locale}`);
     },

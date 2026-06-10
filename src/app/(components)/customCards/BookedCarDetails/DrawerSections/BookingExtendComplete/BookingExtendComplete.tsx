@@ -3,15 +3,15 @@
 import { Button } from "@/app/(components)";
 import { Separator } from "@/app/(components)/ui/separator";
 import {
+  SheetContent,
   SheetFooter,
   SheetHeader,
   SheetTitle,
 } from "@/app/(components)/ui/sheet";
-import ReservationFinalDetailsItem from "@/app/[locale]/(mainpages)/reservation/components/reservationDrawer/components/ReservationFinalDetailsItem";
-import { formatPrice } from "@/lib/utils";
 import type { ReservationDetailsResponse } from "@/types/myBookings/BookingDetails";
 import { ChevronLeft, ChevronRight, SaudiRiyal } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
+import BookingExtendDetails from "./BookingExtendDetails";
 
 interface BookingExtendCompleteProps {
   extendData?: ReservationDetailsResponse | null;
@@ -53,9 +53,7 @@ const BookingExtendComplete = ({
 
         <Separator />
       </SheetHeader>
-      <div className="h-[200px] flex-1 flex items-center justify-center text-3xl font-bold bg-Grey200 rounded-2xl m-5">
-        ...coming soon
-      </div>
+      <BookingExtendDetails />
       <SheetFooter className="mt-0 border-t-2 p-5 shadow-[0px_-13px_15px_0px_#01250514]">
         <Button type="button" className="w-full text-lg!" onClick={onDone}>
           {t("myBookingsDrawer.extendBooking.complete.done")}

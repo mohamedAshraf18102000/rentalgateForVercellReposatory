@@ -67,7 +67,7 @@ const BookingExtending = dynamic(
 );
 
 const BookingExtendComplete = dynamic(
-  () => import("./DrawerSections/DrawerLocation/BookingExtendComplete"),
+  () => import("./DrawerSections/BookingExtendComplete/BookingExtendComplete"),
   { ssr: false },
 );
 
