@@ -1,6 +1,7 @@
 "use client";
 
 import { handleClientApiError } from "@/lib/api/client-redirect";
+import { ApiUnavailableError } from "@/lib/api/api-error";
 import {
   MutationCache,
   QueryCache,
@@ -17,6 +18,25 @@ export default function ReactQueryProvider({
   const [queryClient] = useState(
     () =>
       new QueryClient({
+        defaultOptions: {
+          queries: {
+            // Never retry when the backend is completely unreachable.
+            // Retrying ApiUnavailableError 3× with exponential backoff delays
+            // maintenance detection by 7+ seconds and fires redundant requests.
+            retry: (failureCount, error) => {
+              if (error instanceof ApiUnavailableError) return false;
+              return failureCount < 3;
+            },
+            retryDelay: (failureCount) =>
+              Math.min(1_000 * 2 ** failureCount, 30_000),
+          },
+          mutations: {
+            retry: (failureCount, error) => {
+              if (error instanceof ApiUnavailableError) return false;
+              return failureCount < 3;
+            },
+          },
+        },
         queryCache: new QueryCache({
           onError: handleClientApiError,
         }),

@@ -551,25 +551,25 @@ const BookedCarDetailsDrawer = ({
                         <Button
                           type="button"
                           variant="destructive"
-                          className="text-base! w-full border-2 border-StatusRed bg-transparent text-StatusRed sm:w-1/2"
+                          className="text-base! w-full border-2 border-StatusRed bg-transparent text-StatusRed sm:w-fit"
                           onClick={() => setActiveView("cancel-booking")}
                         >
                           {t("cancelBooking")}
                         </Button>
                       )}
 
-                    {data?.reservationStatus === "FINISHED" && (
+                    {data?.reservationStatus !== "CANCELLED" && (
                       <Button
                         type="button"
                         variant="destructive"
-                        className="text-base! w-full border-2 border-StatusRed bg-transparent text-StatusRed sm:w-1/2"
+                        className="text-base! w-full border-2 border-StatusRed bg-transparent text-StatusRed sm:w-fit"
                         onClick={() => setActiveView("booking-complement")}
                       >
                         ارسال شكوي
                       </Button>
                     )}
                     <Button
-                      className={`text-base! w-full sm:w-1/2`}
+                      className={`text-base! w-full sm:w-fit`}
                       onClick={() => {
                         setIsDrawerOpen(false);
                       }}

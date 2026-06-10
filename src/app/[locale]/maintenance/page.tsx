@@ -1,5 +1,5 @@
 import { redirect } from "@/i18n/routing";
-import { checkBackendHealth } from "@/lib/health";
+import { getCachedBackendHealth } from "@/lib/health";
 import { setRequestLocale } from "next-intl/server";
 import { LocateMaintenancePage } from "./LocateMaintenancePage";
 
@@ -13,7 +13,11 @@ const MaintenancePage = async ({ params }: Props) => {
   const { locale } = await params;
   setRequestLocale(locale);
 
-  const { isUp } = await checkBackendHealth();
+  // Use the shared 30 s server-side cache so that rendering this page (which
+  // is force-dynamic) does not create a fresh TCP connection to the backend
+  // on every request. The proxy already checked health before routing here;
+  // this call will hit the warm cache in the vast majority of cases.
+  const isUp = await getCachedBackendHealth();
   if (isUp) {
     redirect({ href: "/", locale });
   }

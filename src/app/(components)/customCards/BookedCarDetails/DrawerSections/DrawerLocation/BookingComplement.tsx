@@ -115,7 +115,8 @@ const BookingComplement = ({
           variant="ghost"
           size="icon"
           className="shrink-0"
-          aria-label="ارسال شكوي"
+          onClick={onBack}
+          aria-label="العودة لتفاصيل الحجز"
         >
           <BackIcon className="h-5 w-5" />
         </Button>
@@ -188,15 +189,16 @@ const BookingComplement = ({
         </div>
         <SheetFooter className="p-6 border-t mt-auto gap-3 flex-col sm:flex-row">
           <Button
+            variant={"outline"}
             type="button"
-            className="text-base! w-full sm:w-1/2 bg-transparent text-black border-2 border-Grey400 hover:bg-transparent"
+            className="text-base! w-full sm:w-fit bg-transparent text-black border-2 border-Grey400 hover:bg-transparent"
             onClick={onBack}
           >
             رجوع
           </Button>
           <Button
             type="button"
-            className="text-base! w-full sm:w-1/2 bg-transparent text-black border-2 border-Grey400 hover:bg-transparent"
+            className="text-base! w-full sm:w-fit bg-transparent text-white border-2 border-Grey400 hover:bg-transparent"
             onClick={handleCreateComplaint}
             loading={isCreatingComplaint || isUploadingImage}
             disabled={

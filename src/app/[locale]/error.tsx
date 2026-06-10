@@ -1,7 +1,7 @@
 "use client";
 
 import { API_UNAVAILABLE_MESSAGE } from "@/lib/api/api-error";
-import { redirectToMaintenanceClient } from "@/lib/api/client-redirect";
+import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 type ErrorPageProps = {
@@ -9,12 +9,22 @@ type ErrorPageProps = {
   reset: () => void;
 };
 
-export default function LocaleErrorPage({ error }: ErrorPageProps) {
+export default function LocaleErrorPage({ error, reset }: ErrorPageProps) {
+  const router = useRouter();
+
   useEffect(() => {
-    if (error.message === API_UNAVAILABLE_MESSAGE) {
-      redirectToMaintenanceClient();
-    }
-  }, [error]);
+    if (error.message !== API_UNAVAILABLE_MESSAGE) return;
+
+    // The parent locale layout (and therefore BackendHealthWatcher) remains
+    // mounted when this error boundary is shown. Dispatching the maintenance
+    // event lets BackendHealthWatcher perform a deduplicated health check and
+    // navigate via router.replace — no hard page reload.
+    // Fallback: navigate directly in case BackendHealthWatcher is somehow
+    // not yet mounted (e.g. very early hydration failure).
+    const locale =
+      window.location.pathname.split("/").filter(Boolean)[0] || "ar";
+    router.replace(`/${locale}/maintenance`);
+  }, [error, router]);
 
   if (error.message === API_UNAVAILABLE_MESSAGE) {
     return null;
@@ -29,7 +39,7 @@ export default function LocaleErrorPage({ error }: ErrorPageProps) {
       <button
         type="button"
         className="rounded-lg bg-primary px-4 py-2 text-primary-foreground"
-        onClick={() => window.location.reload()}
+        onClick={reset}
       >
         إعادة المحاولة
       </button>
