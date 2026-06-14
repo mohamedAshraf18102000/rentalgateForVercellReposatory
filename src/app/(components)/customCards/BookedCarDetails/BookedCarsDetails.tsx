@@ -15,7 +15,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { useGetUserReservationById } from "@/hooks/api/useGetUserReservationById";
 import { useStatusLabel } from "@/hooks/useBookingStatusLabel";
 import { normalizeImageUrl } from "@/util";
-import { isActiveReservationStatus } from "@/util/bookingStatus";
+import { getStatusColor } from "@/util/bookingStatus";
 
 const BookedCarsDetails = ({ data }: { data: Reservation }) => {
   const getStatusLabel = useStatusLabel();
@@ -45,7 +45,7 @@ const BookedCarsDetails = ({ data }: { data: Reservation }) => {
         <Badge
           className={`absolute top-0 max-w-[calc(100%-0.5rem)] whitespace-normal wrap-break-word rounded-none p-3 text-xs leading-tight font-bold sm:p-4 sm:text-sm ${
             isRTL ? "-right-2 rounded-bl-2xl" : "-left-2 rounded-br-2xl"
-          } ${isActiveReservationStatus(data.reservationStatus) ? "bg-StatusGreen text-StatusDarkGreen" : "bg-StatusBrownBG text-StatusBrown200"}`}
+          } ${getStatusColor(data.reservationStatus)}`}
         >
           {getStatusLabel(data.reservationStatus)}
         </Badge>

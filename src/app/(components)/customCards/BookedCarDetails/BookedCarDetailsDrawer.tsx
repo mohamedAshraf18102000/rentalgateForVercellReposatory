@@ -45,7 +45,7 @@ import RatingContainer from "./DrawerSections/Rating/RatingContainer";
 import { normalizeImageUrl } from "@/util";
 import MaintenanceIcon from "../../../../../public/extraSVGIcons/MaintenanceIcon";
 import { LocationType } from "@/util/locationType";
-import { isActiveReservationStatus } from "@/util/bookingStatus";
+import { getStatusColor } from "@/util/bookingStatus";
 import BookedCarDetailsDrawerSkeleton from "./DrawerSections/BookedCarDetailsDrawerSkeleton";
 import MaintenanceContent from "./DrawerSections/MaintenanceRequest/MaintenanceContent";
 
@@ -85,7 +85,7 @@ interface BookedCarDetailsDrawerProps {
   onOpen?: () => void;
 }
 
-const CANCELLABLE_STATUSES = ["PAID", "DECLINED", "ADMIN_APPROVED"] as const;
+const CANCELLABLE_STATUSES = ["PAID", "ADMIN_APPROVED"] as const;
 
 const BookedCarDetailsDrawer = ({
   trigger,
@@ -318,7 +318,7 @@ const BookedCarDetailsDrawer = ({
                         <div className="flex w-full flex-col gap-y-2">
                           <div>
                             <Badge
-                              className={`rounded-lg p-3 mb-2 text-xs font-bold sm:p-4 sm:text-sm ${isActiveReservationStatus(data?.reservationStatus ?? "") || data?.reservationStatus === "LOCATION_CHANGED" ? "bg-StatusGreen text-StatusDarkGreen" : "bg-StatusBrownBG text-StatusBrown200"}`}
+                              className={`rounded-lg p-3 mb-2 text-xs font-bold sm:p-4 sm:text-sm ${getStatusColor(data?.reservationStatus ?? "")}`}
                             >
                               {getStatusLabel(
                                 data?.reservationStatus as ReservationStatus,
