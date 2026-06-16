@@ -23,7 +23,6 @@ import {
   SaudiRiyal,
   SaudiRiyalIcon,
   SquarePen,
-  Star,
   User,
 } from "lucide-react";
 import type { ReservationDetailsResponse } from "@/types/myBookings/BookingDetails";
@@ -558,7 +557,11 @@ const BookedCarDetailsDrawer = ({
                         </Button>
                       )}
 
-                    {data?.reservationStatus !== "CANCELLED" && (
+                    {/* started, automatically extended, finished */}
+                    {(data?.reservationStatus === "STARTED" ||
+                      data?.reservationStatus === "AUTOMATICALLY_EXTENDED" ||
+                      data?.reservationStatus === "FINISHED_BY_DRIVER" ||
+                      data?.reservationStatus === "FINISHED") && (
                       <Button
                         type="button"
                         variant="destructive"
