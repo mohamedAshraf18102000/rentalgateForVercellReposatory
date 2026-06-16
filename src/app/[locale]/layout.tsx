@@ -10,6 +10,7 @@ import { redirect } from "next/navigation";
 import { ensureLocalizedPathname } from "@/util/locale-path";
 import { BackendHealthWatcher } from "./(components)/BackendHealthWatcher";
 import { RouteGuard } from "./(components)/RouteGuard";
+import { DocumentDirectionSync } from "./(components)/DocumentDirectionSync";
 import { AutoLocationOnVisit } from "./(dialogs)/PickupDialog/AutoLocationOnVisit";
 import { CurrentLocationDialog } from "./(dialogs)/PickupDialog/CurrentLocationDialog";
 import ReactQueryProvider from "@/provider/ReactQueryProvider";
@@ -138,6 +139,7 @@ export default async function LocaleLayout({
 
   return (
     <NextIntlClientProvider messages={messages}>
+      <DocumentDirectionSync />
       <TooltipProvider>
         <ReactQueryProvider>
           <DialogProvider>
