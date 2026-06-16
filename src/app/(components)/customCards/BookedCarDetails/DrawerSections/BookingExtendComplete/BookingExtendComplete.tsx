@@ -299,7 +299,9 @@ const BookingExtendComplete = ({
   // ─────────────────────────────────────────────────────────────────────────
   return (
     <div
-      className="absolute inset-0 z-10 flex flex-col bg-background animate-in fade-in slide-in-from-right duration-300"
+      className={`absolute inset-0 z-10 flex flex-col bg-background animate-in fade-in duration-300 ${
+        isRTL ? "slide-in-from-right" : "slide-in-from-left"
+      }`}
       dir={isRTL ? "rtl" : "ltr"}
     >
       {/* ── Header ── */}

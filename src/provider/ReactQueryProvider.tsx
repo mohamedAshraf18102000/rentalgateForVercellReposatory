@@ -1,7 +1,7 @@
 "use client";
 
 import { handleClientApiError } from "@/lib/api/client-redirect";
-import { ApiUnavailableError } from "@/lib/api/api-error";
+import { ApiError, ApiUnavailableError } from "@/lib/api/api-error";
 import {
   MutationCache,
   QueryCache,
@@ -25,6 +25,15 @@ export default function ReactQueryProvider({
             // maintenance detection by 7+ seconds and fires redundant requests.
             retry: (failureCount, error) => {
               if (error instanceof ApiUnavailableError) return false;
+              // Validation/client errors are deterministic and should not retry.
+              if (
+                error instanceof ApiError &&
+                error.status !== undefined &&
+                error.status >= 400 &&
+                error.status < 500
+              ) {
+                return false;
+              }
               return failureCount < 3;
             },
             retryDelay: (failureCount) =>
@@ -33,6 +42,15 @@ export default function ReactQueryProvider({
           mutations: {
             retry: (failureCount, error) => {
               if (error instanceof ApiUnavailableError) return false;
+              // Avoid duplicate mutation calls on validation/business-rule failures.
+              if (
+                error instanceof ApiError &&
+                error.status !== undefined &&
+                error.status >= 400 &&
+                error.status < 500
+              ) {
+                return false;
+              }
               return failureCount < 3;
             },
           },

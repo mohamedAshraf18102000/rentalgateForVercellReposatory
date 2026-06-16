@@ -224,7 +224,9 @@ const DrawerLocationChange = ({
 
   return (
     <div
-      className="absolute inset-0 z-10 flex flex-col bg-background animate-in fade-in slide-in-from-right duration-300"
+      className={`absolute inset-0 z-10 flex flex-col bg-background animate-in fade-in duration-300 ${
+        isRTL ? "slide-in-from-right" : "slide-in-from-left"
+      }`}
       dir={isRTL ? "rtl" : "ltr"}
     >
       <SheetHeader className="mt-10 flex flex-row items-center gap-2 space-y-0 px-6 text-start">

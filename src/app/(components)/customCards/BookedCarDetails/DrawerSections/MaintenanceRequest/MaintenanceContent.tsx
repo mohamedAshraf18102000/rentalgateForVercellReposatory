@@ -101,7 +101,11 @@ const MaintenanceContent = ({
     );
   };
   return (
-    <div className="animate-in fade-in slide-in-from-right duration-300">
+    <div
+      className={`animate-in fade-in duration-300 ${
+        isRTL ? "slide-in-from-right" : "slide-in-from-left"
+      }`}
+    >
       <SheetHeader className="mt-10 flex flex-row items-center gap-2 space-y-0 px-6 text-start">
         <Button
           type="button"

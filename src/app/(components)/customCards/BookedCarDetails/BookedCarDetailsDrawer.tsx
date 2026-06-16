@@ -398,7 +398,10 @@ const BookedCarDetailsDrawer = ({
                               className="p-3"
                               onClick={() => setActiveView("booking-extending")}
                             >
-                              <SquarePen className="text-white w-5! h-5!" />
+                              <SquarePen className="text-white w-4! h-4!" />
+                              <p className="mx-1 text-[11px]">
+                                {t("myBookingsDrawer.extendBooking.submit")}
+                              </p>
                             </Button>
                           </div>
                         )}
@@ -468,7 +471,7 @@ const BookedCarDetailsDrawer = ({
                                   setActiveView("location-details")
                                 }
                               >
-                                <SquarePen className="text-white w-5! h-5!" />
+                                <SquarePen className="text-white w-4! h-4!" />
                               </Button>
                             </div>
                           )}

@@ -61,16 +61,6 @@ const BookingExtending = ({
   const { mutate: extendReservation, isPending: isExtendingReservation } =
     useExtendReservation();
 
-  const arabicDays = [
-    "الأحد",
-    "الإثنين",
-    "الثلاثاء",
-    "الأربعاء",
-    "الخميس",
-    "الجمعة",
-    "السبت",
-  ];
-
   const parseDate = (value?: string | Date | null): Date | null => {
     if (!value) return null;
     const parsedDate =
@@ -79,16 +69,14 @@ const BookingExtending = ({
   };
 
   const formatDateTimeLikePicker = (date: Date): string => {
-    const day = arabicDays[date.getDay()];
-    const dayNum = date.getDate();
-    const month = date.getMonth() + 1;
-    const year = date.getFullYear();
-    const hours = date.getHours();
-    const minutes = date.getMinutes().toString().padStart(2, "0");
-    const ampm = hours >= 12 ? "مساءً" : "صباحاً";
-    const displayHour = hours % 12 === 0 ? 12 : hours % 12;
-
-    return `${day} ${dayNum}-${month}-${year}  ${displayHour}:${minutes} ${ampm}`;
+    return new Intl.DateTimeFormat(locale, {
+      weekday: "long",
+      day: "numeric",
+      month: "numeric",
+      year: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
+    }).format(date);
   };
 
   const fromDate = useMemo(
@@ -170,7 +158,9 @@ const BookingExtending = ({
 
   return (
     <div
-      className="absolute inset-0 z-10 flex flex-col bg-background animate-in fade-in slide-in-from-right duration-300"
+      className={`absolute inset-0 z-10 flex flex-col bg-background animate-in fade-in duration-300 ${
+        isRTL ? "slide-in-from-right" : "slide-in-from-left"
+      }`}
       dir={isRTL ? "rtl" : "ltr"}
     >
       <SheetHeader className="mt-10 flex flex-row items-center gap-2 space-y-0 px-6 text-start">
