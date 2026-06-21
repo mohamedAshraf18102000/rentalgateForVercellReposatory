@@ -12,6 +12,7 @@ import BookingCardSkeleton from "./BookingCardSkeleton";
 import { useAuth } from "@/app/(components)/navbar/hooks/useAuth";
 import { useTranslations } from "next-intl";
 import EmptyState from "@/app/(components)/EmptyState";
+import { normalizeImageUrl } from "@/util";
 
 const UserBookingsDetails = () => {
   const t = useTranslations("profile");
@@ -28,7 +29,15 @@ const UserBookingsDetails = () => {
         <div className="min-w-0 flex-1 rounded-2xl bg-white p-4 sm:p-5">
           <div className="flex items-start gap-3 sm:items-center">
             <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-lg sm:h-[56px] sm:w-[56px]">
-              <Image src="/banner_ar.png" alt="" fill />
+              <Image
+                src={normalizeImageUrl(
+                  isClient ? storeUserData?.profileImage : undefined,
+                  "/profile/userFallbackImage.webp",
+                )}
+                alt="user avatar"
+                fill
+                sizes="56px"
+              />
             </div>
             <div className="min-w-0 flex-1">
               <p className="text-base font-bold sm:text-lg">
