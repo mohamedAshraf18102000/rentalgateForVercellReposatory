@@ -68,7 +68,7 @@ const WalletTransactions = () => {
       {Object.entries(groupedTransactions).map(([date, items]) => (
         <div key={date} className="mb-6">
           <p className="my-2 font-bold">{date}:</p>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
             {items.map((item) => (
               <VoucherCard key={item.transactionId} transaction={item} />
             ))}

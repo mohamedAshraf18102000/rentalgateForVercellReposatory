@@ -53,10 +53,10 @@ const ReferralCodeTermsDialog = () => {
       content={
         <div className="flex flex-col gap-5">
           <Image
-            src="/profile/referralDialogImages/referralCodeDialogImage.webp"
+            src="/profile/referralDialogImages/Invitation_code_banner.webp"
             alt={t("imageAlt")}
-            width={200}
-            height={200}
+            width={1000}
+            height={1000}
             className="w-full rounded-lg h-[150px]! bg-gray-200 object-cover"
           />
           <ReferralTerm

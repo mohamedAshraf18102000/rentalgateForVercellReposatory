@@ -125,6 +125,7 @@
     "balanceAfterTransaction": "Balance after transaction",
     "amountLabel": "Amount",
     "reservationNumber": "Reservation no.: {reservationId}",
+    "noReservation": "None",
     "offersTabs": {
       "all": "All",
       "earned": "Earned",

@@ -125,6 +125,7 @@
     "balanceAfterTransaction": "الرصيد بعد العملية",
     "amountLabel": "القيمة",
     "reservationNumber": "رقم الحجز: {reservationId}",
+    "noReservation": "لا يوجد",
     "offersTabs": {
       "all": "الكل",
       "earned": "المكتسبة",

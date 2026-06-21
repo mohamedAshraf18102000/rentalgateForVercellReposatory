@@ -45,9 +45,9 @@ const UserBookingsDetails = () => {
                   name: isClient ? (storeUserData?.clientName ?? "...") : "...",
                 })}
               </p>
-              <p className="text-sm">
+              {/* <p className="text-sm">
                 {t("myBookingsPage.updateAndSettingsHint")}
-              </p>
+              </p> */}
             </div>
           </div>
           <Separator className="my-3" />

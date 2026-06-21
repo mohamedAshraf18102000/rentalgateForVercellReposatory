@@ -3,8 +3,15 @@ import { CheckCircle, Copy, Info } from "lucide-react";
 import { toast } from "sonner";
 import { useLocale, useTranslations } from "next-intl";
 import ReferralCodeTermsDialog from "./referalCodeTermsDialog/ReferralCodeTermsDialog";
+import { cn } from "@/lib/utils";
+import Image from "next/image";
 
-const UserReferal = () => {
+interface IUserReferalProps {
+  className?: string;
+  handleWallet?: boolean;
+}
+
+const UserReferal = ({ className, handleWallet }: IUserReferalProps) => {
   const t = useTranslations("profile.profilePage.userReferral");
   const locale = useLocale();
   const isArabic = locale === "ar";
@@ -32,8 +39,46 @@ const UserReferal = () => {
     }
   };
 
+  const referralCodeBlock = (
+    <>
+      <div className="mt-2 flex min-w-0 items-center justify-between gap-2 rounded-lg bg-white p-2 px-3 text-black sm:px-4">
+        <p className="min-w-0 truncate text-sm sm:text-base">
+          {isClient ? storeUserData?.referralCode : ""}
+        </p>
+
+        <Copy
+          size={24}
+          className="text-Grey700 cursor-pointer"
+          onClick={handleCopy}
+        />
+      </div>
+    </>
+  );
+
+  if (handleWallet) {
+    return (
+      <div className="flex w-full min-w-0 max-w-full gap-2 rounded-2xl p-3 text-white bg-[linear-gradient(180deg,#626060_0%,#050101_100%)] cursor-pointer">
+        <div className="w-1/4 relative">
+          <Image src="/profile/Offer_illustration.png" alt="wallet" fill />
+        </div>
+        <div className="w-3/4">
+          <div className="flex items-center gap-2">
+            <h4 className="text-lg font-extrabold">{t("shareCodeTitle")}</h4>
+            <ReferralCodeTermsDialog />
+          </div>
+          {referralCodeBlock}
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="flex h-auto min-h-[220px] w-full flex-col justify-center rounded-2xl border-2 border-white bg-[url(/profile/panner.png)] bg-cover p-2 text-white sm:min-h-[250px] md:h-[270px] md:min-h-0">
+    <div
+      className={cn(
+        "flex h-auto min-h-[200px] w-full flex-col justify-center rounded-2xl border-2 border-white bg-[url(/profile/panner.png)] bg-cover p-2 text-white sm:min-h-[250px] md:min-h-0",
+        className,
+      )}
+    >
       <div
         className={`w-full max-w-full p-2 sm:p-3 ${
           isArabic
@@ -60,17 +105,7 @@ const UserReferal = () => {
           <ReferralCodeTermsDialog />
         </div>
 
-        <div className="mt-2 flex min-w-0 items-center justify-between gap-2 rounded-xl bg-white p-2 px-3 text-black sm:px-4">
-          <p className="min-w-0 truncate text-sm sm:text-base">
-            {isClient ? storeUserData?.referralCode : ""}
-          </p>
-
-          <Copy
-            size={24}
-            className="text-Grey700 cursor-pointer"
-            onClick={handleCopy}
-          />
-        </div>
+        {referralCodeBlock}
       </div>
     </div>
   );

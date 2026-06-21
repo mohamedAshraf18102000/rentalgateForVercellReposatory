@@ -1,13 +1,15 @@
 "use client";
 
 import { Separator } from "@/app/(components)/ui/separator";
-import { SaudiRiyal } from "lucide-react";
+import { ChevronRight, SaudiRiyal } from "lucide-react";
 import Image from "next/image";
 import { useWalletInfo } from "@/hooks/api/useWalletInfo";
 import { formatPrice } from "@/lib/utils";
 import { useTranslations } from "next-intl";
+import { useRouter } from "next/navigation";
 
 const WalletInfo = () => {
+  const router = useRouter();
   const { data: walletInfo } = useWalletInfo();
   const t = useTranslations("profile.walletPage");
   const tProfile = useTranslations("profile");
@@ -24,20 +26,29 @@ const WalletInfo = () => {
               name: walletInfo?.ownerName ?? "...",
             })}
           </p>
-          <p className="text-sm text-Grey600">
-            {tProfile("myBookingsPage.updateAndSettingsHint")}
-          </p>
+          <p className="text-sm text-Grey600">عرض جميع معاملات المحفظة.</p>
         </div>
       </div>
       <Separator className="my-3" />
       <div className="">
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <div className="min-w-0">
+        <div className="flex flex-col gap-20 sm:flex-row sm:items-center bg-Grey100 p-3 rounded-xl">
+          <div className="min-w-0 flex items-center gap-2">
+            <div
+              className="w-8 h-8 flex items-center justify-center rounded-lg border-2 cursor-pointer bg-white transition-all duration-300"
+              onClick={() => {
+                router.back();
+              }}
+            >
+              <ChevronRight className="w-5 h-5" />
+            </div>
+            <div className="w-10 h-10 relative">
+              <Image src="/profile/actionIcons/wallet.webp" alt="wallet" fill />
+            </div>
             <p className="text-lg font-bold">{t("walletTitle")}</p>
           </div>
 
           <div className="shrink-0 self-start sm:self-auto">
-            <p className="flex items-center gap-1 rounded-xl border-2 border-StatusDarkGreen bg-StatusGreen px-3 py-2 sm:px-4">
+            <p className="flex items-center gap-1 rounded-lg border-2 border-StatusDarkGreen bg-StatusGreen px-3 py-2 sm:px-4">
               <span className="text-sm">{t("balancePrefix")}</span>
               <span className="mx-1 text-sm font-extrabold tabular-nums">
                 {walletInfo?.balance !== undefined
