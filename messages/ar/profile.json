@@ -273,6 +273,25 @@
     "toastSuccess": "تم تحديث بيانات الرخصة بنجاح",
     "toastError": "حدث خطأ أثناء تحديث البيانات"
   },
+  "referralCodeTermsDialog": {
+    "title": "شروط كود الإحالة",
+    "imageAlt": "شروط كود الإحالة",
+    "close": "إغلاق",
+    "terms": {
+      "shareCode": {
+        "title": "شارك كود الدعوة الخاص بك",
+        "description": "احصل على رصيد بقيمة <highlight>50 ريال</highlight> يمكنك استخدامه في رحلاتك عندما يسجل كل صديق باستخدام كودك ويكمل حجزه الأول."
+      },
+      "helpFriends": {
+        "title": "ساعد أصدقاءك على التنقل بسهولة",
+        "description": "سيحصلون على رصيد بقيمة <highlight>50 ريال</highlight> يُستخدم على 3 حجوزات مختلفة."
+      },
+      "enjoyRewards": {
+        "title": "استمتع بمكافآتك",
+        "description": "بمجرد أن يكمل صديقك حجوزاته الأولى، ستُضاف المكافآت تلقائياً إلى حسابك."
+      }
+    }
+  },
   "updateReservationProfileDialog": {
     "title": "تحديث بيانات الملف الشخصي",
     "actions": {

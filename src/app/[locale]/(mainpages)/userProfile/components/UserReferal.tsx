@@ -1,7 +1,8 @@
 import { useAuth } from "@/app/(components)/navbar/hooks/useAuth";
-import { CheckCircle, Copy } from "lucide-react";
+import { CheckCircle, Copy, Info } from "lucide-react";
 import { toast } from "sonner";
 import { useLocale, useTranslations } from "next-intl";
+import ReferralCodeTermsDialog from "./referalCodeTermsDialog/ReferralCodeTermsDialog";
 
 const UserReferal = () => {
   const t = useTranslations("profile.profilePage.userReferral");
@@ -41,6 +42,7 @@ const UserReferal = () => {
         }`}
       >
         <h4 className="text-base font-extrabold sm:text-lg">{t("title")}</h4>
+
         <p className="mt-1 max-w-full text-sm sm:max-w-[90%] md:w-3/4">
           {t("description")}
         </p>
@@ -53,20 +55,21 @@ const UserReferal = () => {
             : "md:ms-auto md:w-[75%] lg:w-[55%]"
         }`}
       >
-        <h4 className="text-lg font-extrabold">{t("shareCodeTitle")}</h4>
+        <div className="flex items-center gap-2">
+          <h4 className="text-lg font-extrabold">{t("shareCodeTitle")}</h4>
+          <ReferralCodeTermsDialog />
+        </div>
 
         <div className="mt-2 flex min-w-0 items-center justify-between gap-2 rounded-xl bg-white p-2 px-3 text-black sm:px-4">
           <p className="min-w-0 truncate text-sm sm:text-base">
             {isClient ? storeUserData?.referralCode : ""}
           </p>
 
-          <div className="flex items-center gap-2">
-            <Copy
-              size={24}
-              className="text-Grey700 cursor-pointer"
-              onClick={handleCopy}
-            />
-          </div>
+          <Copy
+            size={24}
+            className="text-Grey700 cursor-pointer"
+            onClick={handleCopy}
+          />
         </div>
       </div>
     </div>

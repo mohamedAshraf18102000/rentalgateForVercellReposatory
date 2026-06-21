@@ -273,6 +273,25 @@
     "toastSuccess": "License details updated successfully",
     "toastError": "An error occurred while updating data"
   },
+  "referralCodeTermsDialog": {
+    "title": "Referral Code Terms",
+    "imageAlt": "Referral Code Terms",
+    "close": "Close",
+    "terms": {
+      "shareCode": {
+        "title": "Share Your Invitation code",
+        "description": "Get credit worth <highlight>50 riyals</highlight> You can use it on your trips when each friend registers using your code and completes their first booking."
+      },
+      "helpFriends": {
+        "title": "Help your friends move easily",
+        "description": "They will get credit worth <highlight>50 riyals</highlight> Used on 3 different bookings."
+      },
+      "enjoyRewards": {
+        "title": "Enjoy your rewards",
+        "description": "Once your friend completes their first bookings, The rewards will be automatically added to your account."
+      }
+    }
+  },
   "updateReservationProfileDialog": {
     "title": "Update Personal Profile",
     "actions": {
