@@ -21,9 +21,9 @@ export const statusTranslations = {
         color: "bg-blue-100 text-blue-700",
     },
     HOLD: {
-        ar: "قيد الانتظار",
-        en: "On Hold",
-        color: "bg-Grey100 text-Grey700",
+        ar: "تم الدفع و في انتظار التأكيد",
+        en: "Paid and Waiting for Confirmation",
+        color: "bg-StatusBrownBG text-StatusBrown200",
     },
     EXTENDED: {
         ar: "تم التمديد",
