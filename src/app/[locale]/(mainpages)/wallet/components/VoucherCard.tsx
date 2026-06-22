@@ -29,20 +29,24 @@ const VoucherCard = ({ transaction }: Props) => {
     transaction.description || t("defaultTransactionDescription");
 
   return (
-    <div className="border-2 w-full bg-white flex items-start gap-5 rounded-2xl relative overflow-hidden min-h-[150px]">
+    <div className="border-2 w-full bg-white flex items-start gap-5 rounded-2xl relative overflow-hidden min-h-[120px]">
       <div className="w-[30%] h-full bg-[url(/offers/offerImage2.png)] bg-cover bg-center bg-no-repeat flex items-end ">
         {/* <p className="text-center w-full bg-StatusGreen/95 py-1 font-bold text-StatusDarkGreen">
           <span className="text-sm">{formattedTime}</span>
         </p> */}
       </div>
       <div className="w-[70%] p-3 ">
-        <div className="flex justify-between items-center">
-          <p className="text-sm text-Grey700 truncate w-1/2">
-            <span>رقم الحجز: </span>
-            <span className="mx-1">
-              {transaction.reservationId ?? "لا يوجد"}
-            </span>
-          </p>
+        <div
+          className={`flex items-center ${transaction.reservationId ? "justify-between" : "justify-end"}`}
+        >
+          {transaction.reservationId && (
+            <p className="text-sm text-Grey700 truncate w-1/2">
+              <span>رقم الحجز: </span>
+              <span className="mx-1">
+                {transaction.reservationId ?? "لا يوجد"}
+              </span>
+            </p>
+          )}
           <p
             className={`border-2 px-3 py-1 rounded-xl flex items-center justify-center min-w-[30%] ${isPositive ? "bg-StatusGreen border-StatusDarkGreen text-StatusDarkGreen" : "bg-red-50 border-red-500 text-red-600"}`}
           >

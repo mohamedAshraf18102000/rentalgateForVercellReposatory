@@ -31,7 +31,7 @@ const WalletInfo = () => {
       </div>
       <Separator className="my-3" />
       <div className="">
-        <div className="flex flex-col gap-20 sm:flex-row sm:items-center bg-Grey100 p-3 rounded-xl">
+        <div className="flex flex-col sm:flex-row sm:items-center bg-Grey100 p-3 rounded-xl gap-3 md:gap-20">
           <div className="min-w-0 flex items-center gap-2">
             <div
               className="w-8 h-8 flex items-center justify-center rounded-lg border-2 cursor-pointer bg-white transition-all duration-300"
