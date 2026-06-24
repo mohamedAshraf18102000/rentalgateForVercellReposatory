@@ -109,7 +109,7 @@ const Page = async ({ searchParams }: PageProps) => {
               <div className="w-full border-t border-dashed border-slate-200" />
 
               {/* Status steps */}
-              <div className="w-full space-y-3">
+              {/* <div className="w-full space-y-3">
                 {[
                   { label: "تأكيد الدفع", done: true },
                   { label: "تجهيز الطلب", done: false, active: true },
@@ -150,7 +150,7 @@ const Page = async ({ searchParams }: PageProps) => {
                     )}
                   </div>
                 ))}
-              </div>
+              </div> */}
 
               {/* CTA buttons */}
               <div className="w-full flex flex-col gap-3 pt-1">
