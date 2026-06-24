@@ -59,6 +59,9 @@ function CurrentLocationDialogContent() {
   geolocationErrorRef.current = geolocationError;
   const pathname = usePathname();
   const isTermsPage = pathname.includes("/terms&conditions");
+  const isPaymentResultPage = pathname.includes("/payment/result");
+  const isMaintenancePage = pathname.includes("/maintenance");
+  const isSuppressedPage = isTermsPage || isPaymentResultPage || isMaintenancePage;
   const setFilter = useUserPreferedFiltersStore((state) => state.setFilter);
   const applyFilters = useUserPreferedFiltersStore(
     (state) => state.applyFilters,
@@ -66,7 +69,7 @@ function CurrentLocationDialogContent() {
   const filters = useUserPreferedFiltersStore((state) => state.filters);
 
   useEffect(() => {
-    if (isTermsPage) {
+    if (isSuppressedPage) {
       return;
     }
     const hasClosed = sessionStorage.getItem("hasClosedLocationDialog");
@@ -74,13 +77,13 @@ function CurrentLocationDialogContent() {
       const timer = setTimeout(() => openDialog("auto"), 3000);
       return () => clearTimeout(timer);
     }
-  }, [isTermsPage, openDialog]);
+  }, [isSuppressedPage, openDialog]);
 
   useEffect(() => {
-    if (isTermsPage && isDialogOpen) {
+    if (isSuppressedPage && isDialogOpen) {
       closeDialog();
     }
-  }, [closeDialog, isDialogOpen, isTermsPage]);
+  }, [closeDialog, isDialogOpen, isSuppressedPage]);
 
   useEffect(() => {
     if (!isDialogOpen) {
