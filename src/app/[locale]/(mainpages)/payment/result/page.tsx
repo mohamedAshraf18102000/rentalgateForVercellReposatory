@@ -36,9 +36,6 @@ const Page = async ({ searchParams }: PageProps) => {
 
   return (
     <WrapperContainer exceedNav>
-      <div className="bg-red-700  text-white text-center text-2xl font-bold">
-        Dummy Content !!!!!!!!!!!!
-      </div>
       <div
         className="flex items-center justify-center h-full bg-slate-50 rounded-2xl p-4"
         dir="rtl"
