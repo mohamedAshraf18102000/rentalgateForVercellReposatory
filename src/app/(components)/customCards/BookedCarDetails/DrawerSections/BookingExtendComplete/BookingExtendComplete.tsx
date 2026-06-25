@@ -12,8 +12,10 @@ import {
 } from "@/app/(components)/ui/sheet";
 import WarningMessage from "@/app/(components)/WarningMessage";
 import WalletBalance from "@/app/[locale]/(mainpages)/reservation/components/reservationDrawer/components/WalletBalance";
+import PaymentGateWay from "@/app/[locale]/(mainpages)/reservation/components/reservationDrawer/components/PaymentGateWay";
 import { useCreateExtension } from "@/hooks/api/booking/useCreateExtension";
 import { useExtendReservation } from "@/hooks/api/booking/useExtendReservation";
+import { usePayExtensionWithGateway } from "@/hooks/api/payment/gatewayPayment/usePayExtensionWithGateway";
 import { usePayExtensionWithWallet } from "@/hooks/api/payment/walletPayment/usePayExtensionWithWallet";
 import { useWalletInfo } from "@/hooks/api/useWalletInfo";
 import { cn, formatPrice } from "@/lib/utils";
@@ -75,6 +77,7 @@ const BookingExtendComplete = ({
 
   // ── Payment state ────────────────────────────────────────────────────────
   const [useWallet, setUseWallet] = useState(false);
+  const [useGateway, setUseGateway] = useState(false);
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [validationAttempted, setValidationAttempted] = useState(false);
   const [paymentSucceeded, setPaymentSucceeded] = useState(false);
@@ -91,21 +94,48 @@ const BookingExtendComplete = ({
   const { data: wallet, isPending: walletPending } = useWalletInfo();
   const {
     mutate: payWithWallet,
-    isPending: isPaying,
-    isError,
-    error,
-    reset: resetPayMutation,
+    isPending: isPayingWithWallet,
+    isError: isWalletPayError,
+    error: walletPayError,
+    reset: resetPayWithWallet,
   } = usePayExtensionWithWallet();
+  const {
+    mutate: payWithGateway,
+    isPending: isPayingWithGateway,
+    isError: isGatewayPayError,
+    error: gatewayPayError,
+    reset: resetPayWithGateway,
+  } = usePayExtensionWithGateway();
+
+  const isPaying = isPayingWithWallet || isPayingWithGateway;
+  const isError = isWalletPayError || isGatewayPayError;
+
+  const handleUseWalletChange = (value: boolean) => {
+    setUseWallet(value);
+    if (value) setUseGateway(false);
+  };
+
+  const handleUseGatewayChange = (value: boolean) => {
+    setUseGateway(value);
+    if (value) setUseWallet(false);
+  };
 
   // Sync initial quote data
   useEffect(() => {
     if (extendData) setCurrentQuote(extendData);
   }, [extendData]);
 
-  // Reset pay mutation when wallet selection or phase changes
+  // Reset pay mutations when payment method or phase changes
   useEffect(() => {
-    resetPayMutation();
-  }, [useWallet, phase, resetPayMutation]);
+    resetPayWithWallet();
+    resetPayWithGateway();
+  }, [
+    useWallet,
+    useGateway,
+    phase,
+    resetPayWithWallet,
+    resetPayWithGateway,
+  ]);
 
   // ── Re-quote (when promo/points change in details phase) ─────────────────
   const triggerReQuote = useCallback(
@@ -198,7 +228,7 @@ const BookingExtendComplete = ({
     walletPending || wallet == null ? null : Number(wallet.balance);
   const balanceInsufficient = balance !== null && payableTotal > balance;
 
-  const canPayWithoutTerms =
+  const canPayWithWallet =
     useWallet &&
     createdExtensionId != null &&
     payableTotal > 0 &&
@@ -206,34 +236,69 @@ const BookingExtendComplete = ({
     !walletPending &&
     !balanceInsufficient;
 
+  const canPayWithGateway =
+    useGateway && createdExtensionId != null && !isPaying;
+
+  const canPayWithoutTerms = canPayWithWallet || canPayWithGateway;
+
   const showTermsError =
     (canPayWithoutTerms || validationAttempted) && !termsAccepted;
-  const showWalletError = validationAttempted && !useWallet;
+  const showPaymentMethodError =
+    validationAttempted && !useWallet && !useGateway;
 
   const validatePayment = (): boolean => {
     setValidationAttempted(true);
-    if (
-      !useWallet ||
-      !termsAccepted ||
-      createdExtensionId == null ||
-      payableTotal <= 0 ||
-      balanceInsufficient ||
-      walletPending ||
-      isPaying
-    ) {
+
+    if (!useWallet && !useGateway) {
       return false;
     }
+
+    if (!termsAccepted) {
+      return false;
+    }
+
+    if (useWallet) {
+      if (
+        createdExtensionId == null ||
+        payableTotal <= 0 ||
+        balanceInsufficient ||
+        walletPending ||
+        isPaying
+      ) {
+        return false;
+      }
+      return true;
+    }
+
+    if (createdExtensionId == null || isPaying) {
+      return false;
+    }
+
     return true;
   };
 
-  const errorMessage =
-    error?.message && error.message.toLowerCase().includes("insufficient")
+  const walletErrorMessage =
+    walletPayError?.message &&
+    walletPayError.message.toLowerCase().includes("insufficient")
       ? tCar("reservation.wallet.balanceNotEnough")
-      : error?.message;
+      : walletPayError?.message;
 
-  // ── Step 2: Wallet payment with extendId from created extension ───────────
-  const handleWalletPayment = () => {
+  const errorMessage = useWallet ? walletErrorMessage : gatewayPayError?.message;
+
+  const handleCompletePayment = () => {
     if (!validatePayment() || createdExtensionId == null) return;
+
+    if (useGateway) {
+      payWithGateway(createdExtensionId, {
+        onSuccess: (response) => {
+          const paymentUrl = response.data?.paymentUrl;
+          if (paymentUrl) {
+            window.location.href = paymentUrl;
+          }
+        },
+      });
+      return;
+    }
 
     payWithWallet(
       { extendId: createdExtensionId, amount: payableTotal },
@@ -283,11 +348,13 @@ const BookingExtendComplete = ({
   const handleBackToDetails = () => {
     setPhase("details");
     setUseWallet(false);
+    setUseGateway(false);
     setTermsAccepted(false);
     setValidationAttempted(false);
     setCreatedExtensionId(null);
     setCreatedExtensionTotal(0);
-    resetPayMutation();
+    resetPayWithWallet();
+    resetPayWithGateway();
   };
 
   // ── Derived titles ───────────────────────────────────────────────────────
@@ -416,7 +483,7 @@ const BookingExtendComplete = ({
                 wallet={wallet || null}
                 loading={walletPending}
                 useWallet={useWallet}
-                onUseWalletChange={setUseWallet}
+                onUseWalletChange={handleUseWalletChange}
               />
               {useWallet && balanceInsufficient && (
                 <p className="mt-2 text-sm text-StatusRed">
@@ -426,6 +493,11 @@ const BookingExtendComplete = ({
               {isError && errorMessage && (
                 <p className="mt-1 text-sm text-StatusRed">*{errorMessage}</p>
               )}
+
+              <PaymentGateWay
+                useGateway={useGateway}
+                onUseGatewayChange={handleUseGatewayChange}
+              />
             </div>
           </div>
 
@@ -466,9 +538,11 @@ const BookingExtendComplete = ({
                 className="mt-2 px-1"
               />
             )}
-            {showWalletError && (
+            {showPaymentMethodError && (
               <WarningMessage
-                message={tCar("reservation.wallet.validation.walletRequired")}
+                message={tCar(
+                  "reservation.wallet.validation.paymentMethodRequired",
+                )}
                 removeIcon
                 className="mt-2 px-1"
               />
@@ -481,7 +555,7 @@ const BookingExtendComplete = ({
               type="button"
               loading={isPaying}
               disabled={!canPayWithoutTerms}
-              onClick={handleWalletPayment}
+              onClick={handleCompletePayment}
             >
               <p className="flex items-center gap-1">
                 <span>{tCar("reservation.drawer.payLabel")}</span>

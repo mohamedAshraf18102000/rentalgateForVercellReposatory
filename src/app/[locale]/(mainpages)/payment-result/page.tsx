@@ -17,6 +17,7 @@ interface PageProps {
 
 const TARGET_TYPE_LABELS: Record<string, string> = {
   RESERVATION: "حجز",
+  EXTENSION: "تمديد",
 };
 
 const PAYMENT_STATUS_LABELS: Record<string, string> = {
@@ -62,7 +63,9 @@ const Page = async ({ params, searchParams }: PageProps) => {
     paymentStatusData?.targetId ?? (targetId ? Number(targetId) : undefined);
 
   const myBookingsHref =
-    reservationId && Number.isFinite(reservationId)
+    paymentStatusData?.targetType === "RESERVATION" &&
+    reservationId &&
+    Number.isFinite(reservationId)
       ? `/myBookings?reservationId=${reservationId}`
       : "/myBookings";
 

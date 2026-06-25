@@ -59,9 +59,10 @@ function CurrentLocationDialogContent() {
   geolocationErrorRef.current = geolocationError;
   const pathname = usePathname();
   const isTermsPage = pathname.includes("/terms&conditions");
-  const isPaymentResultPage = pathname.includes("/payment/result");
+  const isPaymentResultPage = pathname.includes("/payment-result");
   const isMaintenancePage = pathname.includes("/maintenance");
-  const isSuppressedPage = isTermsPage || isPaymentResultPage || isMaintenancePage;
+  const isSuppressedPage =
+    isTermsPage || isPaymentResultPage || isMaintenancePage;
   const setFilter = useUserPreferedFiltersStore((state) => state.setFilter);
   const applyFilters = useUserPreferedFiltersStore(
     (state) => state.applyFilters,
@@ -387,6 +388,7 @@ function CurrentLocationDialogContent() {
 
   return (
     <DialogWrapper
+      className="z-999999"
       open={isDialogOpen}
       onOpenChange={handleOpenChange}
       closeOnOutsideClick={false}

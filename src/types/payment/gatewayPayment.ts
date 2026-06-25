@@ -12,7 +12,7 @@ export type PayWithGatewayResponse = {
   data: GatewayPaymentData;
 };
 
-export type TelrPaymentTargetType = "RESERVATION";
+export type TelrPaymentTargetType = "RESERVATION" | "EXTENSION";
 
 export type TelrPaymentStatusValue = "PAID";
 
