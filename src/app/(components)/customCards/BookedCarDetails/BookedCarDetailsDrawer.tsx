@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import dynamic from "next/dynamic";
 import { Button } from "@/app/(components)/ui/button";
@@ -37,7 +37,9 @@ import { format } from "date-fns";
 import { ar, enUS } from "date-fns/locale";
 import { useStatusLabel } from "@/hooks/useBookingStatusLabel";
 import { ReservationStatus } from "@/types/myBookings/myBookings";
+import { findNearestSavedAddress } from "@/lib/utils/matchSavedAddress";
 import { reverseGeocode } from "@/lib/utils/reverseGeocode";
+import useUserAddreses from "@/hooks/api/useUserAddreses";
 import LocationFrom_To from "./DrawerSections/locationFrom_To/LocationFrom_To";
 import Rating from "./DrawerSections/Rating/Rating";
 import RatingContainer from "./DrawerSections/Rating/RatingContainer";
@@ -136,6 +138,42 @@ const BookedCarDetailsDrawer = ({
   const [changedDeliverAddress, setChangedDeliverAddress] = useState<
     string | null
   >(null);
+  const hasLocationChanges = !!data?.locationChanges;
+  const { data: userAddresses } = useUserAddreses(
+    isDrawerOpen && hasLocationChanges,
+  );
+
+  const changedReceiveLocationName = useMemo(() => {
+    const lat = data?.locationChanges?.receiveLatitude;
+    const lng = data?.locationChanges?.receiveLongitude;
+
+    if (typeof lat !== "number" || typeof lng !== "number") {
+      return null;
+    }
+
+    const matched = findNearestSavedAddress(lat, lng, userAddresses ?? []);
+    return matched?.addressName ?? null;
+  }, [
+    data?.locationChanges?.receiveLatitude,
+    data?.locationChanges?.receiveLongitude,
+    userAddresses,
+  ]);
+
+  const changedDeliverLocationName = useMemo(() => {
+    const lat = data?.locationChanges?.deliverLatitude;
+    const lng = data?.locationChanges?.deliverLongitude;
+
+    if (typeof lat !== "number" || typeof lng !== "number") {
+      return null;
+    }
+
+    const matched = findNearestSavedAddress(lat, lng, userAddresses ?? []);
+    return matched?.addressName ?? null;
+  }, [
+    data?.locationChanges?.deliverLatitude,
+    data?.locationChanges?.deliverLongitude,
+    userAddresses,
+  ]);
 
   useEffect(() => {
     if (!isDrawerOpen) return;
@@ -464,11 +502,25 @@ const BookedCarDetailsDrawer = ({
                                   {t("myBookingsDrawer.locationChangedNotice")}
                                 </p>
                                 <LocationFrom_To
-                                  receiveLocationName={""}
-                                  deliverLocationName={""}
+                                  LocReceiveType={
+                                    data?.receiveType as LocationType
+                                  }
+                                  LocDeliverType={
+                                    data?.deliverType as LocationType
+                                  }
+                                  receiveLocationName={
+                                    changedReceiveLocationName ??
+                                    changedReceiveAddress ??
+                                    ""
+                                  }
+                                  deliverLocationName={
+                                    changedDeliverLocationName ??
+                                    changedDeliverAddress ??
+                                    ""
+                                  }
                                   receiveAddress={changedReceiveAddress}
                                   deliverAddress={changedDeliverAddress}
-                                  showPhysicalAddress={false}
+                                  showPhysicalAddress={true}
                                 />
                               </div>
                             </>
