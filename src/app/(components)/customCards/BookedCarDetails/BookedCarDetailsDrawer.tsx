@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import dynamic from "next/dynamic";
 import { Button } from "@/app/(components)/ui/button";
@@ -82,6 +82,8 @@ interface BookedCarDetailsDrawerProps {
   trigger?: React.ReactNode;
   data?: ReservationDetailsResponse;
   onOpen?: () => void;
+  onClose?: () => void;
+  defaultOpen?: boolean;
 }
 
 const CANCELLABLE_STATUSES = ["PAID", "ADMIN_APPROVED"] as const;
@@ -90,6 +92,8 @@ const BookedCarDetailsDrawer = ({
   trigger,
   data,
   onOpen,
+  onClose,
+  defaultOpen = false,
 }: BookedCarDetailsDrawerProps) => {
   const getStatusLabel = useStatusLabel();
   const t = useTranslations("common");
@@ -112,6 +116,14 @@ const BookedCarDetailsDrawer = ({
     | "request-maintenance"
   >("booking-details");
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const didAutoOpenRef = useRef(false);
+
+  useEffect(() => {
+    if (!defaultOpen || didAutoOpenRef.current) return;
+    didAutoOpenRef.current = true;
+    setIsDrawerOpen(true);
+    onOpen?.();
+  }, [defaultOpen, onOpen]);
   const [normalReceiveAddress, setNormalReceiveAddress] = useState<
     string | null
   >(null);
@@ -260,6 +272,7 @@ const BookedCarDetailsDrawer = ({
           onOpen?.();
           return;
         }
+        onClose?.();
         setActiveView("booking-details");
         setExtendQuoteData(null);
         setExtendPayload(null);

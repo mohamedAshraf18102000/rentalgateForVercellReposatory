@@ -6,7 +6,8 @@ import WarningMessage from "@/app/(components)/WarningMessage";
 import { toast } from "sonner";
 import WalletBalance from "../WalletBalance";
 import { useWalletInfo } from "@/hooks/api/useWalletInfo";
-import { usePayWithWallet } from "@/hooks/api/payment/usePayWithWallet";
+import { usePayWithWallet } from "@/hooks/api/payment/walletPayment/usePayWithWallet";
+import { usePayWithGateway } from "@/hooks/api/payment/gatewayPayment/usePayWithGateway";
 import { useQueryClient } from "@tanstack/react-query";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
@@ -15,6 +16,7 @@ import { resetAllStores } from "@/lib/stores/resetAllStores";
 import ReservationSuccessComponent from "../ReservationSuccessComponent";
 import { SaudiRiyal } from "lucide-react";
 import { Link } from "@/i18n/routing";
+import PaymentGateWay from "../PaymentGateWay";
 
 type PaymentMethodsProps = {
   isRTL?: boolean;
@@ -35,6 +37,7 @@ const PaymentMethods = ({
   const t = useTranslations("carDetails");
   const queryClient = useQueryClient();
   const [useWallet, setUseWallet] = useState(false);
+  const [useGateway, setUseGateway] = useState(false);
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [validationAttempted, setValidationAttempted] = useState(false);
   const { data: wallet, isPending: walletPending } = useWalletInfo();
@@ -45,21 +48,49 @@ const PaymentMethods = ({
   const didNavigateAfterSuccessRef = useRef(false);
   const {
     mutate: payWithWalletMutation,
-    isPending: isPaying,
-    isError,
-    error,
+    isPending: isPayingWithWallet,
+    isError: isWalletPayError,
+    error: walletPayError,
     reset: resetPayWithWallet,
   } = usePayWithWallet();
+  const {
+    mutate: payWithGatewayMutation,
+    isPending: isPayingWithGateway,
+    isError: isGatewayPayError,
+    error: gatewayPayError,
+    reset: resetPayWithGateway,
+  } = usePayWithGateway();
+
+  const isPaying = isPayingWithWallet || isPayingWithGateway;
+  const isError = isWalletPayError || isGatewayPayError;
+
+  const handleUseWalletChange = (value: boolean) => {
+    setUseWallet(value);
+    if (value) setUseGateway(false);
+  };
+
+  const handleUseGatewayChange = (value: boolean) => {
+    setUseGateway(value);
+    if (value) setUseWallet(false);
+  };
 
   useEffect(() => {
     resetPayWithWallet();
-  }, [useWallet, reservationId, amount, resetPayWithWallet]);
+    resetPayWithGateway();
+  }, [
+    useWallet,
+    useGateway,
+    reservationId,
+    amount,
+    resetPayWithWallet,
+    resetPayWithGateway,
+  ]);
 
   const balance =
     walletPending || wallet == null ? null : Number(wallet.balance);
   const balanceInsufficient = balance !== null && amount > balance;
 
-  const canPayWithoutTerms =
+  const canPayWithWallet =
     useWallet &&
     reservationId != null &&
     reservationId > 0 &&
@@ -68,15 +99,24 @@ const PaymentMethods = ({
     !walletPending &&
     !balanceInsufficient;
 
+  const canPayWithGateway =
+    useGateway &&
+    reservationId != null &&
+    reservationId > 0 &&
+    !isPaying;
+
+  const canPayWithoutTerms = canPayWithWallet || canPayWithGateway;
+
   const showTermsError =
     (canPayWithoutTerms || validationAttempted) && !termsAccepted;
-  const showWalletError = validationAttempted && !useWallet;
+  const showPaymentMethodError =
+    validationAttempted && !useWallet && !useGateway;
 
   const validatePayment = (): boolean => {
     setValidationAttempted(true);
 
-    if (!useWallet) {
-      toast.error(t("reservation.wallet.validation.walletRequired"), {
+    if (!useWallet && !useGateway) {
+      toast.error(t("reservation.wallet.validation.paymentMethodRequired"), {
         position: "top-center",
       });
       return false;
@@ -89,12 +129,23 @@ const PaymentMethods = ({
       return false;
     }
 
+    if (useWallet) {
+      if (
+        reservationId == null ||
+        reservationId <= 0 ||
+        amount <= 0 ||
+        balanceInsufficient ||
+        walletPending ||
+        isPaying
+      ) {
+        return false;
+      }
+      return true;
+    }
+
     if (
       reservationId == null ||
       reservationId <= 0 ||
-      amount <= 0 ||
-      balanceInsufficient ||
-      walletPending ||
       isPaying
     ) {
       return false;
@@ -103,13 +154,30 @@ const PaymentMethods = ({
     return true;
   };
 
-  const errorMessage =
-    error?.message && error.message.toLowerCase().includes("insufficient")
+  const walletErrorMessage =
+    walletPayError?.message &&
+    walletPayError.message.toLowerCase().includes("insufficient")
       ? t("reservation.wallet.balanceNotEnough")
-      : error?.message;
+      : walletPayError?.message;
+
+  const errorMessage = useWallet
+    ? walletErrorMessage
+    : gatewayPayError?.message;
 
   const handleCompletePayment = () => {
     if (!validatePayment() || reservationId == null) return;
+
+    if (useGateway) {
+      payWithGatewayMutation(reservationId, {
+        onSuccess: (response) => {
+          const paymentUrl = response.data?.paymentUrl;
+          if (paymentUrl) {
+            window.location.href = paymentUrl;
+          }
+        },
+      });
+      return;
+    }
 
     payWithWalletMutation(
       { reservationId, amount },
@@ -192,7 +260,7 @@ const PaymentMethods = ({
                 wallet={wallet || null}
                 loading={walletPending}
                 useWallet={useWallet}
-                onUseWalletChange={setUseWallet}
+                onUseWalletChange={handleUseWalletChange}
               />
               {useWallet && balanceInsufficient ? (
                 <p className="mt-2 text-sm text-StatusRed">
@@ -203,6 +271,11 @@ const PaymentMethods = ({
                 <p className="text-sm text-StatusRed">*{errorMessage}</p>
               ) : null}
             </div>
+
+            <PaymentGateWay
+              useGateway={useGateway}
+              onUseGatewayChange={handleUseGatewayChange}
+            />
           </div>
         </div>
       </div>
@@ -244,9 +317,9 @@ const PaymentMethods = ({
             className="mt-2 px-1"
           />
         ) : null}
-        {showWalletError ? (
+        {showPaymentMethodError ? (
           <WarningMessage
-            message={t("reservation.wallet.validation.walletRequired")}
+            message={t("reservation.wallet.validation.paymentMethodRequired")}
             removeIcon
             className="mt-2 px-1"
           />

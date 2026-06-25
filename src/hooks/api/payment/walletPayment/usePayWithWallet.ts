@@ -1,7 +1,7 @@
 import {
   payWithWallet,
   type PayReservationWithWalletPayload,
-} from "@/services/payment/payWithWallet.service";
+} from "@/services/payment/walletPayment/payWithWallet.service";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 

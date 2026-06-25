@@ -14,7 +14,7 @@ import WarningMessage from "@/app/(components)/WarningMessage";
 import WalletBalance from "@/app/[locale]/(mainpages)/reservation/components/reservationDrawer/components/WalletBalance";
 import { useCreateExtension } from "@/hooks/api/booking/useCreateExtension";
 import { useExtendReservation } from "@/hooks/api/booking/useExtendReservation";
-import { usePayExtensionWithWallet } from "@/hooks/api/payment/usePayExtensionWithWallet";
+import { usePayExtensionWithWallet } from "@/hooks/api/payment/walletPayment/usePayExtensionWithWallet";
 import { useWalletInfo } from "@/hooks/api/useWalletInfo";
 import { cn, formatPrice } from "@/lib/utils";
 import type { ExtendReservationPayload } from "@/services/mybookings/extendReservation.service";

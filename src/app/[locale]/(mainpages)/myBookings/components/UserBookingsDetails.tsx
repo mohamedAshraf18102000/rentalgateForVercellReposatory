@@ -6,7 +6,8 @@ import PaginationDateView from "@/app/(components)/PaginationDateView";
 import BookedCarsDetails from "@/app/(components)/customCards/BookedCarDetails/BookedCarsDetails";
 import { useGetUserReservations } from "@/hooks/api/useGetUserReservations";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
+import ReservationDeepLinkDrawer from "./ReservationDeepLinkDrawer";
 import { UserReservationsPaylod } from "@/types/myBookings/myBookings";
 import BookingCardSkeleton from "./BookingCardSkeleton";
 import { useAuth } from "@/app/(components)/navbar/hooks/useAuth";
@@ -25,6 +26,9 @@ const UserBookingsDetails = () => {
 
   return (
     <>
+      <Suspense fallback={null}>
+        <ReservationDeepLinkDrawer />
+      </Suspense>
       <div className="my-5 flex min-w-0 flex-col gap-3 sm:gap-4 lg:flex-row lg:items-stretch">
         <div className="min-w-0 flex-1 rounded-2xl bg-white p-4 sm:p-5">
           <div className="flex items-start gap-3 sm:items-center">

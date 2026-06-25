@@ -1,4 +1,4 @@
-import { fetcher } from "../api";
+import { fetcher } from "../../api";
 
 export type PayExtensionWithWalletPayload = {
   extendId: number;
