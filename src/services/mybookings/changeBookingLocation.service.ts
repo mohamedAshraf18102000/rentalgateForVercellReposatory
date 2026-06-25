@@ -8,10 +8,14 @@ export type ChangeLocationPayload = {
   deliverLongitude: number;
 };
 
+export type ChangeLocationResponse = {
+  message: string;
+};
+
 export const changeReservationLocation = async (
-  payload: ChangeLocationPayload
-): Promise<void> => {
-  return fetcher<void>("/reservations/change-location", {
+  payload: ChangeLocationPayload,
+): Promise<ChangeLocationResponse> => {
+  return fetcher<ChangeLocationResponse>("/reservations/change-location", {
     method: "PATCH",
     body: JSON.stringify(payload),
   });

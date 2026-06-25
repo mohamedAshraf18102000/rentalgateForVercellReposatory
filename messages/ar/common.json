@@ -157,6 +157,11 @@
     "locationChange": {
       "fromLabel": "من:",
       "toLabel": "إلى:",
+      "pickupLocationLabel": "مكان الاستلام:",
+      "deliveryLocationLabel": "مكان التسليم:",
+      "selectPickupLocation": "حدد مكان الاستلام",
+      "selectDeliveryLocation": "حدد مكان التسليم",
+      "changeReservationLocation": "تغيير مكان الحجز",
       "addNewAddress": "إضافة عنوان جديد",
       "editPickupDropoff": "تعديل مكان الاستلام و التسليم",
       "loadingAddresses": "جاري تحميل العناوين...",
@@ -193,6 +198,8 @@
         "addSuccess": "تم إضافة العنوان بنجاح",
         "addError": "حدث خطأ أثناء إضافة العنوان",
         "selectAddressFirst": "يرجى اختيار عنوان أولاً",
+        "selectPickupFirst": "يرجى اختيار مكان الاستلام أولاً",
+        "selectDeliveryFirst": "يرجى اختيار مكان التسليم أولاً",
         "unableToDetectReservation": "تعذر تحديد الحجز الحالي",
         "saveSuccess": "تم حفظ الموقع بنجاح",
         "saveError": "حدث خطأ أثناء حفظ الموقع"

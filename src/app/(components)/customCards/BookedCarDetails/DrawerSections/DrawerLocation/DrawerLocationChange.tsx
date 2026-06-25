@@ -9,7 +9,6 @@ import {
 } from "@/app/(components)";
 import GoogleMapsLocation from "@/app/(components)/mapsLocation/GoogleMapsLocation";
 import CountryPhone from "@/app/(components)/template/phone/CountryPhone";
-import ProfileActionCard from "@/app/[locale]/(mainpages)/userProfile/components/ProfileActionCard";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Controller, useForm } from "react-hook-form";
@@ -69,9 +68,12 @@ const DrawerLocationChange = ({
 
   const [showAddForm, setShowAddForm] = useState(false);
   const [isPhoneValid, setIsPhoneValid] = useState(false);
-  const [selectedAddressId, setSelectedAddressId] = useState<number | null>(
-    null,
-  );
+  const [selectedPickupAddressId, setSelectedPickupAddressId] = useState<
+    number | null
+  >(null);
+  const [selectedDeliveryAddressId, setSelectedDeliveryAddressId] = useState<
+    number | null
+  >(null);
   const queryClient = useQueryClient();
   const {
     setUserPhysical_Location,
@@ -130,14 +132,51 @@ const DrawerLocationChange = ({
   const normalizeText = (value: string) =>
     value.trim().replace(/\s+/g, " ").toLowerCase();
 
+  const findMatchingAddress = (
+    locationName: string,
+    addresses: UserAddress[],
+  ) => {
+    const normalizedName = normalizeText(locationName);
+    if (!normalizedName) {
+      return undefined;
+    }
+
+    return (
+      addresses.find(
+        (address) => normalizeText(address.addressName) === normalizedName,
+      ) ||
+      addresses.find(
+        (address) => normalizeText(address.address) === normalizedName,
+      ) ||
+      addresses.find((address) => {
+        const normalizedAddressName = normalizeText(address.addressName);
+        const normalizedAddress = normalizeText(address.address);
+        return (
+          normalizedAddressName.includes(normalizedName) ||
+          normalizedName.includes(normalizedAddressName) ||
+          normalizedAddress.includes(normalizedName) ||
+          normalizedName.includes(normalizedAddress)
+        );
+      })
+    );
+  };
+
   const handleSaveLocation = () => {
-    const selectedAddress = userAddresses?.find(
-      (address) => address.addressId === selectedAddressId,
+    const pickupAddress = userAddresses?.find(
+      (address) => address.addressId === selectedPickupAddressId,
+    );
+    const deliveryAddress = userAddresses?.find(
+      (address) => address.addressId === selectedDeliveryAddressId,
     );
 
-    if (!selectedAddress) {
+    if (!pickupAddress) {
+      toast.error(t("myBookingsDrawer.locationChange.toast.selectPickupFirst"));
+      return;
+    }
+
+    if (!deliveryAddress) {
       toast.error(
-        t("myBookingsDrawer.locationChange.toast.selectAddressFirst"),
+        t("myBookingsDrawer.locationChange.toast.selectDeliveryFirst"),
       );
       return;
     }
@@ -152,10 +191,10 @@ const DrawerLocationChange = ({
     changeReservationLocation(
       {
         reservationId,
-        receiveLatitude: selectedAddress.latitude,
-        receiveLongitude: selectedAddress.longitude,
-        deliverLatitude: selectedAddress.latitude,
-        deliverLongitude: selectedAddress.longitude,
+        receiveLatitude: pickupAddress.latitude,
+        receiveLongitude: pickupAddress.longitude,
+        deliverLatitude: deliveryAddress.latitude,
+        deliverLongitude: deliveryAddress.longitude,
       },
       {
         onSuccess: () => {
@@ -179,48 +218,35 @@ const DrawerLocationChange = ({
   }, [showAddForm, reset]);
 
   useEffect(() => {
-    if (
-      selectedAddressId ||
-      !userAddresses?.length ||
-      !defaultLocationNames.length
-    ) {
+    if (!userAddresses?.length || !defaultLocationNames.length) {
       return;
     }
 
-    const normalizedNames = defaultLocationNames
-      .filter(Boolean)
-      .map((name) => normalizeText(name));
-
-    if (!normalizedNames.length) {
-      return;
-    }
-
-    const matchingAddress =
-      userAddresses.find((address) =>
-        normalizedNames.some(
-          (name) => normalizeText(address.addressName) === name,
-        ),
-      ) ||
-      userAddresses.find((address) =>
-        normalizedNames.some((name) => normalizeText(address.address) === name),
-      ) ||
-      userAddresses.find((address) =>
-        normalizedNames.some((name) => {
-          const normalizedAddressName = normalizeText(address.addressName);
-          const normalizedAddress = normalizeText(address.address);
-          return (
-            normalizedAddressName.includes(name) ||
-            name.includes(normalizedAddressName) ||
-            normalizedAddress.includes(name) ||
-            name.includes(normalizedAddress)
-          );
-        }),
+    if (!selectedPickupAddressId && defaultLocationNames[0]) {
+      const matchingPickupAddress = findMatchingAddress(
+        defaultLocationNames[0],
+        userAddresses,
       );
-
-    if (matchingAddress) {
-      setSelectedAddressId(matchingAddress.addressId);
+      if (matchingPickupAddress) {
+        setSelectedPickupAddressId(matchingPickupAddress.addressId);
+      }
     }
-  }, [defaultLocationNames, selectedAddressId, userAddresses]);
+
+    if (!selectedDeliveryAddressId && defaultLocationNames[1]) {
+      const matchingDeliveryAddress = findMatchingAddress(
+        defaultLocationNames[1],
+        userAddresses,
+      );
+      if (matchingDeliveryAddress) {
+        setSelectedDeliveryAddressId(matchingDeliveryAddress.addressId);
+      }
+    }
+  }, [
+    defaultLocationNames,
+    selectedPickupAddressId,
+    selectedDeliveryAddressId,
+    userAddresses,
+  ]);
 
   return (
     <div
@@ -272,7 +298,7 @@ const DrawerLocationChange = ({
                   {t("myBookingsDrawer.locationChange.addNewAddress")}
                 </Button>
               </div>
-              <div className="flex flex-col gap-3 mb-5">
+              <div className="flex flex-col gap-4 mb-5">
                 {isLoadingAddresses ? (
                   <div className="text-center py-10">
                     {t("myBookingsDrawer.locationChange.loadingAddresses")}
@@ -282,20 +308,89 @@ const DrawerLocationChange = ({
                     {t("myBookingsDrawer.locationChange.noSavedAddresses")}
                   </div>
                 ) : (
-                  userAddresses?.map((address) => {
-                    return (
-                      <ProfileActionCard
-                        key={address.addressId}
-                        active={selectedAddressId === address.addressId}
-                        onClick={() => {
-                          setSelectedAddressId(address.addressId);
-                        }}
-                        bg_gray
-                        title={address.addressName}
-                        description={address.address}
-                      />
-                    );
-                  })
+                  <>
+                    <div className="flex flex-col gap-2">
+                      <span className="text-base font-medium">
+                        {t("myBookingsDrawer.locationChange.pickupLocationLabel")}
+                      </span>
+                      <Select
+                        value={selectedPickupAddressId?.toString() ?? ""}
+                        onValueChange={(value) =>
+                          setSelectedPickupAddressId(Number(value))
+                        }
+                      >
+                        <SelectTrigger className="bg-Grey100! border-none!">
+                          <SelectValue
+                            placeholder={t(
+                              "myBookingsDrawer.locationChange.selectPickupLocation",
+                            )}
+                          />
+                        </SelectTrigger>
+                        <SelectContent className="z-100001">
+                          {(userAddresses ?? []).map((address) => (
+                            <SelectItem
+                              key={`pickup-${address.addressId}`}
+                              value={address.addressId.toString()}
+                            >
+                              {address.addressName}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      {selectedPickupAddressId ? (
+                        <p className="text-sm text-Grey600">
+                          {
+                            (userAddresses ?? []).find(
+                              (address) =>
+                                address.addressId === selectedPickupAddressId,
+                            )?.address
+                          }
+                        </p>
+                      ) : null}
+                    </div>
+
+                    <div className="flex flex-col gap-2">
+                      <span className="text-base font-medium">
+                        {t(
+                          "myBookingsDrawer.locationChange.deliveryLocationLabel",
+                        )}
+                      </span>
+                      <Select
+                        value={selectedDeliveryAddressId?.toString() ?? ""}
+                        onValueChange={(value) =>
+                          setSelectedDeliveryAddressId(Number(value))
+                        }
+                      >
+                        <SelectTrigger className="bg-Grey100! border-none!">
+                          <SelectValue
+                            placeholder={t(
+                              "myBookingsDrawer.locationChange.selectDeliveryLocation",
+                            )}
+                          />
+                        </SelectTrigger>
+                        <SelectContent className="z-100001">
+                          {(userAddresses ?? []).map((address) => (
+                            <SelectItem
+                              key={`delivery-${address.addressId}`}
+                              value={address.addressId.toString()}
+                            >
+                              {address.addressName}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      {selectedDeliveryAddressId ? (
+                        <p className="text-sm text-Grey600">
+                          {
+                            (userAddresses ?? []).find(
+                              (address) =>
+                                address.addressId === selectedDeliveryAddressId,
+                            )?.address
+                          }
+                        </p>
+                      ) : null}
+                    </div>
+                  </>
                 )}
               </div>
             </>
@@ -342,7 +437,7 @@ const DrawerLocationChange = ({
                             )}
                           />
                         </SelectTrigger>
-                        <SelectContent>
+                        <SelectContent className="z-100001">
                           <SelectItem value="Home">
                             {t(
                               "myBookingsDrawer.locationChange.addressTypes.home",
@@ -490,9 +585,16 @@ const DrawerLocationChange = ({
             <Button
               type="button"
               className="text-base! w-1/2 bg-transparent text-white! border-2 border-Grey400 hover:bg-transparent"
-              onClick={() => console.log("Change user location")}
+              onClick={handleSaveLocation}
+              disabled={
+                !selectedPickupAddressId ||
+                !selectedDeliveryAddressId ||
+                isChangingLocation
+              }
             >
-              تغير مكان الحجز
+              {isChangingLocation
+                ? t("saving")
+                : t("myBookingsDrawer.locationChange.changeReservationLocation")}
             </Button>
           )}
 
@@ -505,19 +607,6 @@ const DrawerLocationChange = ({
               {t("myBookings")}
             </Button>
           )}
-          {showAddForm ? (
-            <Button
-              type="button"
-              className="text-base! w-1/2"
-              onClick={handleSaveLocation}
-              disabled={showAddForm || !selectedAddressId || isChangingLocation}
-            >
-              {isChangingLocation
-                ? t("saving")
-                : t("myBookingsDrawer.locationChange.saveChanges")}
-            </Button>
-          ) : null}
-
           {showAddForm ? (
             <Button
               type="submit"

@@ -157,6 +157,11 @@
     "locationChange": {
       "fromLabel": "From:",
       "toLabel": "To:",
+      "pickupLocationLabel": "Pickup location:",
+      "deliveryLocationLabel": "Delivery location:",
+      "selectPickupLocation": "Select pickup location",
+      "selectDeliveryLocation": "Select delivery location",
+      "changeReservationLocation": "Change reservation location",
       "addNewAddress": "Add new address",
       "editPickupDropoff": "Edit pickup and drop-off location",
       "loadingAddresses": "Loading addresses...",
@@ -193,6 +198,8 @@
         "addSuccess": "Address added successfully",
         "addError": "An error occurred while adding the address",
         "selectAddressFirst": "Please select an address first",
+        "selectPickupFirst": "Please select a pickup location first",
+        "selectDeliveryFirst": "Please select a delivery location first",
         "unableToDetectReservation": "Unable to detect the current reservation",
         "saveSuccess": "Location saved successfully",
         "saveError": "An error occurred while saving location"
