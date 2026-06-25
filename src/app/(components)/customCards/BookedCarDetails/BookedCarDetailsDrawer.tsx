@@ -475,8 +475,11 @@ const BookedCarDetailsDrawer = ({
                           )}
                         </div>
 
-                        {data?.receiveType === "MY_LOCATION" &&
-                          data?.deliverType === "MY_LOCATION" && (
+                        {(data?.deliverType === "MY_LOCATION" ||
+                          data?.receiveType === "MY_LOCATION") &&
+                          (data?.reservationStatus === "PAID" ||
+                            data?.reservationStatus === "IN_PROGRESS") &&
+                          data?.locationChanges == null && (
                             <div className="">
                               <Button
                                 className="p-3"

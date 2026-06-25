@@ -490,6 +490,16 @@ const DrawerLocationChange = ({
             <Button
               type="button"
               className="text-base! w-1/2 bg-transparent text-white! border-2 border-Grey400 hover:bg-transparent"
+              onClick={() => console.log("Change user location")}
+            >
+              تغير مكان الحجز
+            </Button>
+          )}
+
+          {!showAddForm && (
+            <Button
+              type="button"
+              className="text-base! w-1/2 bg-transparent text-white! border-2 border-Grey400 hover:bg-transparent"
               onClick={() => setShowLocationDetails(false)}
             >
               {t("myBookings")}
