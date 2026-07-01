@@ -1,4 +1,6 @@
 export interface LocationChanges {
+  id?: number;
+  locationChangeId?: number;
   createdAt: string;
   updatedAt: string;
   status: string;
@@ -44,6 +46,7 @@ export interface ReservationExtend {
 
 export type ReservationDetailsResponse = {
   reservationId: number;
+  paidAmount: number;
   clientId: number;
   rated: boolean;
   startDate: string; // ISO date

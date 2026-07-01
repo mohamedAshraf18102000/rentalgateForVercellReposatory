@@ -143,7 +143,15 @@
     "title": "تفاصيل الحجز",
     "rentalDurationLabel": "مدة الإيجار",
     "rentalDays": "( {days} يوم )",
-    "locationChangedNotice": "تم تغير موقع الاستلام و التسليم",
+    "locationChangedNotice": "تم تغيير موقع الاستلام و التسليم",
+    "payForLocationChange": "دفع مقابل تغيير المكان",
+    "locationChangePayment": {
+      "title": "أستكمال الدفع",
+      "successTitle": "تم الدفع بنجاح!",
+      "redirectCountdown": "العودة إلى تفاصيل الحجز خلال {seconds} ثانية",
+      "redirectGoNow": "العودة الآن",
+      "missingTargetId": "تعذر بدء الدفع. يرجى تحديث الصفحة والمحاولة مرة أخرى."
+    },
     "driverDetailsTitle": "تفاصيل السائق",
     "totalCostLabel": "أجمالي التكلفة",
     "carImageAlt": "صورة السيارة",

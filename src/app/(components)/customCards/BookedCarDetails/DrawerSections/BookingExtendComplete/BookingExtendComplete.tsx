@@ -129,13 +129,7 @@ const BookingExtendComplete = ({
   useEffect(() => {
     resetPayWithWallet();
     resetPayWithGateway();
-  }, [
-    useWallet,
-    useGateway,
-    phase,
-    resetPayWithWallet,
-    resetPayWithGateway,
-  ]);
+  }, [useWallet, useGateway, phase, resetPayWithWallet, resetPayWithGateway]);
 
   // ── Re-quote (when promo/points change in details phase) ─────────────────
   const triggerReQuote = useCallback(
@@ -283,7 +277,9 @@ const BookingExtendComplete = ({
       ? tCar("reservation.wallet.balanceNotEnough")
       : walletPayError?.message;
 
-  const errorMessage = useWallet ? walletErrorMessage : gatewayPayError?.message;
+  const errorMessage = useWallet
+    ? walletErrorMessage
+    : gatewayPayError?.message;
 
   const handleCompletePayment = () => {
     if (!validatePayment() || createdExtensionId == null) return;

@@ -2,12 +2,14 @@ import Image from "next/image";
 import Link from "next/link";
 
 type ReservationSuccessComponentProps = {
+  successTitle?: string;
   redirectCountdownText: string;
   goNowLabel: string;
   onNavigateNow: (e: React.MouseEvent<HTMLAnchorElement>) => void;
 };
 
 const ReservationSuccessComponent = ({
+  successTitle = "تم الحجز بنجاح",
   redirectCountdownText,
   goNowLabel,
   onNavigateNow,
@@ -18,7 +20,7 @@ const ReservationSuccessComponent = ({
         <Image src="/bussinesAccounts/dialogeSuccessImage.png" alt="" fill />
       </div>
       <div className="mt-5">
-        <p className="text-base! font-bold">تم الحجز بنجاح</p>
+        <p className="text-base! font-bold">{successTitle}</p>
         <p className="mt-2 text-sm text-Grey700">{redirectCountdownText}</p>
         <Link
           href="/myBookings"

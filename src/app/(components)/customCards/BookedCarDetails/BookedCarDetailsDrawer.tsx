@@ -27,7 +27,6 @@ import {
 } from "lucide-react";
 import type { ReservationDetailsResponse } from "@/types/myBookings/BookingDetails";
 import { useLocale, useTranslations } from "next-intl";
-import { useRouter } from "@/i18n/routing";
 import type {
   ExtendReservationDriverPayload,
   ExtendReservationPayload,
@@ -49,6 +48,7 @@ import { LocationType } from "@/util/locationType";
 import { getStatusColor } from "@/util/bookingStatus";
 import BookedCarDetailsDrawerSkeleton from "./DrawerSections/BookedCarDetailsDrawerSkeleton";
 import MaintenanceContent from "./DrawerSections/MaintenanceRequest/MaintenanceContent";
+import { useQueryClient } from "@tanstack/react-query";
 
 const CancelConfirmation = dynamic(
   () => import("./DrawerSections/DrawerLocation/CancelConfirmation"),
@@ -80,6 +80,12 @@ const BookingComplement = dynamic(
   { ssr: false },
 );
 
+const LocationChangePaymentMethods = dynamic(
+  () =>
+    import("@/app/[locale]/(mainpages)/reservation/components/reservationDrawer/components/paymentMethods/PaymentMethods"),
+  { ssr: false },
+);
+
 interface BookedCarDetailsDrawerProps {
   trigger?: React.ReactNode;
   data?: ReservationDetailsResponse;
@@ -89,6 +95,14 @@ interface BookedCarDetailsDrawerProps {
 }
 
 const CANCELLABLE_STATUSES = ["PAID", "ADMIN_APPROVED"] as const;
+
+const getLocationChangeId = (
+  locationChanges?: ReservationDetailsResponse["locationChanges"],
+) => {
+  if (!locationChanges) return null;
+
+  return locationChanges.id ?? locationChanges.locationChangeId ?? null;
+};
 
 const BookedCarDetailsDrawer = ({
   trigger,
@@ -100,6 +114,7 @@ const BookedCarDetailsDrawer = ({
   const getStatusLabel = useStatusLabel();
   const t = useTranslations("common");
   const locale = useLocale();
+  const queryClient = useQueryClient();
   const isRTL = locale === "ar";
   const DateArrowIcon = isRTL ? ArrowLeft : ArrowRight;
   const dateLocale = locale === "ar" ? ar : enUS;
@@ -116,6 +131,7 @@ const BookedCarDetailsDrawer = ({
     | "booking-complement"
     | "rating"
     | "request-maintenance"
+    | "location-change-payment"
   >("booking-details");
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const didAutoOpenRef = useRef(false);
@@ -139,6 +155,11 @@ const BookedCarDetailsDrawer = ({
     string | null
   >(null);
   const hasLocationChanges = !!data?.locationChanges;
+  const locationChangePaymentDue =
+    hasLocationChanges && (data?.total ?? 0) - (data?.paidAmount ?? 0) > 0;
+  const locationChangePaymentAmount =
+    (data?.total ?? 0) - (data?.paidAmount ?? 0);
+  const locationChangeId = getLocationChangeId(data?.locationChanges);
   const { data: userAddresses } = useUserAddreses(
     isDrawerOpen && hasLocationChanges,
   );
@@ -348,7 +369,8 @@ const BookedCarDetailsDrawer = ({
                                   | "booking-extend-complete"
                                   | "booking-complement"
                                   | "rating"
-                                  | "request-maintenance",
+                                  | "request-maintenance"
+                                  | "location-change-payment",
                               )
                             }
                           />
@@ -496,32 +518,50 @@ const BookedCarDetailsDrawer = ({
                           {data?.locationChanges && (
                             <>
                               <Separator className="w-[90%]! mx-auto!" />
-                              <div className="">
-                                <p className="text-StatusRedBG">
-                                  <span>*</span>
-                                  {t("myBookingsDrawer.locationChangedNotice")}
-                                </p>
-                                <LocationFrom_To
-                                  LocReceiveType={
-                                    data?.receiveType as LocationType
-                                  }
-                                  LocDeliverType={
-                                    data?.deliverType as LocationType
-                                  }
-                                  receiveLocationName={
-                                    changedReceiveLocationName ??
-                                    changedReceiveAddress ??
-                                    ""
-                                  }
-                                  deliverLocationName={
-                                    changedDeliverLocationName ??
-                                    changedDeliverAddress ??
-                                    ""
-                                  }
-                                  receiveAddress={changedReceiveAddress}
-                                  deliverAddress={changedDeliverAddress}
-                                  showPhysicalAddress={true}
-                                />
+                              <div className="flex justify-between items-center">
+                                <div>
+                                  <p className="text-StatusRedBG">
+                                    <span>*</span>
+                                    {t(
+                                      "myBookingsDrawer.locationChangedNotice",
+                                    )}
+                                  </p>
+                                  <LocationFrom_To
+                                    LocReceiveType={
+                                      data?.receiveType as LocationType
+                                    }
+                                    LocDeliverType={
+                                      data?.deliverType as LocationType
+                                    }
+                                    receiveLocationName={
+                                      changedReceiveLocationName ??
+                                      changedReceiveAddress ??
+                                      ""
+                                    }
+                                    deliverLocationName={
+                                      changedDeliverLocationName ??
+                                      changedDeliverAddress ??
+                                      ""
+                                    }
+                                    receiveAddress={changedReceiveAddress}
+                                    deliverAddress={changedDeliverAddress}
+                                    showPhysicalAddress={true}
+                                  />
+                                </div>
+                                {locationChangePaymentDue && (
+                                  <div>
+                                    <Button
+                                      type="button"
+                                      onClick={() =>
+                                        setActiveView("location-change-payment")
+                                      }
+                                    >
+                                      {t(
+                                        "myBookingsDrawer.payForLocationChange",
+                                      )}
+                                    </Button>
+                                  </div>
+                                )}
                               </div>
                             </>
                           )}
@@ -653,6 +693,32 @@ const BookedCarDetailsDrawer = ({
                   </>
                 )}
               </SheetFooter>
+            </>
+          ) : activeView === "location-change-payment" ? (
+            <>
+              <SheetHeader className="text-start! mt-10 px-6">
+                <SheetTitle>
+                  {t("myBookingsDrawer.locationChangePayment.title")}
+                </SheetTitle>
+              </SheetHeader>
+              <LocationChangePaymentMethods
+                isRTL={isRTL}
+                paymentMode="change-location"
+                changeLocationId={locationChangeId}
+                amount={locationChangePaymentAmount}
+                successBehavior="callback-only"
+                onPaySuccess={() => {
+                  if (data?.reservationId) {
+                    void queryClient.refetchQueries({
+                      queryKey: [
+                        "user-reservation-details",
+                        data.reservationId,
+                      ],
+                    });
+                  }
+                  setActiveView("booking-details");
+                }}
+              />
             </>
           ) : activeView === "location-details" ? (
             <DrawerLocationChange

@@ -144,6 +144,14 @@
     "rentalDurationLabel": "Rental duration",
     "rentalDays": "( {days} days )",
     "locationChangedNotice": "Pickup and drop-off locations have been changed",
+    "payForLocationChange": "Pay for location change",
+    "locationChangePayment": {
+      "title": "Complete payment",
+      "successTitle": "Payment completed successfully!",
+      "redirectCountdown": "Returning to booking details in {seconds} s",
+      "redirectGoNow": "Return now",
+      "missingTargetId": "Unable to start payment. Please refresh and try again."
+    },
     "driverDetailsTitle": "Driver details",
     "totalCostLabel": "Total cost",
     "carImageAlt": "Car image",
